@@ -1,0 +1,24 @@
+.pic{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20rpx;
+}
+.pic-img {
+  flex: 1;
+  margin-bottom: 10rpx;
+  border: 1px solid skyblue;
+}
+
+.action{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 20rpx;
+}
+
+.action-button {
+  margin: 20rpx;
+  border: 1px solid slateblue;
+}

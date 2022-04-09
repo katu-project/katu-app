@@ -1,0 +1,11 @@
+<view class="main">
+  <view class="list">
+    <view class="item" wx:for="{{list}}" wx:key="_id" data-item="{{item}}" bindtap="goCardDetails">
+      {{index+1}}.{{item._id}}
+    </view>
+  </view>
+</view>
+
+<view class="action">
+    <button class="action-button" bindtap="goAddCard">添加卡片</button>
+</view>

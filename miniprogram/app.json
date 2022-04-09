@@ -1,0 +1,17 @@
+{
+  "entryPagePath": "pages/home/index",
+  "pages": [
+    "pages/home/index",
+    "pages/add-card/add",
+    "pages/details/index"
+  ],
+  "window": {
+    "backgroundColor": "#F6F6F6",
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#F6F6F6",
+    "navigationBarTitleText": "卡兔APP",
+    "navigationBarTextStyle": "black"
+  },
+  "sitemapLocation": "sitemap.json",
+  "style": "v2"
+}
