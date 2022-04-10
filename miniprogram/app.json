@@ -1,9 +1,10 @@
 {
-  "entryPagePath": "pages/home/index",
+  "entryPagePath": "pages/settings/index",
   "pages": [
     "pages/home/index",
     "pages/add-card/add",
-    "pages/details/index"
+    "pages/details/index",
+    "pages/settings/index"
   ],
   "window": {
     "backgroundColor": "#F6F6F6",
