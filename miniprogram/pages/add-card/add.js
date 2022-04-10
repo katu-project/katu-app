@@ -102,6 +102,9 @@ Page({
       })
     }
   },
+  async goEncodeCard(){
+    if(!this.data.card0 || !this.data.card1) return
+  },
   async takePic(){
     const pics = await wx.chooseMedia({
       count: 1,

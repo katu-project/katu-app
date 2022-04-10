@@ -7,5 +7,6 @@
   <view class="action">
     <button class="action-button" bindtap="goTakePic">拍摄卡面</button>
     <button class="action-button" bindtap="goSaveCard">保存卡片</button>
+    <button class="action-button" bindtap="goEncodeCard">加密卡片</button>
   </view>
 </view>
