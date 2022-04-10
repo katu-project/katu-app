@@ -22,3 +22,8 @@
   left: 0;
   right: 0;
 }
+.action-button{
+  border: 1rpx solid silver;
+  border-radius: 6rpx;
+  margin: 10rpx;
+}

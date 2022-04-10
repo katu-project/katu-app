@@ -1,0 +1,17 @@
+.key{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.item{
+  min-height: 50rpx;
+  width: 100%;
+  border: 1px solid slateblue;
+  margin-bottom: 10rpx;
+  padding: 20rpx;
+}
+
+.encodeContent{
+  height: 30vh;
+}

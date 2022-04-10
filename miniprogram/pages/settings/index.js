@@ -1,12 +1,13 @@
-const { getCard } = require('../../api')
-
+const { crypto: {md5, encryptString, decryptString} } = require('../../utils/index')
 Page({
 
   /**
    * 页面的初始数据
    */
   data: {
-    list: []
+    key: '',
+    encodeKey: '',
+    decode: ''
   },
 
   /**
@@ -20,18 +21,14 @@ Page({
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady() {
-    
+
   },
 
   /**
    * 生命周期函数--监听页面显示
    */
   onShow() {
-    getCard().then(res=>{
-      this.setData({
-        list: res
-      })
-    })
+
   },
 
   /**
@@ -47,20 +44,21 @@ Page({
   onUnload() {
 
   },
-  goCardDetails(e){
-    wx.navigateTo({
-      url: '/pages/details/index?id='+ e.currentTarget.dataset.item._id,
+  encode(){
+    const encode = md5(this.data.key)
+    this.setData({
+      encodeKey: encode.toString()
     })
   },
-  goAddCard(){
-    wx.navigateTo({
-      url: '/pages/add-card/add',
+  toAes(){
+    const key = '1234'
+    const encode = encryptString(this.data.key, key)
+    const decode = decryptString(encode, key)
+    this.setData({
+      encodeKey: encode,
+      decode: decode
     })
-  },
-  goSettings(){
-    wx.navigateTo({
-      url: '/pages/settings/index',
-    })
+
   },
   /**
    * 页面相关事件处理函数--监听用户下拉动作

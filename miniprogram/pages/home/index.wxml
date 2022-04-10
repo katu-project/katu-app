@@ -8,4 +8,5 @@
 
 <view class="action">
     <button class="action-button" bindtap="goAddCard">添加卡片</button>
+    <button class="action-button" bindtap="goSettings">设置</button>
 </view>
