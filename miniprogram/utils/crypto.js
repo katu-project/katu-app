@@ -1,4 +1,5 @@
 const CryptoJS = require('crypto-js')
+const { readFile } = require('./file')
 
 function md5(string){
   return CryptoJS.MD5(string)
@@ -76,10 +77,22 @@ function decryptString(string, code){
   return CryptoJS.AES.decrypt(string, code).toString(CryptoJS.enc.Utf8)
 }
 
+async function encryptImage(image, code){
+  const imageData = await readFile(image)
+  const wordArrayData = CryptoJS.lib.WordArray.create(imageData)
+  return CryptoJS.AES.encrypt(wordArrayData, code).toString()
+}
+
+function decryptImage(data, code){
+  return 
+}
+
 module.exports = {
   md5,
   encryptString,
   decryptString,
+  encryptImage,
+  decryptImage,
   encrypt: encode,
   decrypt: decode
 }

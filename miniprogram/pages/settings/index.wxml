@@ -1,9 +1,10 @@
 <view>
-<view class="key">
-  <input class="item" model:value="{{key}}" bindinput="encode" type="text"/>
-  <view class="item encodeContent" >{{encodeKey}}</view>
-  <view class="item" >{{decode}}</view>
-  <button class="item" bindtap="encode">计算md5</button>
-  <button class="item" bindtap="toAes">计算aes</button>
-</view>
+  <view class="key">
+    <input class="item" model:value="{{key}}" bindinput="encode" type="text"/>
+    <view class="item encodeContent" >{{encodeKey}}</view>
+    <view class="item" >{{decode}}</view>
+    <button class="item" bindtap="encode">计算md5</button>
+    <button class="item" bindtap="toAes">计算aes</button>
+    <navigator url="./image">图片加密</navigator>
+  </view>
 </view>

@@ -1,0 +1,9 @@
+<view class="main">
+  <view class="list">
+    <image style="height: 400rpx; border: 1px solid royalblue;" src="{{pic}}" mode="aspectFit" bindtap="choosePic"></image>
+    <view class="item">origin size: {{size}}</view>
+    <image style="height: 400rpx; border: 1px solid rgb(194, 33, 100);" src="{{decrypt_pic}}" mode="aspectFit"></image>
+    <view class="item">encrypt size: {{encode_size}}</view>
+    <button class="item" bindtap="goEncode" style="width: 200rpx;">AES加密</button>
+  </view>
+</view>

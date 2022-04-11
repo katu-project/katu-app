@@ -1,0 +1,18 @@
+.main{
+ padding: 20rpx; 
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.list .item{
+  min-height: 50rpx;
+  width: 100%;
+  border: 1px solid slateblue;
+  margin-bottom: 10rpx;
+  padding: 20rpx;
+  margin: 20rpx;
+}
