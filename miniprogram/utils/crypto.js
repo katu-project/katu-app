@@ -1,4 +1,6 @@
 const CryptoJS = require('crypto-js')
+const { Base64 } = require('js-base64')
+const { ArrayBufferToBase64, Base64ToArrayBuffer } = require('./convert')
 const { readFile } = require('./file')
 
 function md5(string){
@@ -77,14 +79,29 @@ function decryptString(string, code){
   return CryptoJS.AES.decrypt(string, code).toString(CryptoJS.enc.Utf8)
 }
 
-async function encryptImage(image, code){
-  const imageData = await readFile(image)
-  const wordArrayData = CryptoJS.lib.WordArray.create(imageData)
+/**
+ * 
+ * @param {string} imagePath 
+ * @param {string} code 
+ * @return {Base64}
+ */
+async function encryptImage(imagePath, code){
+  const imageData = await readFile(imagePath)
+  const base64Data = ArrayBufferToBase64(imageData)
+  const wordArrayData = CryptoJS.lib.WordArray.create(base64Data)
   return CryptoJS.AES.encrypt(wordArrayData, code).toString()
 }
 
-function decryptImage(data, code){
-  return 
+/**
+ * 
+ * @param {*} imagePath 
+ * @param {*} code 
+ * @return {ArrayBuffer}
+ */
+async function decryptImage(imagePath, code){
+  const imageData = await readFile(imagePath)
+  const base64Image = CryptoJS.AES.decrypt(imageData, code).toString(CryptoJS.enc.Utf8)
+  return Base64ToArrayBuffer(base64Image)
 }
 
 module.exports = {

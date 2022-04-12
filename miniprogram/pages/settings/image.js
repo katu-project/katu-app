@@ -1,4 +1,5 @@
-const { crypto: {encryptImage, decryptImage} } = require('../../utils/index')
+const { saveFile } = require('../../utils/file');
+const { crypto: {encryptImage, decryptImage}, file: {getTempFilePath} } = require('../../utils/index')
 
 Page({
 
@@ -47,11 +48,15 @@ Page({
   },
   async goEncode(){
     const cryptedFile = await encryptImage(this.data.pic, '1234')
+    
+    const tempFile = await getTempFilePath('111')
+    const imageObj = await decryptImage(cryptedFile, '1234')
+    await saveFile(tempFile, imageObj)
+    
     this.setData({
-      encode_size: cryptedFile.length
+      encode_size: cryptedFile.length,
+      decrypt_pic: tempFile
     })
-    // const decryptedFile = await decryptImage(cryptedFile, '1234')
-    // console.log(decryptedFile);
   },
   /**
    * 生命周期函数--监听页面隐藏
