@@ -1,4 +1,4 @@
-const { saveFile } = require('../../utils/file');
+const { writeFile } = require('../../utils/file');
 const { crypto: {encryptImage, decryptImage}, file: {getTempFilePath} } = require('../../utils/index')
 
 Page({
@@ -48,14 +48,20 @@ Page({
   },
   async goEncode(){
     const cryptedFile = await encryptImage(this.data.pic, '1234')
-    
     const tempFile = await getTempFilePath('111')
-    const imageObj = await decryptImage(cryptedFile, '1234')
-    await saveFile(tempFile, imageObj)
+    console.log('save encrypted temp file:',tempFile);
+    const jsonRes = JSON.parse(cryptedFile)
+    console.log('enc size:', jsonRes.ct.length/2);
+    await writeFile(tempFile, cryptedFile)
+    const imageObj = await decryptImage(tempFile, '1234')
+    console.log(imageObj.slice(0,32),imageObj.length);
+    const imageTempFile = await getTempFilePath('123')
+    console.log('save encrypted temp file:',imageTempFile);
+    await writeFile(imageTempFile, imageObj, 'hex')
     
     this.setData({
       encode_size: cryptedFile.length,
-      decrypt_pic: tempFile
+      decrypt_pic: imageTempFile
     })
   },
   /**

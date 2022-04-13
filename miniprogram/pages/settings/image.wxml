@@ -5,5 +5,7 @@
     <image style="height: 400rpx; border: 1px solid rgb(194, 33, 100);" src="{{decrypt_pic}}" mode="aspectFit"></image>
     <view class="item">encrypt size: {{encode_size}}</view>
     <button class="item" bindtap="goEncode" style="width: 200rpx;">AES加密</button>
+    
+    <navigator url="../storage/index">检查本地存储</navigator>
   </view>
 </view>

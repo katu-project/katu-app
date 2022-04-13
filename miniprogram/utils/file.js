@@ -1,30 +1,38 @@
 const CryptoJS = require('crypto-js')
+const {APP_TEMP_DIR} = require('../const')
 
-async function readFile(filePath){
+const toPromise = (func, options={}, returnKey) => {
   return new Promise((resolve,reject)=>{
-    wx.getFileSystemManager().readFile({
-      filePath: filePath,
+    func({
+      ...options,
       success: res=>{
-        console.log('readFile:',res);
-        resolve(res.data)
+        console.log(`${func.name}:`,res);
+        if(returnKey && res.hasOwnProperty(returnKey)){
+          resolve(res[returnKey])
+        }else{
+          resolve(res)
+        }
       },
       fail: reject
     })
   })
 }
 
-async function saveFile(filePath, fileData){
-  return new Promise((resolve,reject)=>{
-    wx.getFileSystemManager().writeFile({
-      filePath: filePath,
-      data: fileData,
-      success: res=>{
-        console.log('saveFile:',res);
-        resolve(res.data)
-      },
-      fail: reject
-    })
-  })
+async function readFile(filePath, encoding){
+  const readFile = (...args) => wx.getFileSystemManager().readFile(...args)
+  const options = {filePath}
+  if(encoding) options.encoding = encoding
+  return toPromise(readFile, options , 'data')
+}
+
+async function writeFile(filePath, fileData, encoding){
+  const writeFile = (...args) => wx.getFileSystemManager().writeFile(...args)
+  const options = {
+    filePath,
+    data: fileData
+  }
+  if(encoding) options.encoding = encoding
+  return toPromise(writeFile, options)
 }
 
 async function checkAccess(path) {
@@ -54,19 +62,38 @@ async function mkdir(path) {
   })
 }
 
+async function readDir(dirPath){
+  const readDir = (...args) => wx.getFileSystemManager().readdir(...args)
+  return toPromise(readDir, {
+    dirPath
+  }, 'files')
+}
+
+async function getSavedFileList(){
+  const getSavedFileList = (...args) => wx.getFileSystemManager().getSavedFileList(...args)
+  return toPromise(getSavedFileList, {}, 'fileList')
+}
+
+async function getStats(path, recursive=false){
+  const getStats = (...args) => wx.getFileSystemManager().stat(...args)
+  return toPromise(getStats, {
+    path,
+    recursive
+  }, 'stats')
+}
+// ------- wx function end----
 async function getTempFilePath(cacheId){
-  const tempDir = `${wx.env.USER_DATA_PATH}/katu/temp`
   let tempFile = ''
   try {
-    await checkAccess(tempDir)
+    await checkAccess(APP_TEMP_DIR)
   } catch (error) {
-    await mkdir(tempDir)
+    await mkdir(APP_TEMP_DIR)
   }
 
   if(cacheId){
-    tempFile = `${tempDir}/${CryptoJS.MD5(cacheId)}`
+    tempFile = `${APP_TEMP_DIR}/${CryptoJS.MD5(cacheId)}`
   }else{
-    tempFile = `${tempDir}/${CryptoJS.lib.WordArray.random(128 / 8)}`
+    tempFile = `${APP_TEMP_DIR}/${CryptoJS.lib.WordArray.random(128 / 8)}`
   }
 
   return tempFile
@@ -74,6 +101,9 @@ async function getTempFilePath(cacheId){
 
 module.exports = {
   readFile,
-  saveFile,
+  writeFile,
+  readDir,
+  getStats,
+  getSavedFileList,
   getTempFilePath
 }

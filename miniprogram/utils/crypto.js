@@ -22,7 +22,7 @@ function toBase64String(words){
 const JsonFormatter = {
   stringify: function(cipherParams) {
     // create json object with ciphertext
-    const jsonObj = { ct: cipherParams.ciphertext.toString(CryptoJS.enc.Base64) };
+    const jsonObj = { ct: cipherParams.ciphertext.toString(CryptoJS.enc.Hex) };
 
     // optionally add iv or salt
     if (cipherParams.iv) {
@@ -42,7 +42,7 @@ const JsonFormatter = {
 
     // extract ciphertext from json object, and create cipher params object
     const cipherParams = CryptoJS.lib.CipherParams.create({
-      ciphertext: CryptoJS.enc.Base64.parse(jsonObj.ct)
+      ciphertext: CryptoJS.enc.Hex.parse(jsonObj.ct)
     });
 
     // optionally extract iv or salt
@@ -86,10 +86,13 @@ function decryptString(string, code){
  * @return {Base64}
  */
 async function encryptImage(imagePath, code){
-  const imageData = await readFile(imagePath)
-  const base64Data = ArrayBufferToBase64(imageData)
-  const wordArrayData = CryptoJS.lib.WordArray.create(base64Data)
-  return CryptoJS.AES.encrypt(wordArrayData, code).toString()
+  const imageHexData = await readFile(imagePath, 'hex')
+  console.log(imageHexData.slice(0,32));
+  // const base64Data = ArrayBufferToBase64(imageData)
+  // const wordArrayData = CryptoJS.lib.WordArray.create(imageHexData)
+  return CryptoJS.AES.encrypt(imageHexData, code, {
+    format: JsonFormatter
+  }).toString()
 }
 
 /**
@@ -99,9 +102,12 @@ async function encryptImage(imagePath, code){
  * @return {ArrayBuffer}
  */
 async function decryptImage(imagePath, code){
-  const imageData = await readFile(imagePath)
-  const base64Image = CryptoJS.AES.decrypt(imageData, code).toString(CryptoJS.enc.Utf8)
-  return Base64ToArrayBuffer(base64Image)
+  const imageJsonData = await readFile(imagePath, 'utf-8')
+  const imageHexData = CryptoJS.AES.decrypt(imageJsonData, code, {
+    format: JsonFormatter
+  }).toString(CryptoJS.enc.Utf8)
+  if(!imageHexData) throw Error("decrypt fail")
+  return imageHexData
 }
 
 module.exports = {
