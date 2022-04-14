@@ -40,7 +40,7 @@ async function checkAccess(path) {
     wx.getFileSystemManager().access({
       path: path,
       success: res=>{
-        console.log('checkAccess:',res);
+        console.log('checkAccess:', path, res);
         resolve(res)
       },
       fail: reject

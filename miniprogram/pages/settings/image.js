@@ -38,7 +38,6 @@ Page({
       count: 1,
       mediaType: 'image',
       success: ({tempFiles:[file]}) =>{
-        console.log( file);
         this.setData({
           pic: file.tempFilePath,
           size: file.size
@@ -47,20 +46,23 @@ Page({
     })
   },
   async goEncode(){
-    const cryptedFile = await encryptImage(this.data.pic, '1234')
-    const tempFile = await getTempFilePath('111')
-    console.log('save encrypted temp file:',tempFile);
-    const jsonRes = JSON.parse(cryptedFile)
-    console.log('enc size:', jsonRes.ct.length/2);
-    await writeFile(tempFile, cryptedFile)
-    const imageObj = await decryptImage(tempFile, '1234')
-    console.log(imageObj.slice(0,32),imageObj.length);
+    const key = '123456'
+    console.time('加密用时')
+    const encryptedJson = await encryptImage(this.data.pic, key)
+    console.timeEnd('加密用时')
+
+    const saveTempFile = await getTempFilePath('111')
+    await writeFile(saveTempFile, JSON.stringify(encryptedJson))
+
+    console.time('解密用时')
+    const imageHexData = await decryptImage(saveTempFile, key)
+    console.timeEnd('解密用时')
+
     const imageTempFile = await getTempFilePath('123')
-    console.log('save encrypted temp file:',imageTempFile);
-    await writeFile(imageTempFile, imageObj, 'hex')
-    
+    await writeFile(imageTempFile, imageHexData, 'hex')
+    console.log(encryptedJson);
     this.setData({
-      encode_size: cryptedFile.length,
+      encode_size: `${encryptedJson.ct.length/2}  salt:${encryptedJson.s.length/2}  iv:${encryptedJson.iv.length/2}`,
       decrypt_pic: imageTempFile
     })
   },

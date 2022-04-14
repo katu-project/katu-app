@@ -22,7 +22,7 @@ function toBase64String(words){
 const JsonFormatter = {
   stringify: function(cipherParams) {
     // create json object with ciphertext
-    const jsonObj = { ct: cipherParams.ciphertext.toString(CryptoJS.enc.Hex) };
+    const jsonObj = { ct: cipherParams.ciphertext.toString(CryptoJS.enc.Hex)};
 
     // optionally add iv or salt
     if (cipherParams.iv) {
@@ -32,9 +32,7 @@ const JsonFormatter = {
     if (cipherParams.salt) {
       jsonObj.s = cipherParams.salt.toString();
     }
-
-    // stringify json object
-    return JSON.stringify(jsonObj);
+    return jsonObj
   },
   parse: function(jsonStr) {
     // parse json string
@@ -57,6 +55,13 @@ const JsonFormatter = {
 
     return cipherParams;
   }
+}
+
+function pbkdf2(masterKey){
+  const salt = CryptoJS.lib.WordArray.random(128 / 8)
+  return CryptoJS.PBKDF2(masterKey,salt,{
+    keySize:4,iterations:5000
+  }).toString()
 }
 
 function encode(text, code){
@@ -83,13 +88,10 @@ function decryptString(string, code){
  * 
  * @param {string} imagePath 
  * @param {string} code 
- * @return {Base64}
+ * @return { json string }
  */
 async function encryptImage(imagePath, code){
   const imageHexData = await readFile(imagePath, 'hex')
-  console.log(imageHexData.slice(0,32));
-  // const base64Data = ArrayBufferToBase64(imageData)
-  // const wordArrayData = CryptoJS.lib.WordArray.create(imageHexData)
   return CryptoJS.AES.encrypt(imageHexData, code, {
     format: JsonFormatter
   }).toString()
@@ -97,12 +99,12 @@ async function encryptImage(imagePath, code){
 
 /**
  * 
- * @param {*} imagePath 
+ * @param {*} encryptedImagePath 
  * @param {*} code 
- * @return {ArrayBuffer}
+ * @return { Hex string }
  */
-async function decryptImage(imagePath, code){
-  const imageJsonData = await readFile(imagePath, 'utf-8')
+async function decryptImage(encryptedImagePath, code){
+  const imageJsonData = await readFile(encryptedImagePath, 'utf-8')
   const imageHexData = CryptoJS.AES.decrypt(imageJsonData, code, {
     format: JsonFormatter
   }).toString(CryptoJS.enc.Utf8)
@@ -112,6 +114,7 @@ async function decryptImage(imagePath, code){
 
 module.exports = {
   md5,
+  pbkdf2,
   encryptString,
   decryptString,
   encryptImage,
