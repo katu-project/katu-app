@@ -1,4 +1,4 @@
-const { saveMasterKey } = require("../../crypto/index")
+const { saveMasterKey, readMasterKey } = require("../../crypto/index")
 
 // pages/settings/key.js
 Page({
@@ -48,6 +48,12 @@ Page({
     } catch (error) {
       console.log(error);
     }
+  },
+  async getMasterKey(){
+    const key = await readMasterKey()
+    this.setData({
+      masterKey: key
+    })
   },
   /**
    * 生命周期函数--监听页面卸载

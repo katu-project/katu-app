@@ -47,14 +47,14 @@ Page({
   onUnload() {
 
   },
-  goCardDetails(e){
+  goCardDetail(e){
     wx.navigateTo({
-      url: '/pages/details/index?id='+ e.currentTarget.dataset.item._id,
+      url: '/pages/card/detail/index?id='+ e.currentTarget.dataset.item._id,
     })
   },
   goAddCard(){
     wx.navigateTo({
-      url: '/pages/add-card/add',
+      url: '/pages/card/add/index',
     })
   },
   goSettings(){

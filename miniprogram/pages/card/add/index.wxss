@@ -6,7 +6,6 @@
   padding: 20rpx;
 }
 .pic-img {
-  flex: 1;
   margin-bottom: 10rpx;
   border: 1px solid skyblue;
 }
@@ -15,10 +14,14 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  padding: 20rpx;
+  padding: 10rpx;
 }
 
 .action-button {
-  margin: 20rpx;
+  margin: 20rpx 10rpx 0 10rpx;
+  padding: 20rpx;
+  border-radius: 10rpx;
+  text-align: center;
+  flex: 1;
   border: 1px solid slateblue;
 }

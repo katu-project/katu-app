@@ -1,8 +1,8 @@
 
 <view>
   <view class="pic">
-    <image class="pic-img" mode="aspectFit" src="{{card.pics.pic0}}"></image>
-    <image class="pic-img" mode="aspectFit" src="{{card.pics.pic1}}"></image>
+    <image class="pic-img" mode="aspectFit" src="{{pic0}}"></image>
+    <image class="pic-img" mode="aspectFit" src="{{pic1}}"></image>
   </view>
   <view class="action">
     <button class="action-button" bindtap="goUpdateCard">修改</button>

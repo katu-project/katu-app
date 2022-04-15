@@ -1,6 +1,6 @@
 <view class="main">
   <view class="list">
-    <view class="item" wx:for="{{list}}" wx:key="_id" data-item="{{item}}" bindtap="goCardDetails">
+    <view class="item" wx:for="{{list}}" wx:key="_id" data-item="{{item}}" bindtap="goCardDetail">
       {{index+1}}.{{item._id}}
     </view>
   </view>

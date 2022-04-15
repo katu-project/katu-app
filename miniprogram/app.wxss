@@ -7,12 +7,16 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  padding: 20rpx;
 }
 .list .item{
+  background-color: rgb(223, 245, 245);
   min-height: 50rpx;
+  text-align: center;
   width: 100%;
-  border: 1px solid slateblue;
+  border: 1px solid rgb(149, 144, 180);
   margin-bottom: 10rpx;
   padding: 20rpx;
+  border-radius: 10rpx;
   margin: 20rpx;
 }

@@ -1,0 +1,12 @@
+
+<view class="main">
+  <view class="pic">
+    <image class="pic-img" mode="aspectFit" src="{{card0}}"></image>
+    <image class="pic-img" mode="aspectFit" src="{{card1}}"></image>
+  </view>
+  <view class="action">
+    <view class="action-button" bindtap="goTakePic">拍摄卡面</view>
+    <view class="action-button" bindtap="goSaveCard">保存卡片</view>
+    <view class="action-button" bindtap="goEncryptCard">加密卡片</view>
+  </view>
+</view>

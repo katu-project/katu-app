@@ -1,4 +1,4 @@
-const { getCard, deleteCard } = require('../../api')
+const { getCard, deleteCard } = require('../../../api')
 
 Page({
 
@@ -6,9 +6,9 @@ Page({
    * 页面的初始数据
    */
   data: {
-    card: {
-      pics: {}
-    }
+    id: 0,
+    pic0: '',
+    pic1: ''
   },
 
   /**
@@ -20,7 +20,9 @@ Page({
         id: options.id
       }).then(res=>{
         this.setData({
-          card: res
+          id: res._id,
+          pic0: res.pics.pic0,
+          pic1: res.pics.pic1
         })
       })
     }
@@ -55,12 +57,12 @@ Page({
   },
   goUpdateCard(){
     wx.navigateTo({
-      url: '/pages/add-card/add?id='+ this.data.card._id,
+      url: '/pages/card/add/index?id='+ this.data.id,
     })
   },
   goDeleteCard(){
     deleteCard({
-      id: this.data.card._id
+      id: this.data.id
     }).then(res=>{
       wx.navigateBack()
     })

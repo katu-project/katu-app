@@ -1,5 +1,5 @@
-const { getUser,saveCard, getCard } = require('../../api')
-
+const { getUser,saveCard, getCard } = require('../../../api')
+const { getCardCryptoManager } = require('../../../crypto/index')
 Page({
 
   /**
@@ -87,12 +87,12 @@ Page({
   },
   async goTakePic(){
     try {
-      const picId = await this.takePic()
+      const picPath = await this.takePic()
       const card = {}
       if(this.data.card0){
-        card.card1 = picId
+        card.card1 = picPath
       }else{
-        card.card0 = picId
+        card.card0 = picPath
       }
       this.setData(card)
     } catch (error) {
@@ -102,8 +102,15 @@ Page({
       })
     }
   },
-  async goEncodeCard(){
+  async goEncryptCard(){
     if(!this.data.card0 || !this.data.card1) return
+    console.log(this.data)
+    try {
+      const cryptoManager = await getCardCryptoManager()
+      const pic0TempPath = cryptoManager
+    } catch (error) {
+      
+    }
   },
   async takePic(){
     const pics = await wx.chooseMedia({

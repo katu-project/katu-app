@@ -6,7 +6,6 @@
   padding: 20rpx;
 }
 .pic-img {
-  flex: 1;
   margin-bottom: 10rpx;
   border: 1px solid skyblue;
 }

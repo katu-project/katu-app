@@ -1,22 +1,21 @@
 const CryptoJS = require('crypto-js')
 const { Base64 } = require('js-base64')
-const { ArrayBufferToBase64, Base64ToArrayBuffer } = require('./convert')
 const { readFile } = require('./file')
 
+function random(bytesLength){
+  return CryptoJS.lib.WordArray.random(bytesLength)
+}
+
 function md5(string){
-  return CryptoJS.MD5(string)
+  return CryptoJS.MD5(string).toString()
 }
 
-function toWordArray(str){
-  return CryptoJS.enc.Utf8.parse(str);
+function sha256(string){
+  return CryptoJS.SHA256(string).toString()
 }
 
-function toString(words){
-  return CryptoJS.enc.Utf8.stringify(words);
-}
-
-function toBase64String(words){
-  return CryptoJS.enc.Base64.stringify(words);
+function sha512(string){
+  return CryptoJS.SHA256(string).toString()
 }
 
 const JsonFormatter = {
@@ -88,7 +87,7 @@ function decryptString(string, code){
  * 
  * @param {string} imagePath 
  * @param {string} code 
- * @return { json string }
+ * @return { json }
  */
 async function encryptImage(imagePath, code){
   const imageHexData = await readFile(imagePath, 'hex')
@@ -113,7 +112,10 @@ async function decryptImage(encryptedImagePath, code){
 }
 
 module.exports = {
+  random,
   md5,
+  sha256,
+  sha512,
   pbkdf2,
   encryptString,
   decryptString,
