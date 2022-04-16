@@ -2,3 +2,4 @@ project.private.config.json
 node_modules
 miniprogram_npm
 package-lock.json
+cloudfunctions/
