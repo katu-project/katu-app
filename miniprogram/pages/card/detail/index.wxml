@@ -4,8 +4,8 @@
     <image class="pic-img" mode="aspectFit" src="{{pic0}}"></image>
     <image class="pic-img" mode="aspectFit" src="{{pic1}}"></image>
   </view>
-  <view class="action">
-    <button class="action-button" bindtap="goUpdateCard">修改</button>
-    <button class="action-button" bindtap="goDeleteCard">删除</button>
+  <view class="button-row-list">
+    <view bindtap="goUpdateCard">修改</view>
+    <view bindtap="goDeleteCard">删除</view>
   </view>
 </view>

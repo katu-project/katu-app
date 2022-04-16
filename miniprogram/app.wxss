@@ -20,3 +20,19 @@
   border-radius: 10rpx;
   margin: 20rpx;
 }
+
+.button-row-list{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 10rpx;
+}
+
+.button-row-list > view {
+  margin: 20rpx 10rpx 0 10rpx;
+  padding: 20rpx;
+  border-radius: 10rpx;
+  text-align: center;
+  flex: 1;
+  border: 1px solid slateblue;
+}
