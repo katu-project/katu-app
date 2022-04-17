@@ -1,10 +1,6 @@
 const { getUser,saveCard, getCard } = require('../../../api')
-const { getCardCryptoManager } = require('../../../crypto/index')
+const { getCryptoManager } = require('../../../crypto/index')
 Page({
-
-  /**
-   * 页面的初始数据
-   */
   data: {
     card0: '',
     card1: '',
@@ -47,13 +43,6 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow() {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide() {
 
   },
   async goSaveCard(){
@@ -106,7 +95,7 @@ Page({
     if(!this.data.card0 || !this.data.card1) return
     console.log(this.data)
     try {
-      const cryptoManager = await getCardCryptoManager()
+      const cryptoManager = await getCryptoManager()
       const pic0TempPath = cryptoManager
     } catch (error) {
       

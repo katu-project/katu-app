@@ -58,9 +58,11 @@ const JsonFormatter = {
 
 function pbkdf2(masterKey){
   const salt = CryptoJS.lib.WordArray.random(128 / 8)
-  return CryptoJS.PBKDF2(masterKey,salt,{
+  const key = CryptoJS.PBKDF2(masterKey,salt,{
     keySize:4,iterations:5000
   }).toString()
+
+  return {key, salt}
 }
 
 function encode(text, code){
@@ -85,12 +87,11 @@ function decryptString(string, code){
 
 /**
  * 
- * @param {string} imagePath 
+ * @param {string} imageHexData
  * @param {string} code 
  * @return { json }
  */
-async function encryptImage(imagePath, code){
-  const imageHexData = await readFile(imagePath, 'hex')
+async function encryptImage(imageHexData, code){
   return CryptoJS.AES.encrypt(imageHexData, code, {
     format: JsonFormatter
   }).toString()
