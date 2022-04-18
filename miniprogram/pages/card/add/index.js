@@ -1,5 +1,5 @@
 const { getUser,saveCard, getCard } = require('../../../api')
-const { getCryptoManager } = require('../../../crypto/index')
+const { getCardManager } = require('../../../class/cardManager')
 Page({
   data: {
     card0: '',
@@ -92,13 +92,19 @@ Page({
     }
   },
   async goEncryptCard(){
-    if(!this.data.card0 || !this.data.card1) return
+    // if(!this.data.card0 || !this.data.card1) return
     console.log(this.data)
     try {
-      const cryptoManager = await getCryptoManager()
-      const pic0TempPath = cryptoManager
+      const cardManager = await getCardManager()
+      const res = await cardManager.encryptImage(this.data.card0)
+      console.log(res);
+      const deRes = await cardManager.decryptImage(res.imagePath, res.imageSecretKey)
+      // console.log(deRes);
+      this.setData({
+        // pic1: deRes.imagePath
+      })
     } catch (error) {
-      
+      console.log(error);
     }
   },
   async takePic(){

@@ -1,4 +1,4 @@
-const { getCryptoManager } = require("../../crypto/index")
+const { getAppManager } = require("../../class/appManager")
 // pages/settings/key.js
 Page({
 
@@ -43,8 +43,8 @@ Page({
   },
   async saveMasterKey(){
     try {
-      const cm = await getCryptoManager()
-      await cm.saveMasterKey(this.data.masterKey)
+      const appManager = await getAppManager()
+      await appManager.saveMasterKey(this.data.masterKey)
     } catch (error) {
       console.log(error);
     }

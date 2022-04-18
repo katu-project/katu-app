@@ -1,4 +1,5 @@
 const CryptoJS = require('crypto-js')
+const { KatuCryptoFormatter } = require('../const')
 const { Base64 } = require('js-base64')
 const { readFile } = require('./file')
 
@@ -18,62 +19,24 @@ function sha512(string){
   return CryptoJS.SHA256(string).toString()
 }
 
-const JsonFormatter = {
-  stringify: function(cipherParams) {
-    // create json object with ciphertext
-    const jsonObj = { ct: cipherParams.ciphertext.toString(CryptoJS.enc.Hex)};
-
-    // optionally add iv or salt
-    if (cipherParams.iv) {
-      jsonObj.iv = cipherParams.iv.toString();
-    }
-
-    if (cipherParams.salt) {
-      jsonObj.s = cipherParams.salt.toString();
-    }
-    return jsonObj
-  },
-  parse: function(jsonStr) {
-    // parse json string
-    const jsonObj = JSON.parse(jsonStr);
-
-    // extract ciphertext from json object, and create cipher params object
-    const cipherParams = CryptoJS.lib.CipherParams.create({
-      ciphertext: CryptoJS.enc.Hex.parse(jsonObj.ct)
-    });
-
-    // optionally extract iv or salt
-
-    if (jsonObj.iv) {
-      cipherParams.iv = CryptoJS.enc.Hex.parse(jsonObj.iv);
-    }
-
-    if (jsonObj.s) {
-      cipherParams.salt = CryptoJS.enc.Hex.parse(jsonObj.s);
-    }
-
-    return cipherParams;
-  }
-}
-
-function pbkdf2(masterKey){
-  const salt = CryptoJS.lib.WordArray.random(128 / 8)
+function pbkdf2(masterKey, options={}){
+  const salt = options.salt ? CryptoJS.enc.Hex.parse(options.salt) : CryptoJS.lib.WordArray.random(128 / 8)
   const key = CryptoJS.PBKDF2(masterKey,salt,{
-    keySize:4,iterations:5000
+    keySize: options.size || 4, 
+    iterations: 5000
   }).toString()
-
-  return {key, salt}
+  return {key, salt: salt.toString()}
 }
 
 function encode(text, code){
   return CryptoJS.AES.encrypt(text, code, {
-    format: JsonFormatter
+    format: KatuCryptoFormatter
   });
 }
 
 function decode(text, code){
   return CryptoJS.AES.decrypt(text, code, {
-    format: JsonFormatter
+    format: KatuCryptoFormatter
   })
 }
 
@@ -89,27 +52,30 @@ function decryptString(string, code){
  * 
  * @param {string} imageHexData
  * @param {string} code 
- * @return { json }
+ * @return { Hex }
  */
-async function encryptImage(imageHexData, code){
-  return CryptoJS.AES.encrypt(imageHexData, code, {
-    format: JsonFormatter
+function encryptImage(imageHexData, code){
+  console.log('key:',code);
+  const fileHex = CryptoJS.enc.Hex.parse(imageHexData)
+  return CryptoJS.AES.encrypt(fileHex, code, {
+    format: KatuCryptoFormatter
   }).toString()
 }
 
 /**
  * 
- * @param {*} encryptedImagePath 
+ * @param {*} encryptedImageData
  * @param {*} code 
- * @return { Hex string }
+ * @return { Hex }
  */
-async function decryptImage(encryptedImagePath, code){
-  const imageJsonData = await readFile(encryptedImagePath, 'utf-8')
-  const imageHexData = CryptoJS.AES.decrypt(imageJsonData, code, {
-    format: JsonFormatter
-  }).toString(CryptoJS.enc.Utf8)
-  if(!imageHexData) throw Error("decrypt fail")
-  return imageHexData
+function decryptImage(fileHexString, code){
+  // const fileHex = CryptoJS.enc.Hex.parse(fileHexString)
+  console.log(fileHexString.slice(0,32),fileHexString.length,code);
+  const decryptedHex = CryptoJS.AES.decrypt(fileHexString, code, {
+    format: KatuCryptoFormatter
+  }).toString()
+  if(!decryptedHex) throw Error("decrypt fail")
+  return decryptedHex
 }
 
 module.exports = {
