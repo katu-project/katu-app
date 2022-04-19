@@ -99,9 +99,9 @@ Page({
       const res = await cardManager.encryptImage(this.data.card0)
       console.log(res);
       const deRes = await cardManager.decryptImage(res.imagePath, res.imageSecretKey)
-      // console.log(deRes);
+      console.log(deRes);
       this.setData({
-        // pic1: deRes.imagePath
+        card1: deRes.imagePath
       })
     } catch (error) {
       console.log(error);

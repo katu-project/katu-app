@@ -54,12 +54,12 @@ function decryptString(string, code){
  * @param {string} code 
  * @return { Hex }
  */
-function encryptImage(imageHexData, code){
-  console.log('key:',code);
-  const fileHex = CryptoJS.enc.Hex.parse(imageHexData)
-  return CryptoJS.AES.encrypt(fileHex, code, {
+function encryptImage(imageHexString, code){
+  const hexData = CryptoJS.enc.Hex.parse(imageHexString)
+  const res = CryptoJS.AES.encrypt(hexData, code, {
     format: KatuCryptoFormatter
-  }).toString()
+  })
+  return res.toString()
 }
 
 /**
@@ -69,13 +69,11 @@ function encryptImage(imageHexData, code){
  * @return { Hex }
  */
 function decryptImage(fileHexString, code){
-  // const fileHex = CryptoJS.enc.Hex.parse(fileHexString)
-  console.log(fileHexString.slice(0,32),fileHexString.length,code);
   const decryptedHex = CryptoJS.AES.decrypt(fileHexString, code, {
     format: KatuCryptoFormatter
-  }).toString()
+  })
   if(!decryptedHex) throw Error("decrypt fail")
-  return decryptedHex
+  return decryptedHex.toString()
 }
 
 module.exports = {

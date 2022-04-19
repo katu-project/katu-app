@@ -25,27 +25,29 @@ class CardManager {
 
   
   async encryptImage(imagePath){
-    // const imageHexData = await utils.file.readFile(imagePath, 'hex')
-    const imageHexData = '010203040506'
-    console.log('ihd1:',imageHexData.slice(0,16),imageHexData.length);
+    const imageHexData = await utils.file.readFile(imagePath, 'hex')
+    console.log(11111,imageHexData.slice(0,32),imageHexData.length);
     const {key:imageKey, salt} = this.generateKeyByMasterKey()
-    const encryptedData = utils.crypto.encryptImage(imageHexData, 'b9be2b9b216b1aab46aa95e34c010fe3')
-    console.log('encode:', encryptedData,encryptedData.length);
+    const encryptedData = utils.crypto.encryptImage(imageHexData, imageKey)
+    console.log(11112,encryptedData.slice(0,32),encryptedData.length);
     const tempFilePath = await utils.file.getTempFilePath(salt)
     await utils.file.writeFile(tempFilePath, encryptedData)
-
     return {
       imageSecretKey: salt,
-      imagePath: encryptedData
+      imagePath: tempFilePath
     }
   }
 
   async decryptImage(imagePath, salt){
-    // const imageHexData = await utils.file.readFile(imagePath, 'utf-8')
-    const {key:imageKey} = this.generateKeyByMasterKey({salt:'2c3254c35505bd509758397fa780a294'})
-    const decryptedData = utils.crypto.decryptImage(imagePath, imageKey)
-    console.log('ihd2:',decryptedData.slice(0,16),decryptedData.length);
-    return decryptedData
+    const imageHexData = await utils.file.readFile(imagePath, 'utf-8')
+    const {key:imageKey} = this.generateKeyByMasterKey({salt})
+    const decryptedData = utils.crypto.decryptImage(imageHexData, imageKey)
+    console.log(11111,decryptedData.slice(0,32),decryptedData.length);
+    const tempFilePath = await utils.file.getTempFilePath(salt)
+    await utils.file.writeFile(tempFilePath, decryptedData)
+    return {
+      imagePath: tempFilePath
+    }
   }
 
   generateKeyByMasterKey(options){
