@@ -46,6 +46,7 @@ Page({
 
   },
   async goSaveCard(){
+    if(!this.data.card0 || !this.data.card1) return
     wx.showLoading({
       title: '上传中'
     })
@@ -74,7 +75,13 @@ Page({
     })
     return fileID
   },
-  async goTakePic(){
+  async goTapPic(){
+    if(this.data.card0 && this.data.card1){
+      wx.previewImage({
+        urls: [this.data.card0,this.data.card1],
+      })
+      return
+    }
     try {
       const picPath = await this.takePic()
       const card = {}
@@ -96,13 +103,13 @@ Page({
     console.log(this.data)
     try {
       const cardManager = await getCardManager()
-      const res = await cardManager.encryptImage(this.data.card0)
-      console.log(res);
-      const deRes = await cardManager.decryptImage(res.imagePath, res.imageSecretKey)
-      console.log(deRes);
-      this.setData({
-        card1: deRes.imagePath
-      })
+      const card0Info = await cardManager.encryptImage(this.data.card0)
+      const card1Info = await cardManager.encryptImage(this.data.card1)
+      
+      // const {imagePath} = await cardManager.decryptImage(res.imagePath, res.imageSecretKey)
+      // this.setData({
+      //   card1: imagePath
+      // })
     } catch (error) {
       console.log(error);
     }

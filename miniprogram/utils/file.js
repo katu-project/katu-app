@@ -82,7 +82,7 @@ async function getStats(path, recursive=false){
   }, 'stats')
 }
 // ------- wx function end----
-async function getTempFilePath(cacheId){
+async function getTempFilePath(cacheId, suffix=''){
   let tempFile = ''
   try {
     await checkAccess(APP_TEMP_DIR)
@@ -94,6 +94,10 @@ async function getTempFilePath(cacheId){
     tempFile = `${APP_TEMP_DIR}/${CryptoJS.MD5(cacheId)}`
   }else{
     tempFile = `${APP_TEMP_DIR}/${CryptoJS.lib.WordArray.random(128 / 8)}`
+  }
+
+  if(suffix){
+    tempFile += `.${suffix}`
   }
 
   return tempFile

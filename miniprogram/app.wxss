@@ -1,5 +1,5 @@
 .main{
- padding: 20rpx; 
+ padding: 0 20rpx;
 }
 
 .list {
@@ -25,14 +25,20 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  padding: 10rpx;
+  /* padding: 10rpx; */
 }
 
 .button-row-list > view {
-  margin: 20rpx 10rpx 0 10rpx;
+  /* margin: 0rpx 10rpx 0 0rpx; */
   padding: 20rpx;
   border-radius: 10rpx;
   text-align: center;
   flex: 1;
   border: 1px solid slateblue;
+}
+
+.card {
+  width: 700rpx;
+  height: 440rpx;
+  border-radius: 10rpx;
 }

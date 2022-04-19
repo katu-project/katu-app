@@ -50,30 +50,29 @@ function decryptString(string, code){
 
 /**
  * 
- * @param {string} imageHexData
+ * @param {string} data Hex string
  * @param {string} code 
- * @return { Hex }
+ * @return { Hex String }
  */
-function encryptImage(imageHexString, code){
-  const hexData = CryptoJS.enc.Hex.parse(imageHexString)
-  const res = CryptoJS.AES.encrypt(hexData, code, {
-    format: KatuCryptoFormatter
-  })
-  return res.toString()
+function encryptFile(fileHexString, code){
+  const hexData = CryptoJS.enc.Hex.parse(fileHexString)
+  return CryptoJS.AES.encrypt(hexData, code, {
+                    format: KatuCryptoFormatter
+                  }).toString()
 }
 
 /**
  * 
- * @param {*} encryptedImageData
+ * @param {*} encrypted hex string
  * @param {*} code 
- * @return { Hex }
+ * @return { Hex String }
  */
-function decryptImage(fileHexString, code){
-  const decryptedHex = CryptoJS.AES.decrypt(fileHexString, code, {
+function decryptFile(fileHexString, code){
+  const decryptedHexString = CryptoJS.AES.decrypt(fileHexString, code, {
     format: KatuCryptoFormatter
-  })
-  if(!decryptedHex) throw Error("decrypt fail")
-  return decryptedHex.toString()
+  }).toString()
+  if(!decryptedHexString) throw Error("decrypt fail")
+  return decryptedHexString
 }
 
 module.exports = {
@@ -84,8 +83,8 @@ module.exports = {
   pbkdf2,
   encryptString,
   decryptString,
-  encryptImage,
-  decryptImage,
+  encryptFile,
+  decryptFile,
   encrypt: encode,
   decrypt: decode
 }

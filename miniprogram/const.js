@@ -4,6 +4,11 @@ const APP_ROOT_DIR = `${wx.env.USER_DATA_PATH}/katu`
 const APP_TEMP_DIR = `${APP_ROOT_DIR}/temp`
 const MASTER_KEY_NAME = 'KATU_MASTER_KEY'
 
+const STANDARD_CARD_DATA = {
+  width: 85.60,
+  height: 53.98,
+  ratio: 53.98 / 85.60
+}
 const KatuCryptoFormatter = {
     stringify: function(cipherParams) {
       const KatuMark = [0x9527,0x4396]
@@ -15,8 +20,6 @@ const KatuCryptoFormatter = {
                         .concat(CryptoJS.lib.WordArray.create(SaltMark))
                         .concat(salt)
                         .concat(ciphertext)
-
-      console.log('stringify salt:',salt.toString())
       return wordArray.toString(CryptoJS.enc.Hex)
     },
     parse: function(encryptedHexString) {
@@ -43,7 +46,6 @@ const KatuCryptoFormatter = {
             ciphertext.sigBytes -= 16;
         }
 
-        console.log('parse salt:',salt.toString())
         return CryptoJS.lib.CipherParams.create({
             ciphertext,
             salt
@@ -55,5 +57,6 @@ module.exports = {
   MASTER_KEY_NAME,
   APP_ROOT_DIR,
   APP_TEMP_DIR,
+  STANDARD_CARD_DATA,
   KatuCryptoFormatter
 }

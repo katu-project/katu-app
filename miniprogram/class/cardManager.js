@@ -26,10 +26,8 @@ class CardManager {
   
   async encryptImage(imagePath){
     const imageHexData = await utils.file.readFile(imagePath, 'hex')
-    console.log(11111,imageHexData.slice(0,32),imageHexData.length);
     const {key:imageKey, salt} = this.generateKeyByMasterKey()
-    const encryptedData = utils.crypto.encryptImage(imageHexData, imageKey)
-    console.log(11112,encryptedData.slice(0,32),encryptedData.length);
+    const encryptedData = utils.crypto.encryptFile(imageHexData, imageKey)
     const tempFilePath = await utils.file.getTempFilePath(salt)
     await utils.file.writeFile(tempFilePath, encryptedData)
     return {
@@ -41,10 +39,9 @@ class CardManager {
   async decryptImage(imagePath, salt){
     const imageHexData = await utils.file.readFile(imagePath, 'utf-8')
     const {key:imageKey} = this.generateKeyByMasterKey({salt})
-    const decryptedData = utils.crypto.decryptImage(imageHexData, imageKey)
-    console.log(11111,decryptedData.slice(0,32),decryptedData.length);
+    const decryptedData = utils.crypto.decryptFile(imageHexData, imageKey)
     const tempFilePath = await utils.file.getTempFilePath(salt)
-    await utils.file.writeFile(tempFilePath, decryptedData)
+    await utils.file.writeFile(tempFilePath, decryptedData, 'hex')
     return {
       imagePath: tempFilePath
     }
