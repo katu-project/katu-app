@@ -21,8 +21,8 @@ Page({
       }).then(res=>{
         this.setData({
           id: res._id,
-          pic0: res.pics.pic0,
-          pic1: res.pics.pic1
+          pic0: res.encrypted ? '' : res.pics.pic0,
+          pic1: res.encrypted ? '' : res.pics.pic1
         })
       })
     }

@@ -1,8 +1,8 @@
 
 <view class="main page">
   <view class="pic">
-    <image class="pic-img card" mode="aspectFit" bindtap="goTapPic" src="{{card0}}"></image>
-    <image class="pic-img card" mode="aspectFit" bindtap="goTapPic" src="{{card1}}"></image>
+    <image class="pic-img card" mode="aspectFit" bindtap="goTapPic" src="{{pic0}}"></image>
+    <image class="pic-img card" mode="aspectFit" bindtap="goTapPic" src="{{pic1}}"></image>
   </view>
   <view class="button-row-list">
     <view bindtap="goSaveCard" style="margin-right: 10rpx;">保存</view>

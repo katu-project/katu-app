@@ -2,8 +2,8 @@ const { getUser,saveCard, getCard } = require('../../../api')
 const { getCardManager } = require('../../../class/cardManager')
 Page({
   data: {
-    card0: '',
-    card1: '',
+    pic0: '',
+    pic1: '',
     card: {
       id: '',
       pics: {}
@@ -32,8 +32,8 @@ Page({
       }).then(res=>{
         this.setData({
           'card.pics': res.pics,
-          card0: res.pics.pic0,
-          card1: res.pics.pic1
+          pic0: res.pics.pic0,
+          pic1: res.pics.pic1
         })
       }).finally(wx.hideLoading)
     }
@@ -46,7 +46,7 @@ Page({
 
   },
   async goSaveCard(){
-    if(!this.data.card0 || !this.data.card1) return
+    if(!this.data.pic0 || !this.data.pic1) return
     wx.showLoading({
       title: '上传中'
     })
@@ -64,8 +64,8 @@ Page({
   async saveCard(){
     const {openid} = await getUser()
     const card = this.data.card
-    card.pics.pic0 = await this.uploadFile(this.data.card0,`${openid}/${this.data.card0.slice(-32)}`)
-    card.pics.pic1 = await this.uploadFile(this.data.card1,`${openid}/${this.data.card1.slice(-32)}`)
+    card.pics.pic0 = await this.uploadFile(this.data.pic0,`${openid}/${this.data.pic0.slice(-32)}`)
+    card.pics.pic1 = await this.uploadFile(this.data.pic1,`${openid}/${this.data.pic1.slice(-32)}`)
     return saveCard(card)
   },
   async uploadFile(tempFilePath, saveName){
@@ -76,19 +76,19 @@ Page({
     return fileID
   },
   async goTapPic(){
-    if(this.data.card0 && this.data.card1){
+    if(this.data.pic0 && this.data.pic1){
       wx.previewImage({
-        urls: [this.data.card0,this.data.card1],
+        urls: [this.data.pic0,this.data.pic1],
       })
       return
     }
     try {
       const picPath = await this.takePic()
       const card = {}
-      if(this.data.card0){
-        card.card1 = picPath
+      if(this.data.pic0){
+        card.pic1 = picPath
       }else{
-        card.card0 = picPath
+        card.pic0 = picPath
       }
       this.setData(card)
     } catch (error) {
@@ -99,18 +99,33 @@ Page({
     }
   },
   async goEncryptCard(){
-    // if(!this.data.card0 || !this.data.card1) return
+    if(!this.data.pic0 || !this.data.pic1) return
     console.log(this.data)
+    wx.showLoading({
+      title: '加密中'
+    })
     try {
       const cardManager = await getCardManager()
-      const card0Info = await cardManager.encryptImage(this.data.card0)
-      const card1Info = await cardManager.encryptImage(this.data.card1)
-      
-      // const {imagePath} = await cardManager.decryptImage(res.imagePath, res.imageSecretKey)
-      // this.setData({
-      //   card1: imagePath
-      // })
+      const {openid} = await getUser()
+      const card = this.data.card
+      card.encrypted = 1
+      console.time()
+      card.pics.pic0 = await cardManager.encryptImage(this.data.pic0)
+      card.pics.pic1 = await cardManager.encryptImage(this.data.pic1)
+      card.pics.pic0.url = await this.uploadFile(card.pics.pic0.imagePath, `${openid}/${this.data.pic0.slice(-32)}`)
+      card.pics.pic1.url = await this.uploadFile(card.pics.pic1.imagePath, `${openid}/${this.data.pic1.slice(-32)}`)
+      console.timeEnd()
+      await saveCard(card)
+      wx.hideLoading()
     } catch (error) {
+      wx.hideLoading({
+        success: (res) => {
+          wx.showToast({
+            title: error.message,
+            icon: 'error'
+          })
+        },
+      })
       console.log(error);
     }
   },
