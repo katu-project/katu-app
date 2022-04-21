@@ -83,7 +83,9 @@ Page({
       return
     }
     try {
-      const picPath = await this.takePic()
+      const cardManager = await getCardManager()
+      const picPath = await cardManager.takePic()
+      if(!picPath) return
       const card = {}
       if(this.data.pic0){
         card.pic1 = picPath
@@ -94,7 +96,7 @@ Page({
     } catch (error) {
       console.log(error);
       wx.showToast({
-        title: error.message || error,
+        title: error.message || error.toString(),
       })
     }
   },
@@ -128,16 +130,6 @@ Page({
       })
       console.log(error);
     }
-  },
-  async takePic(){
-    const pics = await wx.chooseMedia({
-      count: 1,
-      mediaType: 'image'
-    })
-
-    if(!pics.tempFiles.length) return
-    const tempFile = pics.tempFiles[0]
-    return tempFile.tempFilePath
   },
   /**
    * 生命周期函数--监听页面卸载

@@ -58,6 +58,23 @@ class CardManager {
     })
   }
   
+  async takePic(){
+    try {
+      const pics = await wx.chooseMedia({
+        count: 1,
+        mediaType: 'image'
+      })
+  
+      if(!pics.tempFiles.length) return
+      const tempFile = pics.tempFiles[0]
+      return tempFile.tempFilePath
+    } catch (error) {
+      if(error?.errMsg === 'chooseMedia:fail cancel'){
+        return
+      }
+      throw error
+    }
+  }
 }
 
 async function getCardManager(){
