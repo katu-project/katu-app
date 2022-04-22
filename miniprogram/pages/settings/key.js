@@ -43,10 +43,17 @@ Page({
   },
   async saveMasterKey(){
     try {
-      const appManager = await getAppManager()
+      const appManager = await getAppManager({setMasterKey:true})
       await appManager.saveMasterKey(this.data.masterKey)
+      wx.showToast({
+        title: '设置成功',
+      })
     } catch (error) {
       console.log(error);
+      wx.showToast({
+        title: '设置出错',
+        icon: 'error'
+      })
     }
   },
   /**

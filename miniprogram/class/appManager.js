@@ -4,10 +4,12 @@ const { MASTER_KEY_NAME } = require('../const')
 class AppManager {
   static instance = null
   masterKey = null
-  static async getInstance(){
+  static async getInstance({setMasterKey}){
     if(!this.instance){
       this.instance = new AppManager()
-      await this.instance.loadMasterKey()
+      if(!setMasterKey){
+        await this.instance.loadMasterKey()
+      }
     }
     return this.instance
   }
@@ -32,8 +34,8 @@ class AppManager {
   
 }
 
-async function getAppManager(){
-  return AppManager.getInstance()
+async function getAppManager(...args){
+  return AppManager.getInstance(...args)
 }
 
 module.exports = {

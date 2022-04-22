@@ -1,11 +1,11 @@
 
 <view class="main page">
   <view class="pic">
-    <image class="pic-img card" mode="aspectFit" bindtap="goTapPic" src="{{pic0}}"></image>
-    <image class="pic-img card" mode="aspectFit" bindtap="goTapPic" src="{{pic1}}"></image>
+    <image class="pic-img card" wx:for="{{pic}}" wx:key="url" data-index="{{index}}" mode="aspectFit" bindtap="goTapPic" src="{{item.url}}"></image>
   </view>
-  <view class="button-row-list">
-    <view bindtap="goSaveCard" style="margin-right: 10rpx;">保存</view>
-    <view bindtap="goEncryptCard">加密保存</view>
+  <view class="action-list">
+    <checkbox>开启加密</checkbox>
+    <view class="save" bindtap="goSaveCard">保存</view>
+    <!-- <view bindtap="goEncryptCard">加密保存</view> -->
   </view>
 </view>

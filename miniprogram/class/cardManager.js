@@ -4,6 +4,7 @@ const { MASTER_KEY_NAME } = require('../const')
 class CardManager {
   static instance = null
   masterKey = null
+
   static async getInstance(){
     if(!this.instance){
       this.instance = new CardManager()
@@ -17,10 +18,15 @@ class CardManager {
   }
 
   async readMasterKey(){
-    const {data} = await wx.getStorage({
-      key: MASTER_KEY_NAME
-    })
-    return data
+    try {
+      const {data} = await wx.getStorage({
+        key: MASTER_KEY_NAME
+      })
+      console.log('????',data);
+      return data
+    } catch (error) {
+      throw Error("未设置主密码")
+    }
   }
 
   
@@ -74,6 +80,14 @@ class CardManager {
       }
       throw error
     }
+  }
+
+  async uploadFile(tempFilePath, saveName){
+    const {fileID} = await wx.cloud.uploadFile({
+      cloudPath: saveName,
+      filePath: tempFilePath
+    })
+    return fileID
   }
 }
 

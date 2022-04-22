@@ -2,8 +2,9 @@ const { getUser,saveCard, getCard } = require('../../../api')
 const { getCardManager } = require('../../../class/cardManager')
 Page({
   data: {
-    pic0: '',
-    pic1: '',
+    pic: [
+      {url: '../../../static/images/add.svg'}
+    ],
     card: {
       id: '',
       pics: {}
@@ -45,8 +46,11 @@ Page({
   onShow() {
 
   },
+  hasSelectedPic(){
+    return this.data.pic.map(e=>e.url.endsWith('add.svg')).filter(e=>e).length === 0
+  },
   async goSaveCard(){
-    if(!this.data.pic0 || !this.data.pic1) return
+    if(!this.hasSelectedPic()) return
     wx.showLoading({
       title: '上传中'
     })
@@ -61,42 +65,35 @@ Page({
       })
     }).finally(wx.hideLoading)
   },
+
   async saveCard(){
     const {openid} = await getUser()
-    const card = this.data.card
-    card.pics.pic0 = await this.uploadFile(this.data.pic0,`${openid}/${this.data.pic0.slice(-32)}`)
-    card.pics.pic1 = await this.uploadFile(this.data.pic1,`${openid}/${this.data.pic1.slice(-32)}`)
+    const cardManager = await getCardManager()
+    const card = { encrypted: 0, image: [], info: {data:null} }
+    for (const pic of this.data.pic) {
+      card.image.push({
+        url: await cardManager.uploadFile(pic.url,`${openid}/${pic.url.slice(-32)}`)
+      })
+    }
     return saveCard(card)
   },
-  async uploadFile(tempFilePath, saveName){
-    const {fileID} = await wx.cloud.uploadFile({
-      cloudPath: saveName,
-      filePath: tempFilePath
-    })
-    return fileID
-  },
-  async goTapPic(){
-    if(this.data.pic0 && this.data.pic1){
-      wx.previewImage({
-        urls: [this.data.pic0,this.data.pic1],
-      })
-      return
-    }
+  
+  async goTapPic(e){
+    const index = e.currentTarget.dataset.index
     try {
       const cardManager = await getCardManager()
       const picPath = await cardManager.takePic()
       if(!picPath) return
-      const card = {}
-      if(this.data.pic0){
-        card.pic1 = picPath
-      }else{
-        card.pic0 = picPath
-      }
-      this.setData(card)
+      
+      const key = `pic[${index}].url`
+      this.setData({
+        [key]: picPath
+      })
     } catch (error) {
       console.log(error);
       wx.showToast({
         title: error.message || error.toString(),
+        icon: "error"
       })
     }
   },
@@ -130,6 +127,11 @@ Page({
       })
       console.log(error);
     }
+  },
+  previewPic(){
+    wx.previewImage({
+      urls: this.data.pic.map(e=>e.url),
+    })
   },
   /**
    * 生命周期函数--监听页面卸载

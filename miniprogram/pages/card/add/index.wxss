@@ -6,11 +6,26 @@
 .pic{
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  /* justify-content: center; */
+  /* align-items: center; */
   padding: 20rpx 0;
 }
 .pic-img {
   margin-bottom: 20rpx;
   border: 1px solid skyblue;
+}
+
+.action-list {
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+}
+
+.action-list .save {
+  margin-top: 20rpx;
+  padding: 20rpx;
+  border-radius: 10rpx;
+  text-align: center;
+  flex: 1;
+  border: 1px solid slateblue;
 }
