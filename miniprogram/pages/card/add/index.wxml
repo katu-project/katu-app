@@ -4,8 +4,7 @@
     <image class="pic-img card" wx:for="{{pic}}" wx:key="url" data-index="{{index}}" mode="aspectFit" bindtap="goTapPic" src="{{item.url}}"></image>
   </view>
   <view class="action-list">
-    <checkbox>开启加密</checkbox>
+    <checkbox bindtap="keepEncrypt" checked="{{encrypted}}">开启加密</checkbox>
     <view class="save" bindtap="goSaveCard">保存</view>
-    <!-- <view bindtap="goEncryptCard">加密保存</view> -->
   </view>
 </view>

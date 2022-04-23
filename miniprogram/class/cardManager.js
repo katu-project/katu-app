@@ -1,35 +1,37 @@
 const utils = require('../utils/index')
-const { MASTER_KEY_NAME } = require('../const')
+const { getUser, saveCard } = require('../api')
+const { getAppManager } = require('./appManager')
 
 class CardManager {
   static instance = null
-  masterKey = null
 
   static async getInstance(){
     if(!this.instance){
       this.instance = new CardManager()
-      await this.instance.loadMasterKey()
+      this.instance.app = await getAppManager()
+      this.instance.user = await getUser()
     }
     return this.instance
   }
-
-  async loadMasterKey(){
-    this.masterKey = await this.readMasterKey()
-  }
-
-  async readMasterKey(){
-    try {
-      const {data} = await wx.getStorage({
-        key: MASTER_KEY_NAME
-      })
-      console.log('????',data);
-      return data
-    } catch (error) {
-      throw Error("未设置主密码")
-    }
-  }
-
   
+  async save(data){
+    const card = { encrypted: data.encrypted?1:0, image: [], info: {data:null} }
+    for (const pic of data.pic) {
+      let imageData = {}
+      const uploadFileId = `${this.user.openid}/${pic.url.slice(-32)}`
+      if(card.encrypted){
+        const tempFile = await this.encryptImage(pic.url)
+        imageData.url = await this.app.uploadFile(tempFile.imagePath, uploadFileId)
+        imageData.salt = tempFile.imageSecretKey
+      }else{
+        imageData.url = await this.app.uploadFile(pic.url, uploadFileId)
+      }
+      card.image.push(imageData)
+    }
+
+    return saveCard(card)
+  }
+
   async encryptImage(imagePath){
     const imageHexData = await utils.file.readFile(imagePath, 'hex')
     const {key:imageKey, salt} = this.generateKeyByMasterKey()
@@ -54,40 +56,11 @@ class CardManager {
   }
 
   generateKeyByMasterKey(options){
-    return utils.crypto.pbkdf2(this.masterKey, options)
-  }
-  
-  async saveMasterKey(key){
-    return wx.setStorage({
-      key: MASTER_KEY_NAME,
-      data: utils.crypto.sha512(key)
-    })
-  }
-  
-  async takePic(){
-    try {
-      const pics = await wx.chooseMedia({
-        count: 1,
-        mediaType: 'image'
-      })
-  
-      if(!pics.tempFiles.length) return
-      const tempFile = pics.tempFiles[0]
-      return tempFile.tempFilePath
-    } catch (error) {
-      if(error?.errMsg === 'chooseMedia:fail cancel'){
-        return
-      }
-      throw error
-    }
+    return utils.crypto.pbkdf2(this.app.masterKey, options)
   }
 
-  async uploadFile(tempFilePath, saveName){
-    const {fileID} = await wx.cloud.uploadFile({
-      cloudPath: saveName,
-      filePath: tempFilePath
-    })
-    return fileID
+  async choosePic(...args){
+    return this.app.chooseFile(...args)
   }
 }
 

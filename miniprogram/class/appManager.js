@@ -4,10 +4,10 @@ const { MASTER_KEY_NAME } = require('../const')
 class AppManager {
   static instance = null
   masterKey = null
-  static async getInstance({setMasterKey}){
+  static async getInstance(options){
     if(!this.instance){
       this.instance = new AppManager()
-      if(!setMasterKey){
+      if(!options?.setMasterKey){
         await this.instance.loadMasterKey()
       }
     }
@@ -19,11 +19,16 @@ class AppManager {
   }
 
   async readMasterKey(){
-    const {data} = await wx.getStorage({
-      key: MASTER_KEY_NAME
-    })
-    return data
+    try {
+      const {data} = await wx.getStorage({
+        key: MASTER_KEY_NAME
+      })
+      return data
+    } catch (error) {
+      throw Error("未设置主密码")
+    }
   }
+
   
   async saveMasterKey(key){
     return wx.setStorage({
@@ -32,6 +37,32 @@ class AppManager {
     })
   }
   
+  
+  async chooseFile(){
+    try {
+      const pics = await wx.chooseMedia({
+        count: 1,
+        mediaType: 'image'
+      })
+  
+      if(!pics.tempFiles.length) return
+      const tempFile = pics.tempFiles[0]
+      return tempFile.tempFilePath
+    } catch (error) {
+      if(error?.errMsg === 'chooseMedia:fail cancel'){
+        return
+      }
+      throw error
+    }
+  }
+
+  async uploadFile(tempFilePath, saveName){
+    const {fileID} = await wx.cloud.uploadFile({
+      cloudPath: saveName,
+      filePath: tempFilePath
+    })
+    return fileID
+  }
 }
 
 async function getAppManager(...args){
