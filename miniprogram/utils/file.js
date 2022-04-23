@@ -36,30 +36,16 @@ async function writeFile(filePath, fileData, encoding){
 }
 
 async function checkAccess(path) {
-  return new Promise((resolve,reject)=>{
-    wx.getFileSystemManager().access({
-      path: path,
-      success: res=>{
-        console.log('checkAccess:', path, res);
-        resolve(res)
-      },
-      fail: reject
-    })
-  })
+  const access = (...args) => wx.getFileSystemManager().access(...args)
+  const options = {path}
+  return toPromise(access, options)
 }
 
-async function mkdir(path) {
-  return new Promise((resolve,reject)=>{
-    wx.getFileSystemManager().mkdir({
-      dirPath: path,
-      recursive: true,
-      success: res=>{
-        console.log('mkdir:',res);
-        resolve(res)
-      },
-      fail: reject
-    })
-  })
+async function mkdir(dirPath, recursive) {
+  const mkdir = (...args) => wx.getFileSystemManager().mkdir(...args)
+  const options = {dirPath, recursive: true}
+  if(recursive) options.recursive = recursive
+  return toPromise(mkdir, options)
 }
 
 async function readDir(dirPath){
