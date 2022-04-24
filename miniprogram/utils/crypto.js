@@ -20,7 +20,7 @@ function sha512(string){
 }
 
 function pbkdf2(masterKey, options={}){
-  const salt = options.salt ? CryptoJS.enc.Hex.parse(options.salt) : CryptoJS.lib.WordArray.random(128 / 8)
+  const salt = options.salt ? CryptoJS.enc.Hex.parse(options.salt) : CryptoJS.lib.WordArray.random(64 / 8)
   const key = CryptoJS.PBKDF2(masterKey,salt,{
     keySize: options.size || 4, 
     iterations: 5000
