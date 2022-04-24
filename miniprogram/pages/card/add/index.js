@@ -3,6 +3,7 @@ const { getCardManager } = require('../../../class/cardManager')
 Page({
   data: {
     pic: [
+      {url: '../../../static/images/add.svg'},
       {url: '../../../static/images/add.svg'}
     ],
     encrypted: false,
@@ -76,12 +77,14 @@ Page({
   
   async goTapPic(e){
     const index = e.currentTarget.dataset.index
+    console.log(index);
     try {
       const cardManager = await getCardManager()
       const picPath = await cardManager.choosePic()
       if(!picPath) return
       
       const key = `pic[${index}].url`
+      console.log(key);
       this.setData({
         [key]: picPath
       })

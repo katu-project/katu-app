@@ -1,7 +1,9 @@
 
 <view class="main page">
   <view class="pic">
-    <image class="pic-img card" wx:for="{{pic}}" wx:key="url" data-index="{{index}}" mode="aspectFit" bindtap="goTapPic" src="{{item.url}}"></image>
+    <block wx:for="{{pic}}" wx:key="url">
+      <image class="pic-img card" data-index="{{index}}" mode="aspectFit" bindtap="goTapPic" src="{{item.url}}"></image>
+    </block>
   </view>
   <view class="action-list">
     <checkbox bindtap="keepEncrypt" checked="{{encrypted}}">开启加密</checkbox>
