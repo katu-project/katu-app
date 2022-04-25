@@ -77,19 +77,16 @@ Page({
   
   async goTapPic(e){
     const index = e.currentTarget.dataset.index
-    console.log(index);
     try {
       const cardManager = await getCardManager()
       const picPath = await cardManager.choosePic()
       if(!picPath) return
       
       const key = `pic[${index}].url`
-      console.log(key);
       this.setData({
         [key]: picPath
       })
     } catch (error) {
-      console.log(error);
       wx.showToast({
         title: error.message || error.toString(),
         icon: "error"
