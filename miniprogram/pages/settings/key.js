@@ -1,4 +1,4 @@
-const { getAppManager } = require("../../class/appManager")
+const { getAppManager } = require("../../class/app")
 // pages/settings/key.js
 Page({
 

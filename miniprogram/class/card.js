@@ -1,6 +1,6 @@
 const utils = require('../utils/index')
 const { getUser, saveCard } = require('../api')
-const { getAppManager } = require('./appManager')
+const { getAppManager } = require('./app')
 
 class CardManager {
   static instance = null

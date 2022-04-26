@@ -1,5 +1,5 @@
 const { getCard } = require('../../../api')
-const { getCardManager } = require('../../../class/cardManager')
+const { getCardManager } = require('../../../class/card')
 Page({
   data: {
     pic: [
