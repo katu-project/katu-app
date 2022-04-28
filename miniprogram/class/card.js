@@ -1,4 +1,5 @@
 const utils = require('../utils/index')
+const { KATU_MARK } = require('../const')
 const { getUser, saveCard } = require('../api')
 const { getAppManager } = require('./app')
 
@@ -29,15 +30,18 @@ class CardManager {
       card.image.push(imageData)
     }
 
-    return saveCard(card)
+    // return saveCard(card)
   }
 
   async encryptImage(imagePath){
     const imageHexData = await utils.file.readFile(imagePath, 'hex')
     const {key:imageKey, salt} = this.generateKeyByMasterKey()
     const encryptedData = utils.crypto.encryptFile(imageHexData, imageKey)
+    const flag = '000101'
+    const encryptPackage = `${encryptedData}${salt}${flag}${KATU_MARK}`
+    console.log('encryptPackage:', encryptPackage.slice(-38),salt);
     const tempFilePath = await utils.file.getTempFilePath(salt)
-    await utils.file.writeFile(tempFilePath, encryptedData)
+    await utils.file.writeFile(tempFilePath, encryptPackage)
     return {
       imageSecretKey: salt,
       imagePath: tempFilePath
@@ -47,7 +51,8 @@ class CardManager {
   async decryptImage(imagePath, salt){
     const imageHexData = await utils.file.readFile(imagePath, 'utf-8')
     const {key:imageKey} = this.generateKeyByMasterKey({salt})
-    const decryptedData = utils.crypto.decryptFile(imageHexData, imageKey)
+    const encryptedData = imageHexData.slice(0,-38)
+    const decryptedData = utils.crypto.decryptFile(encryptedData, imageKey)
     const tempFilePath = await utils.file.getTempFilePath(salt)
     await utils.file.writeFile(tempFilePath, decryptedData, 'hex')
     return {
