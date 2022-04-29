@@ -1,4 +1,5 @@
 const { getCard, deleteCard } = require('../../../api')
+const { getCardManager } = require('../../../class/card')
 
 Page({
 
@@ -7,8 +8,7 @@ Page({
    */
   data: {
     id: 0,
-    pic0: '',
-    pic1: ''
+    image: []
   },
 
   /**
@@ -21,8 +21,10 @@ Page({
       }).then(res=>{
         this.setData({
           id: res._id,
-          pic0: res.encrypted ? '' : res.pics.pic0,
-          pic1: res.encrypted ? '' : res.pics.pic1
+          image: res.image.map(card => ({
+            url:res.encrypted? '../../../static/images/lock.svg' : card.url,
+            salt:res.encrypted ? card.salt : ''
+          }))
         })
       })
     }
@@ -54,6 +56,12 @@ Page({
    */
   onUnload() {
 
+  },
+  async goTapPic(e){
+    const idx = e.currentTarget.dataset.index
+    const cardManager = await getCardManager()
+    const decryptedData = await cardManager.decryptImage(this.data.image[idx].url)
+    console.log(decryptedData);
   },
   goUpdateCard(){
     wx.navigateTo({

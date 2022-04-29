@@ -1,7 +1,8 @@
 <view class="main">
   <view class="pic">
-    <image class="pic-img card" mode="aspectFit" bindtap="goTapPic" src="{{pic0}}"></image>
-    <image class="pic-img card" mode="aspectFit" bindtap="goTapPic" src="{{pic1}}"></image>
+    <block wx:for="{{image}}" wx:key="index">
+      <image class="pic-img card" data-index="{{index}}" mode="aspectFit" bindtap="goTapPic" src="{{item.url}}"></image>
+    </block>
   </view>
   <view class="button-row-list">
     <view bindtap="goUpdateCard" style="margin-right: 10rpx;">修改</view>
