@@ -61,11 +61,19 @@ async function getSavedFileList(){
 }
 
 async function getStats(path, recursive=false){
-  const getStats = (...args) => wx.getFileSystemManager().stat(...args)
+  const getStats = args => wx.getFileSystemManager().stat(args)
   return toPromise(getStats, {
     path,
     recursive
   }, 'stats')
+}
+
+async function download(url, filePath){
+  const download = args => wx.downloadFile(args)
+  return toPromise(download, {
+    url,
+    filePath
+  })
 }
 // ------- wx function end----
 async function getTempFilePath(cacheId, suffix=''){
@@ -94,6 +102,7 @@ module.exports = {
   writeFile,
   readDir,
   getStats,
+  download,
   getSavedFileList,
   getTempFilePath
 }
