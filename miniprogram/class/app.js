@@ -1,5 +1,5 @@
 const utils = require('../utils/index')
-const { MASTER_KEY_NAME } = require('../const')
+const { APP_TEMP_DIR ,MASTER_KEY_NAME } = require('../const')
 
 class AppManager {
   static instance = null
@@ -62,6 +62,25 @@ class AppManager {
       filePath: tempFilePath
     })
     return fileID
+  }
+
+  async downloadFile(card){
+    const savePath = `${APP_TEMP_DIR}/${card.salt}_down`
+    try {
+      await utils.file.checkAccess(savePath)
+      console.log('hit cache file, reuse it')
+      return savePath
+    } catch (error) {
+      console.log('no cache file, download it')
+    }
+    const {fileList: [imageInfo]} = await wx.cloud.getTempFileURL({
+      fileList: [{
+        fileID: card.url
+      }]
+    })
+    console.log('downloadFile:', imageInfo);
+    const downloadFile = await utils.file.download(imageInfo.tempFileURL, savePath)
+    return downloadFile.filePath
   }
 }
 

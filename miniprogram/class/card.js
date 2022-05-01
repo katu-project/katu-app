@@ -30,7 +30,7 @@ class CardManager {
       card.image.push(imageData)
     }
 
-    // return saveCard(card)
+    return saveCard(card)
   }
 
   async encryptImage(imagePath){
@@ -48,16 +48,27 @@ class CardManager {
     }
   }
 
-  async decryptImage(imagePath, salt){
-    const imageHexData = await utils.file.readFile(imagePath, 'utf-8')
+  async decryptImage(card){
+    const salt = card.salt
+    const decryptImage = {
+      imagePath: await utils.file.getTempFilePath(salt)
+    }
+
+    try {
+      await utils.file.checkAccess(decryptImage.imagePath)
+      console.log('hit cache decrypted file, reuse it')
+      return decryptImage
+    } catch (error) {
+      console.log('no cache decrypted file, decrypt it')
+    }
+
+    const imageFilePath = await this.app.downloadFile(card)
+    const imageHexData = await utils.file.readFile(imageFilePath, 'utf-8')
     const {key:imageKey} = this.generateKeyByMasterKey({salt})
     const encryptedData = imageHexData.slice(0,-38)
     const decryptedData = utils.crypto.decryptFile(encryptedData, imageKey)
-    const tempFilePath = await utils.file.getTempFilePath(salt)
-    await utils.file.writeFile(tempFilePath, decryptedData, 'hex')
-    return {
-      imagePath: tempFilePath
-    }
+    await utils.file.writeFile(decryptImage.imagePath, decryptedData, 'hex')
+    return decryptImage
   }
 
   generateKeyByMasterKey(options){
