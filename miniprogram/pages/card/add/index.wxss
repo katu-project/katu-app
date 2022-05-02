@@ -29,3 +29,14 @@
   flex: 1;
   border: 1px solid slateblue;
 }
+
+.add-card-pic{
+  align-items: center;
+}
+
+.add-card-pic .icon{
+  height:40rpx;
+  width: 40rpx;
+  padding-right: 10rpx;
+
+}

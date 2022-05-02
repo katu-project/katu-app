@@ -3,7 +3,6 @@ const { getCardManager } = require('../../../class/card')
 Page({
   data: {
     pic: [
-      {url: '../../../static/images/add.svg'},
       {url: '../../../static/images/add.svg'}
     ],
     encrypted: false,
@@ -90,6 +89,18 @@ Page({
       wx.showToast({
         title: error.message || error.toString(),
         icon: "error"
+      })
+    }
+  },
+  addCardPic(){
+    const idx = this.data.pic.length
+    if(idx == 1){
+      this.setData({
+        pic: this.data.pic.concat({url: '../../../static/images/add.svg'})
+      })
+    }else{
+      this.setData({
+        pic: this.data.pic.slice(0,-1)
       })
     }
   },
