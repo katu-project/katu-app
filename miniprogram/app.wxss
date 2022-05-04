@@ -42,3 +42,20 @@
   height: 440rpx;
   border-radius: 10rpx;
 }
+
+.flex-row{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.flex-row-sb{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.flex-col{
+  display: flex;
+  flex-direction: column;
+}
