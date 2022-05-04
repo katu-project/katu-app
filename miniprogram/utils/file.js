@@ -101,6 +101,7 @@ module.exports = {
   readFile,
   writeFile,
   readDir,
+  checkAccess,
   getStats,
   download,
   getSavedFileList,
