@@ -8,7 +8,11 @@ Page({
    */
   data: {
     id: 0,
-    image: []
+    image: [
+      {
+        _url: '/static/images/image.svg'
+      }
+    ]
   },
 
   /**
@@ -19,11 +23,14 @@ Page({
       getCard({
         id: options.id
       }).then(res=>{
+        console.log(res);
         this.setData({
           id: res._id,
+          encrypted: res.encrypted,
           image: res.image.map(card => ({
-            url:res.encrypted? '../../../static/images/lock.svg' : card.url,
-            salt:res.encrypted ? card.salt : ''
+            _url: res.encrypted? '/static/images/lock.svg' : card.url,
+            url: card.url,
+            salt: res.encrypted ? card.salt : ''
           }))
         })
       })
@@ -59,9 +66,19 @@ Page({
   },
   async goTapPic(e){
     const idx = e.currentTarget.dataset.index
-    const cardManager = await getCardManager()
-    const decryptedData = await cardManager.decryptImage(this.data.image[idx].url)
-    console.log(decryptedData);
+    const image = this.data.image[idx]
+    if(this.data.encrypted && image._url.endsWith('lock.svg')){
+      const cardManager = await getCardManager()
+      const {imagePath} = await cardManager.decryptImage(image)
+      this.setData({
+        [`image[${idx}]._url`]: imagePath
+      })
+      return
+    }
+    
+    wx.previewImage({
+      urls: this.data.image.map(e=>e._url)
+    })
   },
   goUpdateCard(){
     wx.navigateTo({
