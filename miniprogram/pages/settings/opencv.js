@@ -2,14 +2,13 @@
 const canvas1 = 'canvas1'
 // 示例图片
 const sampleImage1 = '../../static/images/test.png'
-// 画布最大宽度
-const maxCanvasWidth = 375
 
 let cv = require('../../utils/opencv/index');
 
 Page({
 	// 画布的dom对象
-	canvasDom: null,
+  canvasDom: null,
+  canvasInstance: null,
 	data: {
 		canvas1Width: 375,
 		canvas1Height: 150,
@@ -17,8 +16,7 @@ Page({
 		sampleImage1Url: sampleImage1,
 	},
 	onReady() {
-		// 可见的画布
-		this.initCanvas(canvas1)
+    this.initCanvas(canvas1)
 	},
 	// 获取画布
 	initCanvas(canvasId) {
@@ -31,44 +29,42 @@ Page({
 				// 设置画布的宽度和高度
 				canvas2d.width = res[0].width;
 				canvas2d.height = res[0].height;
-				_that.canvasDom = canvas2d
+        _that.canvasDom = canvas2d
 			});
-	},
-	// 获取图像数据和调整图像大小
-	getImageData(image,offscreenCanvas) {
-		var _that = this
-		// const ctx = wx.createCanvasContext(canvasId);
-		var canvasWidth = image.width;
-		if (canvasWidth > maxCanvasWidth) {
-			canvasWidth = maxCanvasWidth;
-		}
-		// canvas Height
-		var canvasHeight = Math.floor(canvasWidth * (image.height / image.width));
-		// 离屏画布的宽度和高度不能小于图像的
-		offscreenCanvas.width = canvasWidth;
-		offscreenCanvas.height = canvasHeight;
-		// draw image on canvas
-    var ctx = offscreenCanvas.getContext('2d')
-		ctx.drawImage(image, 0, 0, canvasWidth, canvasHeight);
-		// get image data from canvas
-		var imgData = ctx.getImageData(0, 0, canvasWidth, canvasHeight);
-
-		return imgData
 	},
 	// 创建图像对象
 	async createImageElement(imgUrl) {
-		var _that = this
 		// 创建2d类型的离屏画布（需要微信基础库2.16.1以上）
-		var offscreenCanvas = wx.createOffscreenCanvas({type: '2d'});
-		const image = offscreenCanvas.createImage();
+		this.offscreenCanvas = wx.createOffscreenCanvas({type: '2d'});
+		const image = this.offscreenCanvas.createImage();
 		await new Promise(function (resolve, reject) {
 			image.onload = resolve
 			image.onerror = reject
 			image.src = imgUrl
 		})
-		const imageData = _that.getImageData(image,offscreenCanvas)
-		return imageData
-	},
+		this.offscreenCanvas.width = image.width;
+		this.offscreenCanvas.height = image.height;
+		// draw image on canvas
+    var ctx = this.offscreenCanvas.getContext('2d')
+		ctx.drawImage(image, 0, 0, image.width, image.height);
+		// get image data from canvas
+		var imgData = ctx.getImageData(0, 0, image.width, image.height);
+ 
+		return imgData
+  },
+  preview(){
+    wx.canvasToTempFilePath({
+      canvas: this.canvasDom,
+      success: res => {
+        wx.previewImage({
+          urls: [res.tempFilePath]
+        })
+      },
+      fail: error => {
+        console.log(error);
+      }
+    })
+  },
 	imgProcess1(imageData, canvasDom) {
 		// 读取图像
 		let src = cv.imread(imageData);
@@ -112,6 +108,22 @@ Page({
 		cv.drawKeypoints(src, keypoints, dst)
 
 		cv.imshow(canvasDom, dst);
+		src.delete();
+		dst.delete()
+  },
+  async btnRun0() {
+		// 将图像转换为ImageData
+		const image1Data = await this.createImageElement(sampleImage1)
+
+    let src = cv.imread(image1Data);
+		let dst = new cv.Mat();
+		// 灰度化
+    // cv.cvtColor(src, dst, cv.COLOR_RGBA2GRAY, 0);
+    cv.GaussianBlur(src, dst, new cv.Size(19, 19), 0, 0, cv.BORDER_DEFAULT)
+		// 显示图像
+    cv.imshow(this.canvasDom, dst);
+    this.preview()
+		// 回收对象
 		src.delete();
 		dst.delete()
 	},
