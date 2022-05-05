@@ -36,7 +36,9 @@ Page({
 
         }else{
           this.setData({
-            card: res
+            'card.id': res._id,
+            'card.image': res.image,
+            'card.encrypted': res.encrypted
           })
         }
       }).finally(wx.hideLoading)
@@ -77,7 +79,7 @@ Page({
 
   async saveCard(){
     const cardManager = await getCardManager()
-    return cardManager.save(this.data)
+    return cardManager.save(this.data.card)
   },
   
   async goTapPic(e){

@@ -16,20 +16,35 @@ class CardManager {
   }
   
   async save(data){
-    const card = { encrypted: data.encrypted?1:0, image: [], info: {data:null} }
-    for (const pic of data.pic) {
+    console.log({data});
+    const card = {id: data.id || '', encrypted: data.encrypted?1:0, image: [], info: {data:null} }
+    for (const pic of data.image) {
       let imageData = {}
-      const uploadFileId = `${this.user.openid}/${pic.url.slice(-32)}`
-      if(card.encrypted){
-        const tempFile = await this.encryptImage(pic.url)
-        imageData.url = await this.app.uploadFile(tempFile.imagePath, uploadFileId)
-        imageData.salt = tempFile.imageSecretKey
-      }else{
-        imageData.url = await this.app.uploadFile(pic.url, uploadFileId)
+      // 有编辑
+      if(!pic.url.startsWith('cloud://')){
+        const uploadFileId = `${this.user.openid}/${pic.url.slice(-32)}`
+        const imageHash = await this.getHash(pic.url)
+        console.log("file hash: ", imageHash, pic.hash || '-');
+        if(!pic.hash || pic.hash !== imageHash){ // 新增加或变动
+          imageData.hash = imageHash
+          if(card.encrypted){
+            const tempFile = await this.encryptImage(pic.url)
+            imageData.url = await this.app.uploadFile(tempFile.imagePath, uploadFileId)
+            imageData.salt = tempFile.imageSecretKey
+          }else{
+            imageData.url = await this.app.uploadFile(pic.url, uploadFileId)
+          }
+        }else{
+          throw Error("不应该进入这个分支")
+        }
+      }else{  // 图片没变动
+        imageData = pic
+        console.log('图片没变动');
       }
+      
       card.image.push(imageData)
     }
-
+    // return {}
     return saveCard(card)
   }
 
@@ -69,6 +84,12 @@ class CardManager {
     const decryptedData = utils.crypto.decryptFile(encryptedData, imageKey)
     await utils.file.writeFile(decryptImage.imagePath, decryptedData, 'hex')
     return decryptImage
+  }
+
+  async getHash(imagePath){
+    const imageHexData = await utils.file.readFile(imagePath, 'hex')
+    console.log(imageHexData.length, imageHexData.slice(0,32), imageHexData.slice(-32));
+    return utils.crypto.md5(imageHexData)
   }
 
   generateKeyByMasterKey(options){
