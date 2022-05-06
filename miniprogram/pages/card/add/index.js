@@ -2,13 +2,12 @@ const { getCard } = require('../../../api')
 const { getCardManager } = require('../../../class/card')
 Page({
   data: {
-    pic: [
-      {url: '../../../static/images/add.svg'}
-    ],
-    encrypted: false,
     card: {
       id: '',
-      pics: {}
+      encrypted: false,
+      image: [
+        {url: '/static/images/add.svg'}
+      ],
     }
   },
 
@@ -33,6 +32,13 @@ Page({
         id: this.data.card.id
       }).then(res=>{
         console.log(res);
+        if(res.encrypted){
+
+        }else{
+          this.setData({
+            card: res
+          })
+        }
       }).finally(wx.hideLoading)
     }
   },
@@ -44,7 +50,7 @@ Page({
 
   },
   hasSelectedPic(){
-    return this.data.pic.map(e=>e.url.endsWith('add.svg')).filter(e=>e).length === 0
+    return this.data.card.image.map(e=>e.url.endsWith('add.svg')).filter(e=>e).length === 0
   },
   async goSaveCard(){
     if(!this.hasSelectedPic()) return
@@ -81,7 +87,7 @@ Page({
       const picPath = await cardManager.choosePic()
       if(!picPath) return
       
-      const key = `pic[${index}].url`
+      const key = `card.image[${index}].url`
       this.setData({
         [key]: picPath
       })
@@ -93,25 +99,25 @@ Page({
     }
   },
   addCardPic(){
-    const idx = this.data.pic.length
+    const idx = this.data.card.image.length
     if(idx == 1){
       this.setData({
-        pic: this.data.pic.concat({url: '../../../static/images/add.svg'})
+        'card.image': this.data.card.image.concat({url: '/static/images/add.svg'})
       })
     }else{
       this.setData({
-        pic: this.data.pic.slice(0,-1)
+        'card.image': this.data.card.image.slice(0,-1)
       })
     }
   },
   keepEncrypt(){
     this.setData({
-      encrypted: !this.data.encrypted
+      'card.encrypted': !this.data.card.encrypted
     })
   },
   previewPic(){
     wx.previewImage({
-      urls: this.data.pic.map(e=>e.url),
+      urls: this.data.card.image.map(e=>e.url),
     })
   },
   /**
