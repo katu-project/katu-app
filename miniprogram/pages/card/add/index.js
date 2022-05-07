@@ -23,26 +23,33 @@ Page({
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
-  onReady() {
-    if(this.data.card.id){
-      wx.showLoading({
-        title: 'load card'
-      })
-      getCard({
-        id: this.data.card.id
-      }).then(res=>{
-        console.log(res);
-        if(res.encrypted){
-
-        }else{
-          this.setData({
-            'card.id': res._id,
-            'card.image': res.image,
-            'card.encrypted': res.encrypted
-          })
-        }
-      }).finally(wx.hideLoading)
+  async onReady() {
+    if(!this.data.card.id) return
+    
+    wx.showLoading({
+      title: 'load card'
+    })
+    const res = await getCard({
+      id: this.data.card.id
+    })
+    const setData = {
+      'card.id': res._id,
+      'card.image': res.image,
+      'card.encrypted': res.encrypted
     }
+    if(res.encrypted){
+      const cardManager = await getCardManager()
+      setData['card.image'] = []
+      for (const pic of res.image) {
+        const {imagePath} = await cardManager.decryptImage(pic)
+        pic._url = pic.url
+        pic.url = imagePath
+        setData['card.image'].push(pic)
+      }
+    }
+    this.setData(setData)
+    wx.hideLoading()
+  
   },
 
   /**
