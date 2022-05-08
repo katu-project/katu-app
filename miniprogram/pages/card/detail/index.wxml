@@ -1,6 +1,6 @@
 <view class="main">
   <view class="pic">
-    <block wx:for="{{image}}" wx:key="index">
+    <block wx:for="{{card.image}}" wx:key="index">
       <image class="pic-img card" data-index="{{index}}" mode="aspectFit" bindtap="goTapPic" src="{{item._url}}"></image>
     </block>
   </view>

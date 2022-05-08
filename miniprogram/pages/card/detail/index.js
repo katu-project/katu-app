@@ -1,18 +1,23 @@
 const { getCard, deleteCard } = require('../../../api')
 const { getCardManager } = require('../../../class/card')
 
-Page({
+const DefaultLockImage = '/static/images/lock.svg'
+const DefaultShowImage = '/static/images/image.svg'
 
+Page({
   /**
    * 页面的初始数据
    */
   data: {
-    id: 0,
-    image: [
-      {
-        _url: '/static/images/image.svg'
-      }
-    ]
+    defaultLockImage: DefaultLockImage,
+    card: {
+      id: '',
+      image: [
+        {
+          url: DefaultShowImage
+        }
+      ]
+    }
   },
 
   /**
@@ -20,19 +25,8 @@ Page({
    */
   onLoad(options) {
     if(options.id){
-      getCard({
-        id: options.id
-      }).then(res=>{
-        console.log(res);
-        this.setData({
-          id: res._id,
-          encrypted: res.encrypted,
-          image: res.image.map(card => ({
-            _url: res.encrypted? '/static/images/lock.svg' : card.url,
-            url: card.url,
-            salt: res.encrypted ? card.salt : ''
-          }))
-        })
+      this.setData({
+        'card.id': options.id
       })
     }
   },
@@ -40,8 +34,21 @@ Page({
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
-  onReady() {
-
+  async onReady() {
+    if(this.data.card.id){
+      const res = await getCard({
+        id: this.data.card.id
+      })
+      this.setData({
+        'card.id': res._id,
+        'card.encrypted': res.encrypted,
+        'card.image': res.image.map(pic=>{
+          pic._url = pic.url
+          if(res.encrypted) pic._url = DefaultLockImage
+          return pic
+        })
+      })
+    }
   },
 
   /**
@@ -66,28 +73,28 @@ Page({
   },
   async goTapPic(e){
     const idx = e.currentTarget.dataset.index
-    const image = this.data.image[idx]
-    if(this.data.encrypted && image._url.endsWith('lock.svg')){
+    const image = this.data.card.image[idx]
+    if(this.data.card.encrypted && image._url === DefaultLockImage){
       const cardManager = await getCardManager()
       const {imagePath} = await cardManager.decryptImage(image)
       this.setData({
-        [`image[${idx}]._url`]: imagePath
+        [`card.image[${idx}]._url`]: imagePath
       })
       return
     }
     
     wx.previewImage({
-      urls: this.data.image.map(e=>e._url)
+      urls: this.data.card.image.filter(e=>e._url !== DefaultLockImage).map(e=>e._url)
     })
   },
   goUpdateCard(){
     wx.navigateTo({
-      url: '/pages/card/add/index?id='+ this.data.id,
+      url: '/pages/card/add/index?id='+ this.data.card.id,
     })
   },
   goDeleteCard(){
     deleteCard({
-      id: this.data.id
+      id: this.data.card.id
     }).then(res=>{
       wx.navigateBack()
     })
