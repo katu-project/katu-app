@@ -64,8 +64,8 @@ class AppManager {
     return fileID
   }
 
-  async downloadFile(card){
-    const savePath = `${APP_TEMP_DIR}/${card.salt}_down`
+  async downloadFile(pic){
+    const savePath = `${APP_TEMP_DIR}/${pic.salt||'temp'}_down`
     try {
       await utils.file.checkAccess(savePath)
       console.log('hit cache file, reuse it')
@@ -75,7 +75,7 @@ class AppManager {
     }
     const {fileList: [imageInfo]} = await wx.cloud.getTempFileURL({
       fileList: [{
-        fileID: card.url
+        fileID: pic.url
       }]
     })
     console.log('downloadFile:', imageInfo);
