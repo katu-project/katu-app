@@ -1,12 +1,12 @@
-const { getCard } = require('../../../api')
 const { getCardManager } = require('../../../class/card')
+const DefaultAddImage = '/static/images/add.svg'
+
 Page({
   data: {
     card: {
-      id: '',
       encrypted: false,
       image: [
-        {url: '/static/images/add.svg'}
+        { url: DefaultAddImage }
       ],
     }
   },
@@ -14,43 +14,12 @@ Page({
   /**
    * 生命周期函数--监听页面加载
    */
-  onLoad(options) {
-    if(options.id){
-      this.data.card.id = options.id
-    }
-  },
+  onLoad() {},
 
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
-  async onReady() {
-    if(!this.data.card.id) return
-    
-    wx.showLoading({
-      title: 'load card'
-    })
-    const res = await getCard({
-      id: this.data.card.id
-    })
-    const setData = {
-      'card.id': res._id,
-      'card.image': res.image,
-      'card.encrypted': res.encrypted
-    }
-    if(res.encrypted){
-      const cardManager = await getCardManager()
-      setData['card.image'] = []
-      for (const pic of res.image) {
-        const {imagePath} = await cardManager.decryptImage(pic)
-        pic._url = pic.url
-        pic.url = imagePath
-        setData['card.image'].push(pic)
-      }
-    }
-    this.setData(setData)
-    wx.hideLoading()
-  
-  },
+  async onReady() {},
 
   /**
    * 生命周期函数--监听页面显示
@@ -58,11 +27,11 @@ Page({
   onShow() {
 
   },
-  hasSelectedPic(){
-    return this.data.card.image.map(e=>e.url.endsWith('add.svg')).filter(e=>e).length === 0
+  hasEmptyPic(){
+    return this.data.card.image.filter(e=>e.url === DefaultAddImage).length > 0
   },
   async goSaveCard(){
-    if(!this.hasSelectedPic()) return
+    if(this.hasEmptyPic()) return
     wx.showLoading({
       title: '上传中'
     })
@@ -85,8 +54,9 @@ Page({
   },
 
   async saveCard(){
+    let card = this.data.card
     const cardManager = await getCardManager()
-    return cardManager.save(this.data.card)
+    return cardManager.add(card)
   },
   
   async goTapPic(e){
@@ -111,7 +81,7 @@ Page({
     const idx = this.data.card.image.length
     if(idx == 1){
       this.setData({
-        'card.image': this.data.card.image.concat({url: '/static/images/add.svg'})
+        'card.image': this.data.card.image.concat({url: DefaultAddImage})
       })
     }else{
       this.setData({
@@ -122,11 +92,6 @@ Page({
   keepEncrypt(){
     this.setData({
       'card.encrypted': !this.data.card.encrypted
-    })
-  },
-  previewPic(){
-    wx.previewImage({
-      urls: this.data.card.image.map(e=>e.url),
     })
   },
   /**
