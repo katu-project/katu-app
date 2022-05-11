@@ -89,7 +89,7 @@ Page({
   },
   goUpdateCard(){
     wx.navigateTo({
-      url: '/pages/card/add/index?id='+ this.data.card.id,
+      url: '/pages/card/edit/index?id='+ this.data.card.id,
     })
   },
   goDeleteCard(){
