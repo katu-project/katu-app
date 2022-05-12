@@ -1,8 +1,9 @@
 {
-  "entryPagePath": "pages/settings/opencv",
+  "entryPagePath": "pages/home/index",
   "pages": [
     "pages/home/index",
     "pages/card/add/index",
+    "pages/card/edit/index",
     "pages/card/detail/index",
     "pages/settings/index",
     "pages/settings/image",

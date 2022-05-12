@@ -6,7 +6,7 @@ const toPromise = (func, options={}, returnKey) => {
     func({
       ...options,
       success: res=>{
-        console.log(`${func.name}:`,res);
+        console.warn(`${func.name}:`,res);
         if(returnKey && res.hasOwnProperty(returnKey)){
           resolve(res[returnKey])
         }else{
