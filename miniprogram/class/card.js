@@ -15,37 +15,91 @@ class CardManager {
     return this.instance
   }
   
-  async save(data){
-    console.log({data});
-    const card = {id: data.id || '', encrypted: data.encrypted?1:0, image: [], info: {data:null} }
-    for (const pic of data.image) {
-      let imageData = {}
-      // 有编辑
-      if(!pic.url.startsWith('cloud://')){
-        const uploadFileId = `${this.user.openid}/${pic.url.slice(-32)}`
-        const imageHash = await this.getHash(pic.url)
-        console.log("file hash: ", imageHash, pic.hash || '-');
-        if(!pic.hash || pic.hash !== imageHash){ // 新增加或变动
-          imageData.hash = imageHash
-          if(card.encrypted){
-            const tempFile = await this.encryptImage(pic.url)
-            imageData.url = await this.app.uploadFile(tempFile.imagePath, uploadFileId)
-            imageData.salt = tempFile.imageSecretKey
-          }else{
-            imageData.url = await this.app.uploadFile(pic.url, uploadFileId)
+  async update(card){
+    const cardModel = {id: card.id, encrypted: card.encrypted, image: [], info: {card:null} }
+    let noChange = !card.picCountChange
+    for (const pic of card.image) {
+      let imageData = {url:'',salt:'',hash:''}
+      const uploadFileId = `${this.user.openid}/${pic.url.slice(-32)}`
+      if(cardModel.encrypted){
+        if(pic.salt){ // 保持加密
+          const imageHash = await this.getHash(pic.url)
+          if(pic.hash === imageHash){ //未变动
+            console.log('加密图片无变动');
+            imageData.hash = pic.hash
+            imageData.salt = pic.salt
+            imageData.url = pic.originUrl
+          }else{ // 有变动
+            console.log('加密图片有变动');
+            const encryptedData = await this.encryptImage(pic.url)
+            imageData.url = await this.app.uploadFile(encryptedData.imagePath, uploadFileId)
+            imageData.salt = encryptedData.imageSecretKey
+            imageData.hash = imageHash
+            noChange = false
           }
-        }else{
-          throw Error("不应该进入这个分支")
+        }else{ // 开启加密
+          console.log('未加密图片开启加密');
+          let localTempFile = pic.url
+          if(pic.url.startsWith('cloud://')){ // 增加图片 case
+            localTempFile = await this.app.downloadFile(pic)
+          }
+          const imageHash = await this.getHash(localTempFile)
+          const encryptedData = await this.encryptImage(localTempFile)
+          imageData.url = await this.app.uploadFile(encryptedData.imagePath, uploadFileId)
+          imageData.salt = encryptedData.imageSecretKey
+          imageData.hash = imageHash
+          noChange = false
         }
-      }else{  // 图片没变动
-        imageData = pic
-        console.log('图片没变动');
+      }else{
+        if(pic.salt){ // 取消加密
+          console.log('加密图片取消加密');
+          const imageHash = await this.getHash(pic.url)
+          imageData.salt = ''
+          imageData.url = await this.app.uploadFile(pic.url, uploadFileId) // 重新上传图片获取链接
+          imageData.hash = imageHash
+          noChange = false
+        }else{  // 未加密
+          if(pic.url.startsWith('cloud://')){ // 未变动(一直未使用加密)
+            console.log('未加密图片无变动');
+            imageData.url = pic.url,
+            imageData.hash = pic.hash
+          }else{
+            console.log('未加密图片有变动');
+            const imageHash = await this.getHash(pic.url)
+            imageData.url = await this.app.uploadFile(pic.url, uploadFileId)
+            imageData.hash = imageHash
+            noChange = false
+          }
+        }
       }
-      
-      card.image.push(imageData)
+
+      cardModel.image.push(imageData)
     }
-    // return {}
-    return saveCard(card)
+
+    if(noChange) return
+    return saveCard(cardModel)
+  }
+
+  async add(card){
+    const cardModel = {encrypted: card.encrypted?1:0, image: [], info: {card:null} }
+    for (const pic of card.image) {
+      let imageData = {url:'',salt:'',hash:''}
+      
+      const uploadFileId = `${this.user.openid}/${pic.url.slice(-32)}`
+      const imageHash = await this.getHash(pic.url)
+      console.log("file hash: ", imageHash);
+
+      if(cardModel.encrypted){
+        const encrytedPic = await this.encryptImage(pic.url)
+        imageData.url = await this.app.uploadFile(encrytedPic.imagePath, uploadFileId)
+        imageData.salt = encrytedPic.imageSecretKey
+      }else{
+        imageData.url = await this.app.uploadFile(pic.url, uploadFileId)
+      }
+      imageData.hash = imageHash
+      cardModel.image.push(imageData)
+    }
+    return saveCard(cardModel)
   }
 
   async encryptImage(imagePath){
@@ -55,7 +109,7 @@ class CardManager {
     const flag = '000101'
     const encryptPackage = `${encryptedData}${salt}${flag}${KATU_MARK}`
     console.log('encryptPackage:', encryptPackage.slice(-38),salt);
-    const tempFilePath = await utils.file.getTempFilePath(salt)
+    const tempFilePath = await utils.file.getTempFilePath(salt,'_enc')
     await utils.file.writeFile(tempFilePath, encryptPackage)
     return {
       imageSecretKey: salt,
@@ -66,12 +120,12 @@ class CardManager {
   async decryptImage(card){
     const salt = card.salt
     const decryptImage = {
-      imagePath: await utils.file.getTempFilePath(salt)
+      imagePath: await utils.file.getTempFilePath(salt,'_dec')
     }
 
     try {
       await utils.file.checkAccess(decryptImage.imagePath)
-      console.log('hit cache decrypted file, reuse it')
+      console.log('hit cache decrypted file, reuse it:')
       return decryptImage
     } catch (error) {
       console.log('no cache decrypted file, decrypt it')
@@ -88,7 +142,7 @@ class CardManager {
 
   async getHash(imagePath){
     const imageHexData = await utils.file.readFile(imagePath, 'hex')
-    console.log(imageHexData.length, imageHexData.slice(0,32), imageHexData.slice(-32));
+    console.log('getHash: ',imagePath ,imageHexData.length, imageHexData.slice(0,32), imageHexData.slice(-32));
     return utils.crypto.md5(imageHexData)
   }
 
