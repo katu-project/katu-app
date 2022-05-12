@@ -65,7 +65,7 @@ class AppManager {
   }
 
   async downloadFile(pic){
-    const savePath = `${APP_TEMP_DIR}/${pic.salt||'temp'}_down`
+    const savePath = `${APP_TEMP_DIR}/${pic.salt || new Date().getTime() }_down`
     try {
       await utils.file.checkAccess(savePath)
       console.log('hit cache file, reuse it')
@@ -78,7 +78,7 @@ class AppManager {
         fileID: pic.url
       }]
     })
-    console.log('downloadFile:', imageInfo);
+    console.warn('downloadFile:', imageInfo);
     const downloadFile = await utils.file.download(imageInfo.tempFileURL, savePath)
     return downloadFile.filePath
   }
