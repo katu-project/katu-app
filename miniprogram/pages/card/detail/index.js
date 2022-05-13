@@ -82,22 +82,29 @@ Page({
       })
       return
     }
-    
     wx.previewImage({
       urls: this.data.card.image.filter(e=>e._url !== DefaultLockImage).map(e=>e._url)
     })
   },
   goUpdateCard(){
-    wx.navigateTo({
+    wx.redirectTo({
       url: '/pages/card/edit/index?id='+ this.data.card.id,
     })
   },
   goDeleteCard(){
-    deleteCard({
-      id: this.data.card.id
-    }).then(res=>{
-      wx.navigateBack()
+    wx.showModal({
+      title: "确认删除卡片",
+      content: "卡片删除后不可恢复！",
+      success: ({cancel})=>{
+        if(cancel) return
+        deleteCard({
+          id: this.data.card.id
+        }).then(res=>{
+          wx.navigateBack()
+        })
+      }
     })
+    
   },
   /**
    * 页面相关事件处理函数--监听用户下拉动作
