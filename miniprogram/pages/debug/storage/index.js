@@ -1,5 +1,5 @@
-const { getSavedFileList, readDir, getStats } = require('../../utils/file')
-const { APP_TEMP_DIR } = require('../../const')
+const { getSavedFileList, readDir, getStats } = require('../../../utils/file')
+const { APP_TEMP_DIR } = require('../../../const')
 Page({
 
   /**

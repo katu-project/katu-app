@@ -1,9 +1,9 @@
 // 画布
 const canvas1 = 'canvas1'
 // 示例图片
-const sampleImage1 = '../../static/images/test.png'
-
-let cv = require('../../utils/opencv/index');
+const sampleImage1 = '/static/images/test.png'
+const { getTempFilePath } = require('../../../utils/file')
+let cv = require('../../../utils/opencv/index');
 
 Page({
 	// 画布的dom对象
@@ -114,15 +114,40 @@ Page({
   async btnRun0() {
 		// 将图像转换为ImageData
 		const image1Data = await this.createImageElement(sampleImage1)
-
+    console.log({image1Data});
     let src = cv.imread(image1Data);
-		let dst = new cv.Mat();
+    let dst = new cv.Mat();
+    dst = src.clone()
 		// 灰度化
     // cv.cvtColor(src, dst, cv.COLOR_RGBA2GRAY, 0);
-    cv.GaussianBlur(src, dst, new cv.Size(19, 19), 0, 0, cv.BORDER_DEFAULT)
+    // cv.GaussianBlur(src, dst, new cv.Size(19, 19), 0, 0, cv.BORDER_DEFAULT)
 		// 显示图像
-    cv.imshow(this.canvasDom, dst);
-    this.preview()
+    // cv.imshow(this.canvasDom, dst);
+    // cv.imshow(this.offscreenCanvas, dst)
+    
+    const tempFile = await getTempFilePath('111')
+    console.log(tempFile,'f');
+    const data = wx.arrayBufferToBase64(cv.im2buffer(this.offscreenCanvas,dst))
+    console.log(data,'data');
+    wx.getFileSystemManager().writeFile({
+      filePath: tempFile,
+      data: data,
+      encoding: 'base64',
+      success:res => {
+        console.log(res,1);
+        wx.previewImage({
+          urls: [tempFile]
+        })
+      },
+      fail: err =>{
+        console.log(err,2);
+      },
+      complete: res => {
+        console.log(res,3);
+      }
+    })
+    // console.log(this.offscreenCanvas);
+    // this.preview()
 		// 回收对象
 		src.delete();
 		dst.delete()

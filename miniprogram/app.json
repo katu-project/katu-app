@@ -6,16 +6,17 @@
     "pages/card/edit/index",
     "pages/card/detail/index",
     "pages/settings/index",
-    "pages/settings/image",
-    "pages/storage/index",
     "pages/settings/key",
-    "pages/settings/opencv"
+    "pages/debug/index",
+    "pages/debug/storage/index",
+    "pages/debug/opencv/opencv",
+    "pages/debug/image/image"
   ],
   "window": {
-    "backgroundColor": "#F6F6F6",
+    "backgroundColor": "#ffffff",
     "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#F6F6F6",
-    "navigationBarTitleText": "卡兔APP",
+    "navigationBarBackgroundColor": "#ffffff",
+    "navigationBarTitleText": "卡兔",
     "navigationBarTextStyle": "black"
   },
   "sitemapLocation": "sitemap.json",

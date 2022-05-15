@@ -1,7 +1,18 @@
-<view class="main">
-  <view class="list">
-    <view class="item">
-      <navigator url="./key" hover-class="none">设置主密钥</navigator>
-    </view>
+<view class="cu-list menu card-menu margin-top">
+  <view class="cu-item arrow">
+    <navigator url="./key" hover-class="none">
+      <view class="content">
+        <text class="cuIcon-unlock text-grey"></text>
+        <text class="text-grey">安全</text>
+      </view>
+    </navigator>
+  </view>
+  <view class="cu-item arrow">
+    <navigator url="../debug/index" hover-class="none">
+      <view class="content">
+        <text class="cuIcon-repair text-grey"></text>
+        <text class="text-grey">调试</text>
+      </view>
+    </navigator>
   </view>
 </view>

@@ -1,0 +1,23 @@
+<view class="cu-list menu card-menu margin-top">
+  <view class="cu-item arrow">
+    <navigator url="./opencv/opencv" hover-class="none">
+      <view class="content">
+        <text class="text-grey">opencv</text>
+      </view>
+    </navigator>
+  </view>
+  <view class="cu-item arrow">
+    <navigator url="./image/image" hover-class="none">
+      <view class="content">
+        <text class="text-grey">图片</text>
+      </view>
+    </navigator>
+  </view>
+  <view class="cu-item arrow">
+    <navigator url="./storage/index" hover-class="none">
+      <view class="content">
+        <text class="text-grey">存储</text>
+      </view>
+    </navigator>
+  </view>
+</view>

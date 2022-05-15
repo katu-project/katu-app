@@ -1,5 +1,5 @@
-const { writeFile } = require('../../utils/file');
-const { crypto: {encryptImage, decryptImage}, file: {getTempFilePath} } = require('../../utils/index')
+const { writeFile } = require('../../../utils/file');
+const { crypto: {encryptImage, decryptImage}, file: {getTempFilePath} } = require('../../../utils/index')
 
 Page({
 

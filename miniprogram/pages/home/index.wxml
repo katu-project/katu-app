@@ -7,6 +7,14 @@
 </view>
 
 <view class="action">
-    <button class="action-button" bindtap="goAddCard">添加卡片</button>
-    <button class="action-button" bindtap="goSettings">设置</button>
+    <button  class="cu-btn round line-cyan lg margin-tb" style="width: 200rpx;" bindtap="goAddCard">
+      <view class="text-xxl">
+        <text class="cuIcon-add"></text>
+      </view>
+    </button>
+    <button  class="cu-btn round line-orange lg margin-tb" style="width: 200rpx;" bindtap="goSettings">
+      <view class="text-xxl">
+        <text class="cuIcon-settings"></text>
+      </view>
+    </button>
 </view>
