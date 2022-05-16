@@ -1,13 +1,21 @@
 .page{
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  justify-content: space-between;
 }
+
+.save-btn{
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
 .pic{
   display: flex;
   flex-direction: column;
-  /* justify-content: center; */
-  /* align-items: center; */
+  justify-content: center;
+  align-items: center;
   padding: 20rpx 0;
 }
 .pic-img {

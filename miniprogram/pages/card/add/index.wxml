@@ -1,5 +1,5 @@
 
-<view class="main page">
+<view class="page">
   <view class="pic">
     <block wx:for="{{card.image}}" wx:key="index">
       <image class="pic-img card" data-index="{{index}}" mode="aspectFit" bindtap="goTapPic" src="{{item.url}}"></image>
@@ -13,6 +13,10 @@
         <view>{{card.image.length==1?'增加':'移除'}}卡面</view>
       </view>
     </view>
-    <view class="save" bindtap="goSaveCard">保存</view>
   </view>
+  <button class="cu-btn round line-cyan lg margin-tb save-btn" bindtap="goSaveCard">
+    <view class="text-xl text-blue">
+      保存
+    </view>
+  </button>
 </view>

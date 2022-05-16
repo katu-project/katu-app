@@ -25,7 +25,14 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow() {
-
+    if(this.resolveImagePath){
+      const key = `card.image[${this.resolveImageIdx}].url`
+      this.setData({
+        [key]: this.resolveImagePath
+      })
+      this.resolveImagePath = null
+      this.resolveImageIdx = 0
+    }
   },
   hasEmptyPic(){
     return this.data.card.image.filter(e=>e.url === DefaultAddImage).length > 0
@@ -65,11 +72,15 @@ Page({
       const cardManager = await getCardManager()
       const picPath = await cardManager.choosePic()
       if(!picPath) return
-      
-      const key = `card.image[${index}].url`
-      this.setData({
-        [key]: picPath
+
+      this.resolveImageIdx = index
+      wx.navigateTo({
+        url: `../image-processor/index?p=${picPath}`,
       })
+      // const key = `card.image[${index}].url`
+      // this.setData({
+      //   [key]: picPath
+      // })
     } catch (error) {
       wx.showToast({
         title: error.message || error.toString(),
