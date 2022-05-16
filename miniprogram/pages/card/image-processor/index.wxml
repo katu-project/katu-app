@@ -1,0 +1,9 @@
+<view class="page">
+  <image class="image" mode="aspectFit" src="{{tmpImagePath}}"></image>
+
+  <button class="cu-btn round line-cyan lg margin-tb use-btn" bindtap="useAndBack">
+    <view class="text-xl text-blue">
+      使用图片
+    </view>
+  </button>
+</view>
