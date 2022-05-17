@@ -31,11 +31,35 @@ Page({
   onShow() {
 
   },
+  goBack(){
+    wx.navigateBack({})
+  },
   useAndBack() {
     const pages = getCurrentPages()
     const prevPage = pages[pages.length-2]
     prevPage.resolveImagePath = this.data.tmpImagePath
     wx.navigateBack({})
+  },
+  async selectMethod(e){
+    wx.showLoading({
+      title: '处理中',
+      mask: true
+    })
+    await this.processImage(parseInt(e.detail.value))
+    wx.hideLoading({})
+  },
+  async processImage(idx){
+    return new Promise(resolve=>{
+      setTimeout(() => {
+        resolve()
+      }, 2000);
+    })
+  },
+  showTip1(){
+    console.log('s');
+  },
+  showTip2(){
+
   },
   /**
    * 生命周期函数--监听页面隐藏

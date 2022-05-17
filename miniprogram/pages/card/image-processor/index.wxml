@@ -1,9 +1,33 @@
 <view class="page">
-  <image class="image" mode="aspectFit" src="{{tmpImagePath}}"></image>
+  <image class="image card" mode="aspectFit" src="{{tmpImagePath}}"></image>
 
-  <button class="cu-btn round line-cyan lg margin-tb use-btn" bindtap="useAndBack">
-    <view class="text-xl text-blue">
-      使用图片
+  <view class="padding-tb">
+    <text class="text-xl">如何处理图片:</text>
+  </view>
+  <radio-group class="block" bindchange="selectMethod">
+    <view class="cu-form-group">
+      <view class="title">使用原图</view>
+      <radio class="radio" value="0" checked></radio>
     </view>
-  </button>
+    <view class="cu-form-group">
+      <view class="title">使用内置库 <text class="cuIcon-question lg text-gray" bindtap="showTip1"></text></view>
+      <radio class="radio" value="1"></radio>
+    </view>
+    <view class="cu-form-group">
+      <view class="title">使用外部接口 <text class="cuIcon-question lg text-gray" bindtap="showTip2"></text></view>
+      <radio class="radio" value="2"></radio>
+    </view>
+  </radio-group>
+  <view class="padding flex action">
+    <button class="cu-btn round line-cyan lg margin-tb btn" bindtap="goBack">
+      <view class="text-xl text-red">
+        重新选择
+      </view>
+    </button>
+    <button class="cu-btn round line-cyan lg margin-tb btn" bindtap="useAndBack">
+      <view class="text-xl text-blue">
+        使用图片
+      </view>
+    </button>
+  </view>
 </view>

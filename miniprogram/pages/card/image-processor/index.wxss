@@ -1,10 +1,15 @@
 .image {
-  width: 700rpx;
+  /* width: 700rpx; */
+  border: 1rpx solid gainsboro;
 }
 
-.use-btn{
+.action{
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
+}
+
+.action .btn {
+  width: 250rpx;
 }
