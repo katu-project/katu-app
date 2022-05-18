@@ -1,6 +1,6 @@
 const utils = require('../utils/index')
 const { KATU_MARK } = require('../const')
-const { getUser, saveCard } = require('../api')
+const { getUser, saveCard, request } = require('../api')
 const { getAppManager } = require('./app')
 
 class CardManager {
@@ -152,6 +152,15 @@ class CardManager {
 
   async choosePic(...args){
     return this.app.chooseFile(...args)
+  }
+
+  async parseCardImageByRemoteApi(imagePath){
+    const {fileID} = await wx.cloud.uploadFile({
+      cloudPath: `tmp/pic-${imagePath.slice(-32)}`,
+      filePath: imagePath
+    })
+    const {fileID: fileUrl} = await request('user/captCard', {fileId: fileID})
+    return fileUrl
   }
 }
 
