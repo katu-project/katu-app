@@ -14,6 +14,7 @@ const request = (action, data={}) => {
 }
 
 module.exports = {
+  request,
   getUser: ()=>{
     return request('user/getUser')
   },
