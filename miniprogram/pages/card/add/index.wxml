@@ -7,14 +7,41 @@
   </view>
   <view class="action-list">
     <view class="flex-row-sb">
-      <checkbox bindtap="keepEncrypt" checked="{{card.encrypted}}">开启加密</checkbox>
-      <view class="flex-row add-card-pic" bindtap="addCardPic">
+      <switch class="switch-lock" bindtap="keepEncrypt" checked="{{card.encrypted}}"></switch>
+      <!-- <view class="flex-row add-card-pic" bindtap="addCardPic">
         <image class="icon" mode="aspectFit" src="/static/images/{{card.image.length == 1?'plus':'sub'}}.svg"></image>
         <view>{{card.image.length==1?'增加':'移除'}}卡面</view>
+      </view> -->
+      <button class="cu-btn line-cyan add-card-pic margin-lr-sm" style="width: 200rpx;margin: 0 " bindtap="addCardPic">
+        <view class="text-df">
+          <text class="cuIcon-{{card.image.length==1?'add':'move'}}">{{card.image.length==1?' 添加':' 移除'}}卡面</text>
+        </view>
+      </button>
+    </view>
+  </view>
+
+
+  <view class="cu-list menu sm-border margin-tb" style="border-radius: 24rpx;flex:1;border: 1px solid cornflowerblue;">
+    <view class="cu-item arrow">
+      <view class="content">
+        <text class="cuIcon-circlefill text-grey"></text>
+        <text class="text-grey">名称</text>
+      </view>
+    </view>
+    <view class="cu-item arrow">
+      <view class="content">
+        <text class="cuIcon-tagfill text-red"></text>
+        <text class="text-grey">标签</text>
+      </view>
+      <view class="action">
+        <view class="cu-tag round bg-orange light">音乐</view>
+        <view class="cu-tag round bg-olive light">电影</view>
+        <view class="cu-tag round bg-blue light">旅行</view>
       </view>
     </view>
   </view>
-  <button class="cu-btn round line-cyan lg margin-tb save-btn" bindtap="goSaveCard">
+
+  <button class="cu-btn round line-cyan lg margin-tb" bindtap="goSaveCard">
     <view class="text-xl text-blue">
       保存
     </view>

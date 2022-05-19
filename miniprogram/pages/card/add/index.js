@@ -40,24 +40,24 @@ Page({
   async goSaveCard(){
     if(this.hasEmptyPic()) return
     wx.showLoading({
-      title: '上传中'
+      title: '上传中',
+      mask: true
     })
-    this.saveCard()
-    .then(res=>{
-      wx.nextTick(()=>{
-        wx.showToast({
-          title: 'ok',
-        })
+    
+    try {
+      await this.saveCard()
+      await wx.showToast({
+        title: 'ok',
       })
-    }).catch((error)=>{
-      console.log(error);
-      wx.nextTick(()=>{
-        wx.showToast({
-          title: error.message || 'savePic ERROR',
-          icon: 'error'
-        })
+      wx.navigateBack({
+        delta: 0,
       })
-    }).finally(wx.hideLoading)
+    } catch (error) {
+      wx.showToast({
+        title: error.message || 'savePic ERROR',
+        icon: 'error'
+      })
+    }
   },
 
   async saveCard(){

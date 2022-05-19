@@ -2,13 +2,15 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  min-height: 100vh;
 }
 
-.save-btn{
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
+.switch-lock::after {
+	content: "\e6c0";
+}
+
+.switch-lock::before {
+	content: "\e6c2";
 }
 
 .pic{
@@ -40,11 +42,4 @@
 
 .add-card-pic{
   align-items: center;
-}
-
-.add-card-pic .icon{
-  height:40rpx;
-  width: 40rpx;
-  padding-right: 10rpx;
-
 }
