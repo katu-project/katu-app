@@ -85,6 +85,11 @@ class CardManager {
     for (const pic of card.image) {
       let imageData = {url:'',salt:'',hash:''}
       
+      if(pic.url.startsWith('cloud://')){
+        pic.url = await this.app.downloadFile(pic)
+        console.log('发现远程图片，保存到本地');
+      }
+
       const uploadFileId = `${this.user.openid}/${pic.url.slice(-32)}`
       const imageHash = await this.getHash(pic.url)
       console.log("file hash: ", imageHash);
