@@ -1,19 +1,26 @@
 
 <view class="page">
-  <view class="pic">
+  <view class="pic" wx:if="{{false}}">
     <block wx:for="{{card.image}}" wx:key="index">
       <image class="pic-img card" data-index="{{index}}" mode="aspectFit" bindtap="goTapPic" src="{{item.url}}"></image>
     </block>
   </view>
+  <swiper class="card-swiper square-dot" indicator-dots="true" circular="true"  bindchange="cardSwiper" indicator-color="#8799a3" indicator-active-color="#0081ff">
+    <swiper-item wx:for="{{card.image}}" wx:key="index" class="{{curShowPicIdx==index?'cur':''}}">
+      <view class="swiper-item" bindtap="goTapPic" data-index="{{index}}">
+        <image class="pic-img card" mode="aspectFit" src="{{item.url}}" style="height: 440rpx;width: 700rpx;"></image>
+      </view>
+    </swiper-item>
+  </swiper>
   <view class="action-list">
-    <view class="flex-row-sb">
+    <view class="flex-row-sb" style="align-items: center;">
       <switch class="switch-lock" bindtap="keepEncrypt" checked="{{card.encrypted}}"></switch>
       <!-- <view class="flex-row add-card-pic" bindtap="addCardPic">
         <image class="icon" mode="aspectFit" src="/static/images/{{card.image.length == 1?'plus':'sub'}}.svg"></image>
         <view>{{card.image.length==1?'增加':'移除'}}卡面</view>
       </view> -->
       <button class="cu-btn line-cyan add-card-pic margin-lr-sm" style="width: 200rpx;margin: 0 " bindtap="addCardPic">
-        <view class="text-df">
+        <view class="text-df" style="white-space:nowrap">
           <text class="cuIcon-{{card.image.length==1?'add':'move'}}">{{card.image.length==1?' 添加':' 移除'}}卡面</text>
         </view>
       </button>

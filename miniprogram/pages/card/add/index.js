@@ -8,7 +8,8 @@ Page({
       image: [
         { url: DefaultAddImage }
       ],
-    }
+    },
+    curShowPicIdx: 0
   },
 
   /**
@@ -103,6 +104,11 @@ Page({
   keepEncrypt(){
     this.setData({
       'card.encrypted': !this.data.card.encrypted
+    })
+  },
+  cardSwiper(e){
+    this.setData({
+      curShowPicIdx: e.detail.current
     })
   },
   /**
