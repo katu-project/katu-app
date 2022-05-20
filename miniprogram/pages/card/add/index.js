@@ -97,6 +97,7 @@ Page({
       })
     }else{
       this.setData({
+        curShowPicIdx: 0,
         'card.image': this.data.card.image.slice(0,-1)
       })
     }
@@ -107,9 +108,12 @@ Page({
     })
   },
   cardSwiper(e){
-    this.setData({
-      curShowPicIdx: e.detail.current
-    })
+    if(e.detail.source == 'touch'){
+      this.setData({
+        curShowPicIdx: e.detail.current
+      })
+    }
+
   },
   /**
    * 生命周期函数--监听页面卸载
