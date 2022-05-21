@@ -1,0 +1,14 @@
+<view class="page">
+
+  <view class="margin-bottom padding bg-cyan" style="height: 400rpx;border-radius: 6rpx;">
+    <view>
+      <text class="text-red margin-right-sm">普通卡片额度</text>
+      <text class="text-xl">0/{{user.canUseCardCount}}</text>
+    </view>
+    <view>
+      <text class="text-red margin-right-sm">加密卡片额度:</text>
+      <text class="text-xl">0/{{user.canUseEncryptedCardCount}}</text>
+    </view>
+  </view>
+
+</view>

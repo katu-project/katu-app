@@ -1,30 +1,22 @@
-const { getCard } = require('../../api')
-const { getAppManager } = require('../../class/app')
 const globalData = getApp().globalData
 
 Page({
   data: {
-    list: []
+    user: {}
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad(options) {
-    getAppManager().then(app=>{
-      console.log(app);
-      globalData.app = app
-    })
   },
 
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady() {
-    getCard().then(res=>{
-      this.setData({
-        list: res
-      })
+    this.setData({
+      user: globalData.app.user
     })
   },
 
@@ -32,7 +24,7 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow() {
-    
+
   },
 
   /**
@@ -48,21 +40,7 @@ Page({
   onUnload() {
 
   },
-  goCardDetail(e){
-    wx.navigateTo({
-      url: '/pages/card/detail/index?id='+ e.currentTarget.dataset.item._id,
-    })
-  },
-  goAddCard(){
-    wx.navigateTo({
-      url: '/pages/card/add/index',
-    })
-  },
-  goProfile(){
-    wx.navigateTo({
-      url: '/pages/profile/index',
-    })
-  },
+
   /**
    * 页面相关事件处理函数--监听用户下拉动作
    */

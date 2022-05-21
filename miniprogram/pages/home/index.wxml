@@ -12,9 +12,9 @@
         <text class="cuIcon-add"></text>
       </view>
     </button>
-    <button  class="cu-btn round line-orange lg margin-tb" style="width: 200rpx;" bindtap="goSettings">
+    <button  class="cu-btn round line-cyan lg margin-tb" style="width: 200rpx;" bindtap="goProfile">
       <view class="text-xxl">
-        <text class="cuIcon-settings"></text>
+        <text class="cuIcon-people"></text>
       </view>
     </button>
 </view>
