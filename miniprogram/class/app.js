@@ -1,4 +1,5 @@
 const utils = require('../utils/index')
+const { getUser } = require('../api')
 const { APP_TEMP_DIR ,MASTER_KEY_NAME } = require('../const')
 
 class AppManager {
@@ -7,6 +8,7 @@ class AppManager {
   static async getInstance(options){
     if(!this.instance){
       this.instance = new AppManager()
+      this.instance.user = await getUser()
       if(!options?.setMasterKey){
         await this.instance.loadMasterKey()
       }

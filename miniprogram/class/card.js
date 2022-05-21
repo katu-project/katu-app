@@ -1,7 +1,7 @@
 const utils = require('../utils/index')
 const { KATU_MARK } = require('../const')
-const { getUser, saveCard, request } = require('../api')
 const { getAppManager } = require('./app')
+const { saveCard, request } = require('../api')
 
 class CardManager {
   static instance = null
@@ -10,7 +10,6 @@ class CardManager {
     if(!this.instance){
       this.instance = new CardManager()
       this.instance.app = await getAppManager()
-      this.instance.user = await getUser()
     }
     return this.instance
   }
@@ -20,7 +19,7 @@ class CardManager {
     let noChange = !card.picCountChange
     for (const pic of card.image) {
       let imageData = {url:'',salt:'',hash:''}
-      const uploadFileId = `${this.user.openid}/${pic.url.slice(-32)}`
+      const uploadFileId = `${this.app.user.openid}/${pic.url.slice(-32)}`
       if(cardModel.encrypted){
         if(pic.salt){ // 保持加密
           const imageHash = await this.getHash(pic.url)
@@ -90,7 +89,7 @@ class CardManager {
         console.log('发现远程图片，保存到本地');
       }
 
-      const uploadFileId = `${this.user.openid}/${pic.url.slice(-32)}`
+      const uploadFileId = `${this.app.user.openid}/${pic.url.slice(-32)}`
       const imageHash = await this.getHash(pic.url)
       console.log("file hash: ", imageHash);
 
