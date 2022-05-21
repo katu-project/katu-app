@@ -6,7 +6,7 @@ page {
 }
 
 .page{
- padding: 0 20rpx;
+ padding: 0 25rpx;
 }
 
 .list {
