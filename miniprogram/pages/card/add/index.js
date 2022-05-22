@@ -5,6 +5,7 @@ Page({
   data: {
     card: {
       encrypted: false,
+      title: '卡片名称1',
       image: [
         { url: DefaultAddImage }
       ],
@@ -114,6 +115,21 @@ Page({
       })
     }
 
+  },
+  goEditTitle(){
+    this.setData({
+      showTextEditor: true
+    })
+  },
+  goChangeTitle(e){
+    this.setData({
+      'card.title': e.detail.value
+    })
+  },
+  goFinishEditTitle(){
+    this.setData({
+      editTitle: false
+    })
   },
   /**
    * 生命周期函数--监听页面卸载
