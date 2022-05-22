@@ -1,6 +1,6 @@
 <view class="page">
-
-  <view class="margin-bottom padding bg-cyan" style="height: 400rpx;border-radius: 6rpx;">
+  <view class="padding-top"></view>
+  <view class="margin-bottom padding bg-cyan" style="height: 30vh;border-radius: 6rpx;">
     <view>
       <text class="text-red margin-right-sm">普通卡片额度</text>
       <text class="text-xl">0/{{user.canUseCardCount}}</text>
@@ -11,4 +11,23 @@
     </view>
   </view>
 
+  <view class="cu-list menu sm-border margin-top" style="min-height: 50vh;">
+    <view class="cu-item arrow item">
+      <view class="content" bindtap="goSettings">
+        <text class="cuIcon-circlefill text-grey"></text>
+        <text class="text-grey">设置</text>
+      </view>
+    </view>
+
+    <view class="cu-item arrow item">
+      <view class="content">
+        <text class="cuIcon-circlefill text-grey"></text>
+        <text class="text-grey">加入反馈群</text>
+      </view>
+    </view>
+
+  </view>
+  <view class="flex align-end justify-center" style="height: 10vh;">
+    当前版本: <text class="text-red padding-left-sm">{{version}}</text>
+  </view>
 </view>

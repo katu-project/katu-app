@@ -2,7 +2,8 @@ const globalData = getApp().globalData
 
 Page({
   data: {
-    user: {}
+    user: {},
+    version: 'dev'
   },
 
   /**
@@ -15,9 +16,21 @@ Page({
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady() {
-    this.setData({
-      user: globalData.app.user
+    if(globalData.user){
+      this.setData({
+        user: globalData.app.user
+      })
+      return
+    }
+    wx.showLoading({
+      title: '加载数据',
     })
+    setTimeout(() => {
+      this.setData({
+        user: globalData.user
+      })
+      wx.hideLoading({})
+    }, 1000);
   },
 
   /**
@@ -26,7 +39,11 @@ Page({
   onShow() {
 
   },
-
+  goSettings(){
+    wx.navigateTo({
+      url: '../settings/index',
+    })
+  },
   /**
    * 生命周期函数--监听页面隐藏
    */
