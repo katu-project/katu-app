@@ -13,21 +13,27 @@
 
   <view class="cu-list menu sm-border margin-top" style="min-height: 50vh;">
     <view class="cu-item arrow item">
-      <view class="content" bindtap="goSettings">
-        <text class="cuIcon-circlefill text-grey"></text>
+      <view class="content" bindtap="tapToSettings">
+        <text class="cuIcon-settings text-grey"></text>
         <text class="text-grey">设置</text>
       </view>
     </view>
-
     <view class="cu-item arrow item">
-      <view class="content">
-        <text class="cuIcon-circlefill text-grey"></text>
+      <view class="content" bindtap="tapToQA">
+        <text class="cuIcon-question text-grey"></text>
+        <text class="text-grey">Q&A</text>
+      </view>
+    </view>
+    <view class="cu-item arrow item">
+      <view class="content" bindtap="tapOpenJoinGroup">
+        <text class="cuIcon-weixin text-grey"></text>
         <text class="text-grey">加入反馈群</text>
       </view>
     </view>
-
   </view>
   <view class="flex align-end justify-center" style="height: 10vh;">
-    当前版本: <text class="text-red padding-left-sm">{{version}}</text>
+    <view>
+      当前版本: <text class="text-red padding-left-sm">{{version}}</text>
+    </view>
   </view>
 </view>

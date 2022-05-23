@@ -1,0 +1,7 @@
+<view class="page">
+  <view class="padding text-xxl">
+    <text class="cuIcon-titles text-cyan"></text>{{doc.title}}
+  </view>
+  <view class="padding text-lg">{{doc.content}}</view>
+  <view class="padding text-gray text-sm">最近更新时间 :{{doc.updateTime}}</view>
+</view>

@@ -1,9 +1,12 @@
-const globalData = getApp().globalData
+const { getDoc } = require('../../api')
 
 Page({
+
+  /**
+   * 页面的初始数据
+   */
   data: {
-    user: {},
-    version: 'dev'
+    list: []
   },
 
   /**
@@ -16,21 +19,17 @@ Page({
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady() {
-    if(globalData.user){
-      this.setData({
-        user: globalData.app.user
-      })
-      return
-    }
     wx.showLoading({
-      title: '加载数据',
+      title: '加载数据中',
     })
-    setTimeout(() => {
+    getDoc({field: {title: true}}).then(docs=>{
       this.setData({
-        user: globalData.user
+        list: docs
       })
-      wx.hideLoading({})
-    }, 1000);
+      wx.hideLoading({
+        success: (res) => {},
+      })
+    })
   },
 
   /**
@@ -39,20 +38,9 @@ Page({
   onShow() {
 
   },
-  tapToSettings(){
+  tapToDetail(e){
     wx.navigateTo({
-      url: '../settings/index',
-    })
-  },
-  tapToQA(){
-    wx.navigateTo({
-      url: '../qa/index',
-    })
-  },
-  tapOpenJoinGroup(){
-    const qrUrl = 'cloud://dev-4gglcut52bffa0ff.6465-dev-4gglcut52bffa0ff-1310995773/app/myqr.png'
-    wx.previewImage({
-      urls: [qrUrl]
+      url: './detail?id='+ e.currentTarget.dataset.key,
     })
   },
   /**

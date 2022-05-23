@@ -1,5 +1,5 @@
 {
-  "entryPagePath": "pages/profile/index",
+  "entryPagePath": "pages/qa/index",
   "pages": [
     "pages/home/index",
     "pages/card/add/index",
@@ -12,7 +12,9 @@
     "pages/debug/opencv/opencv",
     "pages/debug/image/image",
     "pages/card/image-processor/index",
-    "pages/profile/index"
+    "pages/profile/index",
+    "pages/qa/index",
+    "pages/qa/detail"
   ],
   "window": {
     "backgroundColor": "#ffffff",

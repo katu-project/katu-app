@@ -26,5 +26,6 @@ module.exports = {
   },
   deleteCard: id=>{
     return request('user/deleteCard', id)
-  }
+  },
+  getDoc: data => request('doc/getDoc', data)
 }
