@@ -1,6 +1,6 @@
 const { getCard } = require('../../api')
 const { getAppManager } = require('../../class/app')
-const globalData = getApp().globalData
+const { loadData } = require('../../utils/index')
 
 Page({
   data: {
@@ -18,9 +18,9 @@ Page({
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady() {
-    getCard().then(res=>{
+    loadData(getCard).then(list=>{
       this.setData({
-        list: res
+        list
       })
     })
   },

@@ -1,4 +1,5 @@
 const globalData = getApp().globalData
+const { loadData } = require('../../utils/index')
 
 Page({
   data: {
@@ -22,15 +23,11 @@ Page({
       })
       return
     }
-    wx.showLoading({
-      title: '加载数据',
-    })
-    setTimeout(() => {
+    loadData().then(()=>{
       this.setData({
         user: globalData.user
       })
-      wx.hideLoading({})
-    }, 1000);
+    })
   },
 
   /**
