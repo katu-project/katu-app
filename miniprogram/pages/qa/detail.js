@@ -1,4 +1,6 @@
 const { getDoc } = require('../../api')
+const { loadData } = require('../../utils/index')
+
 Page({
 
   /**
@@ -23,14 +25,10 @@ Page({
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady() {
-    wx.showLoading({
-      title: '加载内容中',
-    })
-    getDoc({id:this.id}).then(doc=>{
-      this.setData({
-        doc
-      })
-      wx.hideLoading({})
+    loadData(getDoc,{id:this.id}).then(doc=>{
+      doc.updateTime = new Date(doc.updateTime).toLocaleDateString()
+      doc.content = doc.content.replaceAll('<p></p>','<br/>')
+      this.setData({doc})
     })
   },
 

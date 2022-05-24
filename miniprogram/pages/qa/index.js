@@ -1,5 +1,5 @@
 const { getDoc } = require('../../api')
-
+const { loadData } = require('../../utils/index')
 Page({
 
   /**
@@ -19,15 +19,9 @@ Page({
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady() {
-    wx.showLoading({
-      title: '加载数据中',
-    })
-    getDoc({field: {title: true}}).then(docs=>{
+    loadData(getDoc, {field:{title: true}}).then(docs=>{
       this.setData({
         list: docs
-      })
-      wx.hideLoading({
-        success: (res) => {},
       })
     })
   },

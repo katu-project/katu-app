@@ -1,0 +1,59 @@
+<!--
+此文件为开发者工具生成，生成时间: 5/24/2022, 3:17:11 PM
+使用方法：
+在 /Volumes/Leo/workspace/git/katu-weixin-app/miniprogram/pages/qa/index.wxml 引入模板
+
+```
+<import src="index.skeleton.wxml"/>
+<template is="skeleton" wx:if="{{loading}}" />
+```
+
+在 /Volumes/Leo/workspace/git/katu-weixin-app/miniprogram/pages/qa/index.wxss 中引入样式
+```
+@import "./index.skeleton.wxss";
+```
+
+更多详细信息可以参考文档：https://developers.weixin.qq.com/miniprogram/dev/devtools/skeleton.html
+-->
+<template name="skeleton">
+  <view class="sk-container">
+    <view class="page">
+      <view class="padding-top">
+        <text class="text-orange text-xxl"><text class="cuIcon-titles text-cyan sk-pseudo sk-pseudo-circle"></text>
+        <text class="margin-left-xs sk-transparent sk-text-14-2857-942 sk-text">猜你想知道的:</text></text>
+      </view>
+      <view class="cu-list menu sm-border margin-top">
+        <view class="cu-item arrow skeleton-gray-block item sk-gray" data-key="f6e08a64628b4f9504a7481c220dbfab">
+          <view class="content">
+            <text class="cuIcon-question text-grey"></text>
+            <text class="sk-gray">卡兔小程序提供什么服务</text>
+          </view>
+        </view>
+        <view class="cu-item arrow skeleton-gray-block item sk-gray" data-key="f6e08a64628b53c604a8467d74391b28">
+          <view class="content">
+            <text class="cuIcon-question text-grey"></text>
+            <text class="sk-gray">我上传的数据保存在哪里?</text>
+          </view>
+        </view>
+        <view class="cu-item arrow skeleton-gray-block item sk-gray" data-key="6d85a2b9628b54c1063d7b093f152106">
+          <view class="content">
+            <text class="cuIcon-question text-grey"></text>
+            <text class="sk-gray">我的数据安全么？</text>
+          </view>
+        </view>
+        <view class="cu-item arrow skeleton-gray-block item sk-gray" data-key="0a4ec1f9628b5501063149ac75a21cb7">
+          <view class="content">
+            <text class="cuIcon-question text-grey"></text>
+            <text class="sk-gray">什么是主密码？</text>
+          </view>
+        </view>
+        <view class="cu-item arrow skeleton-gray-block item sk-gray" data-key="f6e08a64628b55a704a899564e10cf2e">
+          <view class="content">
+            <text class="cuIcon-question text-grey"></text>
+            <text class="sk-gray">主密码忘记了怎么办？</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</template>

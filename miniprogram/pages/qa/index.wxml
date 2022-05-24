@@ -1,11 +1,16 @@
-<view class="page">
+<import src="index.skeleton.wxml" />
+
+<template is="skeleton" wx:if="{{!list.length}}"/>
+
+<view wx:else class="page">
   <view class="padding-top">
     <text class="text-orange text-xxl">
-      <text class="cuIcon-titles text-cyan"></text>猜你想知道的:
+      <text class="cuIcon-titles text-cyan"></text>
+      <text class="margin-left-xs">猜你想知道的:</text>
     </text>
   </view>
   <view class="cu-list menu sm-border margin-top">
-    <view class="cu-item arrow item" wx:for="{{list}}" wx:key="id" bindtap="tapToDetail" data-key="{{item._id}}">
+    <view class="cu-item arrow skeleton-gray-block item" wx:for="{{list}}" wx:key="id" bindtap="tapToDetail" data-key="{{item._id}}">
       <view class="content">
         <text class="cuIcon-question text-grey"></text>
         <text class="">{{item.title}}</text>

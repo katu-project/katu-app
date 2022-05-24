@@ -1,7 +1,17 @@
-<view class="page">
-  <view class="padding text-xxl">
-    <text class="cuIcon-titles text-cyan"></text>{{doc.title}}
+<import src="detail.skeleton.wxml" />
+
+<template is="skeleton" wx:if="{{!doc.title}}"/>
+
+<view wx:else class="page">
+  <view class="padding-tb margin-left-sm text-xxl flex align-center">
+    <text class="cuIcon-titles text-cyan"></text>
+    <text class="margin-left-xs">{{doc.title}}</text>
   </view>
-  <view class="padding text-lg">{{doc.content}}</view>
-  <view class="padding text-gray text-sm">最近更新时间 :{{doc.updateTime}}</view>
+  <view class="margin padding text-lg content skeleton-gray-block">
+    <rich-text nodes="{{doc.content}}"></rich-text>
+  </view>
+  <view class="margin text-gray text-sm flex align-center justify-end">
+    <text class="cuIcon-time text-cyan"></text>
+    <view class="margin-left-xs">更新时间: {{doc.updateTime}}</view>
+  </view>
 </view>

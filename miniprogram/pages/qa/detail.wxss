@@ -1,1 +1,7 @@
-/* pages/qa/detail.wxss */
+@import "detail.skeleton.wxss";
+
+.content {
+  min-height: 30vh;
+  border-radius: 10rpx;
+  border: 1rpx solid darkcyan;
+}
