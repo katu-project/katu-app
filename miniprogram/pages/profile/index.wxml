@@ -25,15 +25,37 @@
       </view>
     </view>
     <view class="cu-item arrow item">
+      <view class="content" bindtap="tapOpenAbout">
+        <text class="cuIcon-info text-grey"></text>
+        <text class="text-grey">关于卡兔</text>
+      </view>
+    </view>
+    <view class="cu-item arrow item">
       <view class="content" bindtap="tapOpenJoinGroup">
         <text class="cuIcon-weixin text-grey"></text>
         <text class="text-grey">加入反馈群</text>
       </view>
     </view>
   </view>
-  <view class="flex align-end justify-center" style="height: 10vh;">
-    <view>
-      当前版本: <text class="text-red padding-left-sm">{{version}}</text>
+</view>
+
+<view class="cu-modal {{ showAbout?'show':''}}" data-key="showAbout" bindtap="hideModal">
+  <view class="cu-dialog bg-cyan light">
+    <view class="padding-tb flex flex-col align-center">
+      <image mode="aspectFit" class="margin-bottom-xl" style="height: 200rpx; width: 200rpx;border-radius: 50rpx;" src="{{app.logo}}"></image>
+      <view class="text-xl">当前版本: {{app.version}}</view>
+    </view>
+    <view class="cu-bar bg-cyan">
+      <view class="action margin-0 flex-sub  solid-left" data-key="showAbout" bindtap="hideModal">关闭</view>
+    </view>
+  </view>
+</view>
+
+<view class="cu-modal {{ showJoinGroup?'show':''}}" data-key="showJoinGroup" bindtap="hideModal">
+  <view class="cu-dialog bg-cyan light">
+    <image mode="aspectFit" show-menu-by-longpress="{{true}}" bindtap="tapToPreview" class="padding-tb" style="height:300px;" src="{{qrUrl}}"></image>
+    <view class="cu-bar bg-cyan">
+      <view class="action margin-0 flex-sub  solid-left" data-key="showJoinGroup" bindtap="hideModal">请扫描二维码进群</view>
     </view>
   </view>
 </view>

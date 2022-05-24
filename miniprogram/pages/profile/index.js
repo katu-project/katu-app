@@ -4,7 +4,11 @@ const { loadData } = require('../../utils/index')
 Page({
   data: {
     user: {},
-    version: 'dev'
+    app: {
+      logo: '/static/logo.svg',
+      version: 'dev',
+    },
+    qrUrl: 'cloud://dev-4gglcut52bffa0ff.6465-dev-4gglcut52bffa0ff-1310995773/app/myqr.png',
   },
 
   /**
@@ -21,13 +25,15 @@ Page({
       this.setData({
         user: globalData.app.user
       })
-      return
-    }
-    loadData().then(()=>{
-      this.setData({
-        user: globalData.user
+    }else{
+      loadData().then(()=>{
+        this.setData({
+          user: globalData.user
+        })
       })
-    })
+    }
+    
+    this.loadAppInfo()
   },
 
   /**
@@ -35,6 +41,13 @@ Page({
    */
   onShow() {
 
+  },
+  loadAppInfo(){
+    const info = wx.getAccountInfoSync()
+    console.log(info);
+    this.setData({
+      'app.version': info.miniProgram.version || 'dev'
+    })
   },
   tapToSettings(){
     wx.navigateTo({
@@ -46,10 +59,25 @@ Page({
       url: '../qa/index',
     })
   },
+  tapOpenAbout(){
+    this.setData({
+      showAbout: true
+    })
+  },
   tapOpenJoinGroup(){
-    const qrUrl = 'cloud://dev-4gglcut52bffa0ff.6465-dev-4gglcut52bffa0ff-1310995773/app/myqr.png'
+    this.setData({
+      showJoinGroup: true
+    })
+  },
+  tapToPreview(){
     wx.previewImage({
-      urls: [qrUrl]
+      urls: [this.data.qrUrl]
+    })
+  },
+  hideModal(e){
+    const key = e.currentTarget.dataset.key
+    this.setData({
+      [key]: false
     })
   },
   /**
