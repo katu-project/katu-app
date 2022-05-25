@@ -20,9 +20,20 @@ async function loadData(func, params={}){
     })
     return res
   } catch (error) {
-    wx.showToast({
-      title: error.message,
-      icon: 'error'
+    wx.hideLoading({
+      success: (res) => {
+        wx.showModal({
+          title: '内部服务错误，请联系客服',
+          content: error.message,
+          showCancel: false,
+          success: ({cancel})=>{
+            if(cancel) return
+            wx.navigateTo({
+              url: '/pages/profile/index',
+            })
+          }
+        })
+      },
     })
   }
 }
