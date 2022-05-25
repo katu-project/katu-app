@@ -1,12 +1,10 @@
 {
-  "entryPagePath": "pages/qa/index",
+  "entryPagePath": "pages/home/index",
   "pages": [
     "pages/home/index",
     "pages/card/add/index",
     "pages/card/edit/index",
     "pages/card/detail/index",
-    "pages/settings/index",
-    "pages/settings/key",
     "pages/debug/index",
     "pages/debug/storage/index",
     "pages/debug/opencv/opencv",
@@ -14,7 +12,10 @@
     "pages/card/image-processor/index",
     "pages/profile/index",
     "pages/qa/index",
-    "pages/qa/detail"
+    "pages/qa/detail",
+    "pages/settings/index",
+    "pages/settings/security/index",
+    "pages/settings/security/master-key/index"
   ],
   "window": {
     "backgroundColor": "#ffffff",

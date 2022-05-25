@@ -1,6 +1,2 @@
-<view class="main">
-  <view class="list">
-    <input class="item" bindinput="setMasterKey" type="text"/>
-    <button class="item" bindtap="saveMasterKey">保存密码</button>
-  </view>
-</view>
+<!--pages/settings/key.wxml-->
+<text>pages/settings/key.wxml</text>

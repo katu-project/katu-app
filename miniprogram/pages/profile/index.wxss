@@ -1,5 +1,0 @@
-.item{
-  border: 1px solid cyan;
-  border-radius: 8rpx;
-  margin-bottom: 10rpx;
-}

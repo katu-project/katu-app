@@ -5,9 +5,6 @@ Page({
    * 页面的初始数据
    */
   data: {
-    key: '',
-    encodeKey: '',
-    decode: ''
   },
 
   /**
@@ -30,7 +27,16 @@ Page({
   onShow() {
 
   },
-
+  tapToSecurity(){
+    wx.navigateTo({
+      url: './security/index',
+    })
+  },
+  tapToDebug(){
+    wx.navigateTo({
+      url: '../debug/index',
+    })
+  },
   /**
    * 生命周期函数--监听页面隐藏
    */

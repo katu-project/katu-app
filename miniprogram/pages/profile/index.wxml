@@ -11,7 +11,7 @@
     </view>
   </view>
 
-  <view class="cu-list menu sm-border margin-top" style="min-height: 50vh;">
+  <view class="cu-list menu margin-top" style="min-height: 50vh;">
     <view class="cu-item arrow item">
       <view class="content" bindtap="tapToSettings">
         <text class="cuIcon-settings text-grey"></text>

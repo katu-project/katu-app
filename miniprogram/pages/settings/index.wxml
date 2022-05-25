@@ -1,18 +1,16 @@
-<view class="cu-list menu card-menu margin-top">
-  <view class="cu-item arrow">
-    <navigator url="./key" hover-class="none">
-      <view class="content">
+<view class="page">
+  <view class="cu-list menu margin-top">
+    <view class="cu-item arrow item">
+      <view class="content" bindtap="tapToSecurity">
         <text class="cuIcon-unlock text-grey"></text>
         <text class="text-grey">安全</text>
       </view>
-    </navigator>
-  </view>
-  <view class="cu-item arrow">
-    <navigator url="../debug/index" hover-class="none">
-      <view class="content">
+    </view>
+    <view class="cu-item arrow item">
+      <view class="content" bindtap="tapToDebug">
         <text class="cuIcon-repair text-grey"></text>
         <text class="text-grey">调试</text>
       </view>
-    </navigator>
+    </view>
   </view>
 </view>

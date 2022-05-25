@@ -44,7 +44,6 @@ Page({
   },
   loadAppInfo(){
     const info = wx.getAccountInfoSync()
-    console.log(info);
     this.setData({
       'app.version': info.miniProgram.version || 'dev'
     })

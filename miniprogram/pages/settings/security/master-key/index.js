@@ -1,11 +1,11 @@
-// pages/settings/key.js
+const globalData = getApp().globalData
 Page({
 
   /**
    * 页面的初始数据
    */
   data: {
-
+    masterKey: ''
   },
 
   /**
@@ -26,7 +26,6 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow() {
-
   },
 
   /**
@@ -35,7 +34,26 @@ Page({
   onHide() {
 
   },
-
+  setMasterKey(e){
+    this.setData({
+      masterKey : e.detail.value
+    })
+  },
+  async saveMasterKey(){
+    const appManager = globalData.app
+    try {
+      await appManager.saveMasterKey(this.data.masterKey)
+      wx.showToast({
+        title: '设置成功',
+      })
+    } catch (error) {
+      console.log(error);
+      wx.showToast({
+        title: '设置出错',
+        icon: 'error'
+      })
+    }
+  },
   /**
    * 生命周期函数--监听页面卸载
    */
