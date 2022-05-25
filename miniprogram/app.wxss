@@ -10,7 +10,7 @@ page {
 }
 
 .cu-list .cu-item.item{
-  border: 1px solid cyan;
+  border: 1px solid var(--cyan);
   border-radius: 8rpx;
   margin-bottom: 10rpx;
 }
