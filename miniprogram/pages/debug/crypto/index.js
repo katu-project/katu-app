@@ -1,11 +1,12 @@
-// pages/settings/key.js
+const { crypto: {md5, encryptString, decryptString} } = require('../../../utils/index')
 Page({
 
   /**
    * 页面的初始数据
    */
   data: {
-
+    key: '',
+    encode: ''
   },
 
   /**
@@ -28,7 +29,21 @@ Page({
   onShow() {
 
   },
-
+  GoEncode(){
+    const encode = md5(this.data.key)
+    this.setData({
+      encode: encode.toString()
+    })
+  },
+  toAes(){
+    const key = '1234'
+    const encode = encryptString(this.data.key, key)
+    const decode = decryptString(encode, key)
+    this.setData({
+      encodeKey: encode,
+      decode: decode
+    })
+  },
   /**
    * 生命周期函数--监听页面隐藏
    */

@@ -1,12 +1,11 @@
 const { getSavedFileList, readDir, getStats } = require('../../../utils/file')
 const { APP_TEMP_DIR } = require('../../../const')
 Page({
-
   /**
    * 页面的初始数据
    */
   data: {
-
+    list:[]
   },
 
   /**
@@ -23,6 +22,9 @@ Page({
     const files = await getSavedFileList()
     console.log(files);
     const dir = await getStats(APP_TEMP_DIR, true)
+    this.setData({
+      list: dir
+    })
     console.log(dir);
   },
 

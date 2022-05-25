@@ -6,7 +6,7 @@
         <text class="text-grey">安全</text>
       </view>
     </view>
-    <view class="cu-item arrow item">
+    <view class="cu-item arrow item" wx:if="{{isDev}}">
       <view class="content" bindtap="tapToDebug">
         <text class="cuIcon-repair text-grey"></text>
         <text class="text-grey">调试</text>

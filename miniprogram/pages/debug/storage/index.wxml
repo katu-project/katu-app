@@ -1,2 +1,9 @@
-<!--pages/storage/index.wxml-->
-<text>pages/storage/index.wxml</text>
+<view class="page">
+  <view class="cu-list menu margin-top" style="min-height: 50vh;">
+    <view class="cu-item arrow item" wx:for="{{list}}" wx:key="path">
+      <view class="content">
+        <text class="text-black">{{item.path}}</text>
+      </view>
+    </view>
+  </view>
+</view>

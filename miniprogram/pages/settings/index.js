@@ -1,10 +1,12 @@
-const { crypto: {md5, encryptString, decryptString} } = require('../../utils/index')
+const globalData = getApp().globalData
+
 Page({
 
   /**
    * 页面的初始数据
    */
   data: {
+    isDev: false
   },
 
   /**
@@ -18,7 +20,9 @@ Page({
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady() {
-
+    this.setData({
+      isDev: globalData.app.isDev
+    })
   },
 
   /**
@@ -48,22 +52,6 @@ Page({
    * 生命周期函数--监听页面卸载
    */
   onUnload() {
-
-  },
-  encode(){
-    const encode = md5(this.data.key)
-    this.setData({
-      encodeKey: encode.toString()
-    })
-  },
-  toAes(){
-    const key = '1234'
-    const encode = encryptString(this.data.key, key)
-    const decode = decryptString(encode, key)
-    this.setData({
-      encodeKey: encode,
-      decode: decode
-    })
 
   },
   /**

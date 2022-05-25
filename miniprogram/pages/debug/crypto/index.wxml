@@ -1,0 +1,6 @@
+<view class="page">
+  <view class="padding">
+    <input class="solids" type="text" model:value="{{key}}" bindinput="GoEncode"/>
+    <view class="solids margin-top padding-sm" style="min-height: 50rpx;">{{encode}}</view>
+  </view>
+</view>

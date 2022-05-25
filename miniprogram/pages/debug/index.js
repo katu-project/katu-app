@@ -1,4 +1,3 @@
-// pages/debug/index.js
 Page({
 
   /**

@@ -1,3 +1,4 @@
+const { request } = require('../../../../api')
 const globalData = getApp().globalData
 Page({
 
@@ -42,7 +43,10 @@ Page({
   async saveMasterKey(){
     const appManager = globalData.app
     try {
-      await appManager.saveMasterKey(this.data.masterKey)
+      const keyId = await appManager.saveMasterKey(this.data.masterKey)
+      await request('user/markSetMasterKey', {hash: keyId})
+      await appManager.reloadMasterKey()
+      await appManager.reloadUserInfo()
       wx.showToast({
         title: '设置成功',
       })
