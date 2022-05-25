@@ -27,8 +27,9 @@ class AppManager {
       })
       return data
     } catch (error) {
-      throw Error("未设置主密码")
+      console.log("未设置主密码");
     }
+    return null
   }
 
   
