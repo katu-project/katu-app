@@ -13,7 +13,7 @@ class CardManager {
     }
     return this.instance
   }
-  
+
   async update(card){
     const cardModel = {id: card.id, encrypted: card.encrypted, image: [], info: {card:null} }
     let noChange = !card.picCountChange
@@ -80,6 +80,7 @@ class CardManager {
   }
 
   async add(card){
+    this.app.checkMasterKey()
     const cardModel = {encrypted: card.encrypted?1:0, image: [], info: {card:null} }
     for (const pic of card.image) {
       let imageData = {url:'',salt:'',hash:''}

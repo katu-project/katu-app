@@ -43,9 +43,8 @@ Page({
 
   },
   loadAppInfo(){
-    const info = wx.getAccountInfoSync()
     this.setData({
-      'app.version': info.miniProgram.version || 'dev'
+      'app.version': globalData.app.appVersion
     })
   },
   tapToSettings(){

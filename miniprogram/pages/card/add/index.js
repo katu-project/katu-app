@@ -1,5 +1,6 @@
 const { getCardManager } = require('../../../class/card')
 const DefaultAddImage = '/static/images/add.svg'
+const globalData = getApp().globalData
 
 Page({
   data: {
@@ -21,7 +22,9 @@ Page({
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
-  async onReady() {},
+  async onReady() {
+    this.app = globalData.app
+  },
 
   /**
    * 生命周期函数--监听页面显示
@@ -42,7 +45,7 @@ Page({
   async goSaveCard(){
     if(this.hasEmptyPic()) return
     wx.showLoading({
-      title: '上传中',
+      title: '保存中',
       mask: true
     })
     
@@ -55,10 +58,46 @@ Page({
         delta: 0,
       })
     } catch (error) {
-      wx.showToast({
-        title: error.message || 'savePic ERROR',
-        icon: 'error'
-      })
+      console.log(error);
+      await wx.hideLoading()
+      if(error.message === '01'){
+        wx.showModal({
+          title: '未设置主密码',
+          content: '需要设置主密码才能启用加密功能',
+          confirmText: '去设置',
+          success: ({cancel})=>{
+            if(cancel) return
+            wx.navigateTo({
+              url: '../../settings/security/master-key/index',
+            })
+          }
+        })
+      }else if(error.message === '02'){
+        wx.showModal({
+          title: '请输入主密码',
+          editable: true,
+          success: ({cancel, content}) => {
+            if(cancel) return
+            if(!content){
+              wx.nextTick(()=>{
+                wx.showToast({
+                  title: '输入不能为空',
+                })
+              })
+              return
+            }
+            this.app.saveMasterKey(content)
+            wx.nextTick(()=>{
+              this.goSaveCard()
+            })
+          }
+        })
+      }else{
+        wx.showModal({
+          title: '保存数据出错',
+          content: error.message
+        })
+      }
     }
   },
 

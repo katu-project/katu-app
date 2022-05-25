@@ -1,19 +1,46 @@
 const utils = require('../utils/index')
+const constData = require('../const')
 const { getUser } = require('../api')
 const { APP_TEMP_DIR ,MASTER_KEY_NAME } = require('../const')
 
 class AppManager {
   static instance = null
   masterKey = null
+  
   static async getInstance(options){
     if(!this.instance){
       this.instance = new AppManager()
       this.instance.user = await getUser()
+      this.instance.setAppBaseInfo()
+      this.constData = constData
       if(!options?.setMasterKey){
         await this.instance.loadMasterKey()
       }
     }
     return this.instance
+  }
+
+  setAppBaseInfo(){
+    this.appInfo = wx.getAccountInfoSync()
+    this.appVersion = this.appInfo.miniProgram.version || 'develop'
+    this.isDev = this.appInfo.miniProgram.envVersion !== 'release'
+  }
+
+  checkMasterKey(){
+    if(!this.user.hasSetMasterKey){
+      throw Error("01")
+    }
+    if(!this.masterKey) {
+      throw Error("02")
+    }
+  }
+  
+  async reloadMasterKey(){
+    return this.loadMasterKey()
+  }
+
+  async reloadUserInfo(){
+    this.user = await getUser()
   }
 
   async loadMasterKey(){
@@ -34,10 +61,12 @@ class AppManager {
 
   
   async saveMasterKey(key){
-    return wx.setStorage({
+    const keyHash = utils.crypto.sha512(key)
+    await wx.setStorage({
       key: MASTER_KEY_NAME,
-      data: utils.crypto.sha512(key)
+      data: keyHash
     })
+    return keyHash.slice(32)
   }
   
   

@@ -15,14 +15,16 @@
     "pages/qa/detail",
     "pages/settings/index",
     "pages/settings/security/index",
-    "pages/settings/security/master-key/index"
+    "pages/settings/security/master-key/index",
+    "pages/debug/crypto/index"
   ],
   "window": {
     "backgroundColor": "#ffffff",
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#ffffff",
     "navigationBarTitleText": "卡兔",
-    "navigationBarTextStyle": "black"
+    "navigationBarTextStyle": "black",
+    "enablePullDownRefresh": true
   },
   "sitemapLocation": "sitemap.json",
   "style": "v2"

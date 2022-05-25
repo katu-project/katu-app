@@ -48,7 +48,7 @@
   <view class="cu-dialog bg-cyan light">
     <view class="padding-tb flex flex-col align-center">
       <image mode="aspectFit" class="margin-bottom-xl" style="height: 200rpx; width: 200rpx;border-radius: 50rpx;" src="{{app.logo}}"></image>
-      <view class="text-xl">当前版本: {{app.version}}</view>
+      <view class="text-xl">当前版本: <text class="text-grey">{{app.version}}</text></view>
       <view class="padding">
         <button class="cu-btn block line-cyan" open-type="feedback">提交使用反馈</button>
       </view>
