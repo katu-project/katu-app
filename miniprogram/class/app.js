@@ -38,25 +38,56 @@ class AppManager {
     }
   }
 
+  async reloadUserInfo(){
+    this.user = await getUser()
+  }
+
+  // master key section
+
+  async reloadMasterKey(){
+    return this.loadMasterKey()
+  }
+
+  // 生成主密码 258 bite
+  async createMasterKey(masterKeyHash){
+    const masterKey = masterKeyHash
+    const masterKeyId = masterKeyHash.slice(32)
+    let masterCode = null
+    try {
+      const {randomValues} = await wx.getRandomValues({
+        length: 16,
+      })
+      masterCode = utils.convert.BufferToHex(randomValues)
+    } catch (error) {
+      console.log('获取系统随机数出错：', error)
+      masterCode = utils.crypto.random(16).toString()
+    }
+    const masterKeyPack = utils.crypto.encryptString(masterCode, masterKey)
+
+    return {
+      masterKeyId,
+      masterKeyPack
+    }
+  }
+
   checkMasterKey(){
-    if(!this.user.hasSetMasterKey){
+    if(!this.user.setMasterKey){
       throw Error("01")
     }
     if(!this.masterKey) {
       throw Error("02")
     }
   }
-  
-  async reloadMasterKey(){
-    return this.loadMasterKey()
-  }
 
-  async reloadUserInfo(){
-    this.user = await getUser()
+  async buildMasterKey(originKey){
+    if(!originKey || originKey.length < 6) throw Error("输入不符合密码要求")
+    return utils.crypto.sha1(originKey)
   }
 
   async loadMasterKey(){
-    this.masterKey = await this.readMasterKey()
+    if(!this.user.setMasterKey) return
+    const originMasterKey = await this.readMasterKey()
+    this.masterKey = utils.crypto.decryptString(this.user.masterKeyPack.masterKeyPack,originMasterKey)
   }
 
   async readMasterKey(){
@@ -72,17 +103,14 @@ class AppManager {
     return null
   }
 
-  
   async setMasterKey(key){
-    const keyHash = utils.crypto.sha512(key)
     await wx.setStorage({
       key: MASTER_KEY_NAME,
-      data: keyHash
+      data: await this.buildMasterKey(key)
     })
-    await this.reloadMasterKey()
-    return keyHash.slice(32)
   }
-  
+
+  // master key section
   
   async chooseFile(){
     try {
