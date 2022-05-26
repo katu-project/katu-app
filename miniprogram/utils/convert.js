@@ -20,7 +20,14 @@ function Base64ToArrayBuffer(base64) {
   return bytes.buffer
 }
 
+function BufferToHex(buffer) {
+  return [...new Uint8Array(buffer)]
+      .map(x => x.toString(16).padStart(2, '0'))
+      .join('');
+}
+
 module.exports = {
   ArrayBufferToBase64,
-  Base64ToArrayBuffer
+  Base64ToArrayBuffer,
+  BufferToHex
 }

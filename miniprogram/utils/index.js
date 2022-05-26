@@ -1,5 +1,6 @@
 const crypto = require('./crypto')
 const file = require('./file')
+const convert = require('./convert')
 
 async function sleep(t=1000){
   return new Promise(r=>{
@@ -41,5 +42,6 @@ async function loadData(func, params={}){
 module.exports = {
   crypto,
   file,
+  convert,
   loadData
 }

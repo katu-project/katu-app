@@ -52,6 +52,10 @@ function md5(string){
   return CryptoJS.MD5(string).toString()
 }
 
+function sha1(string){
+  return CryptoJS.SHA1(string).toString()
+}
+
 function sha256(string){
   return CryptoJS.SHA256(string).toString()
 }
@@ -119,6 +123,7 @@ function decryptFile(fileHexString, code){
 module.exports = {
   random,
   md5,
+  sha1,
   sha256,
   sha512,
   pbkdf2,
