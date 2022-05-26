@@ -112,6 +112,7 @@ Page({
             return
           }
           this.app.setMasterKey(content)
+          this.app.reloadMasterKey()
           wx.nextTick(()=>{
             this.goSaveCard()
           })
