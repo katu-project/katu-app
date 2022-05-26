@@ -20,7 +20,6 @@ Page({
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady() {
-
   },
 
   /**
@@ -28,11 +27,7 @@ Page({
    */
   onShow() {
   },
-
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide() {
+  checkInput(){
 
   },
   setMasterKey(e){
@@ -42,9 +37,18 @@ Page({
   },
   async setMasterKey(){
     const appManager = globalData.app
+    if(appManager.user.setMasterKey){
+      wx.showToast({
+        title: '已经设置过主密码',
+        icon: 'error'
+      })
+      return
+    }
     try {
-      const keyId = await appManager.setMasterKey(this.data.masterKey)
-      await request('user/markSetMasterKey', {hash: keyId})
+      const masterKey = await appManager.buildMasterKey(this.data.masterKey)
+      const masterKeyPack = await appManager.createMasterKey(masterKey)
+      await request('user/markSetMasterKey', {keyPack: masterKeyPack})
+      await appManager.setMasterKey(this.data.masterKey)
       await appManager.reloadUserInfo()
       wx.showToast({
         title: '设置成功',
@@ -57,31 +61,4 @@ Page({
       })
     }
   },
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload() {
-
-  },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh() {
-
-  },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom() {
-
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage() {
-
-  }
 })
