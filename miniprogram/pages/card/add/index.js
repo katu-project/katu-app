@@ -43,7 +43,13 @@ Page({
     return this.data.card.image.filter(e=>e.url === DefaultAddImage).length > 0
   },
   async goSaveCard(){
-    if(this.hasEmptyPic()) return
+    if(this.hasEmptyPic()) {
+      wx.showToast({
+        title: '有未使用的卡面',
+        icon: 'error'
+      })
+      return
+    }
     wx.showLoading({
       title: '保存中',
       mask: true
@@ -51,62 +57,73 @@ Page({
     
     try {
       await this.saveCard()
-      await wx.showToast({
-        title: 'ok',
-      })
-      wx.navigateBack({
-        delta: 0,
-      })
+      wx.nextTick(this.saveDone)
     } catch (error) {
       console.log(error);
+      wx.nextTick(()=>{
+        this.saveFailed(error)
+      })
+    } finally {
       await wx.hideLoading()
-      if(error.message === '01'){
-        wx.showModal({
-          title: '未设置主密码',
-          content: '需要设置主密码才能启用加密功能',
-          confirmText: '去设置',
-          success: ({cancel})=>{
-            if(cancel) return
-            wx.navigateTo({
-              url: '../../settings/security/master-key/index',
-            })
-          }
-        })
-      }else if(error.message === '02'){
-        wx.showModal({
-          title: '请输入主密码',
-          editable: true,
-          success: ({cancel, content}) => {
-            if(cancel) return
-            if(!content){
-              wx.nextTick(()=>{
-                wx.showToast({
-                  title: '输入不能为空',
-                })
-              })
-              return
-            }
-            this.app.saveMasterKey(content)
-            wx.nextTick(()=>{
-              this.goSaveCard()
-            })
-          }
-        })
-      }else{
-        wx.showModal({
-          title: '保存数据出错',
-          content: error.message
-        })
-      }
     }
   },
 
   async saveCard(){
-    let card = this.data.card
+    const card = Object.assign({},this.data.card)
     const cardManager = await getCardManager()
     return cardManager.add(card)
   },
-  
+  async saveDone(){
+    await wx.hideLoading()
+    wx.showModal({
+      title: '操作成功',
+      content: '卡片数据已保存',
+      showCancel: false,
+      success: ()=>{
+        wx.navigateBack()
+      }
+    })
+  },
+  async saveFailed(error){
+    if(error.message === '01'){
+      wx.showModal({
+        title: '未设置主密码',
+        content: '需要设置主密码才能启用加密功能',
+        confirmText: '去设置',
+        success: ({cancel})=>{
+          if(cancel) return
+          wx.navigateTo({
+            url: '../../settings/security/master-key/index',
+          })
+        }
+      })
+    }else if(error.message === '02'){
+      wx.showModal({
+        title: '请输入主密码',
+        editable: true,
+        success: ({cancel, content}) => {
+          if(cancel) return
+          if(!content){
+            wx.nextTick(()=>{
+              wx.showToast({
+                title: '输入不能为空',
+              })
+            })
+            return
+          }
+          this.app.setMasterKey(content)
+          wx.nextTick(()=>{
+            this.goSaveCard()
+          })
+        }
+      })
+    }else{
+      wx.showModal({
+        title: '保存数据出错',
+        content: error.message
+      })
+    }
+  },
   async goTapPic(e){
     const index = e.currentTarget.dataset.index
     try {
@@ -118,13 +135,9 @@ Page({
       wx.navigateTo({
         url: `../image-processor/index?p=${picPath}`,
       })
-      // const key = `card.image[${index}].url`
-      // this.setData({
-      //   [key]: picPath
-      // })
     } catch (error) {
       wx.showToast({
-        title: error.message || error.toString(),
+        title: error.message,
         icon: "error"
       })
     }
