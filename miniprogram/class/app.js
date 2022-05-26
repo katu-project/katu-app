@@ -7,23 +7,35 @@ class AppManager {
   static instance = null
   masterKey = null
   
-  static async getInstance(options){
+  static async getInstance(options={}){
     if(!this.instance){
       this.instance = new AppManager()
-      this.instance.user = await getUser()
-      this.instance.setAppBaseInfo()
-      this.constData = constData
-      if(!options?.setMasterKey){
-        await this.instance.loadMasterKey()
-      }
+      await this.instance.init()
     }
     return this.instance
   }
+  async init(){
+    this.user = await getUser()
+    this.loadAppBaseInfo()
+    this.loadAppConfig()
+    this.loadConstant()
+    this.loadMasterKey()
+  }
 
-  setAppBaseInfo(){
-    this.appInfo = wx.getAccountInfoSync()
-    this.appVersion = this.appInfo.miniProgram.version || 'develop'
-    this.isDev = this.appInfo.miniProgram.envVersion !== 'release'
+  loadAppBaseInfo(){
+    this.AppInfo = wx.getAccountInfoSync()
+    this.appVersion = this.AppInfo.miniProgram.version || 'develop'
+    this.isDev = this.AppInfo.miniProgram.envVersion !== 'release'
+  }
+  
+  loadConstant(){
+    this.Constant = constData
+  }
+
+  loadAppConfig(){
+    this.Config = {
+      uploadCardNamePrefix: 'card'
+    }
   }
 
   checkMasterKey(){
@@ -48,6 +60,7 @@ class AppManager {
   }
 
   async readMasterKey(){
+    console.log("read Master Key");
     try {
       const {data} = await wx.getStorage({
         key: MASTER_KEY_NAME
@@ -60,12 +73,13 @@ class AppManager {
   }
 
   
-  async saveMasterKey(key){
+  async setMasterKey(key){
     const keyHash = utils.crypto.sha512(key)
     await wx.setStorage({
       key: MASTER_KEY_NAME,
       data: keyHash
     })
+    await this.reloadMasterKey()
     return keyHash.slice(32)
   }
   
