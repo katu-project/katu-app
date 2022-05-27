@@ -1,6 +1,6 @@
 const globalData = getApp().globalData
 const { loadData } = require('../../utils/index')
-
+const { showChoose, navigateTo, showInfo } = require('../../utils/action')
 Page({
   data: {
     user: {},
@@ -47,15 +47,19 @@ Page({
       'app.version': globalData.app.appVersion
     })
   },
-  tapToSettings(){
-    wx.navigateTo({
-      url: '../settings/index',
+  tapUser(){
+    if(this.data.user.isActive) return
+    showChoose('激活账户','激活账户能获得更多卡片额度').then(()=>{
+      loadData().then(()=>{
+        showInfo("激活成功")
+      })
     })
   },
+  tapToSettings(){
+    navigateTo('../settings/index')
+  },
   tapToQA(){
-    wx.navigateTo({
-      url: '../qa/index',
-    })
+    navigateTo('../qa/index')
   },
   tapOpenAbout(){
     this.setData({

@@ -31,14 +31,10 @@ Page({
   onShow() {
 
   },
-  tapToSecurity(){
+  tapToPage(e){
+    const page = e.currentTarget.dataset.page
     wx.navigateTo({
-      url: './security/index',
-    })
-  },
-  tapToDebug(){
-    wx.navigateTo({
-      url: '../debug/index',
+      url: `./${page}/index`,
     })
   },
   /**

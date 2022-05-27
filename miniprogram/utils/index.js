@@ -2,16 +2,17 @@ const crypto = require('./crypto')
 const file = require('./file')
 const convert = require('./convert')
 
-async function sleep(t=1000){
-  return new Promise(r=>{
-    setTimeout(r,t)
+async function sleep(t=2000){
+  return new Promise((resolve,reject)=>{
+    setTimeout(resolve,t)
   })
 }
 
 async function loadData(func, params={}){
+  params = func ? params : 2000
   func = func || sleep
   wx.showLoading({
-    title: '数据加载中',
+    title: '正在处理请求',
     mask: true
   })
   try {
