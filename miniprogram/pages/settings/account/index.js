@@ -1,5 +1,4 @@
-const { loadData } = require("../../../utils/index")
-
+const { loadData, showNotice } = require("../../../utils/index")
 const globalData = getApp().globalData
 
 Page({
@@ -34,7 +33,8 @@ Page({
     })
   },
   startDeleteAccount(){
-    loadData().then(()=>{
+    loadData(this.app.removeAccount).then(()=>{
+      this.app.clearUserInfo()
       wx.showModal({
         title: '操作成功',
         content: '账户注销成功',

@@ -1,6 +1,6 @@
 const utils = require('../utils/index')
 const constData = require('../const')
-const { getUser } = require('../api')
+const { getUser, removeAccount } = require('../api')
 const { APP_TEMP_DIR ,MASTER_KEY_NAME } = require('../const')
 
 class AppManager {
@@ -42,6 +42,15 @@ class AppManager {
     this.user = await getUser()
   }
 
+  // user action
+  async removeAccount(){
+    return removeAccount()
+  }
+  clearUserInfo(){
+    this.user.isActive = false
+    this.masterKey = null
+  }
+  // user action
   // master key section
 
   async reloadMasterKey(){

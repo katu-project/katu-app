@@ -9,6 +9,14 @@ async function showInfo(msg, typeIdx=3, mask=true){
   })
 }
 
+async function showNotice(msg){
+  return showInfo(msg)
+}
+
+async function showError(msg){
+  return showInfo(msg, 1)
+}
+
 // showChoose(title,content)
 async function showChoose(title, content, options={}){
   return new Promise((resolve,reject)=>{
@@ -46,6 +54,9 @@ async function loadData(func, params={}){
     return res
   } catch (error) {
     await wx.hideLoading()
+    if(error.code === 1){
+      return showError(error.message)
+    }
     wx.showModal({
       title: '内部服务错误，请联系客服',
       content: error.message,
@@ -63,6 +74,7 @@ async function loadData(func, params={}){
 module.exports = {
   showInfo,
   showChoose,
+  showNotice,
   navigateTo,
   loadData
 }
