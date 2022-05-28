@@ -885,8 +885,8 @@ button.icon.lg {
 
 .cu-capsule.radius .cu-tag:last-child::after,
 .cu-capsule.radius .cu-tag[class*="line-"] {
-	border-top-right-radius: 12rpx;
-	border-bottom-right-radius: 12rpx;
+	border-top-right-radius: 6rpx;
+	border-bottom-right-radius: 6rpx;
 }
 
 .cu-capsule.round .cu-tag:first-child {
