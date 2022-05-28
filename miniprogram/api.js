@@ -18,6 +18,9 @@ module.exports = {
   getUser: ()=>{
     return request('user/getUser')
   },
+  activeAccount: data => {
+    return request('user/active', wx.cloud.CloudID(data.cloudId))
+  },
   saveCard: data=>{
     return request('user/saveCard', data)
   },

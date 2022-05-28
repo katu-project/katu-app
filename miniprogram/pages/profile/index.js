@@ -1,19 +1,19 @@
 const globalData = getApp().globalData
 const { loadData } = require('../../utils/index')
+const { activeAccount, getUser } = require('../../api')
 const { showChoose, navigateTo, showInfo } = require('../../utils/action')
 Page({
   data: {
-    user: {},
+    user: {
+      canUseCardCount: 1,
+      canUseEncryptedCardCount: 0
+    },
     app: {
       logo: '/static/logo.svg',
       version: 'dev',
     },
     qrUrl: 'cloud://dev-4gglcut52bffa0ff.6465-dev-4gglcut52bffa0ff-1310995773/app/myqr.png',
   },
-
-  /**
-   * 生命周期函数--监听页面加载
-   */
   onLoad(options) {
   },
 
@@ -49,11 +49,32 @@ Page({
   },
   tapUser(){
     if(this.data.user.isActive) return
-    showChoose('激活账户','激活账户能获得更多卡片额度').then(()=>{
-      loadData().then(()=>{
-        showInfo("激活成功")
+    return this.goActiveAccount()
+  },
+  goActiveAccount(){
+    wx.getUserProfile({
+      desc: '用于完善会员资料',
+      success: ({cloudID}) => {
+        loadData(activeAccount, {cloudId: cloudID}).then(()=>{
+          showInfo("激活成功",2)
+          this.updateUserInfo()
+        })
+      },
+      fail: err => {
+        console.log(err);
+        showInfo('授权失败',1)
+      }
+    })
+  },
+  updateUserInfo(){
+    globalData.app.reloadUserInfo().then(()=>{
+      this.setData({
+        user: globalData.app.user
       })
     })
+  },
+  tapToShowActiveInfo(){
+    showInfo("普通卡额度 +10张")
   },
   tapToSettings(){
     navigateTo('../settings/index')

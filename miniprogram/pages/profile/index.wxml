@@ -2,12 +2,14 @@
   <view class="padding-top"></view>
   <view class="margin-bottom padding bg-cyan flex-col align-start" style="border-radius: 6rpx;">
     <view class="flex">
-      <view class="bg-gray light padding-sm" style="border-radius: 10rpx;">
-        <image src="/static/images/user.svg" style="height: 160rpx; width: 160rpx;"></image>
+      <view class="bg-gray light flex" style="border-radius: 10rpx;padding:4rpx">
+        <image src="{{user.isActive? user.avatarUrl:'/static/images/user.svg'}}" style="height: 160rpx; width: 160rpx;border-radius: 10rpx;"></image>
       </view>
-      <view class="margin-left flex-col justify-between padding-top-sm">
-        <view bindtap="tapUser">
-          <text class="text-xl solids-bottom">激活账户</text>
+      <view class="margin-left flex-col justify-between padding-top-xs">
+        <view wx:if="{{user.isActive}}" class="text-xl">{{user.nickName}}</view>
+        <view wx:else>
+          <text class="text-xl solids-bottom" bindtap="tapUser">激活账户</text>
+          <text class="cuIcon-info padding-left-sm padding text-yellow light" bindtap="tapToShowActiveInfo"></text>
         </view>
         <view class="flex">
           <view class="cu-capsule radius margin-right">
