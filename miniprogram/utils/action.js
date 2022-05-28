@@ -1,3 +1,5 @@
+const { sleep } = require('./base')
+
 async function showInfo(msg, typeIdx=3, mask=true){
   const type = ['success', 'error', 'loading', 'none']
   return wx.showToast({
@@ -21,8 +23,8 @@ async function showChoose(title, content, options={}){
   })
 }
 
-async function navigateTo(page){
-  wx.vibrateShort({
+async function navigateTo(page, vibrate=false){
+  vibrate && wx.vibrateShort({
     type: 'light',
   })
   wx.navigateTo({
@@ -30,8 +32,37 @@ async function navigateTo(page){
   })
 }
 
+async function loadData(func, params={}){
+  params = func ? params : 2000
+  func = func || sleep
+  wx.showLoading({
+    title: '正在处理请求',
+    mask: true
+  })
+  let res
+  try {
+    res = await func(params)
+    await wx.hideLoading()
+    return res
+  } catch (error) {
+    await wx.hideLoading()
+    wx.showModal({
+      title: '内部服务错误，请联系客服',
+      content: error.message,
+      showCancel: false,
+      success: ({confirm})=>{
+        if(!confirm) return
+        wx.navigateTo({
+          url: '/pages/profile/index',
+        })
+      }
+    })
+  }
+}
+
 module.exports = {
   showInfo,
   showChoose,
-  navigateTo
+  navigateTo,
+  loadData
 }
