@@ -28,10 +28,10 @@ Page({
     navigateTo(`/pages/card/detail/index?id=${e.currentTarget.dataset.item._id}`)
   },
   goAddCard(){
-    navigateTo('/pages/card/add/index')
+    navigateTo('/pages/card/add/index', true)
   },
   goProfile(){
-    navigateTo('/pages/profile/index')
+    navigateTo('/pages/profile/index', true)
   },
   /**
    * 页面相关事件处理函数--监听用户下拉动作
