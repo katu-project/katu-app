@@ -1,20 +1,29 @@
 const { sleep } = require('./base')
 
-async function showInfo(msg, typeIdx=3, mask=true){
+async function showInfo(msg, typeIdx=3, mask=true, options={}){
   const type = ['success', 'error', 'loading', 'none']
   return wx.showToast({
     title: msg,
     icon: type[typeIdx],
     mask,
+    ...options
   })
 }
 
-async function showNotice(msg){
-  return showInfo(msg)
+async function showSuccess(msg){
+  return showInfo(msg,0)
 }
 
 async function showError(msg){
   return showInfo(msg, 1)
+}
+
+async function showLoading(msg, duration=500){
+  return showInfo(msg,2, true, {duration})
+}
+
+async function showNotice(msg){
+  return showInfo(msg)
 }
 
 // showChoose(title,content)
@@ -43,7 +52,7 @@ async function navigateTo(page, vibrate=false){
 async function loadData(func, params={}){
   let pfunc
   if(func){
-    pfunc = async ()=> await func()
+    pfunc = async ()=> await func(params)
   }else{
     pfunc = sleep
     params = 2000
@@ -87,9 +96,11 @@ async function loadData(func, params={}){
 
 module.exports = {
   showInfo,
+  showSuccess,
   showChoose,
   showNotice,
   showError,
+  showLoading,
   navigateTo,
   loadData
 }
