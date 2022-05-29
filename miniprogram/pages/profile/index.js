@@ -1,46 +1,31 @@
 const globalData = getApp().globalData
 const { loadData } = require('../../utils/index')
-const { activeAccount, getUser } = require('../../api')
-const { showChoose, navigateTo, showInfo } = require('../../utils/action')
+const { activeAccount } = require('../../api')
+const { navigateTo, showInfo } = require('../../utils/action')
+
+const defaultUserData = {
+  canUseCardCount: 1,
+  canUseEncryptedCardCount: 0
+}
+
 Page({
   data: {
-    user: {
-      canUseCardCount: 1,
-      canUseEncryptedCardCount: 0
-    },
+    user: defaultUserData,
     app: {
       logo: '/static/logo.svg',
       version: 'dev',
     },
-    qrUrl: 'cloud://dev-4gglcut52bffa0ff.6465-dev-4gglcut52bffa0ff-1310995773/app/myqr.png',
+    qrUrl: '',
   },
   onLoad(options) {
   },
-
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
   onReady() {
-    if(globalData.user){
-      this.setData({
-        user: globalData.app.user
-      })
-    }else{
-      loadData().then(()=>{
-        this.setData({
-          user: globalData.user
-        })
-      })
-    }
-    
     this.loadAppInfo()
+    this.setData({
+      user: globalData.app.user
+    })
   },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
   onShow() {
-
   },
   loadAppInfo(){
     this.setData({

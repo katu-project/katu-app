@@ -1,4 +1,4 @@
-const { loadData, showNotice } = require("../../../utils/index")
+const { loadData, showChoose } = require("../../../utils/index")
 const globalData = getApp().globalData
 
 Page({
@@ -21,29 +21,22 @@ Page({
   },
 
   tapToDeleteAccount(){
-    wx.showModal({
-      title: '警告',
-      content: '注销账户将会删除你在卡兔上的所有数据！',
+    showChoose('警告','注销账户将会删除你在卡兔上的所有数据！',{
       confirmText: '确认注销',
       confirmColor: 'red',
-      success: ({cancel}) => {
-        if(cancel) return
-        this.startDeleteAccount()
-      }
+    }).then(()=>{
+      this.startDeleteAccount()
     })
   },
   startDeleteAccount(){
     loadData(this.app.removeAccount).then(()=>{
       this.app.clearUserInfo()
-      wx.showModal({
-        title: '操作成功',
-        content: '账户注销成功',
-        showCancel: false,
-        success: ()=>{
-          wx.reLaunch({
-            url: '/pages/home/index',
-          })
-        }
+      showChoose('操作成功','账户注销成功',{
+        showCancel: false
+      }).then(()=>{
+        wx.reLaunch({
+          url: '/pages/home/index',
+        })
       })
     })
   }

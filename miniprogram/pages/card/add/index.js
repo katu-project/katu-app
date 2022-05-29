@@ -1,4 +1,5 @@
 const { getCardManager } = require('../../../class/card')
+const { showNotice, showChoose, navigateTo } = require('../../../utils/action')
 const DefaultAddImage = '/static/images/add.svg'
 const globalData = getApp().globalData
 
@@ -13,22 +14,10 @@ Page({
     },
     curShowPicIdx: 0
   },
-
-  /**
-   * 生命周期函数--监听页面加载
-   */
   onLoad() {},
-
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
   async onReady() {
     this.app = globalData.app
   },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
   onShow() {
     if(this.resolveImagePath){
       const key = `card.image[${this.resolveImageIdx}].url`
@@ -39,15 +28,9 @@ Page({
       this.resolveImageIdx = 0
     }
   },
-  hasEmptyPic(){
-    return this.data.card.image.filter(e=>e.url === DefaultAddImage).length > 0
-  },
   async goSaveCard(){
-    if(this.hasEmptyPic()) {
-      wx.showToast({
-        title: '有未使用的卡面',
-        icon: 'error'
-      })
+    if(this.data.card.image.filter(e=>e.url === DefaultAddImage).length > 0) {
+      showNotice('有未使用的卡面')
       return
     }
     wx.showLoading({
@@ -74,32 +57,19 @@ Page({
     return cardManager.add(card)
   },
   async saveDone(){
-    await wx.hideLoading()
-    wx.showModal({
-      title: '操作成功',
-      content: '卡片数据已保存',
-      showCancel: false,
-      success: ()=>{
-        wx.navigateBack()
-      }
+    showChoose('操作成功','卡片数据已保存',{showCancel: false}).then(()=>{
+      wx.navigateBack()
     })
   },
   async saveFailed(error){
-    if(error.message === '01'){
-      wx.showModal({
-        title: '未设置主密码',
-        content: '需要设置主密码才能启用加密功能',
-        confirmText: '去设置',
-        success: ({cancel})=>{
-          if(cancel) return
-          wx.navigateTo({
-            url: '../../settings/security/master-key/index',
-          })
-        }
+    if(error.code === '01'){
+      showChoose('操作警告',error.message,{}).then(()=>{
+        navigateTo('../../settings/security/master-key/index',false)
       })
-    }else if(error.message === '02'){
+    }else if(error.code === '02'){
+      // todo 使用同一全局输入ui
       wx.showModal({
-        title: '请输入主密码',
+        title: error.message,
         editable: true,
         success: ({cancel, content}) => {
           if(cancel) return
@@ -113,16 +83,10 @@ Page({
           }
           this.app.setMasterKey(content)
           this.app.reloadMasterKey()
-          wx.nextTick(()=>{
-            this.goSaveCard()
-          })
         }
       })
     }else{
-      wx.showModal({
-        title: '保存数据出错',
-        content: error.message
-      })
+      showChoose('保存卡片出错',error.message)
     }
   },
   async goTapPic(e){
