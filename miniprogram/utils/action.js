@@ -26,8 +26,8 @@ async function showChoose(title, content, options={}){
       ...options
     }).then(({confirm, content})=>{
       if(confirm) return resolve(content)
-      return reject()
-    }).catch(reject)
+      // return reject()
+    }).catch(console.warn)
   })
 }
 
@@ -41,40 +41,55 @@ async function navigateTo(page, vibrate=false){
 }
 
 async function loadData(func, params={}){
-  params = func ? params : 2000
-  func = func || sleep
+  let pfunc
+  if(func){
+    pfunc = async ()=> await func()
+  }else{
+    pfunc = sleep
+    params = 2000
+  }
   wx.showLoading({
     title: '正在处理请求',
     mask: true
   })
-  let res
-  try {
-    res = await func(params)
-    await wx.hideLoading()
-    return res
-  } catch (error) {
-    await wx.hideLoading()
-    if(error.code === 1){
-      return showError(error.message)
-    }
-    wx.showModal({
-      title: '内部服务错误，请联系客服',
-      content: error.message,
-      showCancel: false,
-      success: ({confirm})=>{
-        if(!confirm) return
-        wx.navigateTo({
-          url: '/pages/profile/index',
-        })
-      }
+
+  return new Promise((resolve)=>{
+    pfunc(params).then(res=>{
+      resolve(res)
+      wx.hideLoading()
+    }).catch(error=>{
+      wx.hideLoading({
+        success: () => {
+          if(error.code === 1){
+            wx.showModal({
+              title: '操作未完成',
+              content: error.message,
+              showCancel: false,
+            })
+          }else{
+            wx.showModal({
+              title: '内部服务错误，请稍后重试或联系客服',
+              content: error.message,
+              showCancel: false,
+              success: ({confirm})=>{
+                if(!confirm) return
+                wx.navigateTo({
+                  url: '/pages/profile/index',
+                })
+              }
+            })
+          }
+        }
+      })
     })
-  }
+  })
 }
 
 module.exports = {
   showInfo,
   showChoose,
   showNotice,
+  showError,
   navigateTo,
   loadData
 }
