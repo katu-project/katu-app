@@ -23,7 +23,7 @@ Page({
   tapToDeleteAccount(){
     showChoose('警告','注销账户将会删除你在卡兔上的所有数据！',{
       confirmText: '确认注销',
-      confirmColor: 'red',
+      confirmColor: '#FF0000',
     }).then(()=>{
       this.startDeleteAccount()
     })
