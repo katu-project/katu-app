@@ -83,8 +83,10 @@ class CardManager {
   }
 
   async add(card){
-    this.app.checkMasterKey()
     const cardModel = {encrypted: card.encrypted?1:0, image: [], info: {card:null} }
+    if(cardModel.encrypted){
+      this.app.checkMasterKey()
+    }
     for (const pic of card.image) {
       let imageData = {url:'',salt:'',hash:''}
       

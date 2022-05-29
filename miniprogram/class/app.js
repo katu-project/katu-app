@@ -80,11 +80,19 @@ class AppManager {
   }
 
   checkMasterKey(){
+    const error = {
+      code: '',
+      message: ''
+    }
     if(!this.user.setMasterKey){
-      throw Error("01")
+      error.code = '01'
+      error.message = '需要设置主密码才能启用加密功能'
+      throw error
     }
     if(!this.masterKey) {
-      throw Error("02")
+      error.code = '02'
+      error.message = '请输入主密码'
+      throw error
     }
   }
 
