@@ -6,12 +6,12 @@ const request = (action, data={}) => {
   }
   return new Promise((resolve,reject)=>{
     wx.cloud.callFunction({ name: 'api', data: { action, data } })
-    .then(data=>{
-      if(data.result.code === 0){
-        resolve(data.result.data)
+    .then(({result})=>{
+      if(result.code === 0){
+        resolve(result.data)
       }else{
-        error.code = 1
-        error.message = data.result.msg
+        error.message = result.msg
+        error.code = result.code
         reject(error)
       }
     })
@@ -30,14 +30,11 @@ module.exports = {
 
   removeAccount: () => request('user/removeAccount'),
   
-  saveCard: data=>{
-    return request('user/saveCard', data)
-  },
-  getCard: data=>{
-    return request('user/getCard', data)
-  },
-  deleteCard: id=>{
-    return request('user/deleteCard', id)
-  },
+  getCard: data => request('card/fetch', data),
+
+  saveCard: data => request('card/save', data),
+  
+  deleteCard: id => request('card/delete', id),
+
   getDoc: data => request('doc/getDoc', data)
 }

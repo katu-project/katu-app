@@ -1,5 +1,5 @@
 <view class="page flex-col" style="min-height: 100vh;">
-  <view class="padding-top"></view>
+  <view class="padding-top-sm"></view>
   <view class="margin-bottom padding bg-cyan flex-col align-start" style="border-radius: 6rpx;">
     <view class="flex">
       <view class="bg-gray light flex" style="border-radius: 10rpx;padding:4rpx">

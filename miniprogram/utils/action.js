@@ -76,9 +76,10 @@ async function loadData(func, params={}){
               showCancel: false,
             })
           }else{
+            console.warn(error.message)
             wx.showModal({
-              title: '内部服务错误，请稍后重试或联系客服',
-              content: error.message,
+              title: `服务错误(${error.code})`,
+              content: '请稍后重试或联系客服',
               showCancel: false,
               success: ({confirm})=>{
                 if(!confirm) return
