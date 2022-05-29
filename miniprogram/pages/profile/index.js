@@ -1,7 +1,6 @@
 const globalData = getApp().globalData
-const { loadData } = require('../../utils/index')
+const { loadData, navigateTo, showSuccess, showLoading, showNotice } = require('../../utils/index')
 const { activeAccount } = require('../../api')
-const { navigateTo, showInfo } = require('../../utils/action')
 
 const defaultUserData = {
   canUseCardCount: 1,
@@ -37,17 +36,18 @@ Page({
     return this.goActiveAccount()
   },
   goActiveAccount(){
+    showLoading('等待授权')
     wx.getUserProfile({
       desc: '用于完善会员资料',
       success: ({cloudID}) => {
         loadData(activeAccount, {cloudId: cloudID}).then(()=>{
-          showInfo("激活成功",2)
+          showSuccess("激活成功")
           this.updateUserInfo()
         })
       },
       fail: err => {
         console.log(err);
-        showInfo('授权失败',1)
+        showNotice('取消授权')
       }
     })
   },
@@ -59,7 +59,7 @@ Page({
     })
   },
   tapToShowActiveInfo(){
-    showInfo("普通卡额度 +10张")
+    showNotice("普通卡额度 +10张")
   },
   tapToSettings(){
     navigateTo('../settings/index')
