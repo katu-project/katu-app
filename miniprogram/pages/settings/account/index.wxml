@@ -3,9 +3,8 @@
     <view class="cu-item item" bindtap="tapToDeleteAccount">
       <view class="content">
         <text class="cuIcon-delete text-red"></text>
-        <text class="text-grey">注销账户</text>
+        <text class="text-grey">删除账户</text>
       </view>
     </view>
-
   </view>
 </view>
