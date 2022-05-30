@@ -6,6 +6,8 @@ const { activeAccount } = require('../../api')
 Page({
   data: {
     user: DefaultUserData,
+    usedCardCount: 0,
+    usedEncryptedCardCount: 0,
     app: {
       logo: '/static/logo.svg',
       version: 'dev',
@@ -21,6 +23,12 @@ Page({
     })
   },
   onShow() {
+    globalData.app.getUsageStatistic().then(stats=>{
+      this.setData({
+        usedCardCount: stats.usedCardCount ||  0,
+        usedEncryptedCardCount: stats.usedEncryptedCardCount || 0
+      })
+    })
   },
   loadAppInfo(){
     this.setData({

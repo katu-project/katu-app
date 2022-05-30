@@ -1,6 +1,6 @@
 const utils = require('../utils/index')
 const constData = require('../const')
-const { getUser, removeAccount } = require('../api')
+const { getUser, removeAccount, usageStatistic } = require('../api')
 const { APP_TEMP_DIR ,MASTER_KEY_NAME } = require('../const')
 const DefaultUserData = {
   isActive: 0,
@@ -48,6 +48,10 @@ class AppManager {
   }
 
   // user action
+  async getUsageStatistic(){
+    return usageStatistic()
+  }
+
   async removeAccount(){
     return removeAccount()
   }

@@ -30,6 +30,8 @@ module.exports = {
 
   removeAccount: () => request('user/removeAccount'),
   
+  usageStatistic: () => request('user/usage'),
+
   getCard: data => request('card/fetch', data),
 
   saveCard: data => request('card/save', data),
