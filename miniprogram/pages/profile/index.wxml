@@ -6,7 +6,10 @@
         <image src="{{user.isActive? user.avatarUrl:'/static/images/user.svg'}}" style="height: 160rpx; width: 160rpx;border-radius: 10rpx;"></image>
       </view>
       <view class="margin-left flex-col justify-between padding-top-xs">
-        <view wx:if="{{user.isActive}}" class="text-xl">{{user.nickName}}</view>
+        <view wx:if="{{user.isActive}}" class="flex justify-between align-center">
+          <text class="text-xxl">{{user.nickName}}</text>
+          <text class="text-black">ID: {{user.identifyCode}}</text>
+        </view>
         <view wx:else>
           <text class="text-xl solids-bottom" bindtap="tapUser">激活账户</text>
           <text class="cuIcon-info padding-left-sm padding text-yellow light" bindtap="tapToShowActiveInfo"></text>

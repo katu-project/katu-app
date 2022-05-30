@@ -1,15 +1,11 @@
 const globalData = getApp().globalData
+const { DefaultUserData } = require('../../class/app')
 const { loadData, navigateTo, showSuccess, showLoading, showNotice } = require('../../utils/index')
 const { activeAccount } = require('../../api')
 
-const defaultUserData = {
-  canUseCardCount: 1,
-  canUseEncryptedCardCount: 0
-}
-
 Page({
   data: {
-    user: defaultUserData,
+    user: DefaultUserData,
     app: {
       logo: '/static/logo.svg',
       version: 'dev',

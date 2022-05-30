@@ -2,6 +2,11 @@ const utils = require('../utils/index')
 const constData = require('../const')
 const { getUser, removeAccount } = require('../api')
 const { APP_TEMP_DIR ,MASTER_KEY_NAME } = require('../const')
+const DefaultUserData = {
+  isActive: 0,
+  canUseCardCount: 1,
+  canUseEncryptedCardCount: 0
+}
 
 class AppManager {
   static instance = null
@@ -47,7 +52,7 @@ class AppManager {
     return removeAccount()
   }
   clearUserInfo(){
-    this.user.isActive = false
+    this.user = DefaultUserData
     this.masterKey = null
   }
   // user action
@@ -180,5 +185,6 @@ async function getAppManager(...args){
 }
 
 module.exports = {
-  getAppManager
+  getAppManager,
+  DefaultUserData
 }

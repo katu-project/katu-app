@@ -21,8 +21,8 @@ Page({
   },
 
   tapToDeleteAccount(){
-    showChoose('警告','注销账户将会删除你在卡兔上的所有数据！',{
-      confirmText: '确认注销',
+    showChoose('警告','删除账户将会删除你在卡兔上的所有数据！',{
+      confirmText: '确认删除',
       confirmColor: '#FF0000',
     }).then(()=>{
       this.startDeleteAccount()
@@ -31,7 +31,7 @@ Page({
   startDeleteAccount(){
     loadData(this.app.removeAccount).then(()=>{
       this.app.clearUserInfo()
-      showChoose('操作成功','账户注销成功',{
+      showChoose('操作成功','账户删除成功',{
         showCancel: false
       }).then(()=>{
         wx.reLaunch({
