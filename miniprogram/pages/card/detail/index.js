@@ -11,7 +11,7 @@ Page({
   data: {
     defaultLockImage: DefaultLockImage,
     card: {
-      id: '',
+      _id: '',
       image: [
         {
           url: DefaultShowImage
@@ -25,9 +25,7 @@ Page({
    */
   onLoad(options) {
     if(options.id){
-      this.setData({
-        'card.id': options.id
-      })
+      this.id = options.id
     }
   },
 
@@ -35,12 +33,12 @@ Page({
    * 生命周期函数--监听页面初次渲染完成
    */
   async onReady() {
-    if(this.data.card.id){
+    if(this.id){
       const res = await getCard({
-        id: this.data.card.id
+        _id: this.id
       })
       this.setData({
-        'card.id': res._id,
+        'card._id': res._id,
         'card.encrypted': res.encrypted,
         'card.image': res.image.map(pic=>{
           pic._url = pic.url
@@ -88,7 +86,7 @@ Page({
   },
   goUpdateCard(){
     wx.redirectTo({
-      url: '/pages/card/edit/index?id='+ this.data.card.id,
+      url: '/pages/card/edit/index?id='+ this.id,
     })
   },
   goDeleteCard(){
@@ -98,7 +96,7 @@ Page({
       success: ({cancel})=>{
         if(cancel) return
         deleteCard({
-          id: this.data.card.id
+          _id: this.id
         }).then(res=>{
           wx.navigateBack()
         })
