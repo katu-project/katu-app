@@ -66,7 +66,7 @@ class AppManager {
   }
   clearUserInfo(){
     this.user = DefaultUserData
-    this.masterKey = null
+    this._masterKey = null
   }
   // user action
   // master key section
@@ -107,22 +107,33 @@ class AppManager {
       error.message = '需要设置主密码才能启用加密功能'
       throw error
     }
-    if(!this.masterKey) {
+    if(!this._masterKey) {
       error.code = '02'
       error.message = '请输入主密码'
       throw error
     }
   }
 
-  async buildMasterKey(originKey){
+  async checkOriginMasterKey(originKey){
     if(!originKey || originKey.length < 6) throw Error("输入不符合密码要求")
+    if(this.user.setMasterKey){
+      const originKeyHash = utils.crypto.sha1(originKey)
+      if(!originKeyHash.endsWith(this.user.masterKeyPack.masterKeyId)){
+        throw Error("输入与已设置的主密码不匹配")
+      }
+    }
+  }
+
+  async createMasterKey(originKey){
     return utils.crypto.sha1(originKey)
   }
 
+  // 根据用户原始密码解密出主密码 _masterKey
   async loadMasterKey(){
     if(!this.user.setMasterKey) return
     const originMasterKey = await this.readMasterKey()
-    this.masterKey = utils.crypto.decryptString(this.user.masterKeyPack.masterKeyPack,originMasterKey)
+    if(!originMasterKey) return
+    this._masterKey = utils.crypto.decryptString(this.user.masterKeyPack.masterKeyPack,originMasterKey)
   }
 
   async readMasterKey(){
@@ -138,13 +149,19 @@ class AppManager {
     return null
   }
 
-  async setMasterKey(key){
+  async setMasterKey(hashKey){
     await wx.setStorage({
       key: MASTER_KEY_NAME,
-      data: await this.buildMasterKey(key)
+      data: hashKey
     })
   }
 
+  async checkSetAndReloadMasterKey(key){
+    await this.checkOriginMasterKey(key)
+    const masterKey = await this.createMasterKey(key)
+    await this.setMasterKey(masterKey)
+    return this.reloadMasterKey()
+  }
   // master key section
   
   async chooseFile(){
@@ -194,7 +211,7 @@ class AppManager {
 }
 
 async function getAppManager(...args){
-  return AppManager.getInstance(...args)
+  return utils.selfish(await AppManager.getInstance(...args))
 }
 
 module.exports = {
