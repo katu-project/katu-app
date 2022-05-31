@@ -12,7 +12,8 @@ Page({
         { url: DefaultAddImage }
       ],
     },
-    curShowPicIdx: 0
+    curShowPicIdx: 0,
+    showInputKey: false
   },
   onLoad() {},
   async onReady() {
@@ -50,7 +51,6 @@ Page({
       await wx.hideLoading()
     }
   },
-
   async saveCard(){
     const card = Object.assign({},this.data.card)
     const cardManager = await getCardManager()
@@ -67,24 +67,7 @@ Page({
         navigateTo('../../settings/security/master-key/index',false)
       })
     }else if(error.code === '02'){
-      // todo 使用同一全局输入ui
-      wx.showModal({
-        title: error.message,
-        editable: true,
-        success: ({cancel, content}) => {
-          if(cancel) return
-          if(!content){
-            wx.nextTick(()=>{
-              wx.showToast({
-                title: '输入不能为空',
-              })
-            })
-            return
-          }
-          this.app.setMasterKey(content)
-          this.app.reloadMasterKey()
-        }
-      })
+      this.showInputKey()
     }else{
       showChoose('保存卡片出错',error.message)
     }
@@ -148,31 +131,9 @@ Page({
       editTitle: false
     })
   },
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload() {
-
-  },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh() {
-
-  },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom() {
-
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage() {
-
+  showInputKey(){
+    this.setData({
+      showInputKey: true
+    })
   }
 })

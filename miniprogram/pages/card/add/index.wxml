@@ -79,3 +79,5 @@
     </view>
   </view>
 </view>
+
+<read-key show="{{showInputKey}}" />
