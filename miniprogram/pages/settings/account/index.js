@@ -1,4 +1,4 @@
-const { loadData, showChoose } = require("../../../utils/index")
+const { loadData, showChoose, showNotice } = require("../../../utils/index")
 const globalData = getApp().globalData
 
 Page({
@@ -29,6 +29,9 @@ Page({
     })
   },
   startDeleteAccount(){
+    if(!this.app.user.isActive) {
+      return showNotice("账户未激活，无需删除")
+    }
     loadData(this.app.removeAccount).then(()=>{
       this.app.clearUserInfo()
       showChoose('操作成功','账户删除成功',{

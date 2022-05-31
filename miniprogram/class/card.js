@@ -84,6 +84,8 @@ class CardManager {
 
   async add(card){
     const cardModel = {encrypted: card.encrypted?1:0, image: [], info: {card:null} }
+    await this.app.checkQuota(cardModel.encrypted)
+
     if(cardModel.encrypted){
       this.app.checkMasterKey()
     }

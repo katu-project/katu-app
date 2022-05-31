@@ -4,8 +4,10 @@ const { getUser, removeAccount, usageStatistic } = require('../api')
 const { APP_TEMP_DIR ,MASTER_KEY_NAME } = require('../const')
 const DefaultUserData = {
   isActive: 0,
-  canUseCardCount: 1,
-  canUseEncryptedCardCount: 0
+  quota: {
+    cardCount: 1,
+    encryptedCardCount: 0
+  }
 }
 
 class AppManager {
@@ -48,6 +50,13 @@ class AppManager {
   }
 
   // user action
+  async checkQuota(encrypted=false){
+    const { canUseCardCount, canUseEncryptedCardCount } = await usageStatistic()
+    if(encrypted && canUseEncryptedCardCount) return
+    if(!encrypted && canUseCardCount) return
+    throw Error('可使用卡片量不足')
+  }
+
   async getUsageStatistic(){
     return usageStatistic()
   }

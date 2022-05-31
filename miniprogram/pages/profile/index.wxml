@@ -20,7 +20,7 @@
               <text class="cuIcon-unlock"></text>
             </view>
             <view class="cu-tag lg line-gray bg-gray">
-              <text space="ensp" class="text-black">{{usedCardCount || 0}} / {{user.canUseCardCount}}</text>
+              <text space="ensp" class="text-black">{{usedCardCount || 0}} / {{user.quota.cardCount}}</text>
             </view>
           </view>
           <view class="cu-capsule radius padding-left">
@@ -28,7 +28,7 @@
               <text class="cuIcon-lock"></text>
             </view>
             <view class="cu-tag lg line-gray bg-gray">
-              <text space="ensp" class="text-black">{{usedEncryptedCardCount || 0}} / {{user.canUseEncryptedCardCount}}</text>
+              <text space="ensp" class="text-black">{{usedEncryptedCardCount || 0}} / {{user.quota.encryptedCardCount}}</text>
             </view>
           </view>
         </view>
