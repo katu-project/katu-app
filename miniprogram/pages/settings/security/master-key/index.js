@@ -45,10 +45,11 @@ Page({
       return
     }
     try {
-      const masterKey = await appManager.buildMasterKey(this.data.masterKey)
+      await appManager.checkOriginMasterKey(this.data.masterKey)
+      const masterKey = await appManager.createMasterKey(this.data.masterKey)
       const masterKeyPack = await appManager.createMasterKey(masterKey)
       await request('user/markSetMasterKey', {keyPack: masterKeyPack})
-      await appManager.setMasterKey(this.data.masterKey)
+      await appManager.setMasterKey(masterKey)
       await appManager.reloadUserInfo()
       wx.showToast({
         title: '设置成功',

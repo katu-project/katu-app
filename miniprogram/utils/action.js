@@ -49,16 +49,17 @@ async function navigateTo(page, vibrate=false){
   })
 }
 
-async function loadData(func, params={}){
+async function loadData(func, params,title){
+  const loadingTitle = (func && params && title) ? title : '正在处理请求'
   let pfunc
   if(func){
-    pfunc = async ()=> await func(params)
+    pfunc = async p => await func(p)
   }else{
     pfunc = sleep
     params = 2000
   }
   wx.showLoading({
-    title: '正在处理请求',
+    title: loadingTitle,
     mask: true
   })
 
@@ -69,18 +70,19 @@ async function loadData(func, params={}){
     }).catch(error=>{
       wx.hideLoading({
         success: () => {
-          if(error.code === 1){
+          if(!error.code || error.code === 1){
             wx.showModal({
               title: '操作未完成',
               content: error.message,
               showCancel: false,
             })
           }else{
-            console.warn(error.message)
+            console.warn(error)
+            const showContent = error.code ? `错误代码: ${error.code}` : ''
             wx.showModal({
-              title: `服务错误(${error.code})`,
-              content: '请稍后重试或联系客服',
-              showCancel: false,
+              title: `服务错误`,
+              content: `请稍后重试\n${showContent}`,
+              confirmText: '联系客服',
               success: ({confirm})=>{
                 if(!confirm) return
                 wx.navigateTo({

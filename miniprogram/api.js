@@ -11,12 +11,13 @@ const request = (action, data={}) => {
         resolve(result.data)
       }else{
         error.message = result.msg
-        error.code = result.code
+        error.code = result.code // 1 业务报错 其他 系统错误
         reject(error)
       }
     })
     .catch(err=>{
       error.message = err.message
+      error.code = 600 // 云函数报错
       reject(error)
     })
 })

@@ -84,11 +84,12 @@ class CardManager {
 
   async add(card){
     const cardModel = {encrypted: card.encrypted?1:0, image: [], info: {card:null} }
-    await this.app.checkQuota(cardModel.encrypted)
-
+  
     if(cardModel.encrypted){
       this.app.checkMasterKey()
     }
+    await this.app.checkQuota(cardModel.encrypted)
+    
     for (const pic of card.image) {
       let imageData = {url:'',salt:'',hash:''}
       
@@ -162,7 +163,7 @@ class CardManager {
   }
 
   generateKeyByMasterKey(options){
-    return utils.crypto.pbkdf2(this.app.masterKey, options)
+    return utils.crypto.pbkdf2(this.app._masterKey, options)
   }
 
   async choosePic(...args){
