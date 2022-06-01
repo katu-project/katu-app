@@ -1,6 +1,13 @@
 <view class="page">
   <view class="cu-list menu margin-top">
     <view class="cu-item arrow item">
+      <view class="content" bindtap="tapToPage" data-page="general">
+        <text class="cuIcon-apps text-grey"></text>
+        <text class="text-grey">通用</text>
+      </view>
+    </view>
+
+    <view class="cu-item arrow item">
       <view class="content" bindtap="tapToPage" data-page="account">
         <text class="cuIcon-profile text-grey"></text>
         <text class="text-grey">账户</text>

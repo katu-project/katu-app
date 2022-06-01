@@ -1,11 +1,5 @@
-
 <view class="page">
-  <view class="pic" wx:if="{{false}}">
-    <block wx:for="{{card.image}}" wx:key="index">
-      <image class="pic-img card" data-index="{{index}}" mode="aspectFit" bindtap="goTapPic" src="{{item.url}}"></image>
-    </block>
-  </view>
-  <swiper class="card-swiper square-dot" 
+  <swiper class="card-swiper square-dot"
           indicator-dots="true" 
           circular="true"  
           bindchange="cardSwiper"
@@ -13,7 +7,7 @@
           indicator-color="#8799a3" 
           indicator-active-color="#0081ff">
     <swiper-item wx:for="{{card.image}}" wx:key="index" class="{{curShowPicIdx==index?'cur':''}}">
-      <view class="swiper-item" bindtap="goTapPic" data-index="{{index}}">
+      <view class="swiper-item" bindtap="tapToChoosePic" data-index="{{index}}">
         <image class="pic-img card" mode="aspectFit" src="{{item.url}}" style="height: 440rpx;width: 700rpx;"></image>
       </view>
     </swiper-item>
@@ -31,13 +25,13 @@
 
 
   <view class="cu-list menu sm-border margin-tb" style="border-radius: 24rpx;flex:1;border: 1px solid cornflowerblue;">
-    <view class="cu-item arrow">
+    <view class="cu-item arrow" bindtap="tapToEditTitle">
       <view class="content">
         <text class="cuIcon-wenzi text-grey"></text>
         <text class="text-grey">名称</text>
       </view>
       <view class="action">
-        <text class="text-grey text-sm" bindtap="goEditTitle">{{card.title}}</text>
+        <text class="text-grey text-sm">{{card.title}}</text>
       </view>
     </view>
     <view class="cu-item arrow">
@@ -53,31 +47,11 @@
     </view>
   </view>
 
-  <button class="cu-btn round line-cyan lg margin-tb" bindtap="goSaveCard">
+  <button class="cu-btn round line-cyan lg margin-tb" bindtap="tapToSaveCard">
     <view class="text-xl text-blue">
       保存
     </view>
   </button>
-</view>
-
-<view class="cu-modal {{ showTextEditor ?'show':''}}">
-  <view class="cu-dialog">
-    <view class="cu-bar bg-white justify-end">
-      <view class="content">输入名称</view>
-      <view class="action" bindtap="goEditTitle">
-        <text class="cuIcon-close text-red"></text>
-      </view>
-    </view>
-    <view class="padding-xl">
-      <input type="text" value="{{card.title}}"/>
-    </view>
-    <view class="cu-bar bg-white justify-end">
-      <view class="action">
-        <button class="cu-btn line-green text-green" size="mini" style="width: 200rpx;" bindtap="goEditTitle">取消</button>
-        <button class="cu-btn bg-green margin-left" size="mini" style="width: 200rpx;" bindtap="goEditTitle">确定</button>
-      </view>
-    </view>
-  </view>
 </view>
 
 <read-key show="{{showInputKey}}" />

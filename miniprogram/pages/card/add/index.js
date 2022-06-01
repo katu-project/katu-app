@@ -1,5 +1,5 @@
 const { getCardManager } = require('../../../class/card')
-const { showNotice, showChoose, navigateTo } = require('../../../utils/action')
+const { showNotice, showChoose, navigateTo, showError } = require('../../../utils/action')
 const DefaultAddImage = '/static/images/add.svg'
 const globalData = getApp().globalData
 
@@ -29,7 +29,7 @@ Page({
       this.resolveImageIdx = 0
     }
   },
-  async goSaveCard(){
+  async tapToSaveCard(){
     if(this.data.card.image.filter(e=>e.url === DefaultAddImage).length > 0) {
       showNotice('有未使用的卡面')
       return
@@ -72,7 +72,7 @@ Page({
       showChoose('保存卡片出错',error.message)
     }
   },
-  async goTapPic(e){
+  async tapToChoosePic(e){
     const index = e.currentTarget.dataset.index
     try {
       const cardManager = await getCardManager()
@@ -80,14 +80,9 @@ Page({
       if(!picPath) return
 
       this.resolveImageIdx = index
-      wx.navigateTo({
-        url: `../image-processor/index?p=${picPath}`,
-      })
+      await navigateTo(`../image-processor/index?p=${picPath}`)
     } catch (error) {
-      wx.showToast({
-        title: error.message,
-        icon: "error"
-      })
+      showError(error.message)
     }
   },
   addCardPic(){
@@ -116,20 +111,8 @@ Page({
     }
 
   },
-  goEditTitle(){
-    this.setData({
-      showTextEditor: true
-    })
-  },
-  goChangeTitle(e){
-    this.setData({
-      'card.title': e.detail.value
-    })
-  },
-  goFinishEditTitle(){
-    this.setData({
-      editTitle: false
-    })
+  tapToEditTitle(){
+    
   },
   showInputKey(){
     this.setData({

@@ -15,41 +15,12 @@ page {
   margin-bottom: 10rpx;
 }
 
-
-
-.list {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 20rpx;
-}
-.list .item{
-  background-color: rgb(223, 245, 245);
-  min-height: 50rpx;
-  text-align: center;
-  width: 100%;
-  border: 1px solid rgb(149, 144, 180);
-  margin-bottom: 10rpx;
-  padding: 20rpx;
-  border-radius: 10rpx;
-  margin: 20rpx;
+.switch-lock::after {
+	content: "\e6c0";
 }
 
-.button-row-list{
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  /* padding: 10rpx; */
-}
-
-.button-row-list > view {
-  /* margin: 0rpx 10rpx 0 0rpx; */
-  padding: 20rpx;
-  border-radius: 10rpx;
-  text-align: center;
-  flex: 1;
-  border: 1px solid slateblue;
+.switch-lock::before {
+	content: "\e6c2";
 }
 
 .card {

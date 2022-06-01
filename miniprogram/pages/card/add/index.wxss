@@ -5,14 +5,6 @@
   min-height: 100vh;
 }
 
-.switch-lock::after {
-	content: "\e6c0";
-}
-
-.switch-lock::before {
-	content: "\e6c2";
-}
-
 .pic{
   display: flex;
   flex-direction: column;
