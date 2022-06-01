@@ -17,7 +17,8 @@
     "pages/settings/security/index",
     "pages/settings/security/master-key/index",
     "pages/debug/crypto/index",
-    "pages/settings/account/index"
+    "pages/settings/account/index",
+    "pages/settings/general/index"
   ],
   "window": {
     "backgroundColor": "#ffffff",
