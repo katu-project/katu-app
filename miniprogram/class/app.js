@@ -1,6 +1,6 @@
 const utils = require('../utils/index')
 const constData = require('../const')
-const { getUser, removeAccount, usageStatistic } = require('../api')
+const { getUser, removeAccount, usageStatistic, request } = require('../api')
 const { APP_TEMP_DIR ,MASTER_KEY_NAME } = require('../const')
 const DefaultUserData = {
   isActive: 0,
@@ -45,16 +45,27 @@ class AppManager {
     }
   }
 
-  async reloadUserInfo(){
-    this.user = await getUser()
-  }
-
   // user action
   async checkQuota(encrypted=false){
     const { canUseCardCount, canUseEncryptedCardCount } = await usageStatistic()
     if(encrypted && canUseEncryptedCardCount) return
     if(!encrypted && canUseCardCount) return
     throw Error('可使用卡片量不足')
+  }
+
+  async updateUserConfig(configItem){
+    return request('user/updateConfig', configItem)
+  }
+
+  async reloadUserInfo(){
+    this.user = await getUser()
+  }
+
+  async loadUserConfig(configItem){
+    if(configItem){
+      return utils.objectSetValue(this.user, configItem.key, configItem.value)
+    }
+    return this.reloadUserInfo()
   }
 
   async getUsageStatistic(){
@@ -64,6 +75,7 @@ class AppManager {
   async removeAccount(){
     return removeAccount()
   }
+
   clearUserInfo(){
     this.user = DefaultUserData
     this._masterKey = null

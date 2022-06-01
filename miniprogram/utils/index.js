@@ -21,8 +21,19 @@ function selfish (target) {
   return proxy;
 }
 
+function objectSetValue(obj,path,value) {
+  let i
+  path = path.split('_')
+  for (i = 0; i < path.length - 1; i++){
+    if(!(path[i] in obj)) throw Error('path not exist')
+    obj = obj[path[i]];
+  }
+  obj[path[i]] = value;
+}
+
 module.exports = {
   selfish,
+  objectSetValue,
   crypto,
   file,
   convert,
