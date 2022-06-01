@@ -1,18 +1,15 @@
-// pages/settings/security/index.js
+const { loadData, showSuccess, navigateTo } = require("../../../utils/index")
+const globalData = getApp().globalData
+
 Page({
 
   /**
    * 页面的初始数据
    */
   data: {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面加载
-   */
-  onLoad(options) {
-
+    setMasterKey: false,
+    config_security_askKeyOnAny: false,
+    config_security_lockOnExit: true,
   },
 
   /**
@@ -22,49 +19,26 @@ Page({
 
   },
 
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow() {
-
-  },
-  tapToMasterKey(){
-    wx.navigateTo({
-      url: './master-key/index',
+  onShow(){
+    const {app:{user:{config}}} = globalData
+    this.setData({
+      setMasterKey: globalData.user.setMasterKey,
+      config_security_askKeyOnAny: config.security.askKeyOnAny,
+      config_security_lockOnExit: config.security.lockOnExit
     })
   },
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide() {
-
+  tapToConfig(e){
+    const configItem = {
+      key: e.currentTarget.dataset.key,
+      value: e.detail.value
+    }
+    console.log(configItem)
+    loadData(globalData.app.updateUserConfig, configItem).then(()=>{
+      showSuccess('修改成功')
+      globalData.app.loadUserConfig(configItem)
+    })
   },
-
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload() {
-
-  },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh() {
-
-  },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom() {
-
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage() {
-
+  tapToMasterKey(){
+    navigateTo('./master-key/index')
   }
 })

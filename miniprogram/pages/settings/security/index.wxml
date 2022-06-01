@@ -1,10 +1,34 @@
 <view class="page">
   <view class="cu-list menu margin-top">
-    <view class="cu-item arrow item">
-      <view class="content" bindtap="tapToMasterKey">
-        <text class="cuIcon-unlock text-grey"></text>
+    <view class="cu-item arrow" bindtap="tapToMasterKey">
+      <view class="content">
         <text class="text-grey">主密码</text>
       </view>
+      <view class="action">
+        <text class="text-green text-sm" wx:if="{{setMasterKey}}">已设置</text>
+        <text class="text-red text-sm" wx:else>未设置</text>
+      </view>
     </view>
+    <view class="padding text-gray text-sm">加/解密数据使用的唯一密码</view>
+
+    <view class="cu-item">
+      <view class="content">
+      <text class="text-grey">记住主密码</text>
+      </view>
+      <view class="action">
+        <switch class="sm" bindchange="tapToConfig" data-key="config_security_askKeyOnAny" checked="{{config_security_askKeyOnAny}}"></switch>
+      </view>
+    </view>
+    <view class="padding text-gray text-sm">保存主密码在本地，无需重复输入</view>
+
+    <view class="cu-item">
+      <view class="content">
+      <text class="text-grey">退出小程序后清除主密码</text>
+      </view>
+      <view class="action">
+        <switch class="sm" bindchange="tapToConfig" data-key="config_security_lockOnExit" checked="{{config_security_lockOnExit}}"></switch>
+      </view>
+    </view>
+    <view class="padding text-gray text-sm">在退出小程序后清除主密码记录，下次使用时重新提供</view>
   </view>
 </view>
