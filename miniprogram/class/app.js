@@ -1,6 +1,6 @@
 const utils = require('../utils/index')
 const constData = require('../const')
-const { getUser, removeAccount, usageStatistic, request } = require('../api')
+const { getUser, removeAccount, usageStatistic, request, setMasterKeyInfo } = require('../api')
 const { APP_TEMP_DIR ,MASTER_KEY_NAME } = require('../const')
 const DefaultUserData = {
   isActive: 0,
@@ -12,11 +12,10 @@ const DefaultUserData = {
 
 class AppManager {
   static instance = null
-  masterKey = null
   
-  static async getInstance(options={}){
+  static async getInstance(){
     if(!this.instance){
-      this.instance = new AppManager()
+      this.instance = utils.selfish(new AppManager())
       await this.instance.init()
     }
     return this.instance
@@ -57,6 +56,32 @@ class AppManager {
     return request('user/updateConfig', configItem)
   }
 
+  async setMasterKeyInfo(keyPack){
+    return setMasterKeyInfo(keyPack)
+  }
+
+  async setUserMasterKey(masterKey){
+    await this.checkUserMasterKey(masterKey)
+    masterKey = await this.createMasterKey(masterKey)
+    const masterKeyPack = await this.createMasterKeyPack(masterKey)
+    return this.setMasterKeyInfo(masterKeyPack)
+  }
+
+  async updateUserMasterKey({masterKey, newMasterKey}){
+    console.log(masterKey, newMasterKey);
+    await this.checkUserMasterKey(masterKey)
+    masterKey = await this.createMasterKey(masterKey)
+    newMasterKey = await this.createMasterKey(newMasterKey)
+    // 获取原始主密码
+    const originMasterKey = await this.fetchOriginMasterFromMasterPack(this.user.masterKeyPack.keyPack, masterKey)
+    if(!originMasterKey) throw Error("主密钥错误")
+    // 重新生成新的主密码包
+    const masterKeyPack = await this.createMasterPackWithOriginMasterKey(originMasterKey, newMasterKey)
+    // 更新主密码包
+    console.log(masterKeyPack);
+    return this.setMasterKeyInfo(masterKeyPack)
+  }
+
   async reloadUserInfo(){
     this.user = await getUser()
   }
@@ -83,14 +108,16 @@ class AppManager {
   // user action
   // master key section
 
+  async clearMasterKey(){
+    this._masterKey = null
+  }
+
   async reloadMasterKey(){
     return this.loadMasterKey()
   }
 
-  // 生成主密码 258 bite
-  async createMasterKey(masterKeyHash){
-    const masterKey = masterKeyHash
-    const masterKeyId = masterKeyHash.slice(32)
+  // 生成主密码 256 bit
+  async createMasterKeyPack(masterKey){
     let masterCode = null
     try {
       const {randomValues} = await wx.getRandomValues({
@@ -101,12 +128,8 @@ class AppManager {
       console.log('获取系统随机数出错：', error)
       masterCode = utils.crypto.random(16).toString()
     }
-    const masterKeyPack = utils.crypto.encryptString(masterCode, masterKey)
 
-    return {
-      masterKeyId,
-      masterKeyPack
-    }
+    return this.createMasterPackWithOriginMasterKey(masterCode, masterKey)
   }
 
   checkMasterKey(){
@@ -126,11 +149,12 @@ class AppManager {
     }
   }
 
-  async checkOriginMasterKey(originKey){
-    if(!originKey || originKey.length < 6) throw Error("输入不符合密码要求")
+  async checkUserMasterKey(masterKey){
+    if(!masterKey || masterKey.length < 6) throw Error("输入不符合密码要求")
     if(this.user.setMasterKey){
-      const originKeyHash = utils.crypto.sha1(originKey)
-      if(!originKeyHash.endsWith(this.user.masterKeyPack.masterKeyId)){
+      masterKey = await this.createMasterKey(masterKey)
+      const masterKeyId = await this.generateMasterKeyId(masterKey)
+      if(masterKeyId !== this.user.masterKeyPack.keyId){
         throw Error("输入与已设置的主密码不匹配")
       }
     }
@@ -143,9 +167,26 @@ class AppManager {
   // 根据用户原始密码解密出主密码 _masterKey
   async loadMasterKey(){
     if(!this.user.setMasterKey) return
-    const originMasterKey = await this.readMasterKey()
-    if(!originMasterKey) return
-    this._masterKey = utils.crypto.decryptString(this.user.masterKeyPack.masterKeyPack,originMasterKey)
+    const masterKey = await this.readMasterKey()
+    if(!masterKey) return
+    this._masterKey = await this.fetchOriginMasterFromMasterPack(this.user.masterKeyPack.keyPack, masterKey)
+    if(!this._masterKey) throw Error("主密钥错误")
+  }
+
+  async fetchOriginMasterFromMasterPack(masterPack, key){
+    const originMasterKey = utils.crypto.decryptString(masterPack, key)
+    return originMasterKey
+  }
+
+  async createMasterPackWithOriginMasterKey(originMasterkey, masterKey){
+    const keyPack = {}
+    keyPack.keyPack = utils.crypto.encryptString(originMasterkey, masterKey)
+    keyPack.keyId = await this.generateMasterKeyId(masterKey)
+    return keyPack
+  }
+
+  async generateMasterKeyId(masterKey){
+    return masterKey.slice(32)
   }
 
   async readMasterKey(){
@@ -169,7 +210,7 @@ class AppManager {
   }
 
   async checkSetAndReloadMasterKey(key){
-    await this.checkOriginMasterKey(key)
+    await this.checkUserMasterKey(key)
     const masterKey = await this.createMasterKey(key)
     await this.setMasterKey(masterKey)
     return this.reloadMasterKey()
@@ -223,7 +264,7 @@ class AppManager {
 }
 
 async function getAppManager(...args){
-  return utils.selfish(await AppManager.getInstance(...args))
+  return AppManager.getInstance(...args)
 }
 
 module.exports = {

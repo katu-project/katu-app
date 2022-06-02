@@ -33,6 +33,8 @@ module.exports = {
   
   usageStatistic: () => request('user/usage'),
 
+  setMasterKeyInfo: keyPack => request('user/setMasterKeyInfo',{keyPack}),
+  // card 
   getCard: data => request('card/fetch', data),
 
   saveCard: data => request('card/save', data),
