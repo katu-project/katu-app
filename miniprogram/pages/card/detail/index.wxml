@@ -4,8 +4,10 @@
       <image class="pic-img card" data-index="{{index}}" mode="aspectFit" bindtap="goTapPic" src="{{item._url}}"></image>
     </block>
   </view>
-  <view class="button-row-list">
+  <view class="padding flex-row button-row-list">
     <view bindtap="goUpdateCard" style="margin-right: 10rpx;">修改</view>
     <view bindtap="goDeleteCard">删除</view>
   </view>
 </view>
+
+<read-key show="{{showInputKey}}" />

@@ -1,8 +1,11 @@
 const { getCard, deleteCard } = require('../../../api')
 const { getCardManager } = require('../../../class/card')
+const { showChoose, navigateTo } = require('../../../utils/index')
 
 const DefaultLockImage = '/static/images/lock.svg'
 const DefaultShowImage = '/static/images/image.svg'
+
+const globalData = getApp().globalData
 
 Page({
   /**
@@ -10,6 +13,7 @@ Page({
    */
   data: {
     defaultLockImage: DefaultLockImage,
+    showInputKey: false,
     card: {
       _id: '',
       image: [
@@ -74,6 +78,21 @@ Page({
     const image = this.data.card.image[idx]
     if(this.data.card.encrypted && image._url === DefaultLockImage){
       const cardManager = await getCardManager()
+      const appManager = globalData.app
+      try {
+        await appManager.checkMasterKey()
+      } catch (error) {
+        if(error.code === '01'){
+          showChoose('操作警告',error.message,{}).then(()=>{
+            navigateTo('../../settings/security/master-key/index',false)
+          })
+        }else if(error.code === '02'){
+          this.showInputKey()
+        }else{
+          showChoose('保存卡片出错',error.message)
+        }
+        return
+      }
       const {imagePath} = await cardManager.decryptImage(image)
       this.setData({
         [`card.image[${idx}]._url`]: imagePath
@@ -104,24 +123,9 @@ Page({
     })
     
   },
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh() {
-
-  },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom() {
-
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage() {
-
+  showInputKey(){
+    this.setData({
+      showInputKey: true
+    })
   }
 })
