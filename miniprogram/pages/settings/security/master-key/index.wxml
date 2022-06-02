@@ -1,9 +1,9 @@
 <view class="page">
   <view class="padding flex-col justify-center align-center">
-    <view class="bg-gray margin flex justify-center align-center" style="border-radius: 200rpx;height: 400rpx;width: 400rpx; border: 2px dashed grey;">
-      <image mode="aspectFit" style="height: 300rpx;width: 300rpx;" src="/static/images/key.svg"></image>
+    <view class="bg-gray margin flex justify-center align-center" style="border-radius: 200rpx;height: 300rpx;width: 300rpx; border: 2px dashed {{setMasterKey?'green':'grey'}};">
+      <image mode="aspectFit" style="height: 200rpx;width: 200rpx;" src="/static/images/key.svg"></image>
     </view>
-    <text class="padding-top text-xxl">设置主密码</text>
+    <text class="padding-top text-xxl">{{setMasterKey?'修改':'设置'}}主密码</text>
     <text class="padding-top text-red text-center">主密码用于加/解密用户数据</text>
     <text class="text-red text-center">遗忘主密码将导致加密数据丢失，请务必牢记！</text>
     
@@ -14,13 +14,29 @@
         <input model:value="{{masterKey}}" bindinput="checkInput" type="text"/>
       </view>
     </view>
-    <view class="padding flex-col justify-center align-center">
-      <text class="padding-bottom-sm">确认主密码</text>
-      <view class="padding-sm text-center" style="border: 1px solid gray; border-radius: 20rpx;">
-        <input model:value="{{masterKeyRepeat}}" bindinput="checkRepeatInput" type="text"/>
+    <block wx:if="{{setMasterKey}}">
+      <view class="padding flex-col justify-center align-center">
+        <text class="padding-bottom-sm">输入新的主密码</text>
+        <view class="padding-sm text-center" style="border: 1px solid gray; border-radius: 20rpx;">
+          <input model:value="{{newMasterKey}}" bindinput="checkInput" type="text"/>
+        </view>
       </view>
-    </view>
+      <view class="padding flex-col justify-center align-center">
+        <text class="padding-bottom-sm">确认新的主密码</text>
+        <view class="padding-sm text-center" style="border: 1px solid gray; border-radius: 20rpx;">
+          <input model:value="{{newMasterKeyRepeat}}" bindinput="checkInput" type="text"/>
+        </view>
+      </view>
+    </block>
+    <block wx:else>
+      <view class="padding flex-col justify-center align-center">
+        <text class="padding-bottom-sm">确认主密码</text>
+        <view class="padding-sm text-center" style="border: 1px solid gray; border-radius: 20rpx;">
+          <input model:value="{{masterKeyRepeat}}" bindinput="checkRepeatInput" type="text"/>
+        </view>
+      </view>
+    </block>
 
-    <button class="cu-btn block line-cyan lg margin-top-lg" bindtap="setMasterKey">保存密码</button>
+    <button class="cu-btn block line-cyan lg margin-top-lg" bindtap="tapToSetMasterKey">保存密码</button>
   </view>
 </view>

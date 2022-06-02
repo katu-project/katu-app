@@ -1,14 +1,13 @@
-const { request } = require('../../../../api')
-const { showError } = require('../../../../utils/index')
+const { showError, showSuccess, loadData } = require('../../../../utils/index')
 const globalData = getApp().globalData
-Page({
 
-  /**
-   * 页面的初始数据
-   */
+Page({
   data: {
+    setMasterKey: false,
     masterKey: '',
-    masterKeyRepeat: ''
+    masterKeyRepeat: '',
+    newMasterKey: '',
+    newMasterKeyRepeat: ''
   },
 
   /**
@@ -17,17 +16,10 @@ Page({
   onLoad(options) {
 
   },
-
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady() {
-  },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow() {
+  onShow(){
+    this.setData({
+      setMasterKey: globalData.app.user.setMasterKey
+    })
   },
   checkInput(){
 
@@ -35,9 +27,48 @@ Page({
   checkRepeatInput(){
 
   },
-  setMasterKey(e){
-    this.setData({
-      masterKey : e.detail.value
+  tapToSetMasterKey(){
+    if(this.data.setMasterKey){
+      if(!this.data.masterKey) {
+        showError("输入当前主密码")
+        return
+      }
+      if(!this.data.newMasterKey){
+        showError('主密码不能为空')
+        return
+      }
+      if(this.data.newMasterKey === this.data.masterKey){
+        showError('相同密码')
+        return
+      }
+      if(!this.data.newMasterKey || this.data.newMasterKey !== this.data.newMasterKeyRepeat){
+        showError('两次输入不一致')
+        return
+      }
+      this.updateMasterKey()
+    }else{
+      if(!this.data.masterKey || this.data.masterKey !== this.data.masterKeyRepeat){
+        showError('两次输入不一致')
+        return
+      }
+      this.setMasterKey()
+    }
+  },
+  async updateMasterKey(){
+    const appManager = globalData.app
+    if(!appManager.user.setMasterKey){
+      throw Error('请先设置主密码')
+    }
+    const params = {
+      masterKey: this.data.masterKey,
+      newMasterKey: this.data.newMasterKey
+    }
+
+    loadData(appManager.updateUserMasterKey,params).then(()=>{
+      appManager.reloadUserInfo()
+      appManager.clearMasterKey()
+      this.resetContent()
+      showSuccess('修改成功')
     })
   },
   async setMasterKey(){
@@ -47,27 +78,20 @@ Page({
       return
     }
 
-    if(!this.data.masterKey || this.data.masterKey !== this.data.masterKeyRepeat){
-      showError('两次输入不一致')
-      return
-    }
-
-    try {
-      await appManager.checkOriginMasterKey(this.data.masterKey)
-      const masterKey = await appManager.createMasterKey(this.data.masterKey)
-      const masterKeyPack = await appManager.createMasterKey(masterKey)
-      await request('user/markSetMasterKey', {keyPack: masterKeyPack})
-      await appManager.setMasterKey(masterKey)
-      await appManager.reloadUserInfo()
-      wx.showToast({
-        title: '设置成功',
-      })
-    } catch (error) {
-      console.log(error);
-      wx.showToast({
-        title: '设置出错',
-        icon: 'error'
-      })
-    }
+    loadData(appManager.setUserMasterKey,this.data.masterKey).then(()=>{
+      appManager.setMasterKey(masterKey)
+      appManager.reloadUserInfo()
+      appManager.clearMasterKey()
+      this.resetContent()
+      showSuccess('修改成功')
+    })
   },
+  resetContent(){
+    this.setData({
+      masterKey: '',
+      masterKeyRepeat: '',
+      newMasterKey: '',
+      newMasterKeyRepeat: ''
+    })
+  }
 })

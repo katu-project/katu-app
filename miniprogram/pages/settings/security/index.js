@@ -22,7 +22,7 @@ Page({
   onShow(){
     const {app:{user:{config}}} = globalData
     this.setData({
-      setMasterKey: globalData.user.setMasterKey,
+      setMasterKey: globalData.app.user.setMasterKey,
       config_security_askKeyOnAny: config.security.askKeyOnAny,
       config_security_lockOnExit: config.security.lockOnExit
     })
