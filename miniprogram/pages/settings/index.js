@@ -6,7 +6,29 @@ Page({
    * 页面的初始数据
    */
   data: {
-    isDev: false
+    menu: [
+      {
+        icon: 'apps',
+        title: '通用',
+        url: 'general'
+      },
+      {
+        icon: 'profile',
+        title: '账户',
+        url: 'account'
+      },
+      {
+        icon: 'unlock',
+        title: '安全',
+        url: 'security'
+      },
+      {
+        icon: 'repair',
+        title: '调试',
+        url: '../debug',
+        hide: true
+      }
+    ]
   },
 
   /**
@@ -22,7 +44,7 @@ Page({
   onReady() {
     console.log(globalData.app)
     this.setData({
-      isDev: globalData.app.isDev
+      'menu[3].hide': !globalData.app.isDev
     })
   },
 
