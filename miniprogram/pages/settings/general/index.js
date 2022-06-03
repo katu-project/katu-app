@@ -12,7 +12,7 @@ Page({
   onShow(){
     const {app:{user:{config}}} = globalData
     this.setData({
-      config_general_defaultCreateCardType: config.general.defadefaultCreateCardType
+      config_general_defaultCreateCardType: config.general.defaultCreateCardType
     })
   },
   tapToConfig(e){
