@@ -15,9 +15,14 @@ Page({
     curShowPicIdx: 0,
     showInputKey: false
   },
-  onLoad() {},
-  async onReady() {
-    this.app = globalData.app
+  onReady(){
+    const {app:{user:{config}}} = globalData
+    console.log(config);
+    if(config.general.defaultCreateCardType){
+      this.setData({
+        'card.encrypted': true
+      })
+    }
   },
   onShow() {
     if(this.resolveImagePath){
@@ -29,6 +34,7 @@ Page({
       this.resolveImageIdx = 0
     }
   },
+
   async tapToSaveCard(){
     if(this.data.card.image.filter(e=>e.url === DefaultAddImage).length > 0) {
       showNotice('有未使用的卡面')
@@ -72,6 +78,7 @@ Page({
       showChoose('保存卡片出错',error.message)
     }
   },
+
   async tapToChoosePic(e){
     const index = e.currentTarget.dataset.index
     try {
@@ -85,6 +92,7 @@ Page({
       showError(error.message)
     }
   },
+
   addCardPic(){
     const idx = this.data.card.image.length
     if(idx == 1){
@@ -98,11 +106,13 @@ Page({
       })
     }
   },
-  keepEncrypt(){
+
+  changeEncrypt(){
     this.setData({
       'card.encrypted': !this.data.card.encrypted
     })
   },
+
   cardSwiper(e){
     if(e.detail.source == 'touch'){
       this.setData({
@@ -111,6 +121,7 @@ Page({
     }
 
   },
+
   tapToEditTitle(){
     
   },
