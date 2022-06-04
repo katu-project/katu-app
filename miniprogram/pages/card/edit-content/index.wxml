@@ -1,0 +1,8 @@
+<view class="page">
+  <view class="margin padding-left" style="height: 50px;border: 2rpx solid cyan;border-radius: 10rpx;">
+    <input type="text" model:value="{{content}}" bindinput="checkContent" style="height: 50px;" placeholder="设置卡片名称"/>
+  </view>
+  <view class="padding">
+    <button class="cu-cu-btn bg-cyan" bindtap="tapToSetContent">确认</button>
+  </view>
+</view>
