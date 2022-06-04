@@ -12,9 +12,10 @@
       </view>
     </swiper-item>
   </swiper>
+
   <view class="action-list">
-    <view class="flex-row-sb" style="align-items: center;">
-      <switch class="switch-lock" bindtap="keepEncrypt" checked="{{card.encrypted}}"></switch>
+    <view class="flex-row-sb align-center">
+      <switch class="switch-lock" bindtap="changeEncrypt" checked="{{card.encrypted}}"></switch>
       <button class="cu-btn line-cyan add-card-pic margin-lr-sm" style="width: 200rpx;margin: 0 " bindtap="addCardPic">
         <view class="text-df" style="white-space:nowrap">
           <text class="cuIcon-{{card.image.length==1?'add':'move'}}">{{card.image.length==1?' 添加':' 移除'}}卡面</text>
@@ -23,12 +24,11 @@
     </view>
   </view>
 
-
-  <view class="cu-list menu sm-border margin-tb" style="border-radius: 24rpx;flex:1;border: 1px solid cornflowerblue;">
+  <view class="cu-list menu sm-border margin-tb" style="border-radius: 12rpx;flex:1;border: 1px solid cornflowerblue;">
     <view class="cu-item arrow" bindtap="tapToEditTitle">
       <view class="content">
         <text class="cuIcon-wenzi text-grey"></text>
-        <text class="text-grey">名称</text>
+        <text class="text-grey">卡片名称</text>
       </view>
       <view class="action">
         <text class="text-grey text-sm">{{card.title}}</text>
@@ -37,7 +37,7 @@
     <view class="cu-item arrow">
       <view class="content">
         <text class="cuIcon-tagfill text-red"></text>
-        <text class="text-grey">标签</text>
+        <text class="text-grey">选择标签</text>
       </view>
       <view class="action">
         <view class="cu-tag round bg-orange light">音乐</view>

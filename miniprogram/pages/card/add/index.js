@@ -1,5 +1,5 @@
 const { getCardManager } = require('../../../class/card')
-const { showNotice, showChoose, navigateTo, showError } = require('../../../utils/action')
+const { showNotice, showChoose, navigateTo, showError, loadData } = require('../../../utils/action')
 const DefaultAddImage = '/static/images/add.svg'
 const globalData = getApp().globalData
 
@@ -25,6 +25,10 @@ Page({
     }
   },
   onShow() {
+    this.receiveChoosePic()
+    this.receiveCardTitle()
+  },
+  receiveChoosePic(){
     if(this.resolveImagePath){
       const key = `card.image[${this.resolveImageIdx}].url`
       this.setData({
@@ -34,33 +38,27 @@ Page({
       this.resolveImageIdx = 0
     }
   },
-
-  async tapToSaveCard(){
-    if(this.data.card.image.filter(e=>e.url === DefaultAddImage).length > 0) {
-      showNotice('有未使用的卡面')
-      return
-    }
-    wx.showLoading({
-      title: '保存中',
-      mask: true
-    })
-    
-    try {
-      await this.saveCard()
-      wx.nextTick(this.saveDone)
-    } catch (error) {
-      console.log(error);
-      wx.nextTick(()=>{
-        this.saveFailed(error)
+  receiveCardTitle(){
+    if(this.resolveCardTitle){
+      const key = `card.title`
+      this.setData({
+        [key]: this.resolveCardTitle
       })
-    } finally {
-      await wx.hideLoading()
+      this.resolveCardTitle = null
     }
   },
-  async saveCard(){
+  async tapToSaveCard(){
+    if(this.data.card.image.filter(e=>e.url === DefaultAddImage).length > 0) {
+      showNotice('卡面数据不完整')
+      return
+    }
+
     const card = Object.assign({},this.data.card)
     const cardManager = await getCardManager()
-    return cardManager.add(card)
+
+    loadData(cardManager.add, card, {returnFailed: true})
+            .then(this.saveDone)
+            .catch(this.saveFailed)
   },
   async saveDone(){
     showChoose('操作成功','卡片数据已保存',{showCancel: false}).then(()=>{
@@ -123,7 +121,7 @@ Page({
   },
 
   tapToEditTitle(){
-    
+    navigateTo('../edit-content/index?returnContentKey=resolveCardTitle')
   },
   showInputKey(){
     this.setData({
