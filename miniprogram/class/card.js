@@ -8,7 +8,7 @@ class CardManager {
 
   static async getInstance(){
     if(!this.instance){
-      this.instance = new CardManager()
+      this.instance = utils.selfish(new CardManager())
       await this.instance.init()
     }
     return this.instance
@@ -86,6 +86,7 @@ class CardManager {
     const cardModel = {encrypted: card.encrypted?1:0, image: [], info: {card:null} }
   
     if(cardModel.encrypted){
+      console.log(this.app);
       this.app.checkMasterKey()
     }
     await this.app.checkQuota(cardModel.encrypted)

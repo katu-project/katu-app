@@ -49,8 +49,16 @@ async function navigateTo(page, vibrate=false){
   })
 }
 
-async function loadData(func, params,title){
-  const loadingTitle = (func && params && title) ? title : '正在处理请求'
+async function loadData(func, params, options){
+  let loadingTitle = '正在处理请求', returnFailed = false
+  if(options){
+    if(typeof options === 'string'){
+      loadingTitle = options
+    }else{
+      loadingTitle = options.loadingTitle || loadingTitle
+      returnFailed = options.returnFailed || false
+    }
+  }
   let pfunc
   if(func){
     pfunc = async p => await func(p)
@@ -63,13 +71,14 @@ async function loadData(func, params,title){
     mask: true
   })
 
-  return new Promise((resolve)=>{
+  return new Promise((resolve,reject)=>{
     pfunc(params).then(res=>{
       resolve(res)
       wx.hideLoading()
     }).catch(error=>{
       wx.hideLoading({
         success: () => {
+          if(returnFailed) return reject(error)
           if(!error.code || error.code === 1){
             wx.showModal({
               title: '操作未完成',

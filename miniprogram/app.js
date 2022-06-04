@@ -1,5 +1,4 @@
-const { getAppManager } = require('./class/app')
-
+const { getAppManager } = require('class/app')
 App({
   onLaunch: function () {
     wx.cloud.init({
@@ -9,10 +8,7 @@ App({
 
     getAppManager().then(app=>{
       this.globalData.app = app
-      this.globalData.user = app.user
     })
   },
-  globalData: {
-    user: null
-  }
+  globalData: {}
 });

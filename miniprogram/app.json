@@ -18,7 +18,8 @@
     "pages/settings/security/master-key/index",
     "pages/debug/crypto/index",
     "pages/settings/account/index",
-    "pages/settings/general/index"
+    "pages/settings/general/index",
+    "pages/card/edit-content/index"
   ],
   "window": {
     "backgroundColor": "#ffffff",
