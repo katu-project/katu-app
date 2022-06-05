@@ -1,11 +1,11 @@
-<view class="cu-modal {{display?'show':''}}">
+<view class="cu-modal bottom-modal {{display?'show':''}}">
   <view class="cu-dialog" style="vertical-align: unset;">
     <view class="cu-bar bg-white justify-end">
       <view class="content">输入主密码</view>
     </view>
     <view class="padding-xl bg-white flex justify-center">
       <view class="solids-bottom" style="width: 50vw;">
-        <input class="padding-sm" style="height: 50px;" bindinput="checkKey" model:value="{{key}}" password="true" focus="{{display}}" />
+        <input class="padding-sm" style="height: 50px;" adjust-position="{{display}}" bindinput="checkKey" model:value="{{key}}" password="true" focus="{{false}}" />
       </view>
     </view>
     <view class="cu-bar bg-white">

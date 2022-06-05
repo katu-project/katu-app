@@ -47,7 +47,8 @@ Component({
     },
     hideModal(){
       this.setData({
-        show: false
+        show: false,
+        key: ''
       })
     }
   }
