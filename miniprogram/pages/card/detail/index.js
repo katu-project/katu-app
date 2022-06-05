@@ -82,11 +82,11 @@ Page({
       try {
         await appManager.checkMasterKey()
       } catch (error) {
-        if(error.code === '01'){
+        if(error.code[0] === '1'){
           showChoose('操作警告',error.message,{}).then(()=>{
             navigateTo('../../settings/security/master-key/index',false)
           })
-        }else if(error.code === '02'){
+        }else if(error.code[0] === '2'){
           this.showInputKey()
         }else{
           showChoose('保存卡片出错',error.message)

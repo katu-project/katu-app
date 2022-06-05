@@ -61,7 +61,7 @@ class AppManager {
   }
 
   async setUserMasterKey(masterKey){
-    await this.checkUserMasterKey(masterKey)
+    await this._checkInputMasterKey(masterKey)
     masterKey = await this.createMasterKey(masterKey)
     const masterKeyPack = await this.createMasterKeyPack(masterKey)
     return this.setMasterKeyInfo(masterKeyPack)
@@ -69,7 +69,7 @@ class AppManager {
 
   async updateUserMasterKey({masterKey, newMasterKey}){
     console.log(masterKey, newMasterKey);
-    await this.checkUserMasterKey(masterKey)
+    await this._checkInputMasterKey(masterKey)
     masterKey = await this.createMasterKey(masterKey)
     newMasterKey = await this.createMasterKey(newMasterKey)
     // 获取原始主密码
@@ -138,18 +138,19 @@ class AppManager {
       message: ''
     }
     if(!this.user.setMasterKey){
-      error.code = '01'
-      error.message = '需要设置主密码才能启用加密功能'
+      error.code = '10'
+      error.message = '还未设置主密码'
       throw error
     }
+
     if(!this._masterKey) {
-      error.code = '02'
+      error.code = '20'
       error.message = '请输入主密码'
       throw error
     }
   }
 
-  async checkUserMasterKey(masterKey){
+  async _checkInputMasterKey(masterKey){
     if(!masterKey || masterKey.length < 6) throw Error("输入不符合密码要求")
     if(this.user.setMasterKey){
       masterKey = await this.createMasterKey(masterKey)
@@ -210,7 +211,7 @@ class AppManager {
   }
 
   async checkSetAndReloadMasterKey(key){
-    await this.checkUserMasterKey(key)
+    await this._checkInputMasterKey(key)
     const masterKey = await this.createMasterKey(key)
     await this.setMasterKey(masterKey)
     return this.reloadMasterKey()
