@@ -34,15 +34,13 @@
         <text class="text-grey text-sm">{{card.title}}</text>
       </view>
     </view>
-    <view class="cu-item arrow">
+    <view class="cu-item arrow" bindtap="tapToShowSelectTag">
       <view class="content">
         <text class="cuIcon-tagfill text-red"></text>
         <text class="text-grey">选择标签</text>
       </view>
       <view class="action">
-        <view class="cu-tag round bg-orange light">音乐</view>
-        <view class="cu-tag round bg-olive light">电影</view>
-        <view class="cu-tag round bg-blue light">旅行</view>
+        <view class="cu-tag round bg-orange light">未选择</view>
       </view>
     </view>
   </view>
@@ -52,6 +50,21 @@
       保存
     </view>
   </button>
+</view>
+
+<view class="cu-modal bottom-modal {{ showSelectTag?'show':''}}">
+  <view class="cu-dialog">
+    <view class="cu-bar bg-white">
+      <view class="action" bindtap="hideSelectTag">取消</view>
+      <view class="action text-green margin-right" bindtap="hideSelectTag">确定</view>
+    </view>
+    <view class="grid col-3 padding-sm">
+      <view wx:for="{{cardTag}}" class="padding-xs" wx:key="index">
+        <button bindtap="tapToSelectTag" style="width: 200rpx;" class="cu-btn orange lg block {{item.selected?'bg-cyan':'line-orange'}}" data-value="{{item.name}}"> {{item.name}}
+        </button>
+      </view>
+    </view>
+  </view>
 </view>
 
 <read-key show="{{showInputKey}}" />

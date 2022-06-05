@@ -13,7 +13,18 @@ Page({
       ],
     },
     curShowPicIdx: 0,
-    showInputKey: false
+    showInputKey: false,
+    cardTag: [
+      {
+        name: '银行卡',
+        selected: false
+      },{
+        name: '信用卡',
+        selected: false
+      },{
+        name: '自定义'
+      }
+    ]
   },
   onReady(){
     const {app:{user:{config}}} = globalData
@@ -55,23 +66,27 @@ Page({
 
     const card = Object.assign({},this.data.card)
     const cardManager = await getCardManager()
-
     loadData(cardManager.add, card, {returnFailed: true})
             .then(this.saveDone)
             .catch(this.saveFailed)
   },
   async saveDone(){
+    if(globalData.app.user.config.security.rememberPassword){
+      globalData.app.clearMasterKey()
+    }
     showChoose('操作成功','卡片数据已保存',{showCancel: false}).then(()=>{
       wx.navigateBack()
     })
   },
   async saveFailed(error){
-    if(error.code === '01'){
-      showChoose('操作警告',error.message,{}).then(()=>{
-        navigateTo('../../settings/security/master-key/index',false)
-      })
-    }else if(error.code === '02'){
-      this.showInputKey()
+    if(error.code){
+      if(error.code[0] === '1'){
+        showChoose('操作警告',error.message,{}).then(()=>{
+          navigateTo('../../settings/security/master-key/index',false)
+        })
+      }else if(error.code[0] === '2'){
+        this.showInputKey()
+      }
     }else{
       showChoose('保存卡片出错',error.message)
     }
@@ -126,6 +141,23 @@ Page({
   showInputKey(){
     this.setData({
       showInputKey: true
+    })
+  },
+  tapToShowSelectTag(){
+    this.setData({
+      showSelectTag: true
+    })
+  },
+  tapToSelectTag(e){
+    const index = this.data.cardTag.findIndex(tag=>tag.name === e.currentTarget.dataset.value)
+    console.log({index});
+    this.setData({
+      [`cardTag[${index}].selected`]: !this.data.cardTag[index].selected
+    })
+  },
+  hideSelectTag(){
+    this.setData({
+      showSelectTag: false
     })
   }
 })
