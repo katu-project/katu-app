@@ -8,22 +8,15 @@ Page({
    */
   data: {
     setMasterKey: false,
-    config_security_askKeyOnAny: false,
+    config_security_rememberPassword: false,
     config_security_lockOnExit: true,
-  },
-
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady() {
-
   },
 
   onShow(){
     const {app:{user:{config}}} = globalData
     this.setData({
       setMasterKey: globalData.app.user.setMasterKey,
-      config_security_askKeyOnAny: config.security.askKeyOnAny,
+      config_security_rememberPassword: config.security.rememberPassword,
       config_security_lockOnExit: config.security.lockOnExit
     })
   },
@@ -35,6 +28,10 @@ Page({
     console.log(configItem)
     loadData(globalData.app.updateUserConfig, configItem).then(()=>{
       showSuccess('修改成功')
+      if(configItem.key === 'config_security_rememberPassword' && configItem.value === false){
+        console.log('clearMasterKey');
+        globalData.app.clearMasterKey()
+      }
       globalData.app.loadUserConfig(configItem)
     })
   },

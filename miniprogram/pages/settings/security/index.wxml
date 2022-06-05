@@ -16,7 +16,7 @@
       <text class="text-grey">记住主密码</text>
       </view>
       <view class="action">
-        <switch class="sm" bindchange="tapToConfig" data-key="config_security_askKeyOnAny" checked="{{config_security_askKeyOnAny}}"></switch>
+        <switch class="sm" bindchange="tapToConfig" data-key="config_security_rememberPassword" checked="{{config_security_rememberPassword}}"></switch>
       </view>
     </view>
     <view class="padding text-gray text-sm">保存主密码在本地，无需重复输入</view>
