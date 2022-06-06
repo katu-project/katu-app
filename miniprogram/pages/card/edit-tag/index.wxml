@@ -1,0 +1,25 @@
+<view class="page" style="min-height: 100vh;">
+  <view class="padding text-xl">
+    <text class="cuIcon-edit text-cyan"></text>
+    <text class="padding-left-sm">编辑自定义标签：</text>
+  </view>
+  <view class="cu-list menu sm-border margin-top solids">
+    
+    <view class="cu-item arrow" wx:for="{{list}}" wx:key="name">
+      <view class="content">
+        <text class="cuIcon-tag text-gray"></text>
+        <text class="text-grey">{{item.name}}</text>
+      </view>
+    </view>
+
+    <view class="cu-item" bindtap="tapToAddTag">
+      <view class="content">
+        <text class="cuIcon-tag text-gray"></text>
+        <text class="text-cyan">添加标签</text>
+      </view>
+      <view class="action text-xl">
+        <text class="cuIcon-add text-cyan"></text>
+      </view>
+    </view>
+  </view>
+</view>
