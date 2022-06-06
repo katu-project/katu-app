@@ -27,15 +27,14 @@ async function showNotice(msg){
 }
 
 // showChoose(title,content)
-async function showChoose(title, content, options={}){
+async function showChoose(title, content='', options={}){
   return new Promise((resolve,reject)=>{
     wx.showModal({
       title,
       content,
       ...options
-    }).then(({confirm, content})=>{
-      if(confirm) return resolve(content)
-      // return reject()
+    }).then((e)=>{
+      return resolve(e)
     }).catch(console.warn)
   })
 }

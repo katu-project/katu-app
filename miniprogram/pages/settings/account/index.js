@@ -24,7 +24,8 @@ Page({
     showChoose('警告','删除账户将会删除你在卡兔上的所有数据！',{
       confirmText: '确认删除',
       confirmColor: '#FF0000',
-    }).then(()=>{
+    }).then(({cancel})=>{
+      if(cancel) return
       this.startDeleteAccount()
     })
   },

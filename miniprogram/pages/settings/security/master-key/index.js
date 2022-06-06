@@ -1,4 +1,4 @@
-const { showError, showSuccess, loadData } = require('../../../../utils/index')
+const { showError, showSuccess, loadData, showChoose } = require('../../../../utils/index')
 const globalData = getApp().globalData
 
 Page({
@@ -18,7 +18,7 @@ Page({
   },
   onShow(){
     this.setData({
-      setMasterKey: globalData.app.user.setMasterKey
+      setMasterKey: globalData.app.user.setMasterKey || false
     })
   },
   checkInput(){
@@ -64,11 +64,11 @@ Page({
       newMasterKey: this.data.newMasterKey
     }
 
-    loadData(appManager.updateUserMasterKey,params).then(()=>{
-      appManager.reloadUserInfo()
-      appManager.clearMasterKey()
-      this.resetContent()
-      showSuccess('修改成功')
+    showChoose('确认使用该密码？').then(({cancel})=>{
+      if(cancel) return
+      loadData(appManager.updateUserMasterKey,params).then(()=>{
+        this.finishTask()
+      })
     })
   },
   async setMasterKey(){
@@ -78,12 +78,19 @@ Page({
       return
     }
 
-    loadData(appManager.setUserMasterKey,this.data.masterKey).then(()=>{
-      appManager.setMasterKey(masterKey)
-      appManager.reloadUserInfo()
-      appManager.clearMasterKey()
-      this.resetContent()
-      showSuccess('修改成功')
+    showChoose('确认使用该密码？').then(({cancel})=>{
+      if(cancel) return
+      loadData(appManager.setUserMasterKey,this.data.masterKey).then(()=>{
+        this.finishTask()
+      })
+    })
+  },
+  finishTask(){
+    appManager.clearMasterKey()
+    appManager.reloadUserInfo()
+    this.resetContent()
+    showChoose("设置成功","",{showCancel:false}).then(()=>{
+      wx.navigateBack()
     })
   },
   resetContent(){

@@ -1,6 +1,6 @@
 const { getCard } = require('../../api')
 const { loadData } = require('../../utils/index')
-const { showChoose, navigateTo } = require('../../utils/action')
+const { navigateTo } = require('../../utils/action')
 const globalData = getApp().globalData
 Page({
   data: {
