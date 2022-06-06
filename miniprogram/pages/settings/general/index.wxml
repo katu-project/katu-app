@@ -1,11 +1,11 @@
 <view class="cu-list menu sm-border card-menu margin-top">
   <view class="cu-item">
     <view class="content">
-     <text class="text-grey">默认加密模式</text>
+     <text class="text-grey">默认使用加密</text>
     </view>
     <view class="action">
-      <switch class="switch-lock sm" bindchange="tapToConfig" data-key="config_general_defaultCreateCardType" checked="{{config_general_defaultCreateCardType}}"></switch>
+      <switch class="switch-lock sm" bindchange="tapToConfig" data-key="config_general_defaultUseEncrytion" checked="{{config_general_defaultUseEncrytion}}"></switch>
     </view>
   </view>
-  <view class="padding text-gray">创建新卡片时，默认使用加密模式</view>
+  <view class="padding text-gray">创建新卡片时，默认加密卡片数据</view>
 </view>

@@ -7,12 +7,12 @@ Page({
    * 页面的初始数据
    */
   data: {
-    config_general_defaultCreateCardType: true
+    config_general_defaultUseEncrytion: false
   },
   onShow(){
     const {app:{user:{config}}} = globalData
     this.setData({
-      config_general_defaultCreateCardType: config.general.defaultCreateCardType
+      config_general_defaultUseEncrytion: config.general.defaultUseEncrytion
     })
   },
   tapToConfig(e){
