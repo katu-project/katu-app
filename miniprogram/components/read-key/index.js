@@ -1,5 +1,4 @@
-const { loadData, navigateTo, showChoose } = require("../../utils/index")
-const globalData = getApp().globalData
+const { showError } = require("../../utils/index")
 
 Component({
   options: {
@@ -30,21 +29,16 @@ Component({
    */
   methods: {
     async tapToSetKey(){
-      const {app:{user}} = globalData
-      if(!user.setMasterKey) {
-        await showChoose("警告","未设置主密码",{confirmText:'去设置'})
-        navigateTo('/pages/settings/security/master-key/index')
+      if(!this.data.key) {
+        showError("输入有误")
         return
       }
-      await loadData(globalData.app.checkSetAndReloadMasterKey, this.data.key,'验证中')
-
       this.setData({
         display: false
       })
+      this.triggerEvent('confirm', {value: this.data.key})
     },
-    checkKey(){
-      // console.log(this.data.key);
-    },
+    checkKey(){},
     hideModal(){
       this.setData({
         show: false,
