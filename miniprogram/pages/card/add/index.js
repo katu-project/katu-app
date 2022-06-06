@@ -14,30 +14,26 @@ Page({
     },
     curShowPicIdx: 0,
     showInputKey: false,
-    cardTag: [
+    tags: [
       {
         name: '银行卡',
         selected: false
-      },{
+      },
+      {
         name: '信用卡',
         selected: false
-      },{
-        name: '自定义'
+      },
+      {
+        name: '自定义',
+        value: 'custom'
       }
     ]
   },
-  onReady(){
-    const {app:{user:{config}}} = globalData
-    console.log(config);
-    if(config.general.defaultCreateCardType){
-      this.setData({
-        'card.encrypted': true
-      })
-    }
-  },
+  onReady(){},
   onShow() {
     this.receiveChoosePic()
     this.receiveCardTitle()
+    this.checkSetting()
   },
   receiveChoosePic(){
     if(this.resolveImagePath){
@@ -58,6 +54,15 @@ Page({
       this.resolveCardTitle = null
     }
   },
+  checkSetting(){
+    const {app:{user}} = globalData
+    if(user.config.general.defaultUseEncrytion){
+      this.setData({
+        'card.encrypted': true
+      })
+      this.checkShowSetMasterKey()
+    }
+  },
   async tapToSaveCard(){
     if(this.data.card.image.filter(e=>e.url === DefaultAddImage).length > 0) {
       showNotice('卡面数据不完整')
@@ -71,7 +76,7 @@ Page({
             .catch(this.saveFailed)
   },
   async saveDone(){
-    if(globalData.app.user.config.security.rememberPassword){
+    if(!globalData.app.user.config.security.rememberPassword){
       globalData.app.clearMasterKey()
     }
     showChoose('操作成功','卡片数据已保存',{showCancel: false}).then(()=>{
@@ -81,7 +86,8 @@ Page({
   async saveFailed(error){
     if(error.code){
       if(error.code[0] === '1'){
-        showChoose('操作警告',error.message,{}).then(()=>{
+        showChoose('操作警告',error.message).then(({cancel})=>{
+          if(cancel) return
           navigateTo('../../settings/security/master-key/index',false)
         })
       }else if(error.code[0] === '2'){
@@ -120,19 +126,32 @@ Page({
     }
   },
 
-  changeEncrypt(){
+  changeEncrypt(e){
     this.setData({
-      'card.encrypted': !this.data.card.encrypted
+      'card.encrypted': e.detail.value
     })
+    if(e.detail.value){
+      this.checkShowSetMasterKey()
+    }
   },
-
+  checkShowSetMasterKey(){
+    const {app:{user}} = globalData
+    if(!user.setMasterKey){
+      showChoose("警告","未设置主密码",{confirmText:'去设置'}).then(({cancel})=>{
+        if(cancel) {
+          this.changeEncrypt({detail:{value: false}})
+          return
+        }
+        navigateTo('/pages/settings/security/master-key/index')
+      })
+    }
+  },
   cardSwiper(e){
     if(e.detail.source == 'touch'){
       this.setData({
         curShowPicIdx: e.detail.current
       })
     }
-
   },
 
   tapToEditTitle(){
@@ -143,16 +162,25 @@ Page({
       showInputKey: true
     })
   },
+  inputKeyConfirm(e){
+    const key = e.detail.value
+    
+    // await loadData(globalData.app.checkSetAndReloadMasterKey, key,'验证中')
+  },
   tapToShowSelectTag(){
     this.setData({
       showSelectTag: true
     })
   },
   tapToSelectTag(e){
-    const index = this.data.cardTag.findIndex(tag=>tag.name === e.currentTarget.dataset.value)
+    const index = this.data.tags.findIndex(tag=>tag.name === e.currentTarget.dataset.value)
     console.log({index});
+    if(this.data.tags[index].value == 'custom'){
+      navigateTo('../edit-tag/index')
+      return
+    }
     this.setData({
-      [`cardTag[${index}].selected`]: !this.data.cardTag[index].selected
+      [`tags[${index}].selected`]: !this.data.tags[index].selected
     })
   },
   hideSelectTag(){

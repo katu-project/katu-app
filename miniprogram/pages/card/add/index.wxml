@@ -15,7 +15,7 @@
 
   <view class="action-list">
     <view class="flex-row-sb align-center">
-      <switch class="switch-lock" bindtap="changeEncrypt" checked="{{card.encrypted}}"></switch>
+      <switch class="switch-lock" bindchange="changeEncrypt" checked="{{card.encrypted}}"></switch>
       <button class="cu-btn line-cyan add-card-pic margin-lr-sm" style="width: 200rpx;margin: 0 " bindtap="addCardPic">
         <view class="text-df" style="white-space:nowrap">
           <text class="cuIcon-{{card.image.length==1?'add':'move'}}">{{card.image.length==1?' 添加':' 移除'}}卡面</text>
@@ -24,7 +24,7 @@
     </view>
   </view>
 
-  <view class="cu-list menu sm-border margin-tb" style="border-radius: 12rpx;flex:1;border: 1px solid cornflowerblue;">
+  <view class="cu-list menu sm-border margin-tb" style="border-radius: 12rpx;border: 1px solid cornflowerblue;">
     <view class="cu-item arrow" bindtap="tapToEditTitle">
       <view class="content">
         <text class="cuIcon-wenzi text-grey"></text>
@@ -45,9 +45,9 @@
     </view>
   </view>
 
-  <button class="cu-btn round line-cyan lg margin-tb" bindtap="tapToSaveCard">
-    <view class="text-xl text-blue">
-      保存
+  <button class="cu-btn line-cyan lg margin-tb-lg" bindtap="tapToSaveCard">
+    <view class="text-xl text-cyan">
+      保存卡片
     </view>
   </button>
 </view>
@@ -56,15 +56,17 @@
   <view class="cu-dialog">
     <view class="cu-bar bg-white">
       <view class="action" bindtap="hideSelectTag">取消</view>
-      <view class="action text-green margin-right" bindtap="hideSelectTag">确定</view>
+      <view class="action text-green" style="margin-right: 30rpx;" bindtap="hideSelectTag">确定</view>
     </view>
     <view class="grid col-3 padding-sm">
-      <view wx:for="{{cardTag}}" class="padding-xs" wx:key="index">
-        <button bindtap="tapToSelectTag" style="width: 200rpx;" class="cu-btn orange lg block {{item.selected?'bg-cyan':'line-orange'}}" data-value="{{item.name}}"> {{item.name}}
+      <view wx:for="{{tags}}" class="padding-xs" wx:key="index">
+        <button bindtap="tapToSelectTag" style="width: 200rpx;" class="cu-btn orange lg block {{item.selected?'bg-cyan':'line-orange'}} light" data-value="{{item.name}}"> {{item.name}}
         </button>
       </view>
     </view>
+    <view class="padding-lg"></view>
+    <view class="padding-lg"></view>
   </view>
 </view>
 
-<read-key show="{{showInputKey}}" />
+<read-key bind:confirm="inputKeyConfirm" show="{{showInputKey}}" />
