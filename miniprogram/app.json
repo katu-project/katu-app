@@ -19,7 +19,8 @@
     "pages/debug/crypto/index",
     "pages/settings/account/index",
     "pages/settings/general/index",
-    "pages/card/edit-content/index"
+    "pages/card/edit-content/index",
+    "pages/card/edit-tag/index"
   ],
   "window": {
     "backgroundColor": "#ffffff",

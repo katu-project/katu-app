@@ -2,13 +2,6 @@ const utils = require('../utils/index')
 const constData = require('../const')
 const { getUser, removeAccount, usageStatistic, request, setMasterKeyInfo } = require('../api')
 const { APP_TEMP_DIR ,MASTER_KEY_NAME } = require('../const')
-const DefaultUserData = {
-  isActive: 0,
-  quota: {
-    cardCount: 1,
-    encryptedCardCount: 0
-  }
-}
 
 class AppManager {
   static instance = null
@@ -25,7 +18,9 @@ class AppManager {
     this.loadAppBaseInfo()
     this.loadAppConfig()
     this.loadConstant()
-    this.loadMasterKey()
+    if(!this.user.config.security.rememberPassword){
+      this.loadMasterKey()
+    }
   }
 
   loadAppBaseInfo(){
@@ -101,8 +96,8 @@ class AppManager {
     return removeAccount()
   }
 
-  clearUserInfo(){
-    this.user = DefaultUserData
+  async clearUserInfo(){
+    this.user = await getUser()
     this._masterKey = null
   }
   // user action
@@ -269,6 +264,5 @@ async function getAppManager(...args){
 }
 
 module.exports = {
-  getAppManager,
-  DefaultUserData
+  getAppManager
 }
