@@ -5,7 +5,8 @@ Page({
    * 页面的初始数据
    */
   data: {
-    content: ''
+    content: '',
+    showDelete: false
   },
 
   /**
@@ -13,9 +14,17 @@ Page({
    */
   onLoad(options) {
     this.returnContentKey = options.returnContentKey || 'tempData'
+    if(options.sd){
+      this.setData({
+        showDelete: true
+      })
+    }
   },
   checkContent(){
 
+  },
+  tapToDelete(){
+    
   },
   tapToSetContent(){
     const pages = getCurrentPages()

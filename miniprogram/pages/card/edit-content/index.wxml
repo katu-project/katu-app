@@ -1,8 +1,9 @@
 <view class="page">
-  <view class="margin padding-left" style="height: 50px;border: 2rpx solid cyan;border-radius: 10rpx;">
-    <input type="text" model:value="{{content}}" bindinput="checkContent" style="height: 50px;" placeholder="设置卡片名称"/>
+  <view class="margin padding-left" style="height: 50px;border: 2rpx solid darkcyan;border-radius: 10rpx;">
+    <input type="text" model:value="{{content}}" bindinput="checkContent" style="height: 50px;" placeholder="输入名称"/>
   </view>
-  <view class="padding">
-    <button class="cu-cu-btn bg-cyan" bindtap="tapToSetContent">确认</button>
+  <view class="padding flex-row">
+    <button style="width: 200rpx;" class="bg-red light" wx:if="{{showDelete}}" bindtap="tapToDelete">删除</button>
+    <button style="width: 200rpx;" class="bg-cyan" bindtap="tapToSetContent">确认</button>
   </view>
 </view>
