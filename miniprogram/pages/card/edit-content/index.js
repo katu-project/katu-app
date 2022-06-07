@@ -5,8 +5,7 @@ Page({
    * 页面的初始数据
    */
   data: {
-    content: '',
-    showDelete: false
+    content: ''
   },
 
   /**
@@ -22,9 +21,6 @@ Page({
   },
   checkContent(){
 
-  },
-  tapToDelete(){
-    
   },
   tapToSetContent(){
     const pages = getCurrentPages()

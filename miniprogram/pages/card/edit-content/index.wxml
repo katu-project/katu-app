@@ -3,7 +3,6 @@
     <input type="text" model:value="{{content}}" bindinput="checkContent" style="height: 50px;" placeholder="输入名称"/>
   </view>
   <view class="padding flex-row">
-    <button style="width: 200rpx;" class="bg-red light" wx:if="{{showDelete}}" bindtap="tapToDelete">删除</button>
-    <button style="width: 200rpx;" class="bg-cyan" bindtap="tapToSetContent">确认</button>
+    <button class="bg-cyan" bindtap="tapToSetContent">确认</button>
   </view>
 </view>
