@@ -37,6 +37,9 @@ class AppManager {
     this.Config = {
       uploadCardNamePrefix: 'card'
     }
+    request('app/tags').then(tags=>{
+      this.Config.tags = tags
+    })
   }
 
   // user action
@@ -45,6 +48,18 @@ class AppManager {
     if(encrypted && canUseEncryptedCardCount) return
     if(!encrypted && canUseCardCount) return
     throw Error('可使用卡片量不足')
+  }
+
+  async createTag(name){
+    return request('user/tagCreate', {name})
+  }
+
+  async deleteTag(name){
+    return request('user/tagDelete', {name})
+  }
+
+  async syncUserTag(tags){
+    this.user.customTag = tags
   }
 
   async updateUserConfig(configItem){
