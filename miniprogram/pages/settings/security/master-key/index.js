@@ -55,8 +55,7 @@ Page({
     }
   },
   async updateMasterKey(){
-    const appManager = globalData.app
-    if(!appManager.user.setMasterKey){
+    if(!globalData.app.user.setMasterKey){
       throw Error('请先设置主密码')
     }
     const params = {
@@ -66,28 +65,27 @@ Page({
 
     showChoose('确认使用该密码？').then(({cancel})=>{
       if(cancel) return
-      loadData(appManager.updateUserMasterKey,params).then(()=>{
+      loadData(globalData.app.updateUserMasterKey,params).then(()=>{
         this.finishTask()
       })
     })
   },
   async setMasterKey(){
-    const appManager = globalData.app
-    if(appManager.user.setMasterKey){
+    if(globalData.app.user.setMasterKey){
       showError('已经设置主密码')
       return
     }
 
     showChoose('确认使用该密码？').then(({cancel})=>{
       if(cancel) return
-      loadData(appManager.setUserMasterKey,this.data.masterKey).then(()=>{
+      loadData(globalData.app.setUserMasterKey,this.data.masterKey).then(()=>{
         this.finishTask()
       })
     })
   },
   finishTask(){
-    appManager.clearMasterKey()
-    appManager.reloadUserInfo()
+    globalData.app.clearMasterKey()
+    globalData.app.reloadUserInfo()
     this.resetContent()
     showChoose("设置成功","",{showCancel:false}).then(()=>{
       wx.navigateBack()
