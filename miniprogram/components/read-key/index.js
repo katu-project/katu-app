@@ -20,13 +20,11 @@ Component({
   observers:{
     'show': function(v){
       this.setData({
-        display: v
+        display: v,
+        key: ''
       })
     }
   },
-  /**
-   * 组件的方法列表
-   */
   methods: {
     async tapToSetKey(){
       if(!this.data.key) {
