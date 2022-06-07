@@ -153,6 +153,12 @@ class AppManager {
       throw error
     }
 
+    if(!this.user.config.security.rememberPassword && !this._masterKey){
+      error.code = '21'
+      error.message = '请输入主密码'
+      throw error
+    }
+
     if(!this._masterKey) {
       error.code = '20'
       error.message = '请输入主密码'
@@ -161,12 +167,12 @@ class AppManager {
   }
 
   async _checkInputMasterKey(masterKey){
-    if(!masterKey || masterKey.length < 6) throw Error("输入不符合密码要求")
+    if(!masterKey || masterKey.length < 6) throw Error("主密码错误")
     if(this.user.setMasterKey){
       masterKey = await this.createMasterKey(masterKey)
       const masterKeyId = await this.generateMasterKeyId(masterKey)
       if(masterKeyId !== this.user.masterKeyPack.keyId){
-        throw Error("输入与已设置的主密码不匹配")
+        throw Error("主密码错误")
       }
     }
   }
@@ -175,17 +181,24 @@ class AppManager {
     return utils.crypto.sha1(originKey)
   }
 
+  async loadMasterKeyWithKey(key){
+    await this._checkInputMasterKey(key)
+    const masterKey = await this.createMasterKey(key)
+    this._masterKey = await this.fetchOriginMasterFromMasterPack(this.user.masterKeyPack.keyPack, masterKey)
+  }
+
   // 根据用户原始密码解密出主密码 _masterKey
   async loadMasterKey(){
     if(!this.user.setMasterKey) return
     const masterKey = await this.readMasterKey()
     if(!masterKey) return
     this._masterKey = await this.fetchOriginMasterFromMasterPack(this.user.masterKeyPack.keyPack, masterKey)
-    if(!this._masterKey) throw Error("主密钥错误")
   }
 
   async fetchOriginMasterFromMasterPack(masterPack, key){
+    console.log({masterPack, key});
     const originMasterKey = utils.crypto.decryptString(masterPack, key)
+    if(!originMasterKey) throw Error("主密钥错误")
     return originMasterKey
   }
 

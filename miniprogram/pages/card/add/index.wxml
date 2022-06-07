@@ -16,9 +16,9 @@
   <view class="action-list">
     <view class="flex-row-sb align-center">
       <switch class="switch-lock" bindchange="changeEncrypt" checked="{{card.encrypted}}"></switch>
-      <button class="cu-btn line-cyan add-card-pic margin-lr-sm" style="width: 200rpx;margin: 0 " bindtap="addCardPic">
+      <button class="cu-btn line-{{card.image.length==1?'cyan':'orange'}} add-card-pic margin-lr-sm" style="width: 200rpx;margin: 0 " bindtap="addCardPic">
         <view class="text-df" style="white-space:nowrap">
-          <text class="cuIcon-{{card.image.length==1?'add':'move'}}">{{card.image.length==1?' 添加':' 移除'}}卡面</text>
+          <text class="{{card.image.length==1?'cuIcon-add text-cyan':'cuIcon-move text-orange'}}">{{card.image.length==1?' 添加':' 移除'}}卡面</text>
         </view>
       </button>
     </view>
@@ -31,7 +31,7 @@
         <text class="text-grey">卡片名称</text>
       </view>
       <view class="action">
-        <text class="text-grey text-sm">{{card.title}}</text>
+        <text class="text-grey text-df">{{card.title}}</text>
       </view>
     </view>
     <view class="cu-item arrow" bindtap="tapToShowSelectTag">
@@ -39,8 +39,11 @@
         <text class="cuIcon-tagfill text-red"></text>
         <text class="text-grey">选择标签</text>
       </view>
-      <view class="action">
-        <view class="cu-tag round bg-orange light">未选择</view>
+      <view class="action" style="max-width: 40vw;white-space: nowrap;overflow-x: hidden;">
+        <view class="cu-tag round bg-orange light" wx:if="{{!card.tag.length}}">未选择</view>
+        <block wx:else>
+          <view class="cu-tag round bg-cyan light" wx:for="{{card.tag}}" wx:key="index" >{{item}}</view>
+        </block>
       </view>
     </view>
   </view>
@@ -52,15 +55,19 @@
   </button>
 </view>
 
-<view class="cu-modal bottom-modal {{ showSelectTag?'show':''}}">
+<view class="cu-modal bottom-modal {{ showSelectTag?'show':''}}" data-hide="1" bindtap="tapToHideSelectTag">
   <view class="cu-dialog">
     <view class="cu-bar bg-white">
-      <view class="action" bindtap="hideSelectTag">取消</view>
-      <view class="action text-green" style="margin-right: 30rpx;" bindtap="hideSelectTag">确定</view>
+      <view class="action" data-hide="1" bindtap="tapToHideSelectTag">取消</view>
+      <view class="action text-green" style="margin-right: 30rpx;" bindtap="tapToSetTag">确定</view>
     </view>
-    <view class="grid col-3 padding-sm">
+    <view class="padding-sm flex flex-wrap">
       <view wx:for="{{tags}}" class="padding-xs" wx:key="index">
-        <button bindtap="tapToSelectTag" style="width: 200rpx;" class="cu-btn orange lg block {{item.selected?'bg-cyan':'line-orange'}} light" data-value="{{item.name}}"> {{item.name}}
+        <button bindtap="tapToSelectTag" style="width: fit-content;" class="cu-btn orange lg block {{item.selected?'bg-cyan':'line-orange'}} light" data-value="{{item.name}}"> {{item.name}}
+        </button>
+      </view>
+      <view class="padding-xs">
+        <button bindtap="tapToCustomTag" style="width: 200rpx;" class="cu-btn orange lg block line-yellow">自定义
         </button>
       </view>
     </view>

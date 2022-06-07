@@ -8,6 +8,7 @@ Page({
     card: {
       encrypted: false,
       title: '卡片名称1',
+      tag: [],
       image: [
         { url: DefaultAddImage }
       ],
@@ -22,18 +23,25 @@ Page({
       {
         name: '信用卡',
         selected: false
-      },
-      {
-        name: '自定义',
-        value: 'custom'
       }
     ]
   },
-  onReady(){},
+  onReady(){
+  },
   onShow() {
     this.receiveChoosePic()
     this.receiveCardTitle()
     this.checkSetting()
+    this.loadRenderData()
+  },
+  loadRenderData(){
+    this.loadTagData()
+  },
+  loadTagData(){
+    const tags = [...globalData.app.Config.tags,...globalData.app.user.customTag]
+    this.setData({
+      tags
+    })
   },
   receiveChoosePic(){
     if(this.resolveImagePath){
@@ -74,30 +82,34 @@ Page({
     loadData(cardManager.add, card, {returnFailed: true})
             .then(this.saveDone)
             .catch(this.saveFailed)
+            .finally(this.saveFinish)
   },
   async saveDone(){
-    if(!globalData.app.user.config.security.rememberPassword){
-      globalData.app.clearMasterKey()
-    }
     showChoose('操作成功','卡片数据已保存',{showCancel: false}).then(()=>{
       wx.navigateBack()
     })
   },
   async saveFailed(error){
     if(error.code){
-      if(error.code[0] === '1'){
-        showChoose('操作警告',error.message).then(({cancel})=>{
-          if(cancel) return
-          navigateTo('../../settings/security/master-key/index',false)
-        })
-      }else if(error.code[0] === '2'){
+      if(error.code[0] === '2'){
         this.showInputKey()
+      }else{
+        showChoose('保存卡片出错',error.message)
       }
     }else{
       showChoose('保存卡片出错',error.message)
     }
   },
-
+  async saveFinish(){
+    if(!globalData.app.user.config.security.rememberPassword){
+      globalData.app.clearMasterKey()
+    }
+  },
+  showInputKey(){
+    this.setData({
+      showInputKey: true
+    })
+  },
   async tapToChoosePic(e){
     const index = e.currentTarget.dataset.index
     try {
@@ -146,26 +158,27 @@ Page({
       })
     }
   },
-  cardSwiper(e){
-    if(e.detail.source == 'touch'){
-      this.setData({
-        curShowPicIdx: e.detail.current
-      })
-    }
+  inputKeyConfirm(e){
+    const key = e.detail.value
+    globalData.app.loadMasterKeyWithKey(key).then(()=>{
+
+    }).catch(error=>{
+      showChoose(error.message,'',{showCancel:false})
+    })
+    // await loadData(globalData.app.checkSetAndReloadMasterKey, key,'验证中')
   },
 
+  // 卡片名称
   tapToEditTitle(){
     navigateTo('../edit-content/index?returnContentKey=resolveCardTitle')
   },
-  showInputKey(){
+  // 标签部分
+  tapToSetTag(){
+    const tags = this.data.tags.filter(tag=>tag.selected).map(e=>e.name)
     this.setData({
-      showInputKey: true
+      'card.tag': tags
     })
-  },
-  inputKeyConfirm(e){
-    const key = e.detail.value
-    
-    // await loadData(globalData.app.checkSetAndReloadMasterKey, key,'验证中')
+    this.hideSelectTag()
   },
   tapToShowSelectTag(){
     this.setData({
@@ -174,18 +187,28 @@ Page({
   },
   tapToSelectTag(e){
     const index = this.data.tags.findIndex(tag=>tag.name === e.currentTarget.dataset.value)
-    console.log({index});
-    if(this.data.tags[index].value == 'custom'){
-      navigateTo('../edit-tag/index')
-      return
-    }
     this.setData({
       [`tags[${index}].selected`]: !this.data.tags[index].selected
     })
+  },
+  tapToCustomTag(){
+    navigateTo('../edit-tag/index')
   },
   hideSelectTag(){
     this.setData({
       showSelectTag: false
     })
-  }
+  },
+  tapToHideSelectTag(e){
+    if(!e.target.dataset.hide) return
+    return this.hideSelectTag()
+  },
+  // 其他
+  cardSwiper(e){
+    if(e.detail.source == 'touch'){
+      this.setData({
+        curShowPicIdx: e.detail.current
+      })
+    }
+  },
 })
