@@ -1,7 +1,7 @@
 /*
-此文件为开发者工具生成，生成时间: 5/24/2022, 3:17:11 PM
+此文件为开发者工具生成，生成时间: 6/8/2022, 5:12:30 PM
 
-在 /Volumes/Leo/workspace/git/katu-weixin-app/miniprogram/pages/qa/index.wxss 中引入样式
+在 /Volumes/Leo/workspace/git/katu-lite/miniprogram/pages/qa/index.wxss 中引入样式
 ```
 @import "./index.skeleton.wxss";
 ```
@@ -11,8 +11,8 @@
 .sk-transparent {
     color: transparent !important;
   }
-.sk-text-14-2857-942 {
-    background-image: linear-gradient(transparent 14.2857%, #EEEEEE 0%, #EEEEEE 85.7143%, transparent 0%) !important;
+.sk-text-14-2857-776 {
+    background-image: linear-gradient(transparent 14.2857%, #FFFFFF 0%, #FFFFFF 85.7143%, transparent 0%) !important;
     background-size: 100% 61.6000rpx;
     position: relative !important;
   }
@@ -24,7 +24,7 @@
     background-repeat: repeat-y !important;
   }
 .sk-pseudo::before, .sk-pseudo::after {
-      background: #EFEFEF !important;
+      background: #FFFFFF !important;
       background-image: none !important;
       color: transparent !important;
       border-color: transparent !important;
@@ -36,8 +36,8 @@
       border-radius: 50% !important;
     }
 .sk-gray {
-    color: #EFEFEF !important;
-    background: #EFEFEF !important;
+    color: #FFFFFF !important;
+    background: #FFFFFF !important;
   }
 .sk-container {
     position: absolute;

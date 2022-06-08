@@ -1,3 +1,7 @@
+<cu-custom bgColor="bg-cyan" isBack="{{true}}">
+  <view slot="backText">返回</view>
+  <view slot="content">{{card._id?'编辑':'添加'}}卡片</view>
+</cu-custom>
 <view class="page">
   <swiper class="card-swiper square-dot"
           indicator-dots="true" 

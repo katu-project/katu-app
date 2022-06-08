@@ -1,20 +1,8 @@
 <view class="page">
+  <view style="height: 50px;"></view>
   <view class="list">
     <view class="item" wx:for="{{list}}" wx:key="_id" data-item="{{item}}" bindtap="goCardDetail">
       {{index+1}}.{{item._id}}
     </view>
   </view>
-</view>
-
-<view class="action">
-    <button  class="cu-btn round line-cyan lg margin-tb" style="width: 200rpx;" bindtap="goAddCard">
-      <view class="text-xxl">
-        <text class="cuIcon-add"></text>
-      </view>
-    </button>
-    <button  class="cu-btn round line-cyan lg margin-tb" style="width: 200rpx;" bindtap="goProfile">
-      <view class="text-xxl">
-        <text class="cuIcon-people"></text>
-      </view>
-    </button>
 </view>

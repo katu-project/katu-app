@@ -2,7 +2,7 @@
 @import "/colorui/icon.wxss";
 
 page {
-  background-color: #ffffff;
+  background-color: lightcyan;
 }
 
 .page{

@@ -1,5 +1,8 @@
 <import src="detail.skeleton.wxml" />
-
+<cu-custom class="skeleton-pass" bgColor="bg-cyan" isBack="{{true}}">
+  <view slot="backText">返回</view>
+  <view slot="content">使用帮助</view>
+</cu-custom>
 <template is="skeleton" wx:if="{{!doc.title}}"/>
 
 <view wx:else class="page">
@@ -7,7 +10,7 @@
     <text class="cuIcon-titles text-cyan"></text>
     <text class="margin-left-xs">{{doc.title}}</text>
   </view>
-  <view class="margin padding text-lg content skeleton-gray-block">
+  <view class="margin padding text-lg doc-content skeleton-gray-block">
     <rich-text nodes="{{doc.content}}"></rich-text>
   </view>
   <view class="margin text-gray text-sm flex align-center justify-end">

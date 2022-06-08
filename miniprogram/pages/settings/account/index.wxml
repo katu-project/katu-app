@@ -1,3 +1,8 @@
+<cu-custom bgColor="bg-cyan" isBack="{{true}}">
+  <view slot="backText">返回</view>
+  <view slot="content">账户</view>
+</cu-custom>
+
 <view class="page">
   <view class="cu-list menu margin-top">
     <view class="cu-item item" bindtap="tapToDeleteAccount">

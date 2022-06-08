@@ -1,5 +1,8 @@
 <import src="index.skeleton.wxml" />
-
+<cu-custom class="skeleton-pass" bgColor="bg-cyan" isBack="{{true}}">
+  <view slot="backText">返回</view>
+  <view slot="content">使用帮助</view>
+</cu-custom>
 <template is="skeleton" wx:if="{{!list.length}}"/>
 
 <view wx:else class="page">

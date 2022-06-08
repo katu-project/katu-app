@@ -1,6 +1,6 @@
 @import "detail.skeleton.wxss";
 
-.content {
+.doc-content {
   min-height: 30vh;
   border-radius: 10rpx;
   border: 1rpx solid var(--cyan);

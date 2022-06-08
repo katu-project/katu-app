@@ -1,3 +1,8 @@
+<cu-custom bgColor="bg-cyan" isBack="{{true}}">
+  <view slot="backText">返回</view>
+  <view slot="content">标签管理</view>
+</cu-custom>
+
 <view class="page" style="min-height: 100vh;">
   <view class="padding-tb padding-left-sm text-xl">
     <view class="flex-row-sb align-center">

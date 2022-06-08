@@ -1,3 +1,8 @@
+<cu-custom bgColor="bg-cyan" isBack="{{true}}">
+  <view slot="backText">返回</view>
+  <view slot="content">编辑内容</view>
+</cu-custom>
+
 <view class="page">
   <view class="margin padding-left" style="height: 50px;border: 2rpx solid darkcyan;border-radius: 10rpx;">
     <input type="text" model:value="{{content}}" bindinput="checkContent" style="height: 50px;" placeholder="输入名称"/>

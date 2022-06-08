@@ -1,0 +1,23 @@
+<view class="nav">
+	<view class="ul">
+		<view class="li left" bindtap="switchTab" data-idx="0">
+			<view class="icon">
+				<image class="svg" mode="aspectFit" src="/static/images/home.svg"></image>
+			</view>
+		</view>
+
+		<view class="li" bindtap="switchTab" data-idx="1">
+			<view class="center">
+				<view class="icon plus">
+          <image  class="svg" mode="aspectFit" src="/static/images/tab-add.svg"></image>
+        </view>
+			</view>
+		</view>
+
+		<view class="li right" bindtap="switchTab" data-idx="2">
+			<view class="icon">
+				<image class="svg" mode="aspectFit" src="/static/images/tab-setting.svg"></image>
+			</view>
+		</view>
+	</view>
+</view>

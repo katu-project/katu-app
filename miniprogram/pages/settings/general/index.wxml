@@ -1,11 +1,16 @@
+<cu-custom bgColor="bg-cyan" isBack="{{true}}">
+  <view slot="backText">返回</view>
+  <view slot="content">通用</view>
+</cu-custom>
+
 <view class="cu-list menu sm-border card-menu margin-top">
   <view class="cu-item">
     <view class="content">
-     <text class="text-grey">默认使用加密</text>
+    <text class="">默认使用加密</text>
     </view>
     <view class="action">
       <switch class="switch-lock sm" bindchange="tapToConfig" data-key="config_general_defaultUseEncrytion" checked="{{config_general_defaultUseEncrytion}}"></switch>
     </view>
   </view>
-  <view class="padding text-gray">创建新卡片时，默认加密卡片数据</view>
+  <view class="padding bg-white text-grey">创建新卡片时，默认加密卡片数据</view>
 </view>

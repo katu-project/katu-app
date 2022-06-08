@@ -1,8 +1,15 @@
+<cu-custom bgColor="bg-cyan" isBack="{{true}}">
+  <view slot="backText">返回</view>
+  <view slot="content">图片处理</view>
+</cu-custom>
+
 <view class="page">
+  <view class="padding-top"></view>
   <image class="image card" mode="aspectFit" src="{{tmpImagePath}}"></image>
 
   <view class="padding-tb">
-    <text class="text-xl">如何处理图片:</text>
+    <text class="cuIcon-titles text-cyan"></text>
+    <text class="text-lg">图片处理:</text>
   </view>
   <radio-group class="block" bindchange="selectMethod">
     <view class="cu-form-group">
@@ -18,12 +25,13 @@
       <radio class="radio" value="2"></radio>
     </view>
   </radio-group>
-  <view class="padding flex action">
+  <view class="margin-top padding flex">
     <button class="cu-btn round line-cyan lg margin-tb btn" bindtap="goBack">
       <view class="text-xl text-red">
         重新选择
       </view>
     </button>
+    <view class="padding-lr"></view>
     <button class="cu-btn round line-cyan lg margin-tb btn" bindtap="useAndBack">
       <view class="text-xl text-blue">
         使用图片

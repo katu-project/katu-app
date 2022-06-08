@@ -57,6 +57,26 @@
   },
   "skeletonConfig": {
     "global": {
+      "text": {
+        "color": "#FFFFFF"
+      },
+      "image": {
+        "shape": "rect",
+        "color": "#FFFFFF",
+        "shapeOpposite": []
+      },
+      "button": {
+        "color": "#FFFFFF",
+        "excludes": []
+      },
+      "pseudo": {
+        "color": "#FFFFFF",
+        "shape": "circle",
+        "shapeOpposite": []
+      },
+      "excludes": [
+        ".skeleton-pass"
+      ],
       "remove": [
         ".skeleton-remove"
       ],

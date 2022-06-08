@@ -1,3 +1,4 @@
+<cu-custom></cu-custom>
 <view class="page flex-col" style="min-height: 100vh;">
   <view class="padding-top-sm"></view>
   <view class="margin-bottom padding bg-cyan flex-col align-start" style="border-radius: 6rpx;">

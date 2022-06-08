@@ -8,18 +8,3 @@
   border-radius: 6rpx;
   margin-top: 10rpx;
 }
-
-.action{
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-}
-.action-button{
-  border: 1rpx solid silver;
-  border-radius: 6rpx;
-  margin: 10rpx;
-}

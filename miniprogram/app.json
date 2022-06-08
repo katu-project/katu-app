@@ -25,11 +25,27 @@
   "window": {
     "backgroundColor": "#ffffff",
     "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#ffffff",
-    "navigationBarTitleText": "卡兔",
-    "navigationBarTextStyle": "black",
-    "enablePullDownRefresh": true
+    "navigationStyle": "custom"
   },
   "sitemapLocation": "sitemap.json",
-  "style": "v2"
+  "style": "v2",
+  "usingComponents": {
+    "cu-custom":"/colorui/components/cu-custom"
+  },
+  "tabBar": {
+    "color": "#000000",
+    "selectedColor": "#ff0000",
+    "backgroundColor": "#ff0000",
+    "list": [
+      {
+        "text": "",
+        "pagePath": "pages/home/index"
+      },
+      {
+        "text": "",
+        "pagePath": "pages/profile/index"
+      }
+    ],
+    "custom": true
+  }
 }

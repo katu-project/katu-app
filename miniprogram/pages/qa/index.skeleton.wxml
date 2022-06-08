@@ -1,14 +1,14 @@
 <!--
-此文件为开发者工具生成，生成时间: 5/24/2022, 3:17:11 PM
+此文件为开发者工具生成，生成时间: 6/8/2022, 5:12:30 PM
 使用方法：
-在 /Volumes/Leo/workspace/git/katu-weixin-app/miniprogram/pages/qa/index.wxml 引入模板
+在 /Volumes/Leo/workspace/git/katu-lite/miniprogram/pages/qa/index.wxml 引入模板
 
 ```
 <import src="index.skeleton.wxml"/>
 <template is="skeleton" wx:if="{{loading}}" />
 ```
 
-在 /Volumes/Leo/workspace/git/katu-weixin-app/miniprogram/pages/qa/index.wxss 中引入样式
+在 /Volumes/Leo/workspace/git/katu-lite/miniprogram/pages/qa/index.wxss 中引入样式
 ```
 @import "./index.skeleton.wxss";
 ```
@@ -17,10 +17,23 @@
 -->
 <template name="skeleton">
   <view class="sk-container">
+    <view is="colorui/components/cu-custom" class="skeleton-pass">
+      <view class="cu-custom custom--cu-custom" style="height:60px">
+        <view class="cu-bar custom--cu-bar fixed custom--fixed bg-cyan custom--bg-cyan" style="height:60px;padding-top:20px;">
+          <view class="action custom--action">
+            <text class="cuIcon-back custom--cuIcon-back"></text>
+            <view>返回</view>
+          </view>
+          <view class="content custom--content" style="top:20px">
+            <view>使用帮助</view>
+          </view>
+        </view>
+      </view>
+    </view>
     <view class="page">
       <view class="padding-top">
         <text class="text-orange text-xxl"><text class="cuIcon-titles text-cyan sk-pseudo sk-pseudo-circle"></text>
-        <text class="margin-left-xs sk-transparent sk-text-14-2857-942 sk-text">猜你想知道的:</text></text>
+        <text class="margin-left-xs sk-transparent sk-text-14-2857-776 sk-text">猜你想知道的:</text></text>
       </view>
       <view class="cu-list menu sm-border margin-top">
         <view class="cu-item arrow skeleton-gray-block item sk-gray" data-key="f6e08a64628b4f9504a7481c220dbfab">

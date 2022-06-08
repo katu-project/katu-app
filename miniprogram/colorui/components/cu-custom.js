@@ -16,11 +16,11 @@ Component({
       default: ''
     }, 
     isCustom: {
-      type: [Boolean, String],
+      type: Boolean,
       default: false
     },
     isBack: {
-      type: [Boolean, String],
+      type: Boolean,
       default: false
     },
     bgImage: {
@@ -36,9 +36,6 @@ Component({
     CustomBar: app.globalData.CustomBar,
     Custom: app.globalData.Custom
   },
-  /**
-   * 组件的方法列表
-   */
   methods: {
     BackPage() {
       wx.navigateBack({
@@ -47,7 +44,7 @@ Component({
     },
     toHome(){
       wx.reLaunch({
-        url: '/pages/index/index',
+        url: '/pages/home/index',
       })
     }
   }

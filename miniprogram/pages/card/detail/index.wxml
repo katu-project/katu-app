@@ -1,3 +1,7 @@
+<cu-custom bgColor="bg-cyan" isBack="{{true}}">
+  <view slot="backText">返回</view>
+</cu-custom>
+
 <view class="main">
   <view class="pic">
     <block wx:for="{{card.image}}" wx:key="index">

@@ -1,3 +1,7 @@
+<cu-custom bgColor="bg-cyan" isBack="{{true}}">
+  <view slot="backText">返回</view>
+  <view slot="content">主密码</view>
+</cu-custom>
 <view class="page">
   <view class="padding flex-col justify-center align-center">
     <view class="bg-gray margin flex justify-center align-center" style="border-radius: 200rpx;height: 300rpx;width: 300rpx; border: 2px dashed {{setMasterKey?'green':'grey'}};">
