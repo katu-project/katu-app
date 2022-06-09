@@ -9,7 +9,7 @@
 .item {
   background: rgba(47, 49, 83, 0.6);
   padding: 20rpx;
-  height: 30vw;
+  height: 25vw;
   width: 40vw; 
   border-radius: 10rpx;
 }

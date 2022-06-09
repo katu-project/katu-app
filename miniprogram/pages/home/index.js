@@ -23,6 +23,12 @@ Page({
       list
     })
   },
+  tapToSearch(){
+    navigateTo('../card/list/index', true)
+  },
+  tapToCardList(e){
+    navigateTo('../card/list/index?tag='+e.currentTarget.dataset.tag, true)
+  },
   goCardDetail(e){
     navigateTo(`/pages/card/detail/index?id=${e.currentTarget.dataset.item._id}`)
   },
@@ -32,9 +38,6 @@ Page({
   goProfile(){
     navigateTo('/pages/profile/index', true)
   },
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
   onPullDownRefresh() {
     this.setData({
       list: []

@@ -7,21 +7,21 @@
         <image style="height: 6vw;width: 6vw;" mode="aspectFit" src="/static/images/bell.svg"></image>
         <view class="dot"></view>
       </view>
-      <view class="notice margin">
+      <view class="notice margin" bindtap="tapToSearch">
         <image style="height: 6vw;width: 6vw;" mode="aspectFit" src="/static/images/search.svg"></image>
       </view>
     </view>
   </view>
-  <view class="margin-bottom-sm padding-lr flex flex-wrap" style="justify-content: space-between;height: 68vh;overflow-y: scroll;">
+  <view class="margin-bottom-sm padding-lr flex flex-wrap justify-between" style="align-content: flex-start;height: 68vh;overflow-y: scroll;">
     <block wx:for="{{list}}" wx:key="index">
-      <view class="margin-bottom-sm item shadow bg-black flex-row justify-around align-center">
+      <view class="margin-bottom-sm item shadow bg-black flex-row justify-around align-center" data-tag="{{item.name}}" bindtap="tapToCardList">
         <view style="height: 15vw;width: 15vw;border-radius: 50%; opacity: 0.9;" class="bg-cyan flex justify-center align-center">
-          <text class="">银行卡</text>
+          <text class="{{item.name.length>=3?'text-sm':''}}">{{item.name}}</text>
         </view>
-        <text class="text-white text-xxl">12</text>
+        <text class="text-white text-xxl">{{item.count}}</text>
       </view>
     </block>
-    <view class="flex-col justify-center align-center" style="width: 100%;">
+    <view class="flex-col justify-center align-center" style="width: 100%;height: 50vh;" wx:if="{{!list.length}}">
       <text class="text-xl text-white">暂无数据</text>
       <text class="text-grey padding">点击下方按钮开始创建卡片数据吧</text>
       <text class="text-xxl text-grey">
