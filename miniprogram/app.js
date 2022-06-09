@@ -13,9 +13,7 @@ App({
         this.globalData.CustomBar = custom.bottom + custom.top - e.statusBarHeight;
       }
     })
-    getAppManager().then(app=>{
-      this.globalData.app = app
-    })
+    this.globalData.app = getAppManager()
   },
   globalData: {}
 });

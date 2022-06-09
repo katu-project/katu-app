@@ -6,17 +6,17 @@ const { APP_TEMP_DIR ,MASTER_KEY_NAME } = require('../const')
 class AppManager {
   static instance = null
   
-  static async getInstance(){
+  static getInstance(){
     if(!this.instance){
       this.instance = utils.selfish(new AppManager())
-      await this.instance.init()
+      this.instance.init()
     }
     return this.instance
   }
   async init(){
-    this.user = await getUser()
     this.loadAppBaseInfo()
     this.loadAppConfig()
+    this.user = await getUser()
     this.loadConstant()
     if(!this.user.config.security.rememberPassword){
       this.loadMasterKey()
@@ -60,6 +60,10 @@ class AppManager {
 
   async syncUserTag(tags){
     this.user.customTag = tags
+  }
+  
+  async getCardSummary(){
+    return request('card/summary')
   }
 
   async updateUserConfig(configItem){
@@ -287,7 +291,7 @@ class AppManager {
   }
 }
 
-async function getAppManager(...args){
+function getAppManager(...args){
   return AppManager.getInstance(...args)
 }
 
