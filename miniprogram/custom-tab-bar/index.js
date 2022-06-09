@@ -1,3 +1,5 @@
+const { navigateTo, switchTab } = require('../utils/index')
+
 Component({
   data: {
     selected: 0,
@@ -16,16 +18,15 @@ Component({
   methods: {
     switchTab(e) {
       const tabIdx = parseInt(e.currentTarget.dataset.idx)
+      if(this.data.selected === tabIdx) return
       const url = this.data.list[tabIdx].url
       if(tabIdx === 1){
-        wx.navigateTo({
-          url
-        })
+        navigateTo(url, true)
       }else{
-        wx.switchTab({url})
         this.setData({
           selected: tabIdx
         })
+        switchTab(url)
       }
     }
   }

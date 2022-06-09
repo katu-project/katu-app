@@ -1,4 +1,5 @@
 <view class="nav">
+  <view style="height: 10rpx;width: 100%; background-color: lightcyan;"></view>
 	<view class="ul">
 		<view class="li left" bindtap="switchTab" data-idx="0">
 			<view class="icon">

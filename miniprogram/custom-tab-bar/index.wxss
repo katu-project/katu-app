@@ -4,7 +4,6 @@
   left: 0;
   right: 0;
   width: 100%;
-  border-radius: 30px;
   box-shadow: 0 5rpx 6rpx rgba(0, 0, 0, 0.01), 0 12rpx 10rpx rgba(0, 0, 0, 0.01), 0 30rpx 25rpx rgba(0, 0, 0, 0.012), 0 100rpx 80rpx rgba(0, 0, 0, 0.02);
 }
 .nav .ul {
@@ -30,19 +29,19 @@
   padding-left: 10rpx;
   border-top-left-radius: 20px;
   border-bottom-left-radius: 20px;
-  border-top-right-radius: 10px;
+  /* border-top-right-radius: 10px; */
   margin-left: 10px;
 }
 .nav .ul .li.right {
   padding-right: 10rpx;
   border-top-right-radius: 20px;
   border-bottom-right-radius: 20px;
-  border-top-left-radius: 10px;
+  /* border-top-left-radius: 10px; */
   margin-right: 10px;
 }
 
 .nav .center  {
-  margin-bottom: 100px;
+  /* margin-bottom: 100px; */
   border-radius: 50px;
   background: rgb(109, 230, 230);
   box-shadow: 0 0 0 12px lightcyan;
@@ -50,8 +49,8 @@
 }
 
 .nav .center .icon.plus {
-  width: 97px;
-  height: 97px;
+  width: 55px;
+  height: 55px;
   display: flex;
   justify-content: center;
   align-items: center;
