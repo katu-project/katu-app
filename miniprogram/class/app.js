@@ -1,6 +1,6 @@
 const utils = require('../utils/index')
 const constData = require('../const')
-const { getUser, removeAccount, usageStatistic, request, setMasterKeyInfo } = require('../api')
+const { getUser, getCard, removeAccount, usageStatistic, request, setMasterKeyInfo } = require('../api')
 const { APP_TEMP_DIR ,MASTER_KEY_NAME } = require('../const')
 
 class AppManager {
@@ -48,6 +48,10 @@ class AppManager {
     if(encrypted && canUseEncryptedCardCount) return
     if(!encrypted && canUseCardCount) return
     throw Error('可使用卡片量不足')
+  }
+
+  async getCards(...args){
+    return getCard(...args)
   }
 
   async createTag(name){

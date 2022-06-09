@@ -44,9 +44,9 @@
         <text class="text-grey">选择标签</text>
       </view>
       <view class="action" style="max-width: 40vw;white-space: nowrap;overflow-x: hidden;">
-        <view class="cu-tag round bg-orange light" wx:if="{{!card.tag.length}}">未选择</view>
+        <view class="cu-tag round bg-orange light" wx:if="{{!card.tags.length}}">未选择</view>
         <block wx:else>
-          <view class="cu-tag round bg-cyan light" wx:for="{{card.tag}}" wx:key="index" >{{item}}</view>
+          <view class="cu-tag round bg-cyan light" wx:for="{{card.tags}}" wx:key="index" >{{item}}</view>
         </block>
       </view>
     </view>

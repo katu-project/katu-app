@@ -83,8 +83,10 @@ class CardManager {
   }
 
   async add(card){
-    const cardModel = {encrypted: card.encrypted?1:0, image: [], info: {card:null} }
-  
+    const cardModel = {encrypted: card.encrypted, image: [], info: {card:null} }
+    cardModel.title = card.title || '未命名'
+    cardModel.tags = card.tags || ['其他']
+    
     if(cardModel.encrypted){
       console.log(this.app);
       this.app.checkMasterKey()

@@ -8,7 +8,7 @@ Page({
     card: {
       encrypted: false,
       title: '卡片名称1',
-      tag: [],
+      tags: [],
       image: [
         { url: DefaultAddImage }
       ],
@@ -176,7 +176,7 @@ Page({
   tapToSetTag(){
     const tags = this.data.tags.filter(tag=>tag.selected).map(e=>e.name)
     this.setData({
-      'card.tag': tags
+      'card.tags': tags
     })
     this.hideSelectTag()
   },
