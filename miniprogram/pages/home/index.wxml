@@ -1,8 +1,32 @@
+<view class="home-bg"></view>
 <view class="page">
-  <view style="height: 50px;"></view>
-  <view class="list">
-    <view class="item" wx:for="{{list}}" wx:key="_id" data-item="{{item}}" bindtap="goCardDetail">
-      {{index+1}}.{{item._id}}
+  <view class="flex align-end justify-between">
+    <image class="topLogo" mode="aspectFit" src="/static/logo-t.svg"></image>
+    <view class="flex align-end">
+      <view class="search margin-bottom">
+        <image style="height: 6vw;width: 6vw;" mode="aspectFit" src="/static/images/bell.svg"></image>
+        <view class="dot"></view>
+      </view>
+      <view class="notice margin">
+        <image style="height: 6vw;width: 6vw;" mode="aspectFit" src="/static/images/search.svg"></image>
+      </view>
+    </view>
+  </view>
+  <view class="margin-bottom-sm padding-lr flex flex-wrap" style="justify-content: space-between;height: 68vh;overflow-y: scroll;">
+    <block wx:for="{{list}}" wx:key="index">
+      <view class="margin-bottom-sm item shadow bg-black flex-row justify-around align-center">
+        <view style="height: 15vw;width: 15vw;border-radius: 50%; opacity: 0.9;" class="bg-cyan flex justify-center align-center">
+          <text class="">银行卡</text>
+        </view>
+        <text class="text-white text-xxl">12</text>
+      </view>
+    </block>
+    <view class="flex-col justify-center align-center" style="width: 100%;">
+      <text class="text-xl text-white">暂无数据</text>
+      <text class="text-grey padding">点击下方按钮开始创建卡片数据吧</text>
+      <text class="text-xxl text-grey">
+        <text class="cuIcon-rounddown"></text>
+      </text>
     </view>
   </view>
 </view>

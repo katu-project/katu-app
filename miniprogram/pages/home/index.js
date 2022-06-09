@@ -1,4 +1,3 @@
-const { getCard } = require('../../api')
 const { loadData } = require('../../utils/index')
 const { navigateTo } = require('../../utils/action')
 const globalData = getApp().globalData
@@ -16,10 +15,10 @@ Page({
   },
 
   onShow() {
-    
+    this.getTabBar().setData({selected: 0})
   },
   async loadCard(){
-    const list = await loadData(getCard)
+    const list = await loadData(globalData.app.getCardSummary)
     this.setData({
       list
     })
