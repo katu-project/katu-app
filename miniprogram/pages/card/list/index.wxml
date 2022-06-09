@@ -1,0 +1,37 @@
+<cu-custom bgColor="bg-cyan" isBack="{{true}}">
+  <view slot="backText">返回</view>
+  <view slot="content">卡片列表-{{tag||'全部'}}</view>
+</cu-custom>
+
+
+<view class="box">
+  <view class="cu-bar bg-cyan search">
+    <view class="search-form radius">
+      <text class="cuIcon-search"></text>
+      <input type="text" model:value="{{key}}" bindinput="inputSearch" placeholder="搜索卡片名称" confirm-type="search"></input>
+    </view>
+    <view class="action" wx:if="{{key}}">
+      <text class="cuIcon-close"></text>
+      <text>取消</text>
+    </view>
+  </view>
+</view>
+<view class="cu-list menu margin-top">
+  <view class="cu-item arrow"  wx:for="{{list}}" wx:key="_id">
+    <view class="margin-right-sm solids" style="border-radius: 8rpx;">
+      <image mode="aspectFill" style="height: 80rpx;width: 130rpx;" src="{{item.encrypted?DefaultLockImage:DefaultShowImage}}"></image>
+    </view>
+    <view class="content flex-col">
+      <view class="text-pink">
+        <text class="text-cut">{{item.title}}</text>
+      </view>
+      <view class="text-gray text-sm">
+        <text class="text-cut">{{item.tags}}</text>
+      </view>
+    </view>
+    <view class="action">
+      <!-- <view class="text-grey text-xs">22:20</view>
+      <view class="cu-tag round bg-red sm">5</view> -->
+    </view>
+  </view>
+</view>

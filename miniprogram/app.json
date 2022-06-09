@@ -20,7 +20,8 @@
     "pages/settings/account/index",
     "pages/settings/general/index",
     "pages/card/edit-content/index",
-    "pages/card/edit-tag/index"
+    "pages/card/edit-tag/index",
+    "pages/card/list/index"
   ],
   "window": {
     "backgroundColor": "#ffffff",
@@ -30,7 +31,7 @@
   "sitemapLocation": "sitemap.json",
   "style": "v2",
   "usingComponents": {
-    "cu-custom":"/colorui/components/cu-custom"
+    "cu-custom": "/colorui/components/cu-custom"
   },
   "tabBar": {
     "color": "#000000",
