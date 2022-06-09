@@ -48,6 +48,15 @@ async function navigateTo(page, vibrate=false){
   })
 }
 
+async function switchTab(page, vibrate=true){
+  vibrate && wx.vibrateShort({
+    type: 'light',
+  })
+  wx.switchTab({
+    url: page,
+  })
+}
+
 async function loadData(func, params, options){
   let loadingTitle = '正在处理请求', returnFailed = false
   if(options){
@@ -113,5 +122,6 @@ module.exports = {
   showError,
   showLoading,
   navigateTo,
+  switchTab,
   loadData
 }
