@@ -2,7 +2,8 @@
 @import "/colorui/icon.wxss";
 
 page {
-  background-color: lightcyan;
+  /* background-color: lightcyan; */
+  background-color: #ffffff;
 }
 
 .page{
@@ -23,6 +24,17 @@ page {
 	content: "\e6c2";
 }
 
+.home-bg {
+  z-index: -1;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  width: 100vw;
+  background-image: linear-gradient(to top, lightcyan 30%, rgb(44, 73, 73) 100%);
+  /* background-image: linear-gradient(to top, rgb(40, 43, 43) 30%, rgb(44, 73, 73) 100%); */
+}
+
+
 .card {
   width: 700rpx;
   height: 440rpx;
@@ -32,7 +44,6 @@ page {
 .flex-row{
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
 }
 
 .flex-row-sb{
