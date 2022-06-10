@@ -16,6 +16,7 @@ Page({
   onLoad(options) {
   },
   onReady() {
+    console.log("???");
     this.loadAppInfo()
     this.setData({
       user: globalData.app.user
@@ -28,6 +29,8 @@ Page({
         usedEncryptedCardCount: stats.usedEncryptedCardCount || 0
       })
     })
+
+    this.getTabBar().setData({selected: 2})
   },
   loadAppInfo(){
     this.setData({
