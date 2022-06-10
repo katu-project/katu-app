@@ -25,6 +25,9 @@ const request = (action, data={}) => {
 
 module.exports = {
   request,
+  // sys
+  getNotice: () => request('app/notice'), 
+  // user
   getUser: () => request('user/getUser'),
 
   activeAccount: data => request('user/active', wx.cloud.CloudID(data.cloudId)),
@@ -35,6 +38,8 @@ module.exports = {
 
   setMasterKeyInfo: keyPack => request('user/setMasterKeyInfo',{keyPack}),
   // card 
+  setCardLike: data => request('card/setLike', data),
+
   getCard: data => request('card/fetch', data),
 
   saveCard: data => request('card/save', data),

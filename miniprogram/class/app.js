@@ -1,6 +1,8 @@
 const utils = require('../utils/index')
 const constData = require('../const')
 const { getUser, getCard, removeAccount, usageStatistic, request, setMasterKeyInfo } = require('../api')
+const api = require('../api')
+
 const { APP_TEMP_DIR ,MASTER_KEY_NAME } = require('../const')
 
 class AppManager {
@@ -24,6 +26,7 @@ class AppManager {
   }
 
   loadAppBaseInfo(){
+    this.api = api
     this.AppInfo = wx.getAccountInfoSync()
     this.appVersion = this.AppInfo.miniProgram.version || 'develop'
     this.isDev = this.AppInfo.miniProgram.envVersion !== 'release'
