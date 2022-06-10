@@ -1,4 +1,4 @@
-const { loadData } = require("../../../utils/index")
+const { loadData, navigateTo } = require("../../../utils/index")
 const globalData = getApp().globalData
 const DefaultLockImage = '/static/images/lock.svg'
 const DefaultShowImage = '/static/images/image.svg'
@@ -24,19 +24,6 @@ Page({
       })
     }
   },
-  inputSearch(e){
-    const key = e.detail.value
-
-    if(!key){
-      this.setData({
-        list: this.originList
-      })
-    }else{
-      this.setData({
-        list: this.data.list.filter(e=>e.title.includes(key))
-      })
-    }
-  },
   onReady() {
 
   },
@@ -47,5 +34,20 @@ Page({
         list
       })
     })
-  }
+  },
+  tapToCardDetail(e){
+    navigateTo(`../detail/index?id=${e.currentTarget.dataset.key}`)
+  },
+  inputSearch(e){
+    const key = e.detail.value
+    if(!key){
+      this.setData({
+        list: this.originList
+      })
+    }else{
+      this.setData({
+        list: this.data.list.filter(e=>e.title.includes(key))
+      })
+    }
+  },
 })

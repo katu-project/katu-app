@@ -2,8 +2,6 @@
   <view slot="backText">返回</view>
   <view slot="content">卡片列表-{{tag||'全部'}}</view>
 </cu-custom>
-
-
 <view class="box">
   <view class="cu-bar bg-cyan search">
     <view class="search-form radius">
@@ -17,12 +15,12 @@
   </view>
 </view>
 <view class="cu-list menu margin-top">
-  <view class="cu-item arrow"  wx:for="{{list}}" wx:key="_id">
+  <view class="cu-item arrow"  wx:for="{{list}}" wx:key="_id" data-key="{{item._id}}" bindtap="tapToCardDetail">
     <view class="margin-right-sm solids" style="border-radius: 8rpx;">
       <image mode="aspectFill" style="height: 80rpx;width: 130rpx;" src="{{item.encrypted?DefaultLockImage:DefaultShowImage}}"></image>
     </view>
     <view class="content flex-col">
-      <view class="text-pink">
+      <view class="text-grey">
         <text class="text-cut">{{item.title}}</text>
       </view>
       <view class="text-gray text-sm">

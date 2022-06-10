@@ -1,6 +1,5 @@
-const { getCard, deleteCard } = require('../../../api')
 const { getCardManager } = require('../../../class/card')
-const { showChoose, navigateTo } = require('../../../utils/index')
+const { showChoose, showError, loadData } = require('../../../utils/index')
 
 const DefaultLockImage = '/static/images/lock.svg'
 const DefaultShowImage = '/static/images/image.svg'
@@ -8,14 +7,14 @@ const DefaultShowImage = '/static/images/image.svg'
 const globalData = getApp().globalData
 
 Page({
-  /**
-   * 页面的初始数据
-   */
   data: {
     defaultLockImage: DefaultLockImage,
     showInputKey: false,
     card: {
       _id: '',
+      title: '',
+      tags: [],
+      setLike: false,
       image: [
         {
           url: DefaultShowImage
@@ -23,57 +22,46 @@ Page({
       ]
     }
   },
-
-  /**
-   * 生命周期函数--监听页面加载
-   */
   onLoad(options) {
     if(options.id){
       this.id = options.id
     }
   },
-
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
   async onReady() {
-    if(this.id){
-      const res = await getCard({
-        _id: this.id
-      })
+    if(!this.id) {
+      showError("卡片不存在")
+      return
+    }
+
+    loadData(globalData.app.api.getCard,{
+      _id: this.id
+    }).then(card=>{
       this.setData({
-        'card._id': res._id,
-        'card.encrypted': res.encrypted,
-        'card.image': res.image.map(pic=>{
+        'card._id': card._id,
+        'card.encrypted': card.encrypted,
+        'card.title': card.title,
+        'card.tags': card.tags,
+        'card.setLike': card.setLike || false,
+        'card.image': card.image.map(pic=>{
           pic._url = pic.url
-          if(res.encrypted) pic._url = DefaultLockImage
+          if(card.encrypted) pic._url = DefaultLockImage
           return pic
         })
       })
-    }
+    })
   },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
   onShow() {
 
   },
-
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide() {
-
+  tapToSetLike(){
+    const state = !this.data.card.setLike
+    loadData(globalData.app.api.setCardLike,{id:this.id,state}).then(()=>{
+      this.setData({
+        'card.setLike': state
+      })
+    })
   },
-
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload() {
-
-  },
-  async goTapPic(e){
+  async tapToChoosePic(e){
     const idx = e.currentTarget.dataset.index
     const image = this.data.card.image[idx]
     if(this.data.card.encrypted && image._url === DefaultLockImage){
@@ -99,25 +87,18 @@ Page({
       urls: this.data.card.image.filter(e=>e._url !== DefaultLockImage).map(e=>e._url)
     })
   },
-  goUpdateCard(){
+  tapToEditCard(){
     wx.redirectTo({
-      url: '/pages/card/edit/index?id='+ this.id,
+      url: '../add/index?id='+ this.id,
     })
   },
-  goDeleteCard(){
-    wx.showModal({
-      title: "确认删除卡片",
-      content: "卡片删除后不可恢复！",
-      success: ({cancel})=>{
-        if(cancel) return
-        deleteCard({
-          _id: this.id
-        }).then(res=>{
-          wx.navigateBack()
-        })
-      }
+  tapToDeleteCard(){
+    showChoose("确认删除卡片","卡片删除后不可恢复！").then(({cancel})=>{
+      if(cancel) return
+      loadData(globalData.app.api.deleteCard,{_id: this.id}).then(()=>{
+        wx.navigateBack()
+      })
     })
-    
   },
   showInputKey(){
     this.setData({

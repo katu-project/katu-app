@@ -5,7 +5,9 @@
   align-items: center;
   padding: 20rpx;
 }
+
 .pic-img {
+  padding: 5rpx;
   margin-bottom: 10rpx;
   border: 1px solid skyblue;
 }

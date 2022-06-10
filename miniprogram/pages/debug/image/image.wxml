@@ -1,3 +1,6 @@
+<cu-custom class="skeleton-pass" bgColor="bg-cyan" isBack="{{true}}">
+  <view slot="backText">返回</view>
+</cu-custom>
 <view class="main">
   <view class="list">
     <image style="height: 400rpx; border: 1px solid royalblue;" src="{{pic}}" mode="aspectFit" bindtap="choosePic"></image>

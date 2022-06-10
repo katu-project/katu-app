@@ -16,7 +16,6 @@ Page({
   onLoad(options) {
   },
   onReady() {
-    console.log("???");
     this.loadAppInfo()
     this.setData({
       user: globalData.app.user

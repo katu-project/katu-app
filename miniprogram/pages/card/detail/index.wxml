@@ -2,15 +2,30 @@
   <view slot="backText">返回</view>
 </cu-custom>
 
-<view class="main">
+<view class="page">
+  <view class="padding-tb padding-left-xs">
+    <view class="flex justify-between align-center">
+      <view class="text-cyan text-xl flex align-center">
+        <text class="cuIcon-titles padding-right-sm"></text>
+        <text class="text-xl">{{card.title}}</text>
+      </view>
+      <view class="padding-lr text-xl text-{{card.setLike?'red':'gray'}}" bindtap="tapToSetLike"> 
+        <text class="cuIcon-{{card.setLike?'favorfill':'favor'}} padding-right-sm"></text>
+      </view>
+    </view>
+    <view class="text-cyan text-xl padding-top-sm flex align-center">
+      <text class="cuIcon-tag padding-right-xs padding-left-xs"></text>
+      <text class="cu-tag margin-right text-df sm radius line-orange text-orange" wx:for="{{card.tags}}" wx:key="index">{{item}}</text>
+    </view>
+  </view>
   <view class="pic">
     <block wx:for="{{card.image}}" wx:key="index">
-      <image class="pic-img card" data-index="{{index}}" mode="aspectFit" bindtap="goTapPic" src="{{item._url}}"></image>
+      <image class="pic-img card" data-index="{{index}}" mode="aspectFit" bindtap="tapToChoosePic" src="{{item._url}}"></image>
     </block>
   </view>
-  <view class="padding flex-row button-row-list">
-    <view bindtap="goUpdateCard" style="margin-right: 10rpx;">修改</view>
-    <view bindtap="goDeleteCard">删除</view>
+  <view class="padding flex-row">
+    <button class="text-green light" bindtap="tapToEditCard" style="margin-right: 10rpx;">修改</button>
+    <button class="text-red light" bindtap="tapToDeleteCard">删除</button>
   </view>
 </view>
 

@@ -1,3 +1,7 @@
+<cu-custom class="skeleton-pass" bgColor="bg-cyan" isBack="{{true}}">
+  <view slot="backText">返回</view>
+  <view slot="content">调试工具箱</view>
+</cu-custom>
 <view class="cu-list menu card-menu margin-top">
   <view class="cu-item arrow">
     <navigator url="./crypto/index" hover-class="none">
