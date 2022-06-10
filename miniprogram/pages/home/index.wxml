@@ -3,9 +3,9 @@
   <view class="flex align-end justify-between">
     <image class="topLogo" mode="aspectFit" src="/static/logo-t.svg"></image>
     <view class="flex align-end">
-      <view class="search margin-bottom">
+      <view class="search margin-bottom" bindtap="tapToShowNotice">
         <image style="height: 6vw;width: 6vw;" mode="aspectFit" src="/static/images/bell.svg"></image>
-        <view class="dot"></view>
+        <view wx:if="{{notice.newNotice}}" class="dot"></view>
       </view>
       <view class="notice margin" bindtap="tapToSearch">
         <image style="height: 6vw;width: 6vw;" mode="aspectFit" src="/static/images/search.svg"></image>
@@ -27,6 +27,25 @@
       <text class="text-xxl text-grey">
         <text class="cuIcon-rounddown"></text>
       </text>
+    </view>
+  </view>
+</view>
+
+<view class="cu-modal {{showNotice?'show':''}}">
+  <view class="cu-dialog bg-white">
+    <view class="cu-bar justify-end">
+      <view class="content">消息提示</view>
+      <view class="action" data-name="showNotice" bindtap="tapToHideModal">
+        <text class="cuIcon-close text-red"></text>
+      </view>
+    </view>
+    <view class="padding-xl margin-lr text-left" style="min-height: 30vh;">
+      {{notice.content}}
+    </view>
+    <view class="action flex justify-center">
+      <view class="padding-sm margin-sm bg-cyan light" bindtap="tapToMarkRead" style="border-radius: 10rpx;width:50vw">
+        <text class="text-cyan">我知道了</text>
+      </view>
     </view>
   </view>
 </view>

@@ -3,7 +3,11 @@ const { navigateTo } = require('../../utils/action')
 const globalData = getApp().globalData
 Page({
   data: {
-    list: []
+    list: [],
+    notice: {
+      newNotice: false,
+      content: '暂无新消息'
+    }
   },
 
   onLoad(options) {
@@ -15,6 +19,7 @@ Page({
   },
 
   onShow() {
+    this.loadNotice()
     this.getTabBar().setData({selected: 0})
   },
   async loadCard(){
@@ -23,13 +28,34 @@ Page({
       list
     })
   },
+  loadNotice(){
+    globalData.app.api.getNotice().then(notice=>{
+      this.setData({
+        'notice.newNotice': true,
+        'notice.content': notice.content
+      })
+    }).catch(console.warn)
+  },
+  tapToMarkRead(){
+    this.setData({
+      'notice.newNotice': false
+    })
+    this.hideModal('showNotice')
+  },
+  tapToHideModal(e){
+    this.hideModal(e.currentTarget.dataset.name)
+  },
   tapToSearch(){
     navigateTo('../card/list/index', true)
+  },
+  tapToShowNotice(){
+    const data = {showNotice: true}
+    this.setData(data)
   },
   tapToCardList(e){
     navigateTo('../card/list/index?tag='+e.currentTarget.dataset.tag, true)
   },
-  goCardDetail(e){
+  tapToCardDetail(e){
     navigateTo(`/pages/card/detail/index?id=${e.currentTarget.dataset.item._id}`)
   },
   goAddCard(){
@@ -46,5 +72,10 @@ Page({
   },
   onShareAppMessage() {
 
+  },
+  hideModal(name){
+    this.setData({
+      [name]: false
+    })
   }
 })
