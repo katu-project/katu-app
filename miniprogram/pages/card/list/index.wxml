@@ -16,8 +16,8 @@
 </view>
 <view class="cu-list menu margin-top">
   <view class="cu-item arrow"  wx:for="{{list}}" wx:key="_id" data-key="{{item._id}}" bindtap="tapToCardDetail">
-    <view class="margin-right-sm solids" style="border-radius: 8rpx;">
-      <image mode="aspectFill" style="height: 80rpx;width: 130rpx;" src="{{item.encrypted?DefaultLockImage:DefaultShowImage}}"></image>
+    <view class="margin-right-sm flex-col" style="border: 1px solid darkcyan; border-radius: 8rpx;">
+      <image mode="aspectFit" style="height: 80rpx;width: 130rpx;" src="{{item.encrypted?DefaultLockImage:DefaultShowImage}}"></image>
     </view>
     <view class="content flex-col">
       <view class="text-grey">

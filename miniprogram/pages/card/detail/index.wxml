@@ -24,8 +24,12 @@
     </block>
   </view>
   <view class="padding flex-row">
-    <button class="text-green light" bindtap="tapToEditCard" style="margin-right: 10rpx;">修改</button>
-    <button class="text-red light" bindtap="tapToDeleteCard">删除</button>
+    <button class="text-green bg-cyan light" bindtap="tapToEditCard" style="width: 40vw;">
+      <text class="cuIcon-edit"></text>
+    修改</button>
+    <button class="text-red bg-red light" bindtap="tapToDeleteCard" style="width: 40vw;">
+      <text class="cuIcon-delete"></text>
+    删除</button>
   </view>
 </view>
 
