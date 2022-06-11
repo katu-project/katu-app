@@ -64,15 +64,13 @@ Page({
   goProfile(){
     navigateTo('/pages/profile/index', true)
   },
-  onPullDownRefresh() {
+  onPullDownRefresh(){
     this.setData({
       list: []
     })
     this.loadCard().then(wx.stopPullDownRefresh)
   },
-  onShareAppMessage() {
-
-  },
+  onShareAppMessage(){},
   hideModal(name){
     this.setData({
       [name]: false
