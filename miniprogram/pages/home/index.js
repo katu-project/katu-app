@@ -19,7 +19,7 @@ Page({
   },
 
   onShow() {
-    this.loadNotice()
+    setTimeout(this.loadNotice,2000)
     this.getTabBar().setData({selected: 0})
   },
   async loadCard(){
@@ -30,13 +30,18 @@ Page({
   },
   loadNotice(){
     globalData.app.api.getNotice().then(notice=>{
-      this.setData({
-        'notice.newNotice': true,
-        'notice.content': notice.content
-      })
+      if(!globalData.app.user.noticeReadLog.includes(notice._id)){
+        this.setData({
+          'notice.id': notice._id,
+          'notice.newNotice': true,
+          'notice.content': notice.content
+        })
+      }
     }).catch(console.warn)
   },
   tapToMarkRead(){
+    if(!this.data.notice.id) return
+    globalData.app.api.markRead(this.data.notice.id)
     this.setData({
       'notice.newNotice': false
     })

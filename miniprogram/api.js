@@ -30,6 +30,8 @@ module.exports = {
   // user
   getUser: () => request('user/getUser'),
 
+  markRead: id => request('user/markRead',{id}),
+
   activeAccount: data => request('user/active', wx.cloud.CloudID(data.cloudId)),
 
   removeAccount: () => request('user/removeAccount'),
