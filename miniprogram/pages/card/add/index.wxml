@@ -1,4 +1,4 @@
-<cu-custom bgColor="bg-cyan" isBack="{{true}}">
+<cu-custom bgColor="nav-head" isBack="{{true}}">
   <view slot="backText">返回</view>
   <view slot="content">{{card._id?'编辑':'添加'}}卡片</view>
 </cu-custom>
@@ -31,7 +31,7 @@
   <view class="cu-list menu sm-border margin-tb" style="border-radius: 12rpx;border: 1px solid cornflowerblue;">
     <view class="cu-item arrow" bindtap="tapToEditTitle">
       <view class="content">
-        <text class="cuIcon-wenzi text-grey"></text>
+        <text class="cuIcon-wenzi text-cyan"></text>
         <text class="text-grey">卡片名称</text>
       </view>
       <view class="action">
@@ -40,7 +40,7 @@
     </view>
     <view class="cu-item arrow" bindtap="tapToShowSelectTag">
       <view class="content">
-        <text class="cuIcon-tagfill text-red"></text>
+        <text class="cuIcon-tagfill text-orange"></text>
         <text class="text-grey">选择标签</text>
       </view>
       <view class="action" style="max-width: 40vw;white-space: nowrap;overflow-x: hidden;">
@@ -48,6 +48,15 @@
         <block wx:else>
           <view class="cu-tag round bg-cyan light" wx:for="{{card.tags}}" wx:key="index" >{{item}}</view>
         </block>
+      </view>
+    </view>
+    <view class="cu-item">
+      <view class="content">
+        <text class="cuIcon-favorfill text-red"></text>
+        <text class="text-grey">设为常用</text>
+      </view>
+      <view class="action">
+        <switch class="green" bindchange="changeLikeState"></switch>
       </view>
     </view>
   </view>

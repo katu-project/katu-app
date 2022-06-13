@@ -86,6 +86,7 @@ class CardManager {
     const cardModel = {encrypted: card.encrypted, image: [], info: {card:null} }
     cardModel.title = card.title || '未命名'
     cardModel.tags = card.tags || ['其他']
+    cardModel.setLike = card.setLike
     
     if(cardModel.encrypted){
       console.log(this.app);

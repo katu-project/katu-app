@@ -9,6 +9,7 @@ Page({
       encrypted: false,
       title: '卡片名称1',
       tags: [],
+      setLike: false,
       image: [
         { url: DefaultAddImage }
       ],
@@ -27,11 +28,11 @@ Page({
     ]
   },
   onReady(){
+    this.checkSetting()
   },
   onShow() {
     this.receiveChoosePic()
     this.receiveCardTitle()
-    this.checkSetting()
     this.loadRenderData()
   },
   loadRenderData(){
@@ -145,6 +146,11 @@ Page({
     if(e.detail.value){
       this.checkShowSetMasterKey()
     }
+  },
+  changeLikeState(e){
+    this.setData({
+      'card.setLike': e.detail.value
+    })
   },
   checkShowSetMasterKey(){
     const {app:{user}} = globalData
