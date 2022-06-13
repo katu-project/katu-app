@@ -34,6 +34,12 @@ page {
   /* background-image: linear-gradient(to top, rgb(40, 43, 43) 30%, rgb(44, 73, 73) 100%); */
 }
 
+.nav-head{
+  background-image: linear-gradient(45deg, #529eeb, cyan);
+	color: var(--white);
+}
+
+
 
 .card {
   width: 700rpx;
