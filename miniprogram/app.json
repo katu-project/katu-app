@@ -3,7 +3,6 @@
   "pages": [
     "pages/home/index",
     "pages/card/add/index",
-    "pages/card/edit/index",
     "pages/card/detail/index",
     "pages/debug/index",
     "pages/debug/storage/index",
