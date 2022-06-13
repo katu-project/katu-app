@@ -23,7 +23,7 @@
       <image class="pic-img card" data-index="{{index}}" mode="aspectFit" bindtap="tapToChoosePic" src="{{item._url}}"></image>
     </block>
   </view>
-  <view class="padding flex-row">
+  <view class="padding-tb flex-row">
     <button class="text-green bg-cyan light" bindtap="tapToEditCard" style="width: 40vw;">
       <text class="cuIcon-edit"></text>
     修改</button>
@@ -33,4 +33,4 @@
   </view>
 </view>
 
-<read-key show="{{showInputKey}}" />
+<read-key bind:confirm="inputKeyConfirm" show="{{showInputKey}}" />

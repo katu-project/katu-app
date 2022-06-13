@@ -62,27 +62,38 @@ Page({
     })
   },
   async tapToChoosePic(e){
-    const idx = e.currentTarget.dataset.index
-    const image = this.data.card.image[idx]
-    if(this.data.card.encrypted && image._url === DefaultLockImage){
-      const cardManager = await getCardManager()
-      const appManager = globalData.app
-      try {
-        await appManager.checkMasterKey()
-      } catch (error) {
-        if(error.code[0] === '2'){
-          this.showInputKey()
-        }else{
-          showChoose('解密卡片出错',error.message)
-        }
-        return
+    this.chooseIdx = e.currentTarget.dataset.index
+    const image = this.data.card.image[this.chooseIdx]
+    if(!this.data.card.encrypted || image._url !== DefaultLockImage){
+      return this.previewImage()
+    }
+    this.showEncryptedImage()
+  },
+  async showEncryptedImage(){
+    const image = this.data.card.image[this.chooseIdx]
+    const cardManager = await getCardManager()
+    const appManager = globalData.app
+    try {
+      await appManager.checkMasterKey()
+    } catch (error) {
+      if(error.code[0] === '2'){
+        this.showInputKey()
+      }else{
+        showChoose('解密卡片出错',error.message)
       }
-      const {imagePath} = await cardManager.decryptImage(image)
-      this.setData({
-        [`card.image[${idx}]._url`]: imagePath
-      })
       return
     }
+
+    loadData(cardManager.decryptImage, image, '解码中').then(({imagePath})=>{
+      this.setData({
+        [`card.image[${this.chooseIdx}]._url`]: imagePath
+      })
+      if(!globalData.app.user.config.security.rememberPassword){
+        globalData.app.clearMasterKey()
+      }
+    })
+  },
+  async previewImage(){
     wx.previewImage({
       urls: this.data.card.image.filter(e=>e._url !== DefaultLockImage).map(e=>e._url)
     })
@@ -104,5 +115,13 @@ Page({
     this.setData({
       showInputKey: true
     })
-  }
+  },
+  inputKeyConfirm(e){
+    const key = e.detail.value
+    globalData.app.loadMasterKeyWithKey(key).then(()=>{
+      this.showEncryptedImage()
+    }).catch(error=>{
+      showChoose(error.message,'',{showCancel:false})
+    })
+  },
 })
