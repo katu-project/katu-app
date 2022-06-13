@@ -5,6 +5,7 @@ const globalData = getApp().globalData
 
 Page({
   data: {
+    edit: false,
     card: {
       encrypted: false,
       title: '卡片名称1',
@@ -27,8 +28,16 @@ Page({
       }
     ]
   },
+  onLoad(options){
+    if(options.id){
+      this.id = options.id
+    }
+  },
   onReady(){
     this.checkSetting()
+    if(this.id){
+      this.loadCardData()
+    }
   },
   onShow() {
     this.receiveChoosePic()
@@ -72,6 +81,40 @@ Page({
       this.checkShowSetMasterKey()
     }
   },
+  loadCardData(){
+    loadData(globalData.app.api.getCard, {_id: this.id}).then(async card=>{
+      const setData = {
+        edit: true,
+        'card._id': card._id,
+        'card.encrypted': card.encrypted,
+        'card.image': card.image,
+        'card.tags': card.tags,
+        'card.title': card.title,
+        'card.setLike': card.setLike
+      }
+      if(card.encrypted){
+        const cardManager = await getCardManager()
+        setData['card.image'] = []
+        for (const pic of card.image) {
+          const {imagePath} = await cardManager.decryptImage(pic)
+          pic.originUrl = pic.url
+          pic.url = imagePath
+          setData['card.image'].push(pic)
+        }
+      }
+
+      // 处理标签
+      const tags = this.data.tags.map(tag=>{
+        tag.selected = false
+        if(card.tags.includes(tag.name)){
+          tag.selected = true
+        }
+        return tag
+      })
+      setData['tags'] = tags
+      this.setData(setData)
+    })
+  },
   async tapToSaveCard(){
     if(this.data.card.image.filter(e=>e.url === DefaultAddImage).length > 0) {
       showNotice('卡面数据不完整')
@@ -80,7 +123,7 @@ Page({
 
     const card = Object.assign({},this.data.card)
     const cardManager = await getCardManager()
-    loadData(cardManager.add, card, {returnFailed: true})
+    loadData(this.data.edit?cardManager.update:cardManager.add, card, {returnFailed: true})
             .then(this.saveDone)
             .catch(this.saveFailed)
             .finally(this.saveFinish)
@@ -167,16 +210,15 @@ Page({
   inputKeyConfirm(e){
     const key = e.detail.value
     globalData.app.loadMasterKeyWithKey(key).then(()=>{
-
+      this.tapToSaveCard()
     }).catch(error=>{
       showChoose(error.message,'',{showCancel:false})
     })
-    // await loadData(globalData.app.checkSetAndReloadMasterKey, key,'验证中')
   },
 
   // 卡片名称
   tapToEditTitle(){
-    navigateTo('../edit-content/index?returnContentKey=resolveCardTitle')
+    navigateTo('../edit-content/index?returnContentKey=resolveCardTitle&value='+this.data.card.title)
   },
   // 标签部分
   tapToSetTag(){

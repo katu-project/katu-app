@@ -19,8 +19,15 @@ class CardManager {
   }
 
   async update(card){
-    const cardModel = {id: card.id, encrypted: card.encrypted, image: [], info: {card:null} }
-    let noChange = !card.picCountChange
+    const cardModel = {_id: card._id, encrypted: card.encrypted, image: [], info: {card:null} }
+    cardModel.title = card.title || '未命名'
+    cardModel.tags = card.tags || ['其他']
+    cardModel.setLike = card.setLike
+    
+    if(cardModel.encrypted){
+      this.app.checkMasterKey()
+    }
+
     for (const pic of card.image) {
       let imageData = {url:'',salt:'',hash:''}
       if(cardModel.encrypted){
@@ -37,7 +44,6 @@ class CardManager {
             imageData.url = await this.upload(encryptedData.imagePath)
             imageData.salt = encryptedData.imageSecretKey
             imageData.hash = imageHash
-            noChange = false
           }
         }else{ // 开启加密
           console.log('未加密图片开启加密');
@@ -50,7 +56,6 @@ class CardManager {
           imageData.url = await this.upload(encryptedData.imagePath)
           imageData.salt = encryptedData.imageSecretKey
           imageData.hash = imageHash
-          noChange = false
         }
       }else{
         if(pic.salt){ // 取消加密
@@ -59,7 +64,6 @@ class CardManager {
           imageData.salt = ''
           imageData.url = await this.upload(pic.url) // 重新上传图片获取链接
           imageData.hash = imageHash
-          noChange = false
         }else{  // 未加密
           if(pic.url.startsWith('cloud://')){ // 未变动(一直未使用加密)
             console.log('未加密图片无变动');
@@ -70,7 +74,6 @@ class CardManager {
             const imageHash = await this.getHash(pic.url)
             imageData.url = await this.upload(pic.url)
             imageData.hash = imageHash
-            noChange = false
           }
         }
       }
@@ -78,7 +81,6 @@ class CardManager {
       cardModel.image.push(imageData)
     }
 
-    if(noChange) return
     return saveCard(cardModel)
   }
 

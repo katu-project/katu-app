@@ -13,9 +13,9 @@ Page({
    */
   onLoad(options) {
     this.returnContentKey = options.returnContentKey || 'tempData'
-    if(options.sd){
+    if(options.value){
       this.setData({
-        showDelete: true
+        content: options.value
       })
     }
   },
