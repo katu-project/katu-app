@@ -48,7 +48,7 @@ Page({
     showChoose('删除这个标签？').then(({cancel})=>{
       if(cancel) return
       const tags = this.data.list.filter(tag=>tag.name !== e.currentTarget.dataset.value.name)
-      loadData(globalData.app.deleteTag, e.currentTarget.dataset.value.name).then(()=>{
+      loadData(globalData.app.api.deleteTag, e.currentTarget.dataset.value.name).then(()=>{
         this.setData({
           list: tags
         })
@@ -64,7 +64,7 @@ Page({
 
     this.hideModal()
 
-    loadData(globalData.app.createTag, this.data.tempTagName).then(()=>{
+    loadData(globalData.app.api.createTag, this.data.tempTagName).then(()=>{
       const tags = this.data.list.concat({name:this.data.tempTagName})
       this.setData({
         list: tags,

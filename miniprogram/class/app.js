@@ -1,6 +1,5 @@
 const utils = require('../utils/index')
 const constData = require('../const')
-const { getUser, getCard, removeAccount, usageStatistic, request, setMasterKeyInfo } = require('../api')
 const api = require('../api')
 
 const { APP_TEMP_DIR ,MASTER_KEY_NAME } = require('../const')
@@ -18,7 +17,7 @@ class AppManager {
   async init(){
     this.loadAppBaseInfo()
     this.loadAppConfig()
-    this.user = await getUser()
+    this.user = await api.getUser()
     this.loadConstant()
     if(!this.user.config.security.rememberPassword){
       this.loadMasterKey()
@@ -38,47 +37,28 @@ class AppManager {
 
   loadAppConfig(){
     this.Config = {
-      uploadCardNamePrefix: 'card'
+      uploadCardNamePrefix: 'card',
+      allowUploadImageType: ['jpeg','png','jpg']
     }
-    request('app/tags').then(tags=>{
+    api.getDefaultTag().then(tags=>{
       this.Config.tags = tags
     })
   }
 
   // user action
   async checkQuota(encrypted=false){
-    const { canUseCardCount, canUseEncryptedCardCount } = await usageStatistic()
+    const { canUseCardCount, canUseEncryptedCardCount } = await api.usageStatistic()
     if(encrypted && canUseEncryptedCardCount) return
     if(!encrypted && canUseCardCount) return
     throw Error('可使用卡片量不足')
   }
 
-  async getCards(...args){
-    return getCard(...args)
-  }
-
-  async createTag(name){
-    return request('user/tagCreate', {name})
-  }
-
-  async deleteTag(name){
-    return request('user/tagDelete', {name})
-  }
-
   async syncUserTag(tags){
     this.user.customTag = tags
   }
-  
-  async getCardSummary(){
-    return request('card/summary')
-  }
-
-  async updateUserConfig(configItem){
-    return request('user/updateConfig', configItem)
-  }
 
   async setMasterKeyInfo(keyPack){
-    return setMasterKeyInfo(keyPack)
+    return api.setMasterKeyInfo(keyPack)
   }
 
   async setUserMasterKey(masterKey){
@@ -104,7 +84,7 @@ class AppManager {
   }
 
   async reloadUserInfo(){
-    this.user = await getUser()
+    this.user = await api.getUser()
   }
 
   async loadUserConfig(configItem){
@@ -115,15 +95,15 @@ class AppManager {
   }
 
   async getUsageStatistic(){
-    return usageStatistic()
+    return api.usageStatistic()
   }
 
   async removeAccount(){
-    return removeAccount()
+    return api.removeAccount()
   }
 
   async clearUserInfo(){
-    this.user = await getUser()
+    this.user = await api.getUser()
     this._masterKey = null
   }
   // user action

@@ -26,8 +26,17 @@ const request = (action, data={}) => {
 module.exports = {
   request,
   // sys
+  getDefaultTag: () => request('app/tags'),
+
   getNotice: () => request('app/notice'), 
   // user
+
+  updateUserConfig: configItem => request('user/updateConfig', configItem),
+
+  deleteTag: name => request('user/tagDelete', {name}),
+
+  createTag: name => request('user/tagCreate', {name}),
+
   getUser: () => request('user/getUser'),
 
   markRead: id => request('user/markRead',{id}),
@@ -40,7 +49,12 @@ module.exports = {
 
   setMasterKeyInfo: keyPack => request('user/setMasterKeyInfo',{keyPack}),
   // card 
+
+  getCardSummary: () => request('card/summary'),
+
   setCardLike: data => request('card/setLike', data),
+
+  captureCard: fileID => request('card/capture', {fileId: fileID}),
 
   getCard: data => request('card/fetch', data),
 

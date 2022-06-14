@@ -26,7 +26,7 @@ Page({
       value: e.detail.value
     }
     console.log(configItem)
-    loadData(globalData.app.updateUserConfig, configItem).then(()=>{
+    loadData(globalData.app.api.updateUserConfig, configItem).then(()=>{
       showSuccess('修改成功')
       if(configItem.key === 'config_security_rememberPassword' && configItem.value === false){
         console.log('clearMasterKey');

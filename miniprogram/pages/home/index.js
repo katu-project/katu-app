@@ -23,7 +23,8 @@ Page({
     this.getTabBar().setData({selected: 0})
   },
   async loadCard(){
-    const list = await loadData(globalData.app.getCardSummary)
+    const list = await loadData(globalData.app.api.getCardSummary)
+    console.log({list});
     this.setData({
       list
     })
