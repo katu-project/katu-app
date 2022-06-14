@@ -177,12 +177,29 @@ class CardManager {
   }
 
   async parseCardImageByRemoteApi(imagePath){
+    await this.checkImageType(imagePath)
     const {fileID} = await wx.cloud.uploadFile({
       cloudPath: `tmp/pic-${imagePath.slice(-32)}`,
       filePath: imagePath
     })
-    const {fileID: fileUrl} = await request('user/captCard', {fileId: fileID})
+    const {fileID: fileUrl} = await this.app.api.captureCard(fileID)
     return fileUrl
+  }
+
+  async checkImageType(picPath){
+    const type = await this.getImageType(picPath)
+    if(!this.app.Config.allowUploadImageType.includes(type)) throw Error("该图片类型不支持")
+  }
+
+  async getImageType(picPath){
+    try {
+      const info = await wx.getImageInfo({
+        src: picPath,
+      })
+      return info.type
+    } catch (error) {
+      console.log('getImageType error :',error);
+    }
   }
 }
 

@@ -14,28 +14,28 @@
   <radio-group class="block" bindchange="selectMethod">
     <view class="cu-form-group">
       <view class="title">使用原图</view>
-      <radio class="radio" value="0" checked></radio>
+      <radio class="radio" value="0" checked="{{selectedMethod==0}}"></radio>
     </view>
     <view class="cu-form-group">
-      <view class="title">使用内置库 <text class="cuIcon-question lg text-gray" bindtap="showTip1"></text></view>
-      <radio class="radio" value="1"></radio>
+      <view class="title">使用内置库 
+        <text class="cuIcon-info lg text-green" bindtap="showTip1"></text>
+      </view>
+      <radio class="radio" value="1" checked="{{selectedMethod==1}}"></radio>
     </view>
     <view class="cu-form-group">
-      <view class="title">使用外部接口 <text class="cuIcon-question lg text-gray" bindtap="showTip2"></text></view>
-      <radio class="radio" value="2"></radio>
+      <view class="title">使用外部接口 
+        <text class="cuIcon-warn lg text-yellow" bindtap="showTip2"></text>
+      </view>
+      <radio class="radio" value="2" checked="{{selectedMethod==2}}"></radio>
     </view>
   </radio-group>
   <view class="margin-top padding flex">
-    <button class="cu-btn round line-cyan lg margin-tb btn" bindtap="goBack">
-      <view class="text-xl text-red">
-        重新选择
-      </view>
+    <button class="cu-btn round lg margin-tb btn bg-red light" bindtap="goBack">
+      重新选择
     </button>
     <view class="padding-lr"></view>
-    <button class="cu-btn round line-cyan lg margin-tb btn" bindtap="useAndBack">
-      <view class="text-xl text-blue">
-        使用图片
-      </view>
+    <button class="cu-btn round lg margin-tb btn bg-cyan light" bindtap="useAndBack">
+      使用图片
     </button>
   </view>
 </view>
