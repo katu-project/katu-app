@@ -24,7 +24,6 @@ Page({
   },
   async loadCard(){
     const list = await loadData(globalData.app.api.getCardSummary)
-    console.log({list});
     this.setData({
       list
     })

@@ -28,7 +28,7 @@ Page({
 
   },
   onShow() {
-    loadData(globalData.app.api.getCards, {where: this.where}).then(list=>{
+    loadData(globalData.app.api.getCard, {where: this.where}).then(list=>{
       this.originList = list
       this.setData({
         list
