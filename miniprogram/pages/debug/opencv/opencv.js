@@ -4,6 +4,7 @@ const canvas1 = 'canvas1'
 const sampleImage1 = '/static/images/test.jpeg'
 const { getTempFilePath } = require('../../../utils/file')
 let cv = require('../../../utils/opencv/index');
+const file = require('../../../utils/file')
 
 Page({
 	// 画布的dom对象
@@ -55,6 +56,35 @@ Page({
  
 		return imgData
   },
+  async getImageData(url){
+    const offscreenCanvas = wx.createOffscreenCanvas({type: '2d'})
+		const image = offscreenCanvas.createImage()
+		await new Promise(function (resolve, reject) {
+			image.onload = resolve
+			image.onerror = reject
+			image.src = url
+		})
+		offscreenCanvas.width = image.width;
+		offscreenCanvas.height = image.height;
+    const ctx = offscreenCanvas.getContext('2d')
+		ctx.drawImage(image, 0, 0, image.width, image.height)
+		return ctx.getImageData(0, 0, image.width, image.height)
+  },
+  async saveImageData(mat){
+    const offscreenCanvas = wx.createOffscreenCanvas({type: '2d'})
+    const ctx = offscreenCanvas.getContext("2d")
+    const imageData = ctx.createImageData(mat.cols, mat.rows);
+    imageData.data.set(new Uint8ClampedArray(mat.data))
+    offscreenCanvas.width = imageData.cols
+    offscreenCanvas.height = imageData.rows
+    ctx.putImageData(imageData, 0, 0)
+    console.log(offscreenCanvas);
+    const tempFilePath = offscreenCanvas.toDataURL()
+    // const {tempFilePath} = await wx.canvasToTempFilePath({
+    //   canvas: offscreenCanvas,
+    // })
+    return tempFilePath
+  },
   preview(){
     wx.canvasToTempFilePath({
       canvas: this.canvasDom,
@@ -68,7 +98,7 @@ Page({
       }
     })
   },
-	imgProcess1(imageData, canvasDom) {
+	async imgProcess1(imageData) {
 		// 读取图像
 		// let src = cv.imread(imageData);
 		// let dst = new cv.Mat();
@@ -79,15 +109,26 @@ Page({
 		// // 回收对象
 		// src.delete();
     // dst.delete()
-
+    const of = await file.readFile(sampleImage1)
+    // console.log({of, imageData});
     let src = cv.imread(imageData);
     let dst = new cv.Mat();
 		// // 灰度化
 		dst = this.detectCardByContour(src)
 		// // 显示图像
-		cv.imshow(canvasDom, dst);
+    const img = cv.export(dst)
+    console.log({img});
+    // const path = await file.getTempFilePath('1234')
+    const path = await this.saveImageData(img)
+    // console.log({path});
+    // const res = await file.writeFile(path, img)
+    // console.log({res});
+    const info = await wx.getImageInfo({
+      src: path,
+    })
+    console.log({info});
 		// // 回收对象
-		src.delete();
+		// src.delete();
     dst.delete()
     
 	},
@@ -170,14 +211,13 @@ Page({
     var _that = this;
     // 将图像转换为ImageData
     const info = await wx.getImageInfo({src: sampleImage1})
-    const image1Data = await _that.createImageElement(sampleImage1)
-    console.log(image1Data);
+    const imageData = await this.getImageData(sampleImage1)
     const height = info.height / info.width * this.data.canvas1Width
 		// 设置画布的显示大小
 		_that.setData({
 			canvas1Height: height
 		})
-		_that.imgProcess1(image1Data, _that.canvasDom)
+		_that.imgProcess1(imageData)
 	},
 	async btnRun2() {
 		// 同上
@@ -252,7 +292,6 @@ Page({
         return dst
     }
     let originSrc = src.clone()
-
     cv.cvtColor(src, src, cv.COLOR_RGBA2GRAY, 0);
 
     let ksize = new cv.Size(5, 5)
@@ -276,13 +315,14 @@ Page({
                     .slice(-5)
                     .map(e=>contours.get(e.i))
                     .reverse()
-
+    // console.log("检测到轮廓：",areaSortedCnts);
     let poly = new cv.MatVector();
     let idx = 0
     for (const i in areaSortedCnts) {
       let tmp = new cv.Mat();
       let peri = cv.arcLength(areaSortedCnts[i] , true)
       cv.approxPolyDP(areaSortedCnts[i] , tmp, 0.02*peri, true);
+      // console.log("轮廓信息：",tmp.rows,tmp);
       if(tmp.rows == 4){
           poly.push_back(tmp)
           const area = cv.contourArea(areaSortedCnts[i])
