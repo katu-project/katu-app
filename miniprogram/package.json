@@ -9,8 +9,8 @@
   "author": "",
   "license": "GPL-3.0-or-later",
   "dependencies": {
-    "bip39": "^3.0.4",
     "crypto-js": "3.3.0",
-    "js-base64": "^3.7.2"
+    "js-base64": "^3.7.2",
+    "pako": "^2.0.4"
   }
 }
