@@ -2,6 +2,8 @@ const crypto = require('./crypto')
 const file = require('./file')
 const convert = require('./convert')
 const action = require('./action')
+const cv = require('./opencv/index')
+const upng = require('./upng')
 
 function selfish (target) {
   const cache = new WeakMap();
@@ -37,5 +39,7 @@ module.exports = {
   crypto,
   file,
   convert,
+  cv,
+  upng,
   ...action
 }

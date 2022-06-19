@@ -56,7 +56,7 @@ Page({
   },
   async useInternalib(){
     const cardManager = await getCardManager()
-    const imageUrl = await loadData(cardManager.parseCardImageByRemoteApi, this.data.tmpImagePath)
+    const imageUrl = await loadData(cardManager.parseCardImageByInternalLib, this.data.tmpImagePath)
     this.setData({
       'tmpImagePath': imageUrl
     })

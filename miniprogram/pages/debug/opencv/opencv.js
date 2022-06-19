@@ -1,60 +1,28 @@
-// 画布
-const canvas1 = 'canvas1'
-// 示例图片
-const sampleImage1 = '/static/images/test.jpeg'
-const { getTempFilePath } = require('../../../utils/file')
-let cv = require('../../../utils/opencv/index');
+const cv = require('../../../utils/opencv/index');
 const file = require('../../../utils/file')
+const upng = require('../../../utils/upng')
+const defaultImage = '/static/images/image.svg'
 
 Page({
-	// 画布的dom对象
-  canvasDom: null,
-  canvasInstance: null,
 	data: {
-		canvas1Width: 375,
-		canvas1Height: 150,
-		// 示例图片
-		sampleImage1Url: sampleImage1,
+    originImage: defaultImage,
+		targetImage: defaultImage
 	},
 	onReady() {
     
   },
   onShow(){
-    this.initCanvas(canvas1)
   },
-	// 获取画布
-	initCanvas(canvasId) {
-		var _that = this;
-		wx.createSelectorQuery()
-			.select('#' + canvasId)
-			.fields({ node: true, size: true })
-			.exec((res) => {
-				const canvas2d = res[0].node;
-				// 设置画布的宽度和高度
-				canvas2d.width = res[0].width;
-				canvas2d.height = res[0].height;
-        _that.canvasDom = canvas2d
-			});
-	},
-	// 创建图像对象
-	async createImageElement(imgUrl) {
-		// 创建2d类型的离屏画布（需要微信基础库2.16.1以上）
-		this.offscreenCanvas = wx.createOffscreenCanvas({type: '2d'});
-		const image = this.offscreenCanvas.createImage();
-		await new Promise(function (resolve, reject) {
-			image.onload = resolve
-			image.onerror = reject
-			image.src = imgUrl
-		})
-		this.offscreenCanvas.width = image.width;
-		this.offscreenCanvas.height = image.height;
-		// draw image on canvas
-    var ctx = this.offscreenCanvas.getContext('2d')
-		ctx.drawImage(image, 0, 0, image.width, image.height);
-		// get image data from canvas
-		var imgData = ctx.getImageData(0, 0, image.width, image.height);
- 
-		return imgData
+  chooseImage(){
+    wx.chooseImage({
+      count: 1,
+      success: (res)=>{
+        console.log(res);
+        this.setData({
+          originImage: res.tempFilePaths[0]
+        })
+      }
+    })
   },
   async getImageData(url){
     const offscreenCanvas = wx.createOffscreenCanvas({type: '2d'})
@@ -63,93 +31,99 @@ Page({
 			image.onload = resolve
 			image.onerror = reject
 			image.src = url
-		})
+    })
 		offscreenCanvas.width = image.width;
 		offscreenCanvas.height = image.height;
     const ctx = offscreenCanvas.getContext('2d')
-		ctx.drawImage(image, 0, 0, image.width, image.height)
-		return ctx.getImageData(0, 0, image.width, image.height)
+    ctx.drawImage(image, 0, 0, image.width, image.height)
+    return ctx.getImageData(0, 0, image.width, image.height)
   },
-  async saveImageData(mat){
-    const offscreenCanvas = wx.createOffscreenCanvas({type: '2d'})
-    const ctx = offscreenCanvas.getContext("2d")
-    const imageData = ctx.createImageData(mat.cols, mat.rows);
-    imageData.data.set(new Uint8ClampedArray(mat.data))
-    offscreenCanvas.width = imageData.cols
-    offscreenCanvas.height = imageData.rows
-    ctx.putImageData(imageData, 0, 0)
-    console.log(offscreenCanvas);
-    const tempFilePath = offscreenCanvas.toDataURL()
-    // const {tempFilePath} = await wx.canvasToTempFilePath({
-    //   canvas: offscreenCanvas,
-    // })
-    return tempFilePath
-  },
-  preview(){
-    wx.canvasToTempFilePath({
-      canvas: this.canvasDom,
-      success: res => {
-        wx.previewImage({
-          urls: [res.tempFilePath]
-        })
-      },
-      fail: error => {
-        console.log(error);
-      }
+  async showImage(mat){
+    this.setData({
+      targetImage: defaultImage
     })
-  },
-	async imgProcess1(imageData) {
-		// 读取图像
-		// let src = cv.imread(imageData);
-		// let dst = new cv.Mat();
-		// // 灰度化
-		// cv.cvtColor(src, dst, cv.COLOR_RGBA2GRAY, 0);
-		// // 显示图像
-		// cv.imshow(canvasDom, dst);
-		// // 回收对象
-		// src.delete();
-    // dst.delete()
-    const of = await file.readFile(sampleImage1)
-    // console.log({of, imageData});
-    let src = cv.imread(imageData);
-    let dst = new cv.Mat();
-		// // 灰度化
-		dst = this.detectCardByContour(src)
-		// // 显示图像
-    const img = cv.export(dst)
-    console.log({img});
-    // const path = await file.getTempFilePath('1234')
-    const path = await this.saveImageData(img)
-    // console.log({path});
-    // const res = await file.writeFile(path, img)
-    // console.log({res});
+    const imageBuffer = upng.encode([mat.data],mat.cols,mat.rows,0)
+    const path = await file.getTempFilePath()
+    await file.writeFile(path, imageBuffer)
     const info = await wx.getImageInfo({
       src: path,
     })
-    console.log({info});
-		// // 回收对象
-		// src.delete();
-    dst.delete()
-    
-	},
-	imgProcess2(imageData, canvasDom) {
-		let src = cv.imread(imageData);
-		let dst = new cv.Mat();
+    console.log({info})
+    this.setData({
+      targetImage: path
+    })
+  },
+  async showImage1(imageData){
+    this.setData({
+      targetImage: defaultImage
+    })
+    console.log(imageData.data.length);
+    const imageBuffer = upng.encode([imageData.data],imageData.width,imageData.height,0)
+    const path = await file.getTempFilePath()
+    await file.writeFile(path, imageBuffer)
+    const info = await wx.getImageInfo({
+      src: path,
+    })
+    console.log({info,imageBuffer})
+    this.setData({
+      targetImage: path
+    })
+  },
+  previewImage(){
+    wx.previewImage({
+      urls: [this.data.targetImage]
+    })
+  },
+  async btnRun0() {
+    const imageData = await this.getImageData(this.data.originImage)
+    console.log('origin data:',imageData);
+    let src = cv.imread(imageData);
+    console.log('type1:',src.type());
 
-		// 灰度化
-		cv.cvtColor(src, src, cv.COLOR_RGBA2GRAY, 0);
-		// 边缘检测
-		cv.Canny(src, dst, 50, 100, 3, false);
-
-		cv.imshow(canvasDom, dst);
+    let dst = src.clone()
+    cv.cvtColor(src, dst, cv.COLOR_RGBA2GRAY, 0);
+    cv.GaussianBlur(src, dst, new cv.Size(19, 19), 0, 0, cv.BORDER_DEFAULT)
+    console.log('type:',dst.type());
+    dst = cv.export(dst)
+    await this.showImage(dst)
+		// 回收对象
 		src.delete();
 		dst.delete()
 	},
-	imgProcess3(imageData, canvasDom) {
-		let src = cv.imread(imageData);
-		let dst = new cv.Mat();
-
+	async btnRun1() {
+    const imageData = await this.getImageData(this.data.originImage)
+    let src = cv.imread(imageData);
+    let dst = new cv.Mat();
+    dst = src.clone()
 		// 灰度化
+    cv.cvtColor(src, dst, cv.COLOR_RGBA2GRAY, 0);
+    dst = cv.export(dst)
+    await this.showImage(dst)
+		// 回收对象
+		src.delete();
+		dst.delete()
+	},
+	async btnRun2() {
+		const imageData = await this.getImageData(this.data.originImage)
+    let src = cv.imread(imageData);
+    let dst = new cv.Mat();
+    dst = src.clone()
+    // 灰度化
+		cv.cvtColor(src, src, cv.COLOR_RGBA2GRAY, 0);
+		// 边缘检测
+    cv.Canny(src, dst, 50, 100, 3, false);
+    dst = cv.export(dst)
+    await this.showImage(dst)
+		// 回收对象
+		src.delete();
+		dst.delete()
+	},
+	async btnRun3() {
+		const imageData = await this.getImageData(this.data.originImage)
+    let src = cv.imread(imageData);
+    let dst = new cv.Mat();
+    dst = src.clone()
+    // 灰度化
 		cv.cvtColor(src, src, cv.COLOR_RGBA2GRAY, 0);
 
 		var orb = new cv.ORB();
@@ -161,85 +135,23 @@ Page({
 		orb.compute(src, keypoints, descriptors)
 		// 绘制特征点
 		cv.drawKeypoints(src, keypoints, dst)
-
-		cv.imshow(canvasDom, dst);
-		src.delete();
-		dst.delete()
-  },
-  async btnRun0() {
-		// 将图像转换为ImageData
-		const image1Data = await this.createImageElement(sampleImage1)
-    console.log({image1Data});
-    let src = cv.imread(image1Data);
-    let dst = new cv.Mat();
-    dst = src.clone()
-		// 灰度化
-    // cv.cvtColor(src, dst, cv.COLOR_RGBA2GRAY, 0);
-    // cv.GaussianBlur(src, dst, new cv.Size(19, 19), 0, 0, cv.BORDER_DEFAULT)
-		// 显示图像
-    // cv.imshow(this.canvasDom, dst);
-    // cv.imshow(this.offscreenCanvas, dst)
-    
-    const tempFile = await getTempFilePath('111')
-    console.log(tempFile,'f');
-    const data = wx.arrayBufferToBase64(cv.im2buffer(this.offscreenCanvas,dst))
-    console.log(data,'data');
-    wx.getFileSystemManager().writeFile({
-      filePath: tempFile,
-      data: data,
-      encoding: 'base64',
-      success:res => {
-        console.log(res,1);
-        wx.previewImage({
-          urls: [tempFile]
-        })
-      },
-      fail: err =>{
-        console.log(err,2);
-      },
-      complete: res => {
-        console.log(res,3);
-      }
-    })
-    // console.log(this.offscreenCanvas);
-    // this.preview()
+    dst = cv.export(dst)
+    await this.showImage(dst)
 		// 回收对象
 		src.delete();
 		dst.delete()
-	},
-	async btnRun1() {
-    var _that = this;
-    // 将图像转换为ImageData
-    const info = await wx.getImageInfo({src: sampleImage1})
-    const imageData = await this.getImageData(sampleImage1)
-    const height = info.height / info.width * this.data.canvas1Width
-		// 设置画布的显示大小
-		_that.setData({
-			canvas1Height: height
-		})
-		_that.imgProcess1(imageData)
-	},
-	async btnRun2() {
-		// 同上
-		var _that = this;
-		const image1Data = await _that.createImageElement(sampleImage1)
-		_that.setData({
-			canvas1Width: image1Data.width,
-			canvas1Height: image1Data.height,
-		})
-		_that.imgProcess2(image1Data, _that.canvasDom)
-	},
-	async btnRun3() {
-		// 同上
-		var _that = this;
-		const image1Data = await _that.createImageElement(sampleImage1)
-		_that.setData({
-			canvas1Width: image1Data.width,
-			canvas1Height: image1Data.height,
-		})
-		_that.imgProcess3(image1Data, _that.canvasDom)
   },
-  detectCardByContour(src){
+  async btnRun4() {
+    const imageData = await this.getImageData(this.data.originImage)
+    let src = cv.imread(imageData);
+    let dst = await this.detectCardByContour(src)
+    this.setData({
+      targetImage: dst
+    })
+    
+		src.delete()
+  },
+  async detectCardByContour(src){
     function getSize(contour){
         let corner1 = new cv.Point(contour.data32S[0], contour.data32S[1]);
         let corner2 = new cv.Point(contour.data32S[2], contour.data32S[3]);
@@ -343,6 +255,12 @@ Page({
 
     let rect = four_point_transform(originSrc, poly.get(idx))
     poly.delete();contours.delete(),hierarchy.delete()
-    return rect
+
+    rect = cv.export(rect)
+
+    const imageBuffer = upng.encode([rect.data],rect.cols,rect.rows,0)
+    const path = await file.getTempFilePath('1234')
+    await file.writeFile(path, imageBuffer)
+    return path
   }
 })
