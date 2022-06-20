@@ -1,0 +1,67 @@
+<!--
+此文件为开发者工具生成，生成时间: 6/20/2022, 5:52:39 PM
+使用方法：
+在 /Volumes/Leo/workspace/git/katu-lite/miniprogram/pages/qa/list/index.wxml 引入模板
+
+```
+<import src="index.skeleton.wxml"/>
+<template is="skeleton" wx:if="{{loading}}" />
+```
+
+在 /Volumes/Leo/workspace/git/katu-lite/miniprogram/pages/qa/list/index.wxss 中引入样式
+```
+@import "./index.skeleton.wxss";
+```
+
+更多详细信息可以参考文档：https://developers.weixin.qq.com/miniprogram/dev/devtools/skeleton.html
+-->
+<template name="skeleton">
+  <view class="sk-container">
+    <view is="colorui/components/cu-custom" class="skeleton-pass">
+      <view class="cu-custom custom--cu-custom" style="height:60px">
+        <view class="cu-bar custom--cu-bar fixed custom--fixed bg-cyan custom--bg-cyan" style="height:60px;padding-top:20px;">
+          <view class="action custom--action">
+            <text class="cuIcon-back custom--cuIcon-back"></text>
+            <view>返回</view>
+          </view>
+          <view class="content custom--content" style="top:20px">
+            <view>使用帮助-安全</view>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class="page">
+      <view class="padding-top">
+        <text class="text-xl"><text class="cuIcon-safe text-red sk-pseudo sk-pseudo-circle"></text>
+        <text class="margin-left-xs sk-transparent sk-text-14-2857-736 sk-text">安全</text></text>
+      </view>
+      <view class="cu-list menu sm-border margin-top">
+        <view class="cu-item arrow skeleton-gray-block item sk-gray" data-key="f6e08a64628b53c604a8467d74391b28">
+          <view class="content">
+            <text class="sk-gray">用户数据如何存储?</text>
+          </view>
+        </view>
+        <view class="cu-item arrow skeleton-gray-block item sk-gray" data-key="6d85a2b9628b54c1063d7b093f152106">
+          <view class="content">
+            <text class="sk-gray">我的数据安全么？</text>
+          </view>
+        </view>
+        <view class="cu-item arrow skeleton-gray-block item sk-gray" data-key="0a4ec1f9628b5501063149ac75a21cb7">
+          <view class="content">
+            <text class="sk-gray">什么是主密码？</text>
+          </view>
+        </view>
+        <view class="cu-item arrow skeleton-gray-block item sk-gray" data-key="f6e08a64628b55a704a899564e10cf2e">
+          <view class="content">
+            <text class="sk-gray">主密码忘记了怎么办？</text>
+          </view>
+        </view>
+        <view class="cu-item arrow skeleton-gray-block item sk-gray" data-key="b69f67c062b0314b07e7f2dc786910d8">
+          <view class="content">
+            <text class="sk-gray">代码审查？</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</template>

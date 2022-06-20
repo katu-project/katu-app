@@ -1,4 +1,4 @@
-@import "detail.skeleton.wxss";
+@import "index.skeleton.wxss";
 
 .doc-content {
   min-height: 30vh;

@@ -58,19 +58,19 @@
   "skeletonConfig": {
     "global": {
       "text": {
-        "color": "#FFFFFF"
+        "color": "#e7ebed"
       },
       "image": {
         "shape": "rect",
-        "color": "#FFFFFF",
+        "color": "#e7ebed",
         "shapeOpposite": []
       },
       "button": {
-        "color": "#FFFFFF",
+        "color": "#e7ebed",
         "excludes": []
       },
       "pseudo": {
-        "color": "#FFFFFF",
+        "color": "#e7ebed",
         "shape": "circle",
         "shapeOpposite": []
       },

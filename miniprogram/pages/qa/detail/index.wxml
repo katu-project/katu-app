@@ -1,4 +1,4 @@
-<import src="detail.skeleton.wxml" />
+<import src="index.skeleton.wxml" />
 <cu-custom class="skeleton-pass" bgColor="bg-cyan" isBack="{{true}}">
   <view slot="backText">返回</view>
   <view slot="content">使用帮助</view>
@@ -16,5 +16,11 @@
   <view class="margin text-gray text-sm flex align-center justify-end">
     <text class="cuIcon-time text-cyan"></text>
     <view class="margin-left-xs">更新时间: {{doc.updateTime}}</view>
+  </view>
+  <view class="margin text-cyan text-lg">
+    <button class="cu-btn block line-cyan lg" open-type="share">
+      <text class="cuIcon-forward"></text>
+      <text class="padding-left-sm">分享给好友</text>
+    </button>
   </view>
 </view>

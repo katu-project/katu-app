@@ -11,7 +11,7 @@
     "pages/card/image-processor/index",
     "pages/profile/index",
     "pages/qa/index",
-    "pages/qa/detail",
+    "pages/qa/detail/index",
     "pages/settings/index",
     "pages/settings/security/index",
     "pages/settings/security/master-key/index",
@@ -20,7 +20,8 @@
     "pages/settings/general/index",
     "pages/card/edit-content/index",
     "pages/card/edit-tag/index",
-    "pages/card/list/index"
+    "pages/card/list/index",
+    "pages/qa/list/index"
   ],
   "window": {
     "backgroundColor": "#ffffff",
