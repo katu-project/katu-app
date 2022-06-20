@@ -8,7 +8,7 @@
       <view class="cu-item arrow item" wx:if="{{!item.hide}}" data-page="{{item.url}}" bindtap="tapToPage">
         <view class="content">
           <text class="cuIcon-{{item.icon}} text-grey"></text>
-          <text class="text-grey">{{item.title}}</text>
+          <text class="">{{item.title}}</text>
         </view>
       </view>
     </block>

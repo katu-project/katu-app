@@ -8,10 +8,27 @@ Page({
     usedCardCount: 0,
     usedEncryptedCardCount: 0,
     app: {
-      logo: '/static/logo.svg',
+      logo: '/static/logo-t.svg',
       version: 'dev',
     },
     qrUrl: '',
+    profileList: [
+      {
+        icon: 'settings',
+        name: '设置',
+        url: '../settings/index'
+      },
+      {
+        icon: 'question',
+        name: '使用帮助 ( Q&A )',
+        url: '../qa/index'
+      },
+      {
+        icon: 'info',
+        name: '关于卡兔',
+        url: ''
+      }
+    ]
   },
   onLoad(options) {
   },
@@ -66,25 +83,19 @@ Page({
   tapToShowActiveInfo(){
     showNotice("普通卡额度 +10张")
   },
-  tapToSettings(){
-    navigateTo('../settings/index')
-  },
-  tapToQA(){
-    navigateTo('../qa/index')
-  },
-  tapOpenAbout(){
-    this.setData({
-      showAbout: true
-    })
+  tapToItem(e){
+    const item = e.currentTarget.dataset.item
+    if(item.url){
+      navigateTo(item.url)
+    }else{
+      this.setData({
+        showAbout: true
+      })
+    }
   },
   tapOpenJoinGroup(){
     this.setData({
       showJoinGroup: true
-    })
-  },
-  tapToPreview(){
-    wx.previewImage({
-      urls: [this.data.qrUrl]
     })
   },
   hideModal(e){

@@ -39,22 +39,10 @@
   </view>
 
   <view class="cu-list menu margin-top">
-    <view class="cu-item arrow item" bindtap="tapToSettings">
+    <view class="cu-item arrow item" wx:for="{{profileList}}" wx:key="index" data-item="{{item}}" bindtap="tapToItem">
       <view class="content">
-        <text class="cuIcon-settings text-grey"></text>
-        <text class="text-grey">设置</text>
-      </view>
-    </view>
-    <view class="cu-item arrow item" bindtap="tapToQA">
-      <view class="content">
-        <text class="cuIcon-question text-grey"></text>
-        <text class="text-grey">使用帮助 ( Q&A )</text>
-      </view>
-    </view>
-    <view class="cu-item arrow item" bindtap="tapOpenAbout">
-      <view class="content">
-        <text class="cuIcon-info text-grey"></text>
-        <text class="text-grey">关于卡兔</text>
+        <text class="cuIcon-{{item.icon}} text-grey"></text>
+        <text class="">{{item.name}}</text>
       </view>
     </view>
   </view>
@@ -67,16 +55,16 @@
 </view>
 
 <view class="cu-modal {{ showAbout?'show':''}}">
-  <view class="cu-dialog bg-cyan light">
+  <view class="cu-dialog bg-cyan" style="width: 70vw;">
     <view class="padding-tb flex flex-col align-center">
-      <image mode="aspectFit" class="margin-bottom-xl" style="height: 200rpx; width: 200rpx;border-radius: 50rpx;" src="{{app.logo}}"></image>
-      <view class="text-xl padding">安全可靠的卡片管理助手</view>
-      <view class="text-xl">当前版本: <text class="text-grey">{{app.version}}</text></view>
-      <view class="padding">
-        <button class="cu-btn block line-cyan" open-type="feedback">使用反馈</button>
+      <image mode="aspectFit" class="margin-bottom-xl" style="opacity: 0.9;height: 200rpx; width: 200rpx;" src="{{app.logo}}"></image>
+      <view class="text-xl padding-bottom">安全可靠的卡片管理助手</view>
+      <view class="text-xl">当前版本: <text class="padding-left">{{app.version}}</text></view>
+      <view class="padding-top">
+        <button class="cu-btn block line-black" open-type="feedback">使用反馈</button>
       </view>
     </view>
-    <view class="cu-bar bg-cyan" data-key="showAbout" bindtap="hideModal">
+    <view class="cu-bar bg-cyan light" data-key="showAbout" bindtap="hideModal">
       <view class="action margin-0 flex-sub solid-left">关闭</view>
     </view>
   </view>
