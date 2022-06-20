@@ -62,5 +62,10 @@ module.exports = {
   
   deleteCard: id => request('card/delete', id),
 
-  getDoc: data => request('doc/getDoc', data)
+  // doc
+  getDoc: data => request('doc/getDoc', data),
+
+  getHotDoc: () => request('doc/getDoc', {field:{title: true}, where: {type: 2, hot: true}}),
+
+  getCateDoc: cate => request('doc/getDoc', {field:{title: true}, where: {type: 2, cate}})
 }

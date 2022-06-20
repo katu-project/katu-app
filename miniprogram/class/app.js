@@ -38,7 +38,38 @@ class AppManager {
   loadAppConfig(){
     this.Config = {
       uploadCardNamePrefix: 'card',
-      allowUploadImageType: ['jpeg','png','jpg']
+      allowUploadImageType: ['jpeg','png','jpg'],
+      qaDocType: [{
+        icon: 'apps',
+        color: 'green',
+        name: '功能',
+        value: 'function'
+      }, {
+        icon: 'people',
+        color: 'orange',
+        name: '账户',
+        value: 'account'
+      }, {
+        icon: 'safe',
+        color: 'red',
+        name: '安全',
+        value: 'safe'
+      }, {
+        icon: 'vipcard',
+        color: 'olive',
+        name: '额度',
+        value: 'quota'
+      }, {
+        icon: 'recharge',
+        color: 'cyan',
+        name: '费用',
+        value: 'price'
+      }, {
+        icon: 'more',
+        color: 'blue',
+        name: '其他',
+        value: 'other'
+      }]
     }
     api.getDefaultTag().then(tags=>{
       this.Config.tags = tags
