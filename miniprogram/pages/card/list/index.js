@@ -38,12 +38,21 @@ Page({
   tapToCardDetail(e){
     navigateTo(`../detail/index?id=${e.currentTarget.dataset.key}`)
   },
+  tapToCloseFilter(e){
+    this.setData({
+      key: ''
+    })
+    this.resetData()
+  },
+  resetData(){
+    this.setData({
+      list: this.originList
+    })
+  },
   inputSearch(e){
     const key = e.detail.value
     if(!key){
-      this.setData({
-        list: this.originList
-      })
+      this.resetData()
     }else{
       this.setData({
         list: this.data.list.filter(e=>e.title.includes(key))

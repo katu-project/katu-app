@@ -8,7 +8,7 @@
       <text class="cuIcon-search"></text>
       <input type="text" model:value="{{key}}" bindinput="inputSearch" placeholder="搜索卡片名称" confirm-type="search"></input>
     </view>
-    <view class="action" wx:if="{{key}}">
+    <view class="action" wx:if="{{key}}" bindtap="tapToCloseFilter">
       <text class="cuIcon-close"></text>
       <text>取消</text>
     </view>
