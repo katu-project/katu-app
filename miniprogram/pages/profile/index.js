@@ -7,11 +7,6 @@ Page({
     user: {},
     usedCardCount: 0,
     usedEncryptedCardCount: 0,
-    app: {
-      logo: '/static/logo-t.svg',
-      version: 'dev',
-    },
-    qrUrl: '',
     profileList: [
       {
         icon: 'settings',
@@ -26,14 +21,13 @@ Page({
       {
         icon: 'info',
         name: '关于卡兔',
-        url: ''
+        url: '../about/index'
       }
     ]
   },
   onLoad(options) {
   },
   onReady() {
-    this.loadAppInfo()
     this.setData({
       user: globalData.app.user
     })
@@ -48,11 +42,6 @@ Page({
 
     this.getTabBar().setData({selected: 2})
   },
-  loadAppInfo(){
-    this.setData({
-      'app.version': globalData.app.appVersion
-    })
-  },
   tapUser(){
     if(this.data.user.isActive) return
     return this.goActiveAccount()
@@ -64,7 +53,7 @@ Page({
       success: ({cloudID}) => {
         loadData(activeAccount, {cloudId: cloudID}).then(()=>{
           showSuccess("激活成功")
-          this.updateUserInfo()
+          this.reloadUserInfo()
         })
       },
       fail: err => {
@@ -73,7 +62,7 @@ Page({
       }
     })
   },
-  updateUserInfo(){
+  reloadUserInfo(){
     globalData.app.reloadUserInfo().then(()=>{
       this.setData({
         user: globalData.app.user
@@ -85,23 +74,6 @@ Page({
   },
   tapToItem(e){
     const item = e.currentTarget.dataset.item
-    if(item.url){
-      navigateTo(item.url)
-    }else{
-      this.setData({
-        showAbout: true
-      })
-    }
-  },
-  tapOpenJoinGroup(){
-    this.setData({
-      showJoinGroup: true
-    })
-  },
-  hideModal(e){
-    const key = e.currentTarget.dataset.key
-    this.setData({
-      [key]: false
-    })
+    navigateTo(item.url)
   }
 })

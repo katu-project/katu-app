@@ -1,0 +1,39 @@
+<cu-custom bgColor="bg-cyan" isBack="{{true}}">
+  <view slot="backText">返回</view>
+  <view slot="content">关于卡兔</view>
+</cu-custom>
+
+<view class="">
+  <view class="padding-top-xl flex-col justify-center align-center">
+    <image mode="aspectFit" class="margin-bottom-xl" style="border-radius: 10%;opacity: 0.9;height: 200rpx; width: 200rpx;" src="{{logo}}"></image>
+    <text class="text-xxl text-shadow text-cyan">卡兔</text>
+    <text class="padding text-grey">安全好用的卡片管理小程序</text>
+  </view>
+  <view class="cu-list menu sm-border card-menu margin-top">
+    <view class="cu-item">
+      <view class="content">
+        <text class="">版本号</text>
+      </view>
+      <view class="action">
+        <text class="">{{version}}</text>
+      </view>
+    </view>
+
+    <view class="cu-item">
+      <view class="content">
+        <text class="">使用反馈</text>
+      </view>
+      <view class="action">
+        <button class="cu-btn bg-gray" style="width: 160rpx;" open-type="feedback">去提交</button>
+      </view>
+    </view>
+
+    <view class="cu-item arrow" bindtap="tapToDoc">
+      <view class="content">
+        <text class="">用户使用协议</text>
+      </view>
+      <view class="action"></view>
+    </view>
+
+  </view>
+</view>

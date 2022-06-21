@@ -53,28 +53,3 @@
   </view>
   <view style="flex:1"></view>
 </view>
-
-<view class="cu-modal {{ showAbout?'show':''}}">
-  <view class="cu-dialog bg-cyan" style="width: 70vw;">
-    <view class="padding-tb flex flex-col align-center">
-      <image mode="aspectFit" class="margin-bottom-xl" style="opacity: 0.9;height: 200rpx; width: 200rpx;" src="{{app.logo}}"></image>
-      <view class="text-xl padding-bottom">安全可靠的卡片管理助手</view>
-      <view class="text-xl">当前版本: <text class="padding-left">{{app.version}}</text></view>
-      <view class="padding-top">
-        <button class="cu-btn block line-black" open-type="feedback">使用反馈</button>
-      </view>
-    </view>
-    <view class="cu-bar bg-cyan light" data-key="showAbout" bindtap="hideModal">
-      <view class="action margin-0 flex-sub solid-left">关闭</view>
-    </view>
-  </view>
-</view>
-
-<view class="cu-modal {{ showJoinGroup?'show':''}}" data-key="showJoinGroup" bindtap="hideModal">
-  <view class="cu-dialog bg-cyan light">
-    <image mode="aspectFit" show-menu-by-longpress="{{true}}" bindtap="tapToPreview" class="padding-tb" style="height:300px;" src="{{qrUrl}}"></image>
-    <view class="cu-bar bg-cyan">
-      <view class="action margin-0 flex-sub  solid-left" data-key="showJoinGroup" bindtap="hideModal">请扫描二维码进群</view>
-    </view>
-  </view>
-</view>
