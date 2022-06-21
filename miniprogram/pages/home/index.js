@@ -33,6 +33,7 @@ Page({
       if(!globalData.app.user.noticeReadLog.includes(notice._id)){
         this.setData({
           'notice.id': notice._id,
+          'notice.time': new Date(notice.updateTime).toLocaleDateString(),
           'notice.newNotice': true,
           'notice.content': notice.content
         })

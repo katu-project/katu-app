@@ -32,15 +32,16 @@
 </view>
 
 <view class="cu-modal {{showNotice?'show':''}}">
-  <view class="cu-dialog bg-white">
+  <view class="cu-dialog bg-white" style="width: 75vw;">
     <view class="cu-bar justify-end">
       <view class="content">消息提示</view>
       <view class="action" data-name="showNotice" bindtap="tapToHideModal">
         <text class="cuIcon-close text-red"></text>
       </view>
     </view>
-    <view class="padding-xl margin-lr text-left" style="min-height: 30vh;">
-      {{notice.content}}
+    <view class="padding margin-lr text-left solids-top solids flex-col" style="min-height: 30vh;">
+      <rich-text style="flex:1" nodes="{{notice.content}}"></rich-text>
+      <text class="text-right">{{notice.time}}</text>
     </view>
     <view class="action flex justify-center">
       <view class="padding-sm margin-sm bg-cyan light" bindtap="tapToMarkRead" style="border-radius: 10rpx;width:50vw">
