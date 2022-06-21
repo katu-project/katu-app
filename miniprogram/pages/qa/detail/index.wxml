@@ -23,4 +23,5 @@
       <text class="padding-left-sm">分享给好友</text>
     </button>
   </view>
+  <view style="min-height: 10vh;"></view>
 </view>

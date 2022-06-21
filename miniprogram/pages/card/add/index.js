@@ -48,7 +48,8 @@ Page({
     this.loadTagData()
   },
   loadTagData(){
-    const tags = [...globalData.app.Config.tags,...globalData.app.user.customTag]
+    const useDefaultTag = globalData.app.user.config.general.useDefaultTag
+    const tags = [...(useDefaultTag ?globalData.app.Config.tags: []),...globalData.app.user.customTag]
     this.setData({
       tags
     })
