@@ -21,7 +21,8 @@
     "pages/card/edit-content/index",
     "pages/card/edit-tag/index",
     "pages/card/list/index",
-    "pages/qa/list/index"
+    "pages/qa/list/index",
+    "pages/about/index"
   ],
   "window": {
     "backgroundColor": "#ffffff",
