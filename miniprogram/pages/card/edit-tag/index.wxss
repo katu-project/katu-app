@@ -1,1 +1,8 @@
-/* pages/card/edit-tag/index.wxss */
+.chooseColor{
+  position: fixed;
+  bottom: 10vh;
+  left: 10vw;
+  right: 10vw;
+  opacity: 1;
+  transition-duration: 1s;
+}

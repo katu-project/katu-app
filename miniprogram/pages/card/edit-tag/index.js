@@ -2,57 +2,48 @@ const { showChoose, loadData, showSuccess, showError } = require("../../../utils
 const globalData = getApp().globalData
 
 Page({
-
-  /**
-   * 页面的初始数据
-   */
   data: {
     list: [],
-    tempTagName: ''
+    tempTagName: '',
+    hasEdit: false,
+    colors: globalData.ColorList
   },
-
-  /**
-   * 生命周期函数--监听页面加载
-   */
-  onLoad(options) {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
   onReady() {
+    
+  },
+  onShow(){
     this.setData({
       list: globalData.app.user.customTag
     })
   },
-  onShow(){
-  },
   checkInputTag(){
 
   },
-  onUnload(){
-    globalData.app.syncUserTag(this.data.list)
-  },
   tapToShowAddTag(){
     this.setData({
-      showInputTag: true
+      showCreateTag: true
     })
   },
-  hideModal(){
+  hideModal(e){
+    const key = e.currentTarget.dataset.key
     this.setData({
-      showInputTag: false
+      [key]: false,
+      selectedTagIdx: -1
     })
   },
   tapToDeleteTag(e){
+    if(this.data.showSetColor) {
+      this.setData({
+        selectedTagIdx: parseInt(e.currentTarget.dataset.idx)
+      })
+      return
+    }
     showChoose('删除这个标签？').then(({cancel})=>{
       if(cancel) return
-      const tags = this.data.list.filter(tag=>tag.name !== e.currentTarget.dataset.value.name)
-      loadData(globalData.app.api.deleteTag, e.currentTarget.dataset.value.name).then(()=>{
-        this.setData({
-          list: tags
-        })
-        showSuccess("删除成功")
+      this.data.list.splice(parseInt(e.currentTarget.dataset.idx),1)
+      this.setData({
+        list: this.data.list,
+        hasEdit: true
       })
     })
   },
@@ -61,16 +52,57 @@ Page({
       showError("标签已经存在")
       return
     }
+    this.hideModal({currentTarget:{dataset:{key:'showCreateTag'}}})
 
-    this.hideModal()
-
-    loadData(globalData.app.api.createTag, this.data.tempTagName).then(()=>{
-      const tags = this.data.list.concat({name:this.data.tempTagName})
-      this.setData({
-        list: tags,
-        tempTagName: ''
-      })
-      showSuccess("创建成功")
+    const tags = this.data.list.concat({name:this.data.tempTagName})
+    this.setData({
+      list: tags,
+      hasEdit: true,
+      tempTagName: ''
+    })
+  },
+  async syncTag(){
+    return loadData(globalData.app.api.updateTag, this.data.list).then(()=>{
+      globalData.app.syncUserTag(this.data.list)
+    })
+  },
+  tapToShowSetColor(e){
+    this.setData({
+      selectedTagIdx: parseInt(e.currentTarget.dataset.idx)
+    })
+    if(this.data.showSetColor) return
+    this.showSetColor()
+  },
+  tapToSetColor(e){
+    const color = this.data.colors[parseInt(e.currentTarget.dataset.idx)].name
+    const key = `list[${this.data.selectedTagIdx}].color`
+    this.setData({
+      hasEdit: true,
+      [key]: color
+    })
+  },
+  showSetColor(){
+    this.setData({
+      showSetColor: true
+    })
+  },
+  tapToBack(){
+    if(!this.data.hasEdit) {
+      wx.navigateBack()
+      return
+    }
+    showChoose('保存修改?').then(({cancel})=>{
+      if(cancel){
+        wx.navigateBack()
+      }else{
+        this.syncTag().then(()=>{
+          this.setData({
+            hasEdit: false
+          })
+          showSuccess("修改成功")
+          setTimeout(()=>this.tapToBack(), 500)
+        })
+      }
     })
   }
 })

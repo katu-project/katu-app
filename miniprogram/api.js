@@ -37,6 +37,8 @@ module.exports = {
 
   createTag: name => request('user/tagCreate', {name}),
 
+  updateTag: tags => request('user/tagUpdate', {tags}),
+
   getUser: () => request('user/getUser'),
 
   markRead: id => request('user/markRead',{id}),

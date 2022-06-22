@@ -1,5 +1,10 @@
-<cu-custom bgColor="bg-cyan" isBack="{{true}}">
-  <view slot="backText">返回</view>
+<cu-custom bgColor="bg-cyan">
+  <view slot="customLeft">
+    <view class="action" bindtap="tapToBack">
+      <text class="cuIcon-back"></text>
+      <text>返回</text>
+    </view>
+  </view>
   <view slot="content">标签管理</view>
 </cu-custom>
 
@@ -19,26 +24,38 @@
   </view>
 
   <view class="padding-tb flex flex-wrap">
-    <view class="padding-tb-sm padding-lr margin-sm bg-blue light" data-value="{{item}}" bindtap="tapToDeleteTag" style="border-radius: 10rpx;" wx:for="{{list}}" wx:key="name">
-      <text class="text-blue">{{item.name}}</text>
+    <view class="padding-tb-sm padding-lr margin-sm light bg-{{item.color || 'blue'}}" data-idx="{{index}}"  bindtap="tapToDeleteTag" bindlongpress="tapToShowSetColor" style="border-radius: 10rpx;border: 2px solid;border-color: {{selectedTagIdx===index? item.color:'white'}}" wx:for="{{list}}" wx:key="name">
+      <text class="">{{item.name}}</text>
     </view>
   </view>
   
+  <view class="flex-col align-center chooseColor" wx:if="{{showSetColor}}">
+    <view class="grid col-3 padding-sm" style="border: 1rpx solid darkcyan;border-radius: 16rpx;">
+      <view class="padding-sm" wx:for="{{colors}}" wx:key="index" wx:if="{{index<12}}" bindtap="tapToSetColor" data-idx="{{index}}">
+        <view class="bg-{{item.name}} padding radius text-center light">
+        </view>
+      </view>
+    </view>
+    <view class="padding text-xxl text-gray" data-key="showSetColor"  bindtap="hideModal">
+      <text class="cuIcon-roundclose"></text>
+    </view>
+  </view>
+
 </view>
 
-<view class="cu-modal {{showInputTag?'show':''}}">
+<view class="cu-modal {{showCreateTag?'show':''}}">
   <view class="cu-dialog">
     <view class="cu-bar bg-white justify-end">
-      <view class="content">创建新标签</view>
+      <view class="content">输入标签名字</view>
     </view>
-    <view class="padding-xl flex justify-center">
-      <view class="padding solids-bottom" style="height: 50px; width: 300rpx;">
-        <input type="text" model:value="{{tempTagName}}" bindinput="checkInputTag" placeholder="输入标签名字"/>
+    <view class="padding-xl bg-white flex-col justify-center">
+      <view class="padding solids-bottom" style="height: 50px; width: 300rpx;align-self: center;">
+        <input type="text" focus="{{showCreateTag}}" model:value="{{tempTagName}}" bindinput="checkInputTag" placeholder=""/>
       </view>
     </view>
     <view class="cu-bar bg-white justify-end">
       <view class="action">
-        <button class="cu-btn line-green text-green" style="width: 200rpx;" bindtap="hideModal">取消</button>
+        <button class="cu-btn line-green text-green" style="width: 200rpx;" data-key="showCreateTag" bindtap="hideModal">取消</button>
         <view class="padding"></view>
         <button class="cu-btn bg-green margin-left" style="width: 200rpx;" bindtap="tapToAddTag">确定</button>
       </view>
