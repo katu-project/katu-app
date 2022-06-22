@@ -1,10 +1,15 @@
-<cu-custom></cu-custom>
+<cu-custom>
+  <view slot="customLeft" class="margin-left setting" data-item="../settings/index"  bindtap="tapToItem">
+    <image style="height: 6vw;width: 6vw;" mode="aspectFit" src="/static/images/setting.svg"></image>
+  </view>
+</cu-custom>
 <view class="home-bg"></view>
+
 <view class="page flex-col">
   <view class="padding-top-sm"></view>
-  <view class="margin-bottom padding bg-cyan shadow flex-col align-start" style="border-radius: 6rpx;">
+  <view class="margin-bottom padding shadow flex-col align-start" style="border-radius: 15rpx;background-color: cadetblue;">
     <view class="flex">
-      <view class="bg-gray light flex" style="border-radius: 10rpx;padding:4rpx">
+      <view class="bg-gray light flex" style="border-radius: 15rpx;padding:4rpx">
         <image src="{{user.isActive? user.avatarUrl:'/static/images/user.svg'}}" style="height: 160rpx; width: 160rpx;border-radius: 10rpx;"></image>
       </view>
       <view class="margin-left flex-col justify-between padding-top-xs">

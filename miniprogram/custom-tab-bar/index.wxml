@@ -17,7 +17,7 @@
 
 		<view class="li right" bindtap="switchTab" data-idx="2">
 			<view class="icon">
-				<image class="svg" mode="aspectFit" src="/static/images/tab-setting.svg"></image>
+				<image class="svg" mode="aspectFit" src="/static/images/tab-me.svg"></image>
 			</view>
 		</view>
 	</view>

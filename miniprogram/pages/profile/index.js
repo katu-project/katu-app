@@ -9,9 +9,9 @@ Page({
     usedEncryptedCardCount: 0,
     profileList: [
       {
-        icon: 'settings',
-        name: '设置',
-        url: '../settings/index'
+        icon: 'tag',
+        name: '标签管理',
+        url: '../card/edit-tag/index'
       },
       {
         icon: 'question',
@@ -74,6 +74,6 @@ Page({
   },
   tapToItem(e){
     const item = e.currentTarget.dataset.item
-    navigateTo(item.url)
+    navigateTo(item.url || item)
   }
 })
