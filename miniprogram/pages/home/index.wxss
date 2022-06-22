@@ -1,8 +1,8 @@
-.page .topLogo{
-  margin-top: 40rpx;
+.topLogo{
+  margin-top: 10rpx;
   margin-left: 10rpx;
-  height: 200rpx;
-  width: 200rpx;
+  height: 300rpx;
+  width: 300rpx;
   opacity: 0.8;
 }
 

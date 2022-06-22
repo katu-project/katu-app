@@ -1,7 +1,11 @@
-<view class="home-bg"></view>
-<view class="page">
+<cu-custom></cu-custom>
+<view class="home-bg">
   <view class="flex align-end justify-between">
     <image class="topLogo" mode="aspectFit" src="/static/logo-t.svg"></image>
+  </view>
+</view>
+<view class="page">
+  <view class="flex align-end justify-end">
     <view class="flex align-end">
       <view class="search margin-bottom" bindtap="tapToShowNotice">
         <image style="height: 6vw;width: 6vw;" mode="aspectFit" src="/static/images/bell.svg"></image>
