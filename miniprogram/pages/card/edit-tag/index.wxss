@@ -1,8 +1,12 @@
 .chooseColor{
   position: fixed;
-  bottom: 10vh;
+  bottom: 5vh;
   left: 10vw;
   right: 10vw;
   opacity: 1;
   transition-duration: 1s;
+}
+.selected {
+  transition-duration: 0.2s;
+  scale: 1.1;
 }
