@@ -5,6 +5,7 @@ const request = (action, data={}) => {
     message: ''
   }
   return new Promise((resolve,reject)=>{
+    const wxLog = wx.getLogManager()
     wx.cloud.callFunction({ name: 'api', data: { action, data } })
     .then(({result})=>{
       if(result.code === 0){
@@ -12,12 +13,14 @@ const request = (action, data={}) => {
       }else{
         error.message = result.msg
         error.code = result.code // 1 业务报错 其他 系统错误
+        if(result.code != 1) wxLog.debug(error)
         reject(error)
       }
     })
     .catch(err=>{
       error.message = err.message
       error.code = 600 // 云函数报错
+      wxLog.debug(error)
       reject(error)
     })
 })
@@ -26,6 +29,7 @@ const request = (action, data={}) => {
 module.exports = {
   request,
   // sys
+  getAppConfig: name => request('app/config', {name}),
   getDefaultTag: () => request('app/tags'),
 
   getNotice: () => request('app/notice'), 

@@ -5,6 +5,7 @@ const { activeAccount } = require('../../api')
 Page({
   data: {
     user: {},
+    activeInfo: null,
     usedCardCount: 0,
     usedEncryptedCardCount: 0,
     profileList: [
@@ -44,20 +45,24 @@ Page({
   },
   tapUser(){
     if(this.data.user.isActive) return
-    return this.goActiveAccount()
+    return this.showActiveNotice()
   },
-  goActiveAccount(){
-    showLoading('等待授权')
+  tapToActiveAccount(){
+    wx.showLoading({
+      title: '等待获取授权',
+    })
     wx.getUserProfile({
       desc: '用于完善会员资料',
       success: ({cloudID}) => {
+        wx.hideLoading({})
         loadData(activeAccount, {cloudId: cloudID}).then(()=>{
           showSuccess("激活成功")
           this.reloadUserInfo()
+          this.hideActiveNotice()
         })
       },
       fail: err => {
-        console.log(err);
+        wx.hideLoading({})
         showNotice('取消授权')
       }
     })
@@ -75,5 +80,30 @@ Page({
   tapToItem(e){
     const item = e.currentTarget.dataset.item
     navigateTo(item.url || item)
+  },
+  tapToReadDoc(e){
+    navigateTo(`../qa/detail/index?id=${e.currentTarget.dataset.item.id}`)
+  },
+  showActiveNotice(){
+    if(!this.data.activeInfo){
+      loadData(globalData.app.api.getAppConfig, 'active').then(activeInfo=>{
+        loadData(globalData.app.api.getDoc, {_id: activeInfo.id}).then(res=>{
+          this.setData({
+            activeInfo,
+            'activeInfo.notice': res.content
+          })
+          wx.nextTick(()=>this.showActiveNotice())
+        })
+      })
+      return
+    }
+    this.setData({
+      showActiveNotice: true
+    })
+  },
+  hideActiveNotice(){
+    this.setData({
+      showActiveNotice: false
+    })
   }
 })

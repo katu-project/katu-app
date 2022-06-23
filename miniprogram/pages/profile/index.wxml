@@ -18,7 +18,7 @@
           <text class="text-black">ID: {{user.identifyCode}}</text>
         </view>
         <view wx:else>
-          <text class="text-xl solids-bottom" bindtap="tapUser">激活账户</text>
+          <text class="text-xl" style="text-decoration-line: underline;text-underline-offset: 4rpx;" bindtap="tapUser">激活账户</text>
           <text class="cuIcon-info padding-left-sm padding text-yellow light" bindtap="tapToShowActiveInfo"></text>
         </view>
         <view class="flex">
@@ -26,7 +26,7 @@
             <view class="cu-tag lg bg-red">
               <text class="cuIcon-unlock"></text>
             </view>
-            <view class="cu-tag lg line-gray bg-gray">
+            <view class="cu-tag lg line-gray bg-gray" style="min-width: 15vw;">
               <text space="ensp" class="text-black">{{usedCardCount || 0}} / {{user.quota.cardCount}}</text>
             </view>
           </view>
@@ -34,7 +34,7 @@
             <view class="cu-tag lg bg-green">
               <text class="cuIcon-lock"></text>
             </view>
-            <view class="cu-tag lg line-gray bg-gray">
+            <view class="cu-tag lg line-gray bg-gray" style="min-width: 15vw;">
               <text space="ensp" class="text-black">{{usedEncryptedCardCount || 0}} / {{user.quota.encryptedCardCount}}</text>
             </view>
           </view>
@@ -57,4 +57,24 @@
     <text class="cuIcon-service padding-right-sm"></text> 我的客服</button>
   </view>
   <view style="flex:1"></view>
+</view>
+
+<view class="cu-modal {{showActiveNotice?'show':''}}">
+  <view class="cu-dialog bg-white" style="width: 75vw;border-radius: 18rpx;">
+    <view class="cu-bar justify-end">
+      <view class="content text-black">温馨提示</view>
+    </view>
+    <view class="padding margin-lr" style="height: 30vh; text-align: left;">
+      <rich-text style="flex:1" nodes="{{activeInfo.notice||'内容加载中...'}}"></rich-text>
+      <view class="padding">
+        <view class="padding-top" wx:for="{{activeInfo.protocols}}" wx:key="index" data-item="{{item}}" bindtap="tapToReadDoc">
+          <text class="cuIcon-title"></text> 阅读《<text class="text-red">{{item.name}}</text>》
+        </view> 
+      </view>
+    </view>
+    <view class="action flex-row-sb padding">
+      <button class="cu-btn round lines-red" style="width: 200rpx;font-weight: 400;" bindtap="hideActiveNotice">不同意</button>
+      <button class="cu-btn round bg-red" bindtap="tapToActiveAccount" style="width: 200rpx;font-weight: 300;">同意并继续</button>
+    </view>
+  </view>
 </view>
