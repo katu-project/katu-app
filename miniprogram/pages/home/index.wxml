@@ -19,8 +19,8 @@
   <view class="margin-bottom-sm padding-lr flex flex-wrap justify-between" style="align-content: flex-start;height: 68vh;overflow-y: scroll;">
     <block wx:for="{{list}}" wx:key="index">
       <view class="margin-bottom-sm item shadow bg-black flex-row justify-around align-center" data-tag="{{item.name}}" bindtap="tapToCardList">
-        <view style="height: 15vw;width: 15vw;border-radius: 50%; opacity: 0.9;" class="bg-cyan flex justify-center align-center">
-          <text class="{{item.name.length>=3?'text-sm':''}}">{{item.name}}</text>
+        <view style="height: 15vw;width: 15vw;border-radius: 50%; opacity: 0.9;" class="bg-{{item.color || 'cyan'}} light flex justify-center align-center">
+          <text class="{{item.name.length>3?'text-sm':'text-lg'}}">{{item.name}}</text>
         </view>
         <text class="text-white text-xxl">{{item.count}}</text>
       </view>
