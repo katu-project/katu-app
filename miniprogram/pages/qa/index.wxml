@@ -1,11 +1,9 @@
-<cu-custom class="skeleton-pass" bgColor="bg-cyan" isBack="{{true}}">
+<cu-custom class="skeleton-remove" bgColor="bg-cyan" isBack="{{true}}">
   <view slot="backText">返回</view>
   <view slot="content">使用帮助</view>
 </cu-custom>
-<import src="index.skeleton.wxml" />
-<template is="skeleton" wx:if="{{!list.length}}"/>
 
-<view wx:else class="page">
+<view class="page">
   <view class="padding-top text-xl flex-row align-center">
     <text class="cuIcon-titles text-cyan"></text>
     <text class="margin-left-xs text-orange">猜你想知道的</text>

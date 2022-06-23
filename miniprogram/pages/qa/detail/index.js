@@ -1,4 +1,4 @@
-const { loadData } = require('../../../utils/index')
+const { loadData, showChoose } = require('../../../utils/index')
 const globalData = getApp().globalData
 
 Page({
@@ -9,7 +9,7 @@ Page({
   data: {
     doc: {
       title: '',
-      content: '',
+      content: '数据加载中',
       updateTime: ''
     }
   },
@@ -23,6 +23,10 @@ Page({
     // this.loadData()
   },
   loadData(){
+    if(!this.id){
+      showChoose('该文档不存在').then(wx.navigateBack)
+      return
+    }
     loadData(globalData.app.api.getDoc,{_id:this.id}).then(doc=>{
       doc.updateTime = new Date(doc.updateTime).toLocaleDateString()
       doc.content = doc.content.replaceAll('<p></p>','<br/>')

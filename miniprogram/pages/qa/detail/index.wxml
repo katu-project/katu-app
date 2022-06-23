@@ -1,12 +1,10 @@
-<import src="index.skeleton.wxml" />
 <cu-custom class="skeleton-pass" bgColor="bg-cyan" isBack="{{true}}">
   <view slot="backText">返回</view>
   <view slot="content">使用帮助</view>
 </cu-custom>
-<template is="skeleton" wx:if="{{!doc.title}}"/>
 
-<view wx:else class="page">
-  <view class="padding-tb margin-left-sm text-xxl flex align-center">
+<view class="page">
+  <view class="padding-tb margin-left-sm text-xxl flex align-center" hidden="{{!doc.title}}">
     <text class="cuIcon-titles text-cyan"></text>
     <text class="margin-left-xs">{{doc.title}}</text>
   </view>

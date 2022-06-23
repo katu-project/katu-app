@@ -2,10 +2,8 @@
   <view slot="backText">返回</view>
   <view slot="content">使用帮助-{{cate.name||'全部'}}</view>
 </cu-custom>
-<import src="index.skeleton.wxml" />
-<template is="skeleton" wx:if="{{isLoading}}"/>
 
-<view wx:else class="page">
+<view class="page">
   <view class="padding-top">
     <text class="text-xl">
       <text class="cuIcon-{{cate.icon}} text-{{cate.color}}"></text>
