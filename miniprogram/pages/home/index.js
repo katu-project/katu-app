@@ -4,10 +4,12 @@ const globalData = getApp().globalData
 Page({
   data: {
     list: [],
+    likeList: [],
     notice: {
       newNotice: false,
       content: '暂无新消息'
-    }
+    },
+    isRefresh: false
   },
 
   onLoad(options) {
@@ -15,14 +17,38 @@ Page({
   },
 
   onReady() {
-    this.loadCard()
+    this.loadData()
   },
 
   onShow() {
-    setTimeout(this.loadNotice,2000)
+    setTimeout(()=>this.loadNotice(),2000)
     this.getTabBar().setData({selected: 0})
   },
-  async loadCard(){
+  async loadData(){
+    this.loadLikeList()
+    this.loadCateList()
+    
+  },
+  async loadLikeList(){
+    this.setData({
+      likeList: []
+    })
+    let likeList = await loadData(globalData.app.api.getLikeCard)
+    likeList = likeList.map(card=>{
+      card.url = `${card.image[0].url}`
+      if(card.encrypted){
+        card.url = globalData.app.Constant.DefaultShowLockImage
+      }
+      return card
+    })
+    this.setData({
+      likeList
+    })
+  },
+  async loadCateList(){
+    this.setData({
+      list: []
+    })
     const list = await loadData(globalData.app.api.getCardSummary)
     this.setData({
       list
@@ -70,11 +96,13 @@ Page({
   goProfile(){
     navigateTo('/pages/profile/index', true)
   },
-  onPullDownRefresh(){
-    this.setData({
-      list: []
+  onBindRefresh(e){
+    const key = e.currentTarget.dataset.view
+    this[`load${key}List`]().then(()=>{
+      this.setData({
+        isRefresh: false
+      })
     })
-    this.loadCard().then(wx.stopPullDownRefresh)
   },
   onShareAppMessage(){},
   hideModal(name){

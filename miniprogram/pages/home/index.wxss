@@ -6,7 +6,15 @@
   opacity: 0.8;
 }
 
-.item {
+.like-list .item {
+  background: rgba(47, 49, 83, 0.6);
+  padding: 10rpx;
+  height: 35vw;
+  width: 40vw; 
+  border-radius: 10rpx;
+}
+
+.cate-list .item {
   background: rgba(47, 49, 83, 0.6);
   padding: 20rpx;
   height: 25vw;

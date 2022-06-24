@@ -1,6 +1,6 @@
 <cu-custom>
   <view slot="customLeft" class="margin-left setting" data-item="../settings/index"  bindtap="tapToItem">
-    <image style="height: 6vw;width: 6vw;" mode="aspectFit" src="/static/images/setting.svg"></image>
+    <image style="height: 5vw;width: 5vw;" mode="aspectFit" src="/static/images/setting.svg"></image>
   </view>
 </cu-custom>
 <view class="home-bg"></view>

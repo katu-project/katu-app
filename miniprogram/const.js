@@ -1,4 +1,5 @@
 const DefaultShowImage = '/static/images/image.svg'
+const DefaultShowLockImage = '/static/images/lock.svg'
 
 const APP_ROOT_DIR = `${wx.env.USER_DATA_PATH}/katu`
 const APP_TEMP_DIR = `${APP_ROOT_DIR}/temp`
@@ -13,6 +14,7 @@ const STANDARD_CARD_DATA = {
 
 module.exports = {
   DefaultShowImage,
+  DefaultShowLockImage,
   MASTER_KEY_NAME,
   APP_ROOT_DIR,
   APP_TEMP_DIR,

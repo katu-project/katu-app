@@ -28,7 +28,7 @@
     "backgroundColor": "#ffffff",
     "backgroundTextStyle": "light",
     "navigationStyle": "custom",
-    "enablePullDownRefresh": true
+    "enablePullDownRefresh": false
   },
   "sitemapLocation": "sitemap.json",
   "style": "v2",

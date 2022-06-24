@@ -58,6 +58,8 @@ module.exports = {
 
   getCardSummary: () => request('card/summary'),
 
+  getLikeCard: () => request('card/like'),
+
   setCardLike: data => request('card/setLike', data),
 
   captureCard: fileID => request('card/capture', {fileId: fileID}),
