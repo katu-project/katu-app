@@ -39,8 +39,8 @@
             <view class="margin-bottom-sm padding-lr flex flex-wrap justify-between" style="align-content: flex-start;">
               <block wx:for="{{likeList}}" wx:key="index">
                 <view class="margin-bottom-sm item shadow bg-black flex-col justify-around align-center" data-item="{{item}}" bindtap="tapToCardDetail">
-                  <image mode="aspectFit" class="card" src="{{item.url}}"></image>
-                  <text class="text-white">{{item.title}}</text>
+                  <image class="img" mode="aspectFit" data-idx="{{index}}" src="{{item.url}}"></image>
+                  <text class="text-black">{{item.title}}</text>
                 </view>
               </block>
               <view class="flex-col justify-center align-center" style="width: 100%;height: 50vh;" wx:if="{{!likeList.length}}">

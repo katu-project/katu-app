@@ -35,15 +35,30 @@ Page({
     })
     let likeList = await loadData(globalData.app.api.getLikeCard)
     likeList = likeList.map(card=>{
-      card.url = `${card.image[0].url}`
       if(card.encrypted){
         card.url = globalData.app.Constant.DefaultShowLockImage
+      }else{
+        card.url = globalData.app.Constant.DefaultShowImage
       }
       return card
     })
     this.setData({
       likeList
     })
+    this.loadImage()
+  },
+  loadImage(){
+    const setData = {}
+    this.data.likeList.map((e,i)=>{
+      if(!e.encrypted){
+        setData[`likeList[${i}].url`] = e.image[0].url
+      }
+    })
+    this.setData(setData)
+    // wx.cloud.getTempFileURL({
+    //   fileList: []
+    // }).then(({fileList})=>{
+    // })
   },
   async loadCateList(){
     this.setData({
