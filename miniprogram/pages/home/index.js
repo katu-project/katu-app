@@ -13,7 +13,6 @@ Page({
   },
 
   onLoad(options) {
-   
   },
 
   onReady() {
@@ -48,17 +47,21 @@ Page({
     this.loadImage()
   },
   loadImage(){
-    const setData = {}
-    this.data.likeList.map((e,i)=>{
-      if(!e.encrypted){
-        setData[`likeList[${i}].url`] = e.image[0].url
+    for (const idx in this.data.likeList) {
+      const card = this.data.likeList[idx]
+      if(!card.encrypted){
+        wx.cloud.getTempFileURL({
+          fileList: [{
+            fileID: card.image[0].url
+          }]
+        }).then(({fileList:[file]})=>{
+          const key = `likeList[${idx}].url`
+          this.setData({
+            [key]: file.tempFileURL + globalData.app.Config.imageMogr2
+          })
+        })
       }
-    })
-    this.setData(setData)
-    // wx.cloud.getTempFileURL({
-    //   fileList: []
-    // }).then(({fileList})=>{
-    // })
+    }
   },
   async loadCateList(){
     this.setData({
