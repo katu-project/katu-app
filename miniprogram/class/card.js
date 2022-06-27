@@ -203,7 +203,7 @@ class CardManager {
     }
   }
 
-  async parseCardImageByInternalLib(url){
+  async parseCardImageByInternalApi(url){
     const imageData = await this.getImageData(url)
     const src = cv.imread(imageData)
     const cardUrl = await this.detectCardByContour(src)
@@ -303,7 +303,7 @@ class CardManager {
                     .reverse()
     // console.log("检测到轮廓：",areaSortedCnts);
     let poly = new cv.MatVector();
-    let idx = 0
+    let idx = -1
     for (const i in areaSortedCnts) {
       let tmp = new cv.Mat();
       let peri = cv.arcLength(areaSortedCnts[i] , true)
@@ -323,8 +323,8 @@ class CardManager {
     }
 
     console.log('poly:',poly,poly.size(),idx);
-    if(!poly.size()) {
-        throw Error("no rect found")
+    if(idx === -1) {
+        throw Error("未检测出卡片")
     }
 
     let rect = four_point_transform(originSrc, poly.get(idx))

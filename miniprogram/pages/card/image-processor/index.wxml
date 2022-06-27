@@ -24,18 +24,18 @@
     </view>
     <view class="cu-form-group">
       <view class="title">使用外部接口 
-        <text class="cuIcon-warn lg text-yellow" bindtap="showTip2"></text>
+        <text class="cuIcon-warn lg text-yellow" bindtap="tapToShowWarn"></text>
       </view>
       <radio class="radio" value="2" checked="{{selectedMethod==2}}"></radio>
     </view>
   </radio-group>
   <view class="margin-top padding flex">
     <button class="cu-btn round lg margin-tb btn bg-red light" bindtap="goBack">
-      重新选择
+      <text style="font-weight: 400;">重新选择</text>
     </button>
     <view class="padding-lr"></view>
     <button class="cu-btn round lg margin-tb btn bg-cyan light" bindtap="useAndBack">
-      使用图片
+      <text style="font-weight: 400;">使用图片</text>
     </button>
   </view>
 </view>

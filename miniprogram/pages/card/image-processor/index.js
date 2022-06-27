@@ -1,5 +1,5 @@
 const { getCardManager } = require('../../../class/card')
-const { loadData, showChoose } = require('../../../utils/index')
+const { loadData, showChoose, navigateTo, showError } = require('../../../utils/index')
 const globalData = getApp().globalData
 
 Page({
@@ -41,7 +41,7 @@ Page({
       case 0:
         break;
       case 1:
-        this.useInternalib()
+        this.useInternalApi()
         break
       case 2:
         this.useRemoteApi()
@@ -54,12 +54,16 @@ Page({
       'tmpImagePath': imageUrl
     })
   },
-  async useInternalib(){
+  async useInternalApi(){
     const cardManager = await getCardManager()
-    const imageUrl = await loadData(cardManager.parseCardImageByInternalLib, this.data.tmpImagePath)
-    this.setData({
-      'tmpImagePath': imageUrl
+    const imageUrl = await loadData(cardManager.parseCardImageByInternalApi, this.data.tmpImagePath,{returnFailed: true}).catch(error=>{
+      this.findCardFailed(error)
     })
+    if(imageUrl) {
+      this.setData({
+        'tmpImagePath': imageUrl
+      })
+    }
   },
   async useRemoteApi(){
     const cardManager = await getCardManager()
@@ -68,18 +72,39 @@ Page({
         selectedMethod: 0
       })
       this.useRemoteApiConfirm = true
-      this.showTip2()
+      this.showTip2('确认')
       return
     }
-    const imageUrl = await loadData(cardManager.parseCardImageByRemoteApi, this.data.tmpImagePath)
+    const imageUrl = await loadData(cardManager.parseCardImageByRemoteApi, this.data.tmpImagePath,{returnFailed: true}).catch(error=>{
+      this.findCardFailed(error)
+    })
+    if(imageUrl){
+      this.setData({
+        'tmpImagePath': imageUrl
+      })
+    }
+  },
+  findCardFailed(error){
+    showError(error.message)
     this.setData({
-      'tmpImagePath': imageUrl
+      selectedMethod: 0
     })
   },
   showTip1(){
-    showChoose("温馨提示","为确保卡片识别率，请尽量使用纯色强对比背景。",{showCancel:false})
+    showChoose("温馨提示","未识别出卡片？\n查看这些小技巧也许能提高卡片识别率！",{confirmText:'去查看'})
+    .then(({cancel})=>{
+      if(cancel) return
+      navigateTo('/pages/qa/detail/index?id=0ab5303b62b975a20b880414327d5628')
+    })
   },
-  showTip2(){
-    showChoose("警告","外部接口使用第三方提供的服务，用户数据有泄漏风险!",{showCancel:false})
+  showTip2(cancelText){
+    showChoose("警告","外部接口服务由第三方提供!\n更多信息请查看帮助文档。",{confirmText:'去查看',cancelText: cancelText||'取消'})
+    .then(({cancel})=>{
+      if(cancel) return
+      navigateTo('/pages/qa/detail/index?id=058dfefe62b9720f0ad5eca959e4f456')
+    })
+  },
+  tapToShowWarn(){
+    this.showTip2()
   }
 })
