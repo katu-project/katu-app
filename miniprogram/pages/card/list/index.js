@@ -1,15 +1,12 @@
 const { loadData, navigateTo } = require("../../../utils/index")
 const globalData = getApp().globalData
-const DefaultLockImage = '/static/images/lock.svg'
-const DefaultShowImage = '/static/images/image.svg'
 
 Page({
   data: {
-    DefaultLockImage,
-    DefaultShowImage,
     key: '',
     tag: '',
-    list: []
+    list: [],
+    isRefresh: false
   },
 
   /**
@@ -25,13 +22,48 @@ Page({
     }
   },
   onReady() {
-
+    this.loadData()
   },
   onShow() {
-    loadData(globalData.app.api.getCard, {where: this.where}).then(list=>{
+    
+  },
+  loadData(){
+    return loadData(globalData.app.api.getCard, {where: this.where}).then(list=>{
       this.originList = list
       this.setData({
-        list
+        list: list.map(card=>{
+          if(card.encrypted){
+            card.url = globalData.app.Constant.DefaultShowLockImage
+          }else{
+            card.url = globalData.app.Constant.DefaultShowImage
+          }
+          return card
+        })
+      })
+      this.loadImage()
+    })
+  },
+  loadImage(){
+    for (const idx in this.data.list) {
+      const card = this.data.list[idx]
+      if(!card.encrypted){
+        wx.cloud.getTempFileURL({
+          fileList: [{
+            fileID: card.image[0].url
+          }]
+        }).then(({fileList:[file]})=>{
+          const key = `list[${idx}].url`
+          this.setData({
+            [key]: file.tempFileURL + globalData.app.Config.imageMogr2
+          })
+        })
+      }
+    }
+  },
+  onBindRefresh(){
+    this.loadData().then(()=>{
+      this.setData({
+        isRefresh: false
       })
     })
   },

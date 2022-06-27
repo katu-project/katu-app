@@ -69,7 +69,8 @@ class AppManager {
         color: 'blue',
         name: '其他',
         value: 'other'
-      }]
+      }],
+      imageMogr2: '&imageMogr2/thumbnail/100x/rquality/80/format/png/interlace/1/strip'
     }
     api.getDefaultTag().then(tags=>{
       this.Config.tags = tags
