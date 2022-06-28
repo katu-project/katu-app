@@ -85,7 +85,9 @@ Page({
     }).catch(console.warn)
   },
   tapToMarkRead(){
-    if(!this.data.notice.id) return
+    if(!this.data.notice.id) {
+      return this.hideModal('showNotice')
+    }
     globalData.app.api.markRead(this.data.notice.id)
     this.setData({
       'notice.newNotice': false
