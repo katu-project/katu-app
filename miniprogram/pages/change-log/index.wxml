@@ -1,0 +1,16 @@
+<cu-custom bgColor="bg-cyan" isBack="{{true}}">
+  <view slot="backText">返回</view>
+  <view slot="content">发布历史</view>
+</cu-custom>
+
+<view class="cu-timeline" wx:for="{{list}}" wx:key="_id">
+  <view class="cu-time" style="width: unset;">{{item.time}}</view>
+  <view class="cu-item text-green">
+    <view class="content">
+      <view class="action">
+        <text class="text-green text-lg">v{{item.version}}</text>
+      </view>
+      <rich-text nodes="{{item.desc}}"></rich-text>
+    </view>
+  </view>
+</view>

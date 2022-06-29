@@ -22,6 +22,9 @@ Page({
       'app.version': globalData.app.appVersion
     })
   },
+  tapToChangeLog(){
+    navigateTo('../change-log/index')
+  },
   tapToDoc(){
     navigateTo(`../qa/detail/index?id=${this.data.userDocId}`)
   }

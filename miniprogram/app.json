@@ -22,7 +22,8 @@
     "pages/card/edit-tag/index",
     "pages/card/list/index",
     "pages/qa/list/index",
-    "pages/about/index"
+    "pages/about/index",
+    "pages/change-log/index"
   ],
   "window": {
     "backgroundColor": "#ffffff",

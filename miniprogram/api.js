@@ -31,6 +31,7 @@ module.exports = {
   // sys
   getAppConfig: name => request('app/config', {name}),
   getDefaultTag: () => request('app/tags'),
+  getChangeLog: () => request('app/changeLog'),
 
   getNotice: () => request('app/notice'), 
   // user
