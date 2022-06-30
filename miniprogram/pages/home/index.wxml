@@ -4,16 +4,15 @@
     <image class="topLogo" mode="aspectFit" src="/static/logo-t.svg"></image>
   </view>
 </view>
-<view class="page">
-  <view class="flex align-end justify-end">
-    <view class="flex align-end">
-      <view class="search margin-bottom" bindtap="tapToShowNotice">
-        <image style="height: 6vw;width: 6vw;" mode="aspectFit" src="/static/images/bell.svg"></image>
-        <view wx:if="{{notice.newNotice}}" class="dot"></view>
-      </view>
-      <view class="notice margin" bindtap="tapToSearch">
-        <image style="height: 6vw;width: 6vw;" mode="aspectFit" src="/static/images/search.svg"></image>
-      </view>
+
+<view class="flex align-end justify-end padding-lr">
+  <view class="flex align-end">
+    <view class="search margin-bottom" bindtap="tapToShowNotice">
+      <image style="height: 6vw;width: 6vw;" mode="aspectFit" src="/static/images/bell.svg"></image>
+      <view wx:if="{{notice.newNotice}}" class="dot"></view>
+    </view>
+    <view class="notice margin" bindtap="tapToSearch">
+      <image style="height: 6vw;width: 6vw;" mode="aspectFit" src="/static/images/search.svg"></image>
     </view>
   </view>
 </view>
@@ -23,10 +22,12 @@
     enable-flex="true" 
     enhanced="true"
     show-scrollbar="false"
+    bindscrolltolower="onBindscrolltolower"
+    bindscrolltoupper="onBindscrolltoupper"
     paging-enabled="true">
-    <view style="width: 200vw;min-height: 100vh;" class="flex-row">
+    <view style="width: {{likeList.length?'2':'1'}}00vw;min-height: 100vh;" class="flex-row">
 
-      <view class="padding-lr-sm like-list" style="width: 100vw;">
+      <view class="padding-lr-sm like-list" wx:if="{{likeList.length}}" style="width: 100vw;">
         <scroll-view
           scroll-y="true"
           enable-flex="true"
@@ -39,19 +40,10 @@
             <view class="margin-bottom-sm padding-lr flex flex-wrap justify-between" style="align-content: flex-start;">
               <block wx:for="{{likeList}}" wx:key="index">
                 <view class="margin-bottom-sm item shadow bg-black flex-col justify-around align-center" data-item="{{item}}" bindtap="tapToCardDetail">
-                  <image class="img" mode="aspectFit" data-idx="{{index}}" src="{{item.url}}"></image>
-                  <text class="text-black">{{item.title}}</text>
+                  <image class="img" lazy-load="true" mode="aspectFit" data-idx="{{index}}" src="{{item.url}}"></image>
+                  <text class="text-white">{{item.title}}</text>
                 </view>
               </block>
-              <view class="flex-col justify-center align-center" style="width: 100%;height: 50vh;" wx:if="{{!likeList.length}}">
-                <text class="text-xl text-white">暂无数据</text>
-                <text class="text-grey padding" hidden="{{list.length}}">点击下方按钮开始创建卡片数据吧</text>
-                <text class="text-grey padding" hidden="{{!list.length}}">去设置常用卡片</text>
-                <text class="text-xxl text-grey">
-                  <text class="cuIcon-rounddown" hidden="{{list.length}}"></text>
-                  <text class="cuIcon-roundright" hidden="{{!list.length}}"></text>
-                </text>
-              </view>
             </view>
           </view>
         </scroll-view>

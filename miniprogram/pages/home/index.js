@@ -9,7 +9,8 @@ Page({
       newNotice: false,
       content: '暂无新消息'
     },
-    isRefresh: false
+    isRefresh: false,
+    curTab: 0
   },
 
   onLoad(options) {
@@ -24,9 +25,8 @@ Page({
     this.getTabBar().setData({selected: 0})
   },
   async loadData(){
-    this.loadLikeList()
-    this.loadCateList()
-    
+    await this.loadLikeList()
+    await this.loadCateList()
   },
   async loadLikeList(){
     this.setData({
@@ -118,11 +118,34 @@ Page({
   },
   onBindRefresh(e){
     const key = e.currentTarget.dataset.view
-    this[`load${key}List`]().then(()=>{
-      this.setData({
-        isRefresh: false
+    if(key === 'Like'){
+      this.loadLikeList().then(()=>{
+        this.setData({
+          isRefresh: false
+        })
       })
-    })
+    }else{
+      this.loadData().then(()=>{
+        this.setData({
+          isRefresh: false
+        })
+      })
+    }
+    
+  },
+  onBindscrolltoupper(){
+    if(this.data.curTab !== 0){
+      this.setData({
+        curTab: 0
+      })
+    }
+  },
+  onBindscrolltolower(){
+    if(this.data.curTab !== 1){
+      this.setData({
+        curTab: 1
+      })
+    }
   },
   onShareAppMessage(){},
   hideModal(name){
