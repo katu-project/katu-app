@@ -15,7 +15,9 @@
     </view>
     <view class="text-cyan text-xl padding-top-sm flex align-center">
       <text class="cuIcon-tag padding-right-xs padding-left-xs"></text>
-      <text class="cu-tag margin-right text-df sm radius line-orange text-orange" wx:for="{{card.tags}}" wx:key="index">{{item}}</text>
+      <view style="width: 80vw; overflow-x: scroll;" class="flex">
+        <text class="cu-tag margin-right radius line-orange text-orange" wx:for="{{card.tags}}" wx:key="index">{{item}}</text>
+      </view>
     </view>
   </view>
   <view class="pic">
