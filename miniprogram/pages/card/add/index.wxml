@@ -12,7 +12,7 @@
           indicator-active-color="#0081ff">
     <swiper-item wx:for="{{card.image}}" wx:key="index" class="{{curShowPicIdx==index?'cur':''}}">
       <view class="swiper-item" bindtap="tapToChoosePic" data-index="{{index}}">
-        <image class="pic-img card" mode="aspectFit" src="{{item.url}}" style="height: 440rpx;width: 700rpx;"></image>
+        <image class="pic-img card" mode="aspectFit" src="{{item.url}}"></image>
       </view>
     </swiper-item>
   </swiper>
@@ -43,7 +43,7 @@
         <text class="cuIcon-tagfill text-orange"></text>
         <text class="text-grey">选择标签</text>
       </view>
-      <view class="action" style="max-width: 40vw;white-space: nowrap;overflow-x: hidden;">
+      <view class="action" style="max-width: 40vw;white-space: nowrap;overflow-x: scroll;">
         <view class="cu-tag round bg-orange light" wx:if="{{!card.tags.length}}">未选择</view>
         <block wx:else>
           <view class="cu-tag round bg-cyan light" wx:for="{{card.tags}}" wx:key="index" >{{item}}</view>

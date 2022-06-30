@@ -13,6 +13,7 @@
 }
 .pic-img {
   border: 1px solid skyblue;
+  padding: 2rpx
 }
 
 .action-list {

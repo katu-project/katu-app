@@ -17,16 +17,7 @@ Page({
     },
     curShowPicIdx: 0,
     showInputKey: false,
-    tags: [
-      {
-        name: '银行卡',
-        selected: false
-      },
-      {
-        name: '信用卡',
-        selected: false
-      }
-    ]
+    tags: []
   },
   onLoad(options){
     if(options.id){
@@ -103,17 +94,22 @@ Page({
           setData['card.image'].push(pic)
         }
       }
-
-      // 处理标签
-      const tags = this.data.tags.map(tag=>{
-        tag.selected = false
-        if(card.tags.includes(tag.name)){
-          tag.selected = true
-        }
-        return tag
-      })
-      setData['tags'] = tags
       this.setData(setData)
+      // 处理标签
+      this.renderTagState()
+    })
+  },
+  renderTagState(){
+    const tags = this.data.tags.map(tag=>{
+      tag.selected = false
+      if(this.data.card.tags.includes(tag.name)){
+        tag.selected = true
+      }
+      return tag
+    })
+    
+    this.setData({
+      tags
     })
   },
   async tapToSaveCard(){
@@ -250,6 +246,7 @@ Page({
   },
   tapToHideSelectTag(e){
     if(!e.target.dataset.hide) return
+    this.renderTagState()
     return this.hideSelectTag()
   },
   // 其他
