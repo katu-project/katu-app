@@ -48,6 +48,13 @@ async function navigateTo(page, vibrate=false){
   })
 }
 
+async function navigateBack(backData={},delta=1){
+  const pages = getCurrentPages()
+  const prevPage = pages[pages.length - delta - 1]
+  prevPage.backData = backData
+  wx.navigateBack({delta})
+}
+
 async function switchTab(page, vibrate=true){
   vibrate && wx.vibrateShort({
     type: 'light',
@@ -122,6 +129,7 @@ module.exports = {
   showError,
   showLoading,
   navigateTo,
+  navigateBack,
   switchTab,
   loadData
 }

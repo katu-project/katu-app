@@ -26,10 +26,10 @@
     </block>
   </view>
   <view class="padding-tb flex-row">
-    <button class="text-green bg-cyan light" bindtap="tapToEditCard" style="width: 40vw;">
+    <button class="text-green bg-cyan light" bindtap="tapToEditCard" style="width: 40vw;font-weight: 400;">
       <text class="cuIcon-edit"></text>
     修改</button>
-    <button class="text-red bg-red light" bindtap="tapToDeleteCard" style="width: 40vw;">
+    <button class="text-red bg-red light" bindtap="tapToDeleteCard" style="width: 40vw;font-weight: 400;">
       <text class="cuIcon-delete"></text>
     删除</button>
   </view>

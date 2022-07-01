@@ -1,9 +1,6 @@
 const { getCardManager } = require('../../../class/card')
-const { showChoose, showError, loadData } = require('../../../utils/index')
-
-const DefaultLockImage = '/static/images/lock.svg'
-const DefaultShowImage = '/static/images/image.svg'
-
+const { showChoose, showError, loadData, navigateBack } = require('../../../utils/index')
+const { DefaultLockImage, DefaultShowImage } = require('../../../const')
 const globalData = getApp().globalData
 
 Page({
@@ -106,8 +103,9 @@ Page({
   tapToDeleteCard(){
     showChoose("确认删除卡片","卡片删除后不可恢复！").then(({cancel})=>{
       if(cancel) return
+
       loadData(globalData.app.api.deleteCard,{_id: this.id}).then(()=>{
-        wx.navigateBack()
+        navigateBack({ refresh: true })
       })
     })
   },

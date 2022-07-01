@@ -46,22 +46,22 @@ Page({
     })
   },
   receiveChoosePic(){
-    if(this.resolveImagePath){
+    if(this.backData && this.backData.resolveImagePath){
       const key = `card.image[${this.resolveImageIdx}].url`
       this.setData({
-        [key]: this.resolveImagePath
+        [key]: this.backData.resolveImagePath
       })
-      this.resolveImagePath = null
+      this.backData.resolveImagePath = null
       this.resolveImageIdx = 0
     }
   },
   receiveCardTitle(){
-    if(this.resolveCardTitle){
+    if(this.backData && this.backData.resolveCardTitle){
       const key = `card.title`
       this.setData({
-        [key]: this.resolveCardTitle
+        [key]: this.backData.resolveCardTitle
       })
-      this.resolveCardTitle = null
+      this.backData.resolveCardTitle = null
     }
   },
   checkSetting(){
@@ -159,7 +159,10 @@ Page({
       if(!picPath) return
 
       this.resolveImageIdx = index
-      await navigateTo(`../image-processor/index?p=${picPath}`)
+
+      const rk = 'resolveImagePath'
+      const c = picPath
+      await navigateTo(`../image-processor/index?returnContentKey=${rk}&value=${c}`)
     } catch (error) {
       showError(error.message)
     }
@@ -215,7 +218,9 @@ Page({
 
   // 卡片名称
   tapToEditTitle(){
-    navigateTo('../edit-content/index?returnContentKey=resolveCardTitle&value='+this.data.card.title)
+    const rk = 'resolveCardTitle'
+    const c = this.data.card.title
+    navigateTo(`../edit-content/index?returnContentKey=${rk}&value=${c}`)
   },
   // 标签部分
   tapToSetTag(){

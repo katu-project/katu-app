@@ -1,3 +1,5 @@
+const { navigateBack } = require("../../../utils/index")
+
 // pages/card/edit-content/index.js
 Page({
 
@@ -23,9 +25,6 @@ Page({
 
   },
   tapToSetContent(){
-    const pages = getCurrentPages()
-    const prevPage = pages[pages.length-2]
-    prevPage[this.returnContentKey] = this.data.content
-    wx.navigateBack({})
+    navigateBack({[this.returnContentKey]: this.data.content})
   }
 })

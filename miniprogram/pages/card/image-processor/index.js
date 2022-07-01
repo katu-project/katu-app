@@ -1,5 +1,5 @@
 const { getCardManager } = require('../../../class/card')
-const { loadData, showChoose, navigateTo, showError } = require('../../../utils/index')
+const { loadData, showChoose, navigateTo, showError, navigateBack } = require('../../../utils/index')
 const globalData = getApp().globalData
 
 Page({
@@ -9,10 +9,11 @@ Page({
     tmpImagePath: ''
   },
   onLoad(options) {
+    this.returnContentKey = options.returnContentKey || 'tempData'
     this.setData({
       tmpImagePath: globalData.app.Constant.DefaultShowImage
     })
-    this.originImagePath = options.p
+    this.originImagePath = options.value
   },
   onReady() {
     this.setData({
@@ -26,10 +27,7 @@ Page({
     wx.navigateBack({})
   },
   useAndBack() {
-    const pages = getCurrentPages()
-    const prevPage = pages[pages.length-2]
-    prevPage.resolveImagePath = this.data.tmpImagePath
-    wx.navigateBack({})
+    navigateBack({[this.returnContentKey]: this.data.tmpImagePath})
   },
   async selectMethod(e){
     return this.processImage(parseInt(e.detail.value))

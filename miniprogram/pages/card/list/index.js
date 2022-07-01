@@ -25,7 +25,10 @@ Page({
     this.loadData()
   },
   onShow() {
-    
+    if(this.backData && this.backData.refresh){
+      this.loadData()
+      this.backData.refresh = null
+    }
   },
   loadData(){
     return loadData(globalData.app.api.getCard, {where: this.where}).then(list=>{
@@ -61,6 +64,9 @@ Page({
     }
   },
   onBindRefresh(){
+    this.setData({
+      isRefresh: true
+    })
     this.loadData().then(()=>{
       this.setData({
         isRefresh: false
