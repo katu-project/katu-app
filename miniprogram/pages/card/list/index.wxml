@@ -22,7 +22,7 @@
   bindrefresherrefresh="onBindRefresh"
   refresher-triggered="{{isRefresh}}"
   show-scrollbar="false">
-  <view style="height: 70vh;">
+  <view style="min-height: 90vh;">
     <view class="cu-list menu margin-top-sm">
       <view class="cu-item arrow"  wx:for="{{list}}" wx:key="_id" data-key="{{item._id}}" bindtap="tapToCardDetail">
         <view class="margin-right-sm flex-col" style="border: 1px solid darkcyan; border-radius: 8rpx;">

@@ -1,11 +1,10 @@
 const { getCardManager } = require('../../../class/card')
 const { showChoose, showError, loadData, navigateBack } = require('../../../utils/index')
-const { DefaultLockImage, DefaultShowImage } = require('../../../const')
+const { DefaultShowLockImage, DefaultShowImage } = require('../../../const')
 const globalData = getApp().globalData
 
 Page({
   data: {
-    defaultLockImage: DefaultLockImage,
     showInputKey: false,
     card: {
       _id: '',
@@ -14,7 +13,7 @@ Page({
       setLike: false,
       image: [
         {
-          url: DefaultShowImage
+          _url: DefaultShowImage
         }
       ]
     }
@@ -41,7 +40,7 @@ Page({
         'card.setLike': card.setLike || false,
         'card.image': card.image.map(pic=>{
           pic._url = pic.url
-          if(card.encrypted) pic._url = DefaultLockImage
+          if(card.encrypted) pic._url = DefaultShowLockImage
           return pic
         })
       })
@@ -61,7 +60,7 @@ Page({
   async tapToChoosePic(e){
     this.chooseIdx = e.currentTarget.dataset.index
     const image = this.data.card.image[this.chooseIdx]
-    if(!this.data.card.encrypted || image._url !== DefaultLockImage){
+    if(!this.data.card.encrypted || image._url !== DefaultShowLockImage){
       return this.previewImage()
     }
     this.showEncryptedImage()
@@ -92,7 +91,7 @@ Page({
   },
   async previewImage(){
     wx.previewImage({
-      urls: this.data.card.image.filter(e=>e._url !== DefaultLockImage).map(e=>e._url)
+      urls: this.data.card.image.filter(e=>e._url !== DefaultShowLockImage).map(e=>e._url)
     })
   },
   tapToEditCard(){
