@@ -1,5 +1,5 @@
 const globalData = getApp().globalData
-const { loadData, navigateTo, showSuccess, showLoading, showNotice } = require('../../utils/index')
+const { loadData, navigateTo, showSuccess, showNotice } = require('../../utils/index')
 const { activeAccount } = require('../../api')
 
 Page({
@@ -44,7 +44,9 @@ Page({
     this.getTabBar().setData({selected: 2})
   },
   tapUser(){
-    if(this.data.user.isActive) return
+    if(this.data.user.isActive) {
+      return this.tapToEditInfo()
+    }
     return this.showActiveNotice()
   },
   tapToActiveAccount(){
@@ -73,6 +75,10 @@ Page({
         user: globalData.app.user
       })
     })
+  },
+  tapToEditInfo(){
+    if(!this.data.user.isActive) return
+    navigateTo('./edit/index')
   },
   tapToShowActiveInfo(){
     showNotice("普通卡额度 +10张")

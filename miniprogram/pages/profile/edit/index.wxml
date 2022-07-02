@@ -1,0 +1,15 @@
+<cu-custom class="skeleton-remove" bgColor="bg-cyan" isBack="{{true}}">
+  <view slot="backText">返回</view>
+  <view slot="content">编辑信息</view>
+</cu-custom>
+
+<view class="flex-col justify-center align-center padding margin-top-lg">
+  <image src="{{url}}" mode="aspectFit" style="height:200rpx;width:200rpx;border: 1px solid darkcyan;border-radius: 16rpx;"></image>
+  <button class="cu-btn margin line-cyan" style="width: 200rpx;" open-type="chooseAvatar" bindchooseavatar="onBindChooseAvatar">选择头像</button>
+  
+  <view class="cu-form-group margin-top">
+		<view class="title">昵称</view>
+		<input type="nickname" model:value="{{name}}" bindinput="emptyInput" placeholder="输入昵称"></input>
+	</view>
+  <button class="cu-btn margin-top lines-cyan" bindtap="tapToSaveUserInfo">保存</button>
+</view>

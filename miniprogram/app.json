@@ -23,7 +23,8 @@
     "pages/settings/general/index",
     "pages/qa/list/index",
     "pages/about/index",
-    "pages/change-log/index"
+    "pages/change-log/index",
+    "pages/profile/edit/index"
   ],
   "window": {
     "backgroundColor": "#ffffff",

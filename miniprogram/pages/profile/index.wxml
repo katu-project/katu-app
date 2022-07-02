@@ -10,11 +10,11 @@
   <view class="margin-bottom padding shadow flex-col align-start" style="border-radius: 15rpx;background-color: cadetblue;">
     <view class="flex">
       <view class="bg-gray light flex" style="border-radius: 15rpx;padding:4rpx">
-        <image src="{{user.isActive? user.avatarUrl:'/static/images/user.svg'}}" style="height: 160rpx; width: 160rpx;border-radius: 10rpx;"></image>
+        <image src="{{user.isActive? user.avatarUrl:'/static/images/user.svg'}}" bindtap="tapToEditInfo" style="height: 160rpx; width: 160rpx;border-radius: 10rpx;"></image>
       </view>
       <view class="margin-left flex-col justify-between padding-top-xs">
         <view wx:if="{{user.isActive}}" class="flex justify-between align-center">
-          <text class="text-xxl">{{user.nickName}}</text>
+          <text class="text-xxl" bindtap="tapUser">{{user.nickName}}</text>
           <text class="text-black">ID: {{user.identifyCode}}</text>
         </view>
         <view wx:else>
@@ -53,7 +53,7 @@
   </view>
 
   <view class="flex align-center padding-xl">
-    <button class="cu-btn block line-cyan lg" open-type="contact" hover-class="none">
+    <button class="cu-btn block line-cyan lg" open-type="contact" hover-class="none" style="font-weight: 400;">
     <text class="cuIcon-service padding-right-sm"></text> 我的客服</button>
   </view>
   <view style="flex:1"></view>
