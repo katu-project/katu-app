@@ -11,21 +11,31 @@ Page({
 
   },
   onReady() {
-
-  },
-  onShow(){
     this.setData({
       url: globalData.app.user.avatarUrl,
       name: globalData.app.user.nickName
     })
   },
-  emptyInput(){
-
+  onShow(){
+  },
+  nameInput(e){
+    this.setData({
+      name: e.detail.value
+    })
   },
   onBindChooseAvatar(e){
-
+    this.setData({
+      url: e.detail.avatarUrl
+    })
   },
   tapToSaveUserInfo(){
-    navigateBack()
+    loadData(globalData.app.api.updateUserProfile, this.data).then(()=>{
+      globalData.app.reloadUserInfo()
+      showSuccess('修改成功').then(()=>{
+        setTimeout(()=>{
+          navigateBack()
+        },500)
+      })
+    })
   }
 })

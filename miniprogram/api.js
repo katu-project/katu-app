@@ -38,6 +38,8 @@ module.exports = {
 
   updateUserConfig: configItem => request('user/updateConfig', configItem),
 
+  updateUserProfile: data => request('user/updateProfile', data),
+  
   deleteTag: name => request('user/tagDelete', {name}),
 
   createTag: name => request('user/tagCreate', {name}),

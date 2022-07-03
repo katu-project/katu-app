@@ -34,6 +34,13 @@ Page({
     })
   },
   onShow() {
+    if(this.data.user.nickName !== globalData.app.user.nickName || this.data.user.avatarUrl !== globalData.app.user.avatarUrl){
+      this.setData({
+        'user.avatarUrl': globalData.app.user.avatarUrl,
+        'user.nickName': globalData.app.user.nickName,
+      })
+    }
+
     globalData.app.getUsageStatistic().then(stats=>{
       this.setData({
         usedCardCount: stats.usedCardCount ||  0,
