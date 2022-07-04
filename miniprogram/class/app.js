@@ -138,6 +138,11 @@ class AppManager {
     this.user = await api.getUser()
     this._masterKey = null
   }
+
+  async uploadUserAvatar(filePath){
+    const s = new Date().getTime()
+    return api.uploadAvatar(filePath, `user/${this.user.openid}/avatar/${s}`)
+  }
   // user action
   // master key section
 

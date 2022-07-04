@@ -57,6 +57,14 @@ module.exports = {
   usageStatistic: () => request('user/usage'),
 
   setMasterKeyInfo: keyPack => request('user/setMasterKeyInfo',{keyPack}),
+
+  uploadAvatar: async (filePath, url) => {
+    const {fileID} = await wx.cloud.uploadFile({
+      cloudPath: url,
+      filePath
+    })
+    return fileID
+  },
   // card 
 
   getCardSummary: () => request('card/summary'),

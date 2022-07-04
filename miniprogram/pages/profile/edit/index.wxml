@@ -9,7 +9,7 @@
   
   <view class="cu-form-group margin-top">
 		<view class="title">昵称</view>
-		<input type="nickname" value="{{name}}" bindinput="nameInput" placeholder="输入昵称"></input>
+		<input value="{{name}}" bindinput="nameInput" placeholder="输入昵称"></input>
 	</view>
   <button class="cu-btn margin-top line-cyan" bindtap="tapToSaveUserInfo">保存</button>
 </view>

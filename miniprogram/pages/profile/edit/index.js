@@ -5,16 +5,15 @@ Page({
   data: {
     url: '/static/images/user.svg',
     name: ''
-
   },
   onLoad(options) {
-
   },
   onReady() {
     this.setData({
       url: globalData.app.user.avatarUrl,
       name: globalData.app.user.nickName
     })
+    this.originData = Object.assign({},this.data)
   },
   onShow(){
   },
@@ -24,17 +23,32 @@ Page({
     })
   },
   onBindChooseAvatar(e){
+    console.log(e.detail.avatarUrl);
     this.setData({
       url: e.detail.avatarUrl
     })
   },
-  tapToSaveUserInfo(){
-    loadData(globalData.app.api.updateUserProfile, this.data).then(()=>{
-      globalData.app.reloadUserInfo()
-      showSuccess('修改成功').then(()=>{
-        setTimeout(()=>{
-          navigateBack()
-        },500)
+  async tapToSaveUserInfo(){
+    if(this.data.name == this.originData.name && this.data.url == this.originData.url) {
+      showNotice('数据无变动!')
+      return
+    }
+
+    const userData = {
+      name: this.data.name
+    }
+    if(!this.data.url.startsWith('https') && !this.data.url.startsWith('cloud:')){
+      const url = await loadData(globalData.app.uploadUserAvatar, this.data.url, '正在上传头像')
+      userData.url = url
+    }
+    
+    loadData(globalData.app.api.updateUserProfile, userData, '正在保存信息').then(()=>{
+      globalData.app.reloadUserInfo().then(()=>{
+        showSuccess('修改成功').then(()=>{
+          setTimeout(()=>{
+            navigateBack()
+          },500)
+        })
       })
     })
   }
