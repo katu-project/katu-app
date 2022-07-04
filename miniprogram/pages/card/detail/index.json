@@ -1,6 +1,5 @@
 {
   "usingComponents": {
     "read-key": "../../../components/read-key"
-  },
-  "disableScroll": true
+  }
 }
