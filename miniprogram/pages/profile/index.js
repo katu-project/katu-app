@@ -87,8 +87,9 @@ Page({
     if(!this.data.user.isActive) return
     navigateTo('./edit/index')
   },
-  tapToShowActiveInfo(){
-    showNotice("普通卡额度 +10张")
+  async tapToShowActiveTip(){
+    await this.loadActiveData()
+    navigateTo(`../qa/detail/index?id=${this.data.activeInfo.tip}`)
   },
   tapToItem(e){
     const item = e.currentTarget.dataset.item
@@ -97,19 +98,8 @@ Page({
   tapToReadDoc(e){
     navigateTo(`../qa/detail/index?id=${e.currentTarget.dataset.item.id}`)
   },
-  showActiveNotice(){
-    if(!this.data.activeInfo){
-      loadData(globalData.app.api.getAppConfig, 'active').then(activeInfo=>{
-        loadData(globalData.app.api.getDoc, {_id: activeInfo.id}).then(res=>{
-          this.setData({
-            activeInfo,
-            'activeInfo.notice': res.content
-          })
-          wx.nextTick(()=>this.showActiveNotice())
-        })
-      })
-      return
-    }
+  async showActiveNotice(){
+    await this.loadActiveData()
     this.setData({
       showActiveNotice: true
     })
@@ -117,6 +107,15 @@ Page({
   hideActiveNotice(){
     this.setData({
       showActiveNotice: false
+    })
+  },
+  async loadActiveData(){
+    if(this.data.activeInfo) return
+    const activeInfo = await loadData(globalData.app.api.getAppConfig, 'active')
+    const doc = await loadData(globalData.app.api.getDoc, {_id: activeInfo.id})
+    this.setData({
+      activeInfo,
+      'activeInfo.notice': doc.content
     })
   }
 })
