@@ -49,6 +49,13 @@ Page({
   onShow() {
 
   },
+  onUnload(){
+    if(globalData.app.user.config.security.rememberPassword){
+      globalData.app.cacheMasterKey()
+    }else{
+      globalData.app.clearMasterKey()
+    }
+  },
   tapToSetLike(){
     const state = !this.data.card.setLike
     loadData(globalData.app.api.setCardLike,{id:this.id,state}).then(()=>{
@@ -70,7 +77,7 @@ Page({
     const cardManager = await getCardManager()
     const appManager = globalData.app
     try {
-      await appManager.checkMasterKey()
+      appManager.checkMasterKey()
     } catch (error) {
       if(error.code[0] === '2'){
         this.showInputKey()
@@ -84,9 +91,6 @@ Page({
       this.setData({
         [`card.image[${this.chooseIdx}]._url`]: imagePath
       })
-      if(!globalData.app.user.config.security.rememberPassword){
-        globalData.app.clearMasterKey()
-      }
     })
   },
   async previewImage(){

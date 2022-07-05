@@ -10,7 +10,7 @@
         <text class="text-black">删除账户</text>
       </view>
       <view class="action">
-        <button class="cu-btn round bg-red shadow light" style="width: 150rpx;">
+        <button class="cu-btn round line-red light" style="width: 150rpx;font-weight: 400;">
           <text class="cuIcon-delete"></text> 删除</button>
       </view>
     </view>

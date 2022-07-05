@@ -35,6 +35,13 @@ Page({
     this.receiveCardTitle()
     this.loadRenderData()
   },
+  onUnload(){
+    if(globalData.app.user.config.security.rememberPassword){
+      globalData.app.cacheMasterKey()
+    }else{
+      globalData.app.clearMasterKey()
+    }
+  },
   loadRenderData(){
     this.loadTagData()
   },
@@ -142,9 +149,6 @@ Page({
     }
   },
   async saveFinish(){
-    if(!globalData.app.user.config.security.rememberPassword){
-      globalData.app.clearMasterKey()
-    }
   },
   showInputKey(){
     this.setData({

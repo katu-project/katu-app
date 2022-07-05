@@ -41,7 +41,7 @@ Page({
       })
     }
 
-    globalData.app.getUsageStatistic().then(stats=>{
+    globalData.app.api.usageStatistic().then(stats=>{
       this.setData({
         usedCardCount: stats.usedCardCount ||  0,
         usedEncryptedCardCount: stats.usedEncryptedCardCount || 0

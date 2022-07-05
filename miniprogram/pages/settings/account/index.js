@@ -21,7 +21,7 @@ Page({
   },
 
   tapToDeleteAccount(){
-    showChoose('警告','删除账户将会删除你在卡兔上的所有数据！',{
+    showChoose('警告','此操作将删除你在卡兔上的所有数据！',{
       confirmText: '确认删除',
       confirmColor: '#FF0000',
     }).then(({cancel})=>{
@@ -33,7 +33,7 @@ Page({
     if(!this.app.user.isActive) {
       return showNotice("账户未激活，无需删除")
     }
-    loadData(this.app.removeAccount).then(()=>{
+    loadData(this.app.api.removeAccount).then(()=>{
       this.app.clearUserInfo()
       showChoose('操作成功','账户删除成功',{
         showCancel: false

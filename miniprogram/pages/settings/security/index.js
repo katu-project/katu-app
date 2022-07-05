@@ -32,7 +32,7 @@ Page({
         console.log('clearMasterKey');
         globalData.app.clearMasterKey()
       }
-      globalData.app.loadUserConfig(configItem)
+      globalData.app.reloadUserConfig(configItem)
     })
   },
   tapToMasterKey(){

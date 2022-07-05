@@ -1,4 +1,4 @@
-const { showError, showSuccess, loadData, showChoose } = require('../../../../utils/index')
+const { showError, showSuccess, loadData, showChoose, navigateTo } = require('../../../../utils/index')
 const globalData = getApp().globalData
 
 Page({
@@ -45,23 +45,34 @@ Page({
         showError('两次输入不一致')
         return
       }
-      this.updateMasterKey()
+      
+      try {
+        this.updateMasterKey()
+      } catch (error) {
+        showError(error.message)
+      }
     }else{
       if(!this.data.masterKey || this.data.masterKey !== this.data.masterKeyRepeat){
         showError('两次输入不一致')
         return
       }
-      this.setMasterKey()
+      try {
+        this.setMasterKey()
+      } catch (error) {
+        showError(error.message)
+      }
     }
   },
-  async updateMasterKey(){
+  updateMasterKey(){
     if(!globalData.app.user.setMasterKey){
       throw Error('请先设置主密码')
     }
     const params = {
-      masterKey: this.data.masterKey,
-      newMasterKey: this.data.newMasterKey
+      key: this.data.masterKey,
+      newKey: this.data.newMasterKey
     }
+
+    globalData.app.checkMasterKeyFormat(this.data.newMasterKey)
 
     showChoose('确认使用该密码？').then(({cancel})=>{
       if(cancel) return
@@ -70,11 +81,13 @@ Page({
       })
     })
   },
-  async setMasterKey(){
+  setMasterKey(){
     if(globalData.app.user.setMasterKey){
-      showError('已经设置主密码')
+      showError('已设置过主密码')
       return
     }
+
+    globalData.app.checkMasterKeyFormat(this.data.masterKey)
 
     showChoose('确认使用该密码？').then(({cancel})=>{
       if(cancel) return
@@ -87,7 +100,7 @@ Page({
     globalData.app.clearMasterKey()
     globalData.app.reloadUserInfo()
     this.resetContent()
-    showChoose("设置成功","",{showCancel:false}).then(()=>{
+    showChoose(`${this.data.setMasterKey?'更新':'设置'}成功`,"",{showCancel:false}).then(()=>{
       wx.navigateBack()
     })
   },
@@ -98,5 +111,8 @@ Page({
       newMasterKey: '',
       newMasterKeyRepeat: ''
     })
+  },
+  tapToOpenDoc(){
+    navigateTo('../../../qa/detail/index?id=0a4ec1f9628b5501063149ac75a21cb7')
   }
 })

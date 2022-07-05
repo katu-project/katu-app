@@ -25,7 +25,7 @@ Page({
     console.log(configItem)
     loadData(globalData.app.api.updateUserConfig, configItem).then(()=>{
       showSuccess('修改成功')
-      globalData.app.loadUserConfig(configItem)
+      globalData.app.reloadUserConfig(configItem)
     })
   }
 })

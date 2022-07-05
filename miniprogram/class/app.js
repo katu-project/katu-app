@@ -19,8 +19,8 @@ class AppManager {
     this.loadAppConfig()
     this.user = await api.getUser()
     this.loadConstant()
-    if(!this.user.config.security.rememberPassword){
-      this.loadMasterKey()
+    if(this.user.config.security.rememberPassword){
+      this._loadMasterKey()
     }
   }
 
@@ -89,53 +89,39 @@ class AppManager {
     this.user.customTag = tags
   }
 
-  async setMasterKeyInfo(keyPack){
-    return api.setMasterKeyInfo(keyPack)
+  async setUserMasterKey(key){
+    const hexCode = await this._convertToHex(key)
+    const masterKeyPack = await this._createMasterKeyPack(hexCode)
+    return api.setMasterKeyInfo(masterKeyPack)
   }
 
-  async setUserMasterKey(masterKey){
-    await this._checkInputMasterKey(masterKey)
-    masterKey = await this.createMasterKey(masterKey)
-    const masterKeyPack = await this.createMasterKeyPack(masterKey)
-    return this.setMasterKeyInfo(masterKeyPack)
-  }
-
-  async updateUserMasterKey({masterKey, newMasterKey}){
-    console.log(masterKey, newMasterKey);
-    await this._checkInputMasterKey(masterKey)
-    masterKey = await this.createMasterKey(masterKey)
-    newMasterKey = await this.createMasterKey(newMasterKey)
-    // 获取原始主密码
-    const originMasterKey = await this.fetchOriginMasterFromMasterPack(this.user.masterKeyPack.keyPack, masterKey)
-    if(!originMasterKey) throw Error("主密钥错误")
+  async updateUserMasterKey({key, newKey}){
+    this.checkMasterKeyFormat(key)
+    this.checkMasterKeyFormat(newKey)
+    const hexCode = await this._convertToHex(key)
+    const newHexCode = await this._convertToHex(newKey)
+    // 获取主密码
+    const masterKey = await this._fetchMasterKeyFromKeyPack(this.user.masterKeyPack.keyPack, hexCode)
+    if(!masterKey) throw Error("主密码错误")
     // 重新生成新的主密码包
-    const masterKeyPack = await this.createMasterPackWithOriginMasterKey(originMasterKey, newMasterKey)
+    const masterKeyPack = await this._createMasterKeyPack(newHexCode, masterKey)
     // 更新主密码包
-    console.log(masterKeyPack);
-    return this.setMasterKeyInfo(masterKeyPack)
+    return api.setMasterKeyInfo(masterKeyPack)
   }
 
   async reloadUserInfo(){
     this.user = await api.getUser()
   }
 
-  async loadUserConfig(configItem){
+  async reloadUserConfig(configItem){
     if(configItem){
       return utils.objectSetValue(this.user, configItem.key, configItem.value)
     }
     return this.reloadUserInfo()
   }
 
-  async getUsageStatistic(){
-    return api.usageStatistic()
-  }
-
-  async removeAccount(){
-    return api.removeAccount()
-  }
-
   async clearUserInfo(){
-    this.user = await api.getUser()
+    this.user = await api.getUser() // 获取基础用户数据
     this._masterKey = null
   }
 
@@ -143,33 +129,53 @@ class AppManager {
     const s = new Date().getTime()
     return api.uploadAvatar(filePath, `user/${this.user.openid}/avatar/${s}`)
   }
-  // user action
+  // user action end
+
   // master key section
+  async _loadMasterKey(){
+    if(!this.user.setMasterKey) return
+    this._masterKey = await this._readMasterKey()
+    console.log("加载主密码成功");
+  }
+
+  async _readMasterKey(){
+    try {
+      const {data} = await wx.getStorage({
+        key: MASTER_KEY_NAME
+      })
+      return data
+    } catch (error) {
+      console.log("读取主密码缓存失败");
+    }
+    return null
+  }
 
   async clearMasterKey(){
     this._masterKey = null
+    this._removeMasterKeyCache()
   }
 
-  async reloadMasterKey(){
-    return this.loadMasterKey()
+  async loadMasterKeyWithKey(key){
+    this.checkMasterKeyFormat(key)
+    const hexCode = await this._convertToHex(key)
+    this._masterKey = await this._fetchMasterKeyFromKeyPack(this.user.masterKeyPack.keyPack, hexCode)
   }
 
-  // 生成主密码 256 bit
-  async createMasterKeyPack(masterKey){
-    let masterCode = null
-    try {
-      const {randomValues} = await wx.getRandomValues({
-        length: 16,
-      })
-      masterCode = utils.convert.BufferToHex(randomValues)
-    } catch (error) {
-      console.log('获取系统随机数出错：', error)
-      masterCode = utils.crypto.random(16).toString()
-    }
-
-    return this.createMasterPackWithOriginMasterKey(masterCode, masterKey)
+  async cacheMasterKey(){
+    if(!this._masterKey) return
+    await wx.setStorage({
+      key: MASTER_KEY_NAME,
+      data: this._masterKey
+    })
   }
 
+  async _removeMasterKeyCache(){
+    return wx.removeStorage({
+      key: MASTER_KEY_NAME
+    })
+  }
+
+  // 使用前检测主密码状态
   checkMasterKey(){
     const error = {
       code: '',
@@ -194,79 +200,45 @@ class AppManager {
     }
   }
 
-  async _checkInputMasterKey(masterKey){
-    if(!masterKey || masterKey.length < 6) throw Error("主密码错误")
-    if(this.user.setMasterKey){
-      masterKey = await this.createMasterKey(masterKey)
-      const masterKeyId = await this.generateMasterKeyId(masterKey)
-      if(masterKeyId !== this.user.masterKeyPack.keyId){
-        throw Error("主密码错误")
+  checkMasterKeyFormat(key){
+    if(!key || key.length < 6) throw Error("格式错误")
+  }
+
+  async _convertToHex(key){
+    const hexCode = utils.crypto.sha1(key)
+    if(!hexCode) throw Error("主密码生成出错，请联系客服")
+    return hexCode
+  }
+
+  // 生成主密码 256 bit
+  async _createMasterKeyPack(hexKey, masterKey){
+    if(!masterKey){
+      try {
+        const {randomValues} = await wx.getRandomValues({
+          length: 16,
+        })
+        masterKey = utils.convert.BufferToHex(randomValues)
+      } catch (error) {
+        console.log('获取系统随机数出错，将使用内置替代库：', error)
+        masterKey = utils.crypto.random(16).toString()
       }
     }
-  }
-
-  async createMasterKey(originKey){
-    return utils.crypto.sha1(originKey)
-  }
-
-  async loadMasterKeyWithKey(key){
-    await this._checkInputMasterKey(key)
-    const masterKey = await this.createMasterKey(key)
-    this._masterKey = await this.fetchOriginMasterFromMasterPack(this.user.masterKeyPack.keyPack, masterKey)
-  }
-
-  // 根据用户原始密码解密出主密码 _masterKey
-  async loadMasterKey(){
-    if(!this.user.setMasterKey) return
-    const masterKey = await this.readMasterKey()
-    if(!masterKey) return
-    this._masterKey = await this.fetchOriginMasterFromMasterPack(this.user.masterKeyPack.keyPack, masterKey)
-  }
-
-  async fetchOriginMasterFromMasterPack(masterPack, key){
-    console.log({masterPack, key});
-    const originMasterKey = utils.crypto.decryptString(masterPack, key)
-    if(!originMasterKey) throw Error("主密钥错误")
-    return originMasterKey
-  }
-
-  async createMasterPackWithOriginMasterKey(originMasterkey, masterKey){
     const keyPack = {}
-    keyPack.keyPack = utils.crypto.encryptString(originMasterkey, masterKey)
-    keyPack.keyId = await this.generateMasterKeyId(masterKey)
+    keyPack.keyPack = utils.crypto.encryptString(masterKey, hexKey)
+    keyPack.keyId = await this._generateMasterKeyId(hexKey)
     return keyPack
   }
 
-  async generateMasterKeyId(masterKey){
-    return masterKey.slice(32)
+  async _fetchMasterKeyFromKeyPack(masterPack, hexCode){
+    const masterKey = utils.crypto.decryptString(masterPack, hexCode)
+    if(!masterKey) throw Error("主密码错误")
+    return masterKey
   }
 
-  async readMasterKey(){
-    console.log("read Master Key");
-    try {
-      const {data} = await wx.getStorage({
-        key: MASTER_KEY_NAME
-      })
-      return data
-    } catch (error) {
-      console.log("未设置主密码");
-    }
-    return null
+  async _generateMasterKeyId(key){
+    return utils.crypto.sha1(key)
   }
 
-  async setMasterKey(hashKey){
-    await wx.setStorage({
-      key: MASTER_KEY_NAME,
-      data: hashKey
-    })
-  }
-
-  async checkSetAndReloadMasterKey(key){
-    await this._checkInputMasterKey(key)
-    const masterKey = await this.createMasterKey(key)
-    await this.setMasterKey(masterKey)
-    return this.reloadMasterKey()
-  }
   // master key section
   
   async chooseFile(){
