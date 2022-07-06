@@ -36,11 +36,6 @@ Page({
     this.loadRenderData()
   },
   onUnload(){
-    if(globalData.app.user.config.security.rememberPassword){
-      globalData.app.cacheMasterKey()
-    }else{
-      globalData.app.clearMasterKey()
-    }
   },
   loadRenderData(){
     this.loadTagData()

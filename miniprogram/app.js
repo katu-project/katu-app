@@ -35,6 +35,20 @@ App({
       })
     })
   },
+  onHide(){
+    if(!this.globalData.app.user) return
+
+    if(this.globalData.app.user.config.security.rememberPassword){
+      console.log('缓存主密码');
+      this.globalData.app.cacheMasterKey()
+    }else{
+      if(this.globalData.app.user.config.security.lockOnExit){
+        console.log('退出并清除主密码');
+        this.globalData.app.clearMasterKey()
+      }
+    }
+
+  },
   globalData: {
     ColorList: [{
         title: '嫣红',

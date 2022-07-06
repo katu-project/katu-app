@@ -29,13 +29,18 @@ Page({
     loadData(globalData.app.api.updateUserConfig, configItem).then(()=>{
       showSuccess('修改成功')
       if(configItem.key === 'config_security_rememberPassword' && configItem.value === false){
-        console.log('clearMasterKey');
         globalData.app.clearMasterKey()
       }
+      this.setData({
+        [configItem.key]: configItem.value
+      })
       globalData.app.reloadUserConfig(configItem)
     })
   },
   tapToMasterKey(){
     navigateTo('./master-key/index')
+  },
+  tapToReadDoc(e){
+    globalData.app.navToDoc(e.currentTarget.dataset.key)
   }
 })

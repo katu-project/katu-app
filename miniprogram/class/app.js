@@ -3,6 +3,7 @@ const constData = require('../const')
 const api = require('../api')
 
 const { APP_TEMP_DIR ,MASTER_KEY_NAME } = require('../const')
+const { navigateTo } = require('../utils/index')
 
 class AppManager {
   static instance = null
@@ -70,11 +71,18 @@ class AppManager {
         name: '其他',
         value: 'other'
       }],
+      tags: [
+        { name: '储蓄卡' },
+        { name: '信用卡' },
+        { name: '购物卡' },
+        { name: '名片' },
+        { name: '其他' }
+      ],
       imageMogr2: '&imageMogr2/thumbnail/100x/rquality/80/format/png/interlace/1/strip'
     }
     api.getDefaultTag().then(tags=>{
       this.Config.tags = tags
-    })
+    }).catch(console.log)
   }
 
   // user action
@@ -284,6 +292,10 @@ class AppManager {
     console.warn('downloadFile:', imageInfo);
     const downloadFile = await utils.file.download(imageInfo.tempFileURL, savePath)
     return downloadFile.filePath
+  }
+
+  navToDoc(id){
+    navigateTo(`/pages/qa/detail/index?id=${id}`)
   }
 }
 

@@ -50,11 +50,6 @@ Page({
 
   },
   onUnload(){
-    if(globalData.app.user.config.security.rememberPassword){
-      globalData.app.cacheMasterKey()
-    }else{
-      globalData.app.clearMasterKey()
-    }
   },
   tapToSetLike(){
     const state = !this.data.card.setLike
