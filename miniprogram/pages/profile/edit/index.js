@@ -1,4 +1,4 @@
-const { loadData, navigateTo, showSuccess, showNotice, navigateBack } = require('../../../utils/index')
+const { loadData, showError, showSuccess, showNotice, navigateBack } = require('../../../utils/index')
 const globalData = getApp().globalData
 
 Page({
@@ -33,7 +33,9 @@ Page({
       showNotice('数据无变动!')
       return
     }
-
+    if(this.data.name.length>6){
+      return showError("昵称长度有误")
+    }
     const userData = {
       name: this.data.name
     }

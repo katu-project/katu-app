@@ -28,12 +28,12 @@
 
     <view class="cu-item">
       <view class="content">
-      <text class="">关闭应用后清除主密码</text>
+      <text class="">离开应用后清除主密码</text>
       </view>
       <view class="action">
         <switch class="sm" disabled="{{config_security_rememberPassword}}" bindchange="tapToConfig" data-key="config_security_lockOnExit" checked="{{config_security_lockOnExit}}"></switch>
       </view>
     </view>
-    <view class="padding bg-white text-grey text-sm">在关闭应用后清除主密码记录，再次进入应用后相关操作需重新验证主密码</view>
+    <view class="padding bg-white text-grey text-sm">在离开应用后清除主密码记录，再次进入应用后相关操作需重新验证主密码</view>
   </view>
 </view>

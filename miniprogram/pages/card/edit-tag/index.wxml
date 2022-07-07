@@ -16,13 +16,15 @@
         <text class="padding-left-sm">我的标签<text class="text-df text-grey" wx:if="{{list.length}}">・{{list.length}}</text></text>
       </view>
       <view class="text-df padding-right">
-        <button class="cu-btn icon round lines-cyan sm" style="width:100rpx" bindtap="tapToShowAddTag">
-          <text class="cuIcon-add text-cyan">添加</text>
+        <button class="cu-btn icon round line-cyan sm" style="width:100rpx" bindtap="tapToShowAddTag">
+          <text class="cuIcon-add text-cyan" style="font-weight: 400;">添加</text>
         </button>
       </view>
     </view>
   </view>
-  <!-- {{selectedTagIdx===index? tempTagColor:'blue'}} -->
+  
+  <view class="padding-top-xl text-center text-gray" wx:if="{{!list.length}}">暂无自定义标签</view>
+
   <view class="padding-tb flex flex-wrap">
     <view class="padding-tb-sm padding-lr margin-sm light bg-{{ selectedTagIdx === index ? tempTagColor:item.color || 'blue'}} {{selectedTagIdx===index? 'selected':''}}" data-idx="{{index}}"  style="border-radius: 16rpx;" bindtap="tapToDeleteTag" bindlongpress="tapToShowSetColor" wx:for="{{list}}" wx:key="name">
       <text class="">{{item.name}}</text>
@@ -37,15 +39,18 @@
       <view class="content">输入标签名字</view>
     </view>
     <view class="padding-xl bg-white flex-col justify-center">
-      <view class="padding solids-bottom" style="height: 50px; width: 300rpx;align-self: center;">
-        <input type="text" class="text-left" focus="{{showCreateTag}}" model:value="{{tempTagName}}" bindinput="checkInputTag" placeholder="建议4个字以内"/>
+      <view class="solids-bottom" style="width: 300rpx;align-self: center;">
+        <input type="text" style="height: 40px;" class="text-center" focus="{{showCreateTag}}" model:value="{{tempTagName}}" bindinput="checkInputTag" placeholder=""/>
+      </view>
+      <view class="padding-top">
+        <text class="text-sm text-grey">建议4个字以内</text>
       </view>
     </view>
     <view class="cu-bar bg-white justify-end">
       <view class="action">
-        <button class="cu-btn line-green text-green" style="width: 200rpx;" data-key="showCreateTag" bindtap="hideModal">取消</button>
-        <view class="padding"></view>
-        <button class="cu-btn bg-green margin-left" style="width: 200rpx;" bindtap="tapToAddTag">确定</button>
+        <button class="cu-btn line-green text-green gfw" style="width: 200rpx;" data-key="showCreateTag" bindtap="hideModal">取消</button>
+        <view class="padding-left-sm"></view>
+        <button class="cu-btn bg-green margin-left gfw" style="width: 200rpx;" bindtap="tapToAddTag">确定</button>
       </view>
     </view>
   </view>

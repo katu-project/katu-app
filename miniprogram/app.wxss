@@ -39,7 +39,9 @@ page {
 	color: var(--white);
 }
 
-
+.gfw{
+  font-weight: 400;
+}
 
 .card {
   width: 700rpx;

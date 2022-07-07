@@ -1,4 +1,4 @@
-const { showChoose, loadData, showSuccess, showError } = require("../../../utils/index")
+const { showChoose, loadData, showSuccess, showError, redirectTo } = require("../../../utils/index")
 const globalData = getApp().globalData
 
 Page({
@@ -46,9 +46,17 @@ Page({
   },
   tapToAddTag(){
     if(!this.data.tempTagName){
-      showError("输入有误")
+      showError("请输入名字")
       return
     }
+    
+    if(!globalData.app.user || !globalData.app.user.isActive){
+      return showChoose("警告","账户未激活，不可使用此功能。", {confirmText:'去激活'}).then(({cancel})=>{
+        if(cancel) return
+        redirectTo('../../profile/index')
+      })
+    }
+
     if(this.data.list.find(tag=>tag.name === this.data.tempTagName)){
       showError("标签已经存在")
       return

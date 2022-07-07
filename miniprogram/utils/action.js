@@ -48,6 +48,15 @@ async function navigateTo(page, vibrate=false){
   })
 }
 
+async function redirectTo(page, vibrate=false){
+  vibrate && wx.vibrateShort({
+    type: 'light',
+  })
+  wx.redirectTo({
+    url: page,
+  })
+}
+
 async function navigateBack(backData={},delta=1){
   const pages = getCurrentPages()
   const prevPage = pages[pages.length - delta - 1]
@@ -129,6 +138,7 @@ module.exports = {
   showError,
   showLoading,
   navigateTo,
+  redirectTo,
   navigateBack,
   switchTab,
   loadData

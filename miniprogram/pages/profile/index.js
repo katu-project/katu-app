@@ -34,21 +34,17 @@ Page({
     })
   },
   onShow() {
-    if(this.data.user.nickName !== globalData.app.user.nickName || this.data.user.avatarUrl !== globalData.app.user.avatarUrl){
-      this.setData({
-        'user.avatarUrl': globalData.app.user.avatarUrl,
-        'user.nickName': globalData.app.user.nickName,
-      })
-    }
-
+    this.getTabBar().setData({selected: 2})
+    this.checkRefreshUserData()
+    this.loadCardUsageStatistic()
+  },
+  loadCardUsageStatistic(){
     globalData.app.api.usageStatistic().then(stats=>{
       this.setData({
         usedCardCount: stats.usedCardCount ||  0,
         usedEncryptedCardCount: stats.usedEncryptedCardCount || 0
       })
     })
-
-    this.getTabBar().setData({selected: 2})
   },
   tapUser(){
     if(this.data.user.isActive) {
@@ -87,16 +83,24 @@ Page({
     if(!this.data.user.isActive) return
     navigateTo('./edit/index')
   },
+  checkRefreshUserData(){
+    if(globalData.app.user && (this.data.user.nickName !== globalData.app.user.nickName || this.data.user.avatarUrl !== globalData.app.user.avatarUrl)){
+      this.setData({
+        'user.avatarUrl': globalData.app.user.avatarUrl,
+        'user.nickName': globalData.app.user.nickName,
+      })
+    }
+  },
   async tapToShowActiveTip(){
     await this.loadActiveData()
-    navigateTo(`../qa/detail/index?id=${this.data.activeInfo.tip}`)
+    globalData.app.navToDoc(this.data.activeInfo.tip)
   },
   tapToItem(e){
     const item = e.currentTarget.dataset.item
     navigateTo(item.url || item)
   },
   tapToReadDoc(e){
-    navigateTo(`../qa/detail/index?id=${e.currentTarget.dataset.item.id}`)
+    globalData.app.navToDoc(e.currentTarget.dataset.item.id)
   },
   async showActiveNotice(){
     await this.loadActiveData()
