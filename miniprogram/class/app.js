@@ -297,6 +297,13 @@ class AppManager {
   navToDoc(id){
     navigateTo(`/pages/qa/detail/index?id=${id}`)
   }
+
+  setHomeRefresh(){
+    const pages = getCurrentPages()
+    const homePage = pages.find(page=>page.route==='pages/home/index')
+    if(!homePage) return
+    homePage.backData = {refresh:true}
+  }
 }
 
 function getAppManager(...args){

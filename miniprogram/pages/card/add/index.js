@@ -144,6 +144,7 @@ Page({
     }
   },
   async saveFinish(){
+    globalData.app.setHomeRefresh()
   },
   showInputKey(){
     this.setData({

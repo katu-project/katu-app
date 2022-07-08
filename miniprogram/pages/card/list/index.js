@@ -8,10 +8,6 @@ Page({
     list: [],
     isRefresh: false
   },
-
-  /**
-   * 生命周期函数--监听页面加载
-   */
   onLoad(options) {
     this.where = {}
     if(options.tag){

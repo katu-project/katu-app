@@ -23,6 +23,7 @@ Page({
   onShow() {
     setTimeout(()=>this.loadNotice(),2000)
     this.getTabBar().setData({selected: 0})
+    this.checkDataRefresh()
   },
   async loadData(){
     await this.loadLikeList()
@@ -71,6 +72,13 @@ Page({
     this.setData({
       list
     })
+  },
+  checkDataRefresh(){
+    if(this.backData && this.backData.refresh){
+      this.loadData()
+      this.backData.refresh = null
+      console.log("刷新数据");
+    }
   },
   async loadNotice(){
     return globalData.app.api.getNotice().then(notice=>{

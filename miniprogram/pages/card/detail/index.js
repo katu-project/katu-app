@@ -47,7 +47,6 @@ Page({
     })
   },
   onShow() {
-
   },
   onUnload(){
   },
@@ -57,6 +56,7 @@ Page({
       this.setData({
         'card.setLike': state
       })
+      globalData.app.setHomeRefresh()
     })
   },
   async tapToChoosePic(e){
@@ -103,6 +103,7 @@ Page({
       if(cancel) return
 
       loadData(globalData.app.api.deleteCard,{_id: this.id}).then(()=>{
+        globalData.app.setHomeRefresh()
         navigateBack({ refresh: true })
       })
     })
@@ -119,5 +120,5 @@ Page({
     }).catch(error=>{
       showChoose(error.message,'',{showCancel:false})
     })
-  },
+  }
 })
