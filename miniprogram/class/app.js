@@ -46,6 +46,11 @@ class AppManager {
         name: '功能',
         value: 'function'
       }, {
+        icon: 'settings',
+        color: 'cyan',
+        name: '设置',
+        value: 'setting'
+      }, {
         icon: 'people',
         color: 'orange',
         name: '账户',
@@ -60,11 +65,6 @@ class AppManager {
         color: 'olive',
         name: '额度',
         value: 'quota'
-      }, {
-        icon: 'recharge',
-        color: 'cyan',
-        name: '费用',
-        value: 'price'
       }, {
         icon: 'more',
         color: 'blue',

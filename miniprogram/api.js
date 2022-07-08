@@ -33,7 +33,7 @@ module.exports = {
   getDefaultTag: () => request('app/tags'),
   getChangeLog: () => request('app/changeLog'),
 
-  getNotice: () => request('app/notice'), 
+  getNotice: data => request('app/notice', data), 
   // user
 
   updateUserConfig: configItem => request('user/updateConfig', configItem),
