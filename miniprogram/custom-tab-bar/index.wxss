@@ -48,6 +48,12 @@
   overflow: hidden;
 }
 
+.nav .icon{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .nav .center .icon.plus {
   width: 55px;
   height: 55px;
@@ -59,4 +65,16 @@
 .nav .center .icon.plus .svg{
   width: 40px;
   height: 40px;
+}
+
+.active-dot{
+  width: 10rpx;
+  margin-top: 10rpx;
+  height: 10rpx;
+  background-color: cyan;
+  border-radius: 50%;
+  visibility: hidden;
+}
+.active{
+  visibility: unset;
 }
