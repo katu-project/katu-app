@@ -72,15 +72,18 @@ Page({
       list
     })
   },
-  loadNotice(){
-    globalData.app.api.getNotice().then(notice=>{
+  async loadNotice(){
+    return globalData.app.api.getNotice().then(notice=>{
       if(!globalData.app.user.noticeReadLog.includes(notice._id)){
         this.setData({
           'notice.id': notice._id,
           'notice.time': new Date(notice.updateTime).toLocaleDateString(),
           'notice.newNotice': true,
-          'notice.content': notice.content
+          'notice.content': notice.content+notice.content
         })
+        if(notice.auto_show){
+          this.tapToShowNotice()
+        }
       }
     }).catch(console.warn)
   },

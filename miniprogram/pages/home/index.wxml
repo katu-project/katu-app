@@ -90,9 +90,11 @@
         <text class="cuIcon-close text-red"></text>
       </view>
     </view>
-    <view class="padding margin-lr text-left solids-top solids flex-col" style="min-height: 30vh;">
-      <rich-text style="flex:1" nodes="{{notice.content}}"></rich-text>
-      <text class="text-right">{{notice.time}}</text>
+    <view class="padding-tb-sm padding-lr margin-lr text-left solids-top solids">
+      <view style="height: 40vh;overflow-y: scroll;" class="flex-col">
+        <rich-text style="flex:1" nodes="{{notice.content}}"></rich-text>
+        <text class="text-right padding-top">{{notice.time}}</text>
+      </view>
     </view>
     <view class="action flex justify-center">
       <view class="padding-sm margin-sm bg-cyan light" bindtap="tapToMarkRead" style="border-radius: 10rpx;width:50vw">
