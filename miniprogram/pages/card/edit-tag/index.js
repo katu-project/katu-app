@@ -49,7 +49,7 @@ Page({
       showError("请输入名字")
       return
     }
-    
+
     if(!globalData.app.user || !globalData.app.user.isActive){
       return showChoose("警告","账户未激活，不可使用此功能。", {confirmText:'去激活'}).then(({cancel})=>{
         if(cancel) return
@@ -61,13 +61,13 @@ Page({
       showError("标签已经存在")
       return
     }
+    const tagName = this.data.tempTagName
     this.hideModal({currentTarget:{dataset:{key:'showCreateTag'}}})
 
-    const tags = this.data.list.concat({name:this.data.tempTagName})
+    const tags = this.data.list.concat({name: tagName})
     this.setData({
       list: tags,
-      hasEdit: true,
-      tempTagName: ''
+      hasEdit: true
     })
   },
   async syncTag(){
@@ -112,6 +112,9 @@ Page({
     })
   },
   tapToBack(){
+    if(JSON.stringify(globalData.app.user.customTag) === JSON.stringify(this.data.list)){
+      return wx.navigateBack()
+    }
     if(!this.data.hasEdit) {
       wx.navigateBack()
       return
