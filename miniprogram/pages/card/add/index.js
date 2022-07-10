@@ -1,6 +1,6 @@
 const { getCardManager } = require('../../../class/card')
 const { showNotice, showChoose, navigateTo, showError, loadData } = require('../../../utils/action')
-const DefaultAddImage = '/static/images/add.svg'
+const { DefaultAddImage } = require('../../../const')
 const globalData = getApp().globalData
 
 Page({

@@ -44,6 +44,6 @@
       </view>
     </block>
 
-    <button class="cu-btn block line-cyan lg margin-top-lg" bindtap="tapToSetMasterKey">{{setMasterKey?'更新':'设置'}}主密码</button>
+    <button class="cu-btn block line-cyan lg margin-top-lg gfw" bindtap="tapToSetMasterKey">{{setMasterKey?'更新':'设置'}}主密码</button>
   </view>
 </view>

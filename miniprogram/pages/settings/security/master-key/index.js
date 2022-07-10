@@ -1,4 +1,4 @@
-const { showError, showSuccess, loadData, showChoose, navigateTo } = require('../../../../utils/index')
+const { showError, loadData, showChoose, navigateTo } = require('../../../../utils/index')
 const globalData = getApp().globalData
 
 Page({
@@ -9,10 +9,6 @@ Page({
     newMasterKey: '',
     newMasterKeyRepeat: ''
   },
-
-  /**
-   * 生命周期函数--监听页面加载
-   */
   onLoad(options) {
 
   },
@@ -113,6 +109,6 @@ Page({
     })
   },
   tapToOpenDoc(){
-    navigateTo('../../../qa/detail/index?id=0a4ec1f9628b5501063149ac75a21cb7')
+    globalData.app.navToDoc('0a4ec1f9628b5501063149ac75a21cb7')
   }
 })

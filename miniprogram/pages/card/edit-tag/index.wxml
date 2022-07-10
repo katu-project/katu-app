@@ -17,7 +17,7 @@
       </view>
       <view class="text-df padding-right">
         <button class="cu-btn icon round line-cyan sm" style="width:100rpx" bindtap="tapToShowAddTag">
-          <text class="cuIcon-add text-cyan" style="font-weight: 400;">添加</text>
+          <text class="cuIcon-add text-cyan gfw">添加</text>
         </button>
       </view>
     </view>

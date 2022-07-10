@@ -2,10 +2,6 @@ const { loadData, showSuccess, navigateTo } = require("../../../utils/index")
 const globalData = getApp().globalData
 
 Page({
-
-  /**
-   * 页面的初始数据
-   */
   data: {
     setMasterKey: false,
     config_security_rememberPassword: false,

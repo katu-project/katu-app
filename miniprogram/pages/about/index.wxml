@@ -38,7 +38,7 @@
         <text class="">使用反馈</text>
       </view>
       <view class="action">
-        <button class="cu-btn bg-gray" style="font-weight: 400;text-align: right;width: 160rpx;margin-right:0;padding:0" open-type="feedback">去提交</button>
+        <button class="cu-btn bg-gray gfw" style="text-align: right;width: 160rpx;margin-right:0;padding:0" open-type="feedback">去提交</button>
       </view>
     </view>
   </view>

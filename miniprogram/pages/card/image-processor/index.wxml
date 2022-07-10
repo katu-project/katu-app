@@ -31,11 +31,11 @@
   </radio-group>
   <view class="margin-top padding flex">
     <button class="cu-btn round lg margin-tb btn bg-red light" bindtap="goBack">
-      <text style="font-weight: 400;">重新选择</text>
+      <text class="gfw">重新选择</text>
     </button>
     <view class="padding-lr"></view>
     <button class="cu-btn round lg margin-tb btn bg-cyan light" bindtap="useAndBack">
-      <text style="font-weight: 400;">使用图片</text>
+      <text class="gfw">使用图片</text>
     </button>
   </view>
 </view>

@@ -1,6 +1,6 @@
-const globalData = getApp().globalData
 const { loadData, navigateTo, showSuccess, showNotice } = require('../../utils/index')
-const { activeAccount } = require('../../api')
+
+const globalData = getApp().globalData
 
 Page({
   data: {
@@ -60,7 +60,7 @@ Page({
       desc: '用于完善会员资料',
       success: ({cloudID}) => {
         wx.hideLoading({})
-        loadData(activeAccount, {cloudId: cloudID}).then(()=>{
+        loadData(globalData.app.api.activeAccount, {cloudId: cloudID}).then(()=>{
           showSuccess("激活成功")
           this.reloadUserInfo()
           this.hideActiveNotice()
