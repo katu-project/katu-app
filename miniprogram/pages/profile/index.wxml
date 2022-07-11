@@ -14,7 +14,7 @@
       </view>
       <view class="margin-left flex-col justify-between padding-top-xs">
         <view wx:if="{{user.isActive}}" class="flex justify-between align-center">
-          <text class="text-xxl" bindtap="tapUser">{{user.nickName}}</text>
+          <text class="text-xxl nickname" bindtap="tapUser">{{user.nickName}}</text>
           <text class="text-black">ID: {{user.identifyCode}}</text>
         </view>
         <view wx:else>
