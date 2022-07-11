@@ -9,6 +9,12 @@ Page({
 
   },
   onReady() {
+    
+  },
+  onShow() {
+    this.loadData()
+  },
+  loadData(){
     loadData(globalData.app.api.getChangeLog).then(list=>{
       this.setData({
         list: list.map(e=>{
@@ -17,8 +23,5 @@ Page({
         })
       })
     })
-  },
-  onShow() {
-    
   }
 })

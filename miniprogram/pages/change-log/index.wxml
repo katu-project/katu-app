@@ -5,10 +5,10 @@
 
 <view class="cu-timeline" wx:for="{{list}}" wx:key="_id">
   <view class="cu-time" style="width: unset;">{{item.time}}</view>
-  <view class="cu-item text-green">
+  <view class="cu-item text-{{item.pre_release?'yellow':'green'}}">
     <view class="content">
       <view class="action">
-        <text class="text-green text-lg">v{{item.version}}</text>
+        <text class="text-{{item.pre_release?'yellow':'green'}} text-lg">v{{item.version}}</text>
       </view>
       <rich-text nodes="{{item.desc}}"></rich-text>
     </view>
