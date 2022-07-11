@@ -53,7 +53,7 @@ Page({
     })
   },
   async useInternalApi(){
-    const cardManager = await getCardManager()
+    const cardManager = getCardManager()
     const imageUrl = await loadData(cardManager.parseCardImageByInternalApi, this.data.tmpImagePath,{returnFailed: true}).catch(error=>{
       this.findCardFailed(error)
     })
@@ -64,7 +64,7 @@ Page({
     }
   },
   async useRemoteApi(){
-    const cardManager = await getCardManager()
+    const cardManager = getCardManager()
     if(!this.useRemoteApiConfirm) {
       this.setData({
         selectedMethod: 0

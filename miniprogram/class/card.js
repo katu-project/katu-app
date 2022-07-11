@@ -7,16 +7,16 @@ const { saveCard } = require('../api')
 class CardManager {
   static instance = null
 
-  static async getInstance(){
+  static getInstance(){
     if(!this.instance){
       this.instance = utils.selfish(new CardManager())
-      await this.instance.init()
+      this.instance.init()
     }
     return this.instance
   }
 
-  async init(){
-    this.app = await getAppManager()
+  init(){
+    this.app = getAppManager()
   }
 
   async update(card){
@@ -339,7 +339,7 @@ class CardManager {
   }
 }
 
-async function getCardManager(){
+function getCardManager(){
   return CardManager.getInstance()
 }
 

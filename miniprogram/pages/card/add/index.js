@@ -87,7 +87,7 @@ Page({
         'card.setLike': card.setLike
       }
       if(card.encrypted){
-        const cardManager = await getCardManager()
+        const cardManager = getCardManager()
         setData['card.image'] = []
         for (const pic of card.image) {
           const {imagePath} = await cardManager.decryptImage(pic)
@@ -121,7 +121,7 @@ Page({
     }
 
     const card = Object.assign({},this.data.card)
-    const cardManager = await getCardManager()
+    const cardManager = getCardManager()
     loadData(this.data.edit?cardManager.update:cardManager.add, card, {returnFailed: true})
             .then(this.saveDone)
             .catch(this.saveFailed)
@@ -154,7 +154,7 @@ Page({
   async tapToChoosePic(e){
     const index = e.currentTarget.dataset.index
     try {
-      const cardManager = await getCardManager()
+      const cardManager = getCardManager()
       const picPath = await cardManager.choosePic()
       if(!picPath) return
 

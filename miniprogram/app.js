@@ -14,6 +14,7 @@ App({
       }
     })
     this.globalData.app = getAppManager()
+    this.globalData.app.loadUserConfig()
     this.checkUpdate()
   },
   checkUpdate(){

@@ -15,14 +15,10 @@ class AppManager {
     }
     return this.instance
   }
-  async init(){
+  init(){
     this.loadAppBaseInfo()
     this.loadAppConfig()
-    this.user = await api.getUser()
     this.loadConstant()
-    if(this.user.config.security.rememberPassword){
-      this._loadMasterKey()
-    }
   }
 
   loadAppBaseInfo(){
@@ -115,6 +111,20 @@ class AppManager {
     const masterKeyPack = await this._createMasterKeyPack(newHexCode, masterKey)
     // 更新主密码包
     return api.setMasterKeyInfo(masterKeyPack)
+  }
+
+  async loadUserInfo(){
+    this.user = await api.getUser()
+  }
+
+  async loadUserConfig(){
+    if(!this.user) {
+      await this.loadUserInfo()
+    }
+    if(this.user.config.security.rememberPassword){
+      console.log("启用记住密码: 加载主密码");
+      this._loadMasterKey()
+    }
   }
 
   async reloadUserInfo(){

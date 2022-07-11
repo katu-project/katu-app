@@ -69,7 +69,7 @@ Page({
   },
   async showEncryptedImage(){
     const image = this.data.card.image[this.chooseIdx]
-    const cardManager = await getCardManager()
+    const cardManager = getCardManager()
     const appManager = globalData.app
     try {
       appManager.checkMasterKey()

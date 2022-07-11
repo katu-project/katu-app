@@ -1,6 +1,9 @@
 const { loadData } = require('../../utils/index')
 const { navigateTo } = require('../../utils/action')
 const globalData = getApp().globalData
+
+const { DefaultShowLockImage, DefaultShowImage } = require('../../const')
+
 Page({
   data: {
     list: [],
@@ -36,9 +39,9 @@ Page({
     let likeList = await loadData(globalData.app.api.getLikeCard)
     likeList = likeList.map(card=>{
       if(card.encrypted){
-        card.url = globalData.app.Constant.DefaultShowLockImage
+        card.url = DefaultShowLockImage
       }else{
-        card.url = globalData.app.Constant.DefaultShowImage
+        card.url = DefaultShowImage
       }
       return card
     })
@@ -157,7 +160,13 @@ Page({
       })
     }
   },
-  onShareAppMessage(){},
+  onShareAppMessage(){
+    return {
+      title: '卡兔-安全好用的卡片管理助手',
+      path: '/pages/home/index',
+      imageUrl: '../../static/share.png'
+    }
+  },
   hideModal(name){
     this.setData({
       [name]: false
