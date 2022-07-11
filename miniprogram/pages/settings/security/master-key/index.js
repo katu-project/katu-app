@@ -109,6 +109,6 @@ Page({
     })
   },
   tapToOpenDoc(){
-    globalData.app.navToDoc('0a4ec1f9628b5501063149ac75a21cb7')
+    globalData.app.navToDoc(globalData.app.Config.doc.masterKeyNotice)
   }
 })

@@ -50,6 +50,12 @@ App({
     }
 
   },
+  onPageNotFound({path}){
+    console.log(`运行异常: 页面未找到-${path}`);
+    wx.reLaunch({
+      url: 'pages/home/index',
+    })
+  },
   globalData: {
     ColorList: [{
         title: '嫣红',

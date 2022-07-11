@@ -92,14 +92,14 @@ Page({
     showChoose("温馨提示","未识别出卡片？\n查看这些小技巧也许能提高卡片识别率！",{confirmText:'去查看'})
     .then(({cancel})=>{
       if(cancel) return
-      navigateTo('/pages/qa/detail/index?id=0ab5303b62b975a20b880414327d5628')
+      globalData.app.navToDoc(globalData.app.Config.doc.imageProcessorTip_1)
     })
   },
   showTip2(cancelText){
     showChoose("警告","外部接口服务由第三方提供!\n更多信息请查看帮助文档。",{confirmText:'去查看',cancelText: cancelText||'取消'})
     .then(({cancel})=>{
       if(cancel) return
-      navigateTo('/pages/qa/detail/index?id=058dfefe62b9720f0ad5eca959e4f456')
+      globalData.app.navToDoc(globalData.app.Config.doc.imageProcessorTip_2)
     })
   },
   tapToShowWarn(){

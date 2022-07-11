@@ -1,6 +1,7 @@
 const utils = require('../utils/index')
 const constData = require('../const')
 const api = require('../api')
+const config = require('../config')
 
 const { APP_TEMP_DIR ,MASTER_KEY_NAME } = require('../const')
 const { navigateTo } = require('../utils/index')
@@ -33,49 +34,15 @@ class AppManager {
   }
 
   loadAppConfig(){
-    this.Config = {
-      uploadCardNamePrefix: 'card',
-      allowUploadImageType: ['jpeg','png','jpg'],
-      qaDocType: [{
-        icon: 'apps',
-        color: 'green',
-        name: '功能',
-        value: 'function'
-      }, {
-        icon: 'settings',
-        color: 'cyan',
-        name: '设置',
-        value: 'setting'
-      }, {
-        icon: 'people',
-        color: 'orange',
-        name: '账户',
-        value: 'account'
-      }, {
-        icon: 'safe',
-        color: 'red',
-        name: '安全',
-        value: 'safe'
-      }, {
-        icon: 'vipcard',
-        color: 'olive',
-        name: '额度',
-        value: 'quota'
-      }, {
-        icon: 'more',
-        color: 'blue',
-        name: '其他',
-        value: 'other'
-      }],
-      tags: [
-        { name: '储蓄卡' },
-        { name: '信用卡' },
-        { name: '购物卡' },
-        { name: '名片' },
-        { name: '其他' }
-      ],
-      imageMogr2: '&imageMogr2/thumbnail/100x/rquality/80/format/png/interlace/1/strip'
-    }
+    this.Config = config
+    this.rewriteConfig()
+  }
+
+  rewriteConfig(){
+    this.loadDefaultTag()
+  }
+
+  loadDefaultTag(){
     api.getDefaultTag().then(tags=>{
       this.Config.tags = tags
     }).catch(console.log)
@@ -153,7 +120,9 @@ class AppManager {
   async _loadMasterKey(){
     if(!this.user.setMasterKey) return
     this._masterKey = await this._readMasterKey()
-    console.log("加载主密码成功");
+    if(this._masterKey) {
+      console.log("加载主密码成功");
+    }
   }
 
   async _readMasterKey(){
@@ -302,6 +271,10 @@ class AppManager {
     console.warn('downloadFile:', imageInfo);
     const downloadFile = await utils.file.download(imageInfo.tempFileURL, savePath)
     return downloadFile.filePath
+  }
+
+  openUserUsageProtocol(){
+    return this.navToDoc(this.Config.doc.userUsageProtocol)
   }
 
   navToDoc(id){

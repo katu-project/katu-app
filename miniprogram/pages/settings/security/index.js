@@ -37,6 +37,6 @@ Page({
     navigateTo('./master-key/index')
   },
   tapToReadDoc(e){
-    globalData.app.navToDoc(e.currentTarget.dataset.key)
+    globalData.app.navToDoc(globalData.app.Config.doc.rememberKeyNotice)
   }
 })

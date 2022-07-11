@@ -5,8 +5,7 @@ const globalData = getApp().globalData
 Page({
   data: {
     logo: '/static/logo.svg',
-    version: 'dev',
-    userDocId: 'f6e08a6462b0879e08d6b0a15725ecbb'
+    version: 'dev'
   },
   onLoad(options) {
 
@@ -19,13 +18,13 @@ Page({
   },
   loadAppInfo(){
     this.setData({
-      'app.version': globalData.app.appVersion
+      'version': globalData.app.appVersion
     })
   },
   tapToChangeLog(){
     navigateTo('../change-log/index')
   },
   tapToDoc(){
-    navigateTo(`../qa/detail/index?id=${this.data.userDocId}`)
+    globalData.app.openUserUsageProtocol()
   }
 })

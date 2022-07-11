@@ -24,7 +24,7 @@
         <switch class="sm" bindchange="tapToConfig" data-key="config_security_rememberPassword" checked="{{config_security_rememberPassword}}"></switch>
       </view>
     </view>
-    <view class="padding bg-white text-grey text-sm">在验证过一次主密码后，后续使用过程中无需再次验证主密码 <text class="cuIcon-warn text-yellow" bindtap="tapToReadDoc" data-key="0a4ec1f962c4f45f0ea61cd706dd10ca"></text></view>
+    <view class="padding bg-white text-grey text-sm">在验证过一次主密码后，后续使用过程中无需再次验证主密码 <text class="cuIcon-warn text-yellow" bindtap="tapToReadDoc"></text></view>
 
     <view class="cu-item">
       <view class="content">
