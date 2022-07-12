@@ -8,6 +8,6 @@
     <input type="text" focus="true" model:value="{{content}}" bindinput="checkContent" style="height: 50px;" placeholder="输入名称"/>
   </view>
   <view class="padding flex-row">
-    <button class="bg-cyan" bindtap="tapToSetContent">确认</button>
+    <button class="bg-cyan gfw" bindtap="tapToSetContent">确认</button>
   </view>
 </view>

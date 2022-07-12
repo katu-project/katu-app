@@ -62,7 +62,7 @@
   </view>
 
   <button class="cu-btn line-cyan lg margin-tb-lg" bindtap="tapToSaveCard">
-    <view class="text-xl text-cyan">
+    <view class="text-xl gfw text-cyan">
       保存卡片
     </view>
   </button>
