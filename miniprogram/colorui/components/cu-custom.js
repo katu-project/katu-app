@@ -40,7 +40,9 @@ Component({
     BackPage() {
       wx.navigateBack({
         delta: 1
-      });
+      }).catch(e=>{
+        this.toHome()
+      })
     },
     toHome(){
       wx.reLaunch({
