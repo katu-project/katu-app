@@ -24,7 +24,8 @@
     "pages/qa/list/index",
     "pages/about/index",
     "pages/change-log/index",
-    "pages/profile/edit/index"
+    "pages/profile/edit/index",
+    "pages/card/edit-extra/index"
   ],
   "window": {
     "backgroundColor": "#ffffff",

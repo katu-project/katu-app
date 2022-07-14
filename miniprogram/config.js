@@ -39,6 +39,28 @@ const AppConfig = {
     { name: '名片' },
     { name: '其他' }
   ],
+  extraDataLabels: [
+    {
+      key: 'cn',
+      name: '卡号',
+      xid: 1
+    },
+    {
+      key: 'cvc',
+      name: '校验码',
+      xid: 2
+    },
+    {
+      key: 'cm',
+      name: '联系方式',
+      xid: 3
+    },
+    {
+      key: 'ed',
+      name: '失效日期',
+      xid: 4
+    }
+  ],
   imageMogr2: '&imageMogr2/thumbnail/100x/rquality/80/format/png/interlace/1/strip',
   doc: {
     userUsageProtocol: 'f6e08a6462b0879e08d6b0a15725ecbb',
