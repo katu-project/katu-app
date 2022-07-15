@@ -82,9 +82,10 @@ Page({
       return
     }
 
-    loadData(cardManager.decryptImage, image, '解码中').then(({imagePath})=>{
+    loadData(cardManager.decryptImage, image, '解码中').then(data=>{
+      console.log(data);
       this.setData({
-        [`card.image[${this.chooseIdx}]._url`]: imagePath
+        [`card.image[${this.chooseIdx}]._url`]: data.imagePath
       })
     })
   },

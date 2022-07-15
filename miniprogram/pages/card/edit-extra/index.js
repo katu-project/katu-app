@@ -9,8 +9,16 @@ Page({
   onLoad(options) {
     this.returnContentKey = options.returnContentKey || 'tempData'
     if(options.value){
+      let labels = this.data.labels
+      const list = JSON.parse(options.value).map(item=>{
+        labels = labels.filter(e=>e.key !== item[0])
+        const label = Object.assign({},this.data.labels.find(e=>e.key == item[0]))
+        label.value = item[1]
+        return label
+      })
       this.setData({
-        list: JSON.parse(options.value)
+        labels,
+        list
       })
     }
   },

@@ -3,6 +3,9 @@ const { cv } = require('../utils/index')
 const { KATU_MARK } = require('../const')
 const { getAppManager } = require('./app')
 const { saveCard } = require('../api')
+const { string2hex, hex2string } = require('../utils/convert')
+
+const PACKAGE_TAIL_LENGTH = -48
 
 class CardManager {
   static instance = null
@@ -20,17 +23,19 @@ class CardManager {
   }
 
   async update(card){
-    const cardModel = {_id: card._id, encrypted: card.encrypted, image: [], info: {card:null} }
+    const cardModel = {_id: card._id, encrypted: card.encrypted, image: []}
     cardModel.title = card.title || '未命名'
     cardModel.tags = card.tags || ['其他']
+    cardModel.info = card.info
     cardModel.setLike = card.setLike
     
     if(cardModel.encrypted){
       this.app.checkMasterKey()
     }
 
-    for (const pic of card.image) {
-      let imageData = {url:'',salt:'',hash:''}
+    for (const idx in card.image) {
+      const pic = card.image[idx]
+      const imageData = {url:'',salt:'',hash:''}
       if(cardModel.encrypted){
         if(pic.salt){ // 保持加密
           const imageHash = await this.getHash(pic.url)
@@ -41,9 +46,17 @@ class CardManager {
             imageData.url = pic.originUrl
           }else{ // 有变动
             console.log('加密图片有变动');
-            const encryptedData = await this.encryptImage(pic.url)
-            imageData.url = await this.upload(encryptedData.imagePath)
-            imageData.salt = encryptedData.imageSecretKey
+
+            let encrytedPic = ''
+            if(cardModel.info && idx == 0){
+              encrytedPic = await this.encryptImage(pic.url, cardModel.info)
+              cardModel.info = 'ENCRYPED'
+            }else{
+              encrytedPic = await this.encryptImage(pic.url)
+            }
+
+            imageData.url = await this.upload(encrytedPic.imagePath)
+            imageData.salt = encrytedPic.imageSecretKey
             imageData.hash = imageHash
           }
         }else{ // 开启加密
@@ -53,9 +66,17 @@ class CardManager {
             localTempFile = await this.app.downloadFile(pic)
           }
           const imageHash = await this.getHash(localTempFile)
-          const encryptedData = await this.encryptImage(localTempFile)
-          imageData.url = await this.upload(encryptedData.imagePath)
-          imageData.salt = encryptedData.imageSecretKey
+
+          let encrytedPic = ''
+          if(cardModel.info && idx == 0){
+            encrytedPic = await this.encryptImage(localTempFile, cardModel.info)
+            cardModel.info = 'ENCRYPED'
+          }else{
+            encrytedPic = await this.encryptImage(localTempFile)
+          }
+
+          imageData.url = await this.upload(encrytedPic.imagePath)
+          imageData.salt = encrytedPic.imageSecretKey
           imageData.hash = imageHash
         }
       }else{
@@ -86,29 +107,34 @@ class CardManager {
   }
 
   async add(card){
-    const cardModel = {encrypted: card.encrypted, image: [], info: {card:null} }
+    const cardModel = {encrypted: card.encrypted, image: []}
     cardModel.title = card.title || '未命名'
     cardModel.tags = card.tags || ['其他']
+    cardModel.info = card.info
     cardModel.setLike = card.setLike
     
     if(cardModel.encrypted){
-      console.log(this.app);
       this.app.checkMasterKey()
     }
     await this.app.checkQuota(cardModel.encrypted)
     
-    for (const pic of card.image) {
-      let imageData = {url:'',salt:'',hash:''}
-      
+    for (const idx in card.image) {
+      const pic = card.image[idx]
+      const imageData = {url:'',salt:'',hash:''}
       if(pic.url.startsWith('cloud://')){
         pic.url = await this.app.downloadFile(pic)
         console.log('发现远程图片，保存到本地');
       }
-
       const imageHash = await this.getHash(pic.url)
-
       if(cardModel.encrypted){
-        const encrytedPic = await this.encryptImage(pic.url)
+        let encrytedPic = ''
+        if(cardModel.info && idx == 0){
+          encrytedPic = await this.encryptImage(pic.url, cardModel.info)
+          delete cardModel.info
+        }else{
+          encrytedPic = await this.encryptImage(pic.url)
+        }
+        
         imageData.url = await this.upload(encrytedPic.imagePath)
         imageData.salt = encrytedPic.imageSecretKey
       }else{
@@ -120,41 +146,92 @@ class CardManager {
     return saveCard(cardModel)
   }
 
-  async encryptImage(imagePath){
+  async encryptImage(imagePath, extraData=[]){
     const imageHexData = await utils.file.readFile(imagePath, 'hex')
     const {key:imageKey, salt} = this.generateKeyByMasterKey()
-    const encryptedData = utils.crypto.encryptFile(imageHexData, imageKey)
-    const flag = '000101'
-    const encryptPackage = `${encryptedData}${salt}${flag}${KATU_MARK}`
-    console.log('encryptPackage:', encryptPackage.slice(-38),salt);
+    const flag = '00000000'
+    const extraDataInfo = this.packExtraData(extraData)
+    
+    const mixHexData = imageHexData.concat(extraDataInfo.data)
+    const encryptedData = utils.crypto.encryptFile(mixHexData, imageKey)
+    
+    const encryptPackage = encryptedData.concat(salt)
+                                        .concat(flag).concat(extraDataInfo.lengthData)
+                                        .concat(KATU_MARK)
+
+    console.log('encryptPackage:',encryptedData.length, encryptPackage.slice(PACKAGE_TAIL_LENGTH), salt);
     const tempFilePath = await utils.file.getTempFilePath(salt,'_enc')
-    await utils.file.writeFile(tempFilePath, encryptPackage)
+    await utils.file.writeFile(tempFilePath, encryptPackage, 'hex')
     return {
       imageSecretKey: salt,
       imagePath: tempFilePath
     }
   }
 
+  packExtraData(extraData=[]){
+    const retDataInfo = {
+      data: '',
+      lengthData: '00000000'
+    }
+    extraData = JSON.stringify(extraData)
+    if(extraData !== '[]') {
+      const hexStr = string2hex(extraData)
+      retDataInfo.data = hexStr
+      retDataInfo.lengthData = hexStr.length.toString().padStart(8,0)
+    }
+    return retDataInfo
+  }
+
+  unpackExtraData(mixHexData, metaData){
+    const retDataInfo = {
+      dataLength: 0,
+      data: ''
+    }
+    const extraDataLength = parseInt(metaData.slice(-24,-16))
+    if(extraDataLength){
+      retDataInfo.dataLength = extraDataLength
+      retDataInfo.data = JSON.parse(hex2string(mixHexData.slice(-extraDataLength)))
+    }
+    return retDataInfo
+  }
+
   async decryptImage(card){
     const salt = card.salt
     const decryptImage = {
-      imagePath: await utils.file.getTempFilePath(salt,'_dec')
+      imagePath: await utils.file.getTempFilePath(salt,'_dec'),
+      extraData: []
     }
 
     try {
       await utils.file.checkAccess(decryptImage.imagePath)
-      console.log('hit cache decrypted file, reuse it:')
+      console.log('命中缓存数据: 已经存在相同解密数据')
+      decryptImage.extraData = (await wx.getStorage({ key: decryptImage.imagePath })).data
       return decryptImage
     } catch (error) {
-      console.log('no cache decrypted file, decrypt it')
+      console.log('未发现缓存数据，开始解密数据')
     }
 
     const imageFilePath = await this.app.downloadFile(card)
-    const imageHexData = await utils.file.readFile(imageFilePath, 'utf-8')
-    const {key:imageKey} = this.generateKeyByMasterKey({salt})
-    const encryptedData = imageHexData.slice(0,-38)
-    const decryptedData = utils.crypto.decryptFile(encryptedData, imageKey)
-    await utils.file.writeFile(decryptImage.imagePath, decryptedData, 'hex')
+    const encryptedHexData = await utils.file.readFile(imageFilePath, 'hex')
+    const {key:secretKey} = this.generateKeyByMasterKey({salt})
+    // 解密数据
+    const metaData = encryptedHexData.slice(PACKAGE_TAIL_LENGTH)
+    const mixHexData = encryptedHexData.slice(0, PACKAGE_TAIL_LENGTH)
+
+    const decryptedData = utils.crypto.decryptFile(mixHexData, secretKey)
+    if(!decryptedData) throw Error("主密码错误")
+    // 检测并解密附加数据
+    const {data:extraData, dataLength: extraDataLength} = this.unpackExtraData(decryptedData, metaData)
+    if(extraDataLength){
+      decryptImage.extraData = extraData
+      wx.setStorage({
+        key: decryptImage.imagePath,
+        data: extraData
+      })
+    }
+    const imageData = extraDataLength?decryptedData.slice(0, -extraDataLength): decryptedData
+
+    await utils.file.writeFile(decryptImage.imagePath, imageData, 'hex')
     return decryptImage
   }
 

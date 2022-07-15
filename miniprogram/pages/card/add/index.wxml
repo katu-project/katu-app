@@ -59,6 +59,15 @@
         <switch class="green" bindchange="changeLikeState" checked="{{card.setLike}}"></switch>
       </view>
     </view>
+    <view class="cu-item arrow" bindtap="tapToEditExtraData">
+      <view class="content">
+        <text class="cuIcon-edit text-green"></text>
+        <text class="text-grey">附加数据</text>
+      </view>
+      <view class="action">
+        <text class="text-grey text-df">{{card.info.length || '无'}}</text>
+      </view>
+    </view>
   </view>
 
   <button class="cu-btn line-cyan lg margin-tb-lg" bindtap="tapToSaveCard">

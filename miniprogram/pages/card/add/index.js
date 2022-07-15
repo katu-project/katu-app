@@ -14,6 +14,7 @@ Page({
       image: [
         { url: DefaultAddImage }
       ],
+      info: []
     },
     curShowPicIdx: 0,
     showInputKey: false,
@@ -33,6 +34,7 @@ Page({
   onShow() {
     this.receiveChoosePic()
     this.receiveCardTitle()
+    this.receiveExtraData()
     this.loadRenderData()
   },
   onUnload(){
@@ -66,6 +68,17 @@ Page({
       this.backData.resolveCardTitle = null
     }
   },
+  receiveExtraData(){
+    if(this.backData && this.backData.resolveCardExtraData){
+      console.log('处理额外数据:',this.backData.resolveCardExtraData);
+      const key = `card.info`
+      const data = JSON.parse(this.backData.resolveCardExtraData)
+      this.setData({
+        [key]: data
+      })
+      this.backData.resolveCardExtraData = null
+    }
+  },
   checkSetting(){
     const {app:{user}} = globalData
     if(user.config.general.defaultUseEncrytion){
@@ -83,6 +96,7 @@ Page({
         'card.encrypted': card.encrypted,
         'card.image': card.image,
         'card.tags': card.tags,
+        'card.info': card.info,
         'card.title': card.title,
         'card.setLike': card.setLike
       }
@@ -243,6 +257,11 @@ Page({
   },
   tapToCustomTag(){
     navigateTo('../edit-tag/index')
+  },
+  tapToEditExtraData(){
+    const rk = 'resolveCardExtraData'
+    const c = JSON.stringify(this.data.card.info)
+    navigateTo(`../edit-extra/index?returnContentKey=${rk}&value=${c}`)
   },
   hideSelectTag(){
     this.setData({
