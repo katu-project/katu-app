@@ -26,8 +26,27 @@ function BufferToHex(buffer) {
       .join('');
 }
 
+function string2hex(str){
+  let result = ""
+  for (let i=0; i < str.length; i++) {
+      result += str.charCodeAt(i).toString(16).padStart(4,0)
+  }
+  return result
+}
+
+function hex2string(hex){
+  const hexes = hex.match(/.{1,4}/g) || []
+  let back = ""
+  for(let j = 0; j<hexes.length; j++) {
+      back += String.fromCharCode(parseInt(hexes[j], 16))
+  }
+  return back
+}
+
 module.exports = {
   ArrayBufferToBase64,
   Base64ToArrayBuffer,
-  BufferToHex
+  BufferToHex,
+  string2hex,
+  hex2string
 }
