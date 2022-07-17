@@ -6,7 +6,11 @@ const toPromise = (func, options={}, returnKey) => {
     func({
       ...options,
       success: res=>{
-        console.warn(`${func.name}:`,res);
+        if(res.data && res.data.length > 200){
+          console.warn(`${func.name}:`, res.data.slice(-200))
+        }else{
+          console.warn(`${func.name}:`, res);
+        }
         if(returnKey && res.hasOwnProperty(returnKey)){
           resolve(res[returnKey])
         }else{

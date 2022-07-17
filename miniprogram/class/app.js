@@ -120,7 +120,14 @@ class AppManager {
   async _loadMasterKey(){
     if(!this.user.setMasterKey) return
     this._masterKey = await this._readMasterKey()
+    
     if(this._masterKey) {
+      try {
+        this._verifyKey(this._masterKey, this.user.masterKeyPack.keyId)
+      } catch (error) {
+        console.log('主密码不匹配，正常使用不应该出现这个问题！')
+        await this.clearMasterKey()
+      }
       console.log("加载主密码成功");
     }
   }
@@ -142,6 +149,7 @@ class AppManager {
     this._removeMasterKeyCache()
   }
 
+  // 用户主密码导出原始主密码
   async loadMasterKeyWithKey(key){
     this.checkMasterKeyFormat(key)
     const hexCode = await this._convertToHex(key)
@@ -185,6 +193,15 @@ class AppManager {
       error.message = '请输入主密码'
       throw error
     }
+
+    try {
+      this._verifyKey(this._masterKey, this.user.masterKeyPack.keyId)
+    } catch (err) {
+      error.code = '22'
+      error.message = '主密码不匹配'
+      throw error
+    }
+
   }
 
   checkMasterKeyFormat(key){
@@ -212,17 +229,24 @@ class AppManager {
     }
     const keyPack = {}
     keyPack.keyPack = utils.crypto.encryptString(masterKey, hexKey)
-    keyPack.keyId = await this._generateMasterKeyId(hexKey)
+    keyPack.hexKeyId = this._calculateKeyId(hexKey)
+    keyPack.keyId = this._calculateKeyId(masterKey)
     return keyPack
   }
 
   async _fetchMasterKeyFromKeyPack(masterPack, hexCode){
     const masterKey = utils.crypto.decryptString(masterPack, hexCode)
-    if(!masterKey) throw Error("主密码错误")
+    if(!masterKey) throw Error("密码有误")
     return masterKey
   }
 
-  async _generateMasterKeyId(key){
+  _verifyKey(key, keyId){
+    if(this._calculateKeyId(key) !== keyId){
+      throw Error("密码错误")
+    }
+  }
+
+  _calculateKeyId(key){
     return utils.crypto.sha1(key)
   }
 
