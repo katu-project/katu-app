@@ -1,5 +1,5 @@
 const { writeFile } = require('../../../utils/file');
-const { crypto: {encryptImage, decryptImage}, file: {getTempFilePath} } = require('../../../utils/index')
+const { crypto: {encryptFile, decryptFile}, file: {getTempFilePath} } = require('../../../utils/index')
 
 Page({
 
@@ -12,24 +12,6 @@ Page({
     size: '0',
     encode_size: '0'
   },
-
-  /**
-   * 生命周期函数--监听页面加载
-   */
-  onLoad(options) {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady() {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
   onShow() {
 
   },
@@ -45,24 +27,44 @@ Page({
       }
     })
   },
+  lookDetail(){
+    wx.getFileSystemManager().readFile({
+      filePath: this.data.pic,
+      success: res=>{
+        console.log(res);
+      }
+    })
+  },
   async goEncode(){
     const key = '123456'
     console.time('加密用时')
-    const encryptedJson = await encryptImage(this.data.pic, key)
+    const data = wx.getFileSystemManager().readFileSync(this.data.pic,'hex')
+    console.log(data,data.length);
+    const encryptedData = await encryptFile(data, key)
+    console.log('加密数据长度:',encryptedData,encryptedData.length);
     console.timeEnd('加密用时')
 
     const saveTempFile = await getTempFilePath('111')
-    await writeFile(saveTempFile, JSON.stringify(encryptedJson))
+    await writeFile(saveTempFile, encryptedData, 'hex')
 
+    wx.getFileSystemManager().getFileInfo({
+      filePath: saveTempFile,
+      success: res=>{
+        console.log('加密数据保存文档信息：',res)
+      }
+    })
+
+    const readData = wx.getFileSystemManager().readFileSync(saveTempFile,'hex')
+    console.log("读取加密文件数据：",readData.length, readData);
     console.time('解密用时')
-    const imageHexData = await decryptImage(saveTempFile, key)
+    const imageHexData = await decryptFile(readData, key)
     console.timeEnd('解密用时')
 
     const imageTempFile = await getTempFilePath('123')
     await writeFile(imageTempFile, imageHexData, 'hex')
-    console.log(encryptedJson);
+
     this.setData({
-      encode_size: `${encryptedJson.ct.length/2}  salt:${encryptedJson.s.length/2}  iv:${encryptedJson.iv.length/2}`,
+      encode_size: `${encryptedData.length - 48}  salt: 8 `,
       decrypt_pic: imageTempFile
     })
   },

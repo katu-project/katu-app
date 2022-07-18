@@ -1,13 +1,17 @@
 <cu-custom class="skeleton-pass" bgColor="bg-cyan" isBack="{{true}}">
   <view slot="backText">返回</view>
 </cu-custom>
-<view class="main">
+<view class="page">
   <view class="list">
     <image style="height: 400rpx; border: 1px solid royalblue;" src="{{pic}}" mode="aspectFit" bindtap="choosePic"></image>
     <view class="item">origin size: {{size}}</view>
     <image style="height: 400rpx; border: 1px solid rgb(194, 33, 100);" src="{{decrypt_pic}}" mode="aspectFit"></image>
     <view class="item">encrypt size: {{encode_size}}</view>
-    <button class="item" bindtap="goEncode" style="width: 200rpx;">AES加密</button>
+
+    <view class="flex-row">
+      <button class="item" bindtap="lookDetail" style="width: 250rpx;">Image Data</button>
+      <button class="item" bindtap="goEncode" style="width: 250rpx;">AES加密</button>
+    </view>
     
     <navigator url="../storage/index">检查本地存储</navigator>
   </view>
