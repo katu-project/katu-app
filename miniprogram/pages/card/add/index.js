@@ -96,7 +96,7 @@ Page({
         'card.encrypted': card.encrypted,
         'card.image': card.image,
         'card.tags': card.tags,
-        'card.info': card.info,
+        'card.info': card.info || [],
         'card.title': card.title,
         'card.setLike': card.setLike
       }
@@ -104,9 +104,11 @@ Page({
         const cardManager = getCardManager()
         setData['card.image'] = []
         for (const pic of card.image) {
-          const {imagePath} = await cardManager.decryptImage(pic)
-          pic.originUrl = pic.url
+          const {imagePath, extraData} = await cardManager.decryptImage(pic)
           pic.url = imagePath
+          if(extraData.length){
+            setData['card.info'] = extraData
+          }
           setData['card.image'].push(pic)
         }
       }

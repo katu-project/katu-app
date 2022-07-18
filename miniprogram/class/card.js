@@ -23,99 +23,62 @@ class CardManager {
   }
 
   async update(card){
-    const cardModel = {_id: card._id, encrypted: card.encrypted, image: []}
+    const cardModel = {image:[]}
+    cardModel._id = card._id
+    cardModel.encrypted = card.encrypted || false
     cardModel.title = card.title || '未命名'
     cardModel.tags = card.tags || ['其他']
-    cardModel.info = card.info
-    cardModel.setLike = card.setLike
-    
+    cardModel.info = card.info || []
+    cardModel.setLike = card.setLike || false
+
     if(cardModel.encrypted){
       this.app.checkMasterKey()
     }
 
+    this._cardDataCheck(card)
+    
     for (const idx in card.image) {
       const pic = card.image[idx]
       const imageData = {url:'',salt:'',hash:''}
-      if(cardModel.encrypted){
-        if(pic.salt){ // 保持加密
-          const imageHash = await this.getHash(pic.url)
-          if(pic.hash === imageHash){ //未变动
-            console.log('加密图片无变动');
-            imageData.hash = pic.hash
-            imageData.salt = pic.salt
-            imageData.url = pic.originUrl
-          }else{ // 有变动
-            console.log('加密图片有变动');
 
-            let encrytedPic = ''
-            if(cardModel.info && idx == 0){
-              encrytedPic = await this.encryptImage(pic.url, cardModel.info)
-              cardModel.info = 'ENCRYPED'
-            }else{
-              encrytedPic = await this.encryptImage(pic.url)
-            }
-
-            imageData.url = await this.upload(encrytedPic.imagePath)
-            imageData.salt = encrytedPic.imageSecretKey
-            imageData.hash = imageHash
-          }
-        }else{ // 开启加密
-          console.log('未加密图片开启加密');
-          let localTempFile = pic.url
-          if(pic.url.startsWith('cloud://')){ // 增加图片 case
-            localTempFile = await this.app.downloadFile(pic)
-          }
-          const imageHash = await this.getHash(localTempFile)
-
-          let encrytedPic = ''
-          if(cardModel.info && idx == 0){
-            encrytedPic = await this.encryptImage(localTempFile, cardModel.info)
-            cardModel.info = 'ENCRYPED'
-          }else{
-            encrytedPic = await this.encryptImage(localTempFile)
-          }
-
-          imageData.url = await this.upload(encrytedPic.imagePath)
-          imageData.salt = encrytedPic.imageSecretKey
-          imageData.hash = imageHash
-        }
-      }else{
-        if(pic.salt){ // 取消加密
-          console.log('加密图片取消加密');
-          const imageHash = await this.getHash(pic.url)
-          imageData.salt = ''
-          imageData.url = await this.upload(pic.url) // 重新上传图片获取链接
-          imageData.hash = imageHash
-        }else{  // 未加密
-          if(pic.url.startsWith('cloud://')){ // 未变动(一直未使用加密)
-            console.log('未加密图片无变动');
-            imageData.url = pic.url,
-            imageData.hash = pic.hash
-          }else{
-            console.log('未加密图片有变动');
-            const imageHash = await this.getHash(pic.url)
-            imageData.url = await this.upload(pic.url)
-            imageData.hash = imageHash
-          }
-        }
+      // 统一转换成本地资源
+      if(pic.url.startsWith('cloud://')){
+        pic.url = await this.app.downloadFile(pic)
       }
 
+      imageData.hash = await this.getHash(pic.url)
+      if(cardModel.encrypted){
+        const encrytedPic = await this.encryptImage(pic.url, cardModel.info)
+        imageData.url = await this.upload(encrytedPic.imagePath)
+        imageData.salt = encrytedPic.imageSecretKey
+      }else{
+        imageData.salt = ''
+        imageData.url = await this.upload(pic.url)
+      }
       cardModel.image.push(imageData)
+    }
+
+    if(cardModel.encrypted){
+      delete cardModel.info
     }
 
     return saveCard(cardModel)
   }
 
   async add(card){
-    const cardModel = {encrypted: card.encrypted, image: []}
+    const cardModel = {image:[]}
+    cardModel.encrypted = card.encrypted || false
     cardModel.title = card.title || '未命名'
     cardModel.tags = card.tags || ['其他']
-    cardModel.info = card.info
-    cardModel.setLike = card.setLike
+    cardModel.info = card.info || []
+    cardModel.setLike = card.setLike || false
     
     if(cardModel.encrypted){
       this.app.checkMasterKey()
     }
+
+    this._cardDataCheck(card)
+    
     await this.app.checkQuota(cardModel.encrypted)
     
     for (const idx in card.image) {
@@ -123,29 +86,29 @@ class CardManager {
       const imageData = {url:'',salt:'',hash:''}
       if(pic.url.startsWith('cloud://')){
         pic.url = await this.app.downloadFile(pic)
-        console.log('发现远程图片，保存到本地');
       }
-      const imageHash = await this.getHash(pic.url)
+      
+      imageData.hash = await this.getHash(pic.url)
       if(cardModel.encrypted){
-        let encrytedPic = ''
-        if(cardModel.info && idx == 0){
-          encrytedPic = await this.encryptImage(pic.url, cardModel.info)
-          delete cardModel.info
-        }else{
-          encrytedPic = await this.encryptImage(pic.url)
-        }
-        
+        const encrytedPic = await this.encryptImage(pic.url, cardModel.info)
         imageData.url = await this.upload(encrytedPic.imagePath)
         imageData.salt = encrytedPic.imageSecretKey
       }else{
         imageData.url = await this.upload(pic.url)
       }
-      imageData.hash = imageHash
       cardModel.image.push(imageData)
     }
+
+    if(cardModel.encrypted){
+      delete cardModel.info
+    }
+
     return saveCard(cardModel)
   }
 
+  _cardDataCheck(card){
+    if(card.image.length>2) throw Error("卡面数量错误")
+  }
   async encryptImage(imagePath, extraData=[]){
     const imageHexData = await utils.file.readFile(imagePath, 'hex')
     const {key:imageKey, salt} = this.generateKeyByMasterKey()
