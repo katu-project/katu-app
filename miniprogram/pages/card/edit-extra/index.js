@@ -66,8 +66,7 @@ Page({
     })
   },
   tapToSave(){
-    let miniData = JSON.stringify(this.data.list.map(e=>([e.key,e.value])))
-    if(miniData === '[]') miniData = ''
+    const miniData = JSON.stringify(this.data.list.map(e=>([e.key,e.value])))
     navigateBack({[this.returnContentKey]: miniData})
   }
 })
