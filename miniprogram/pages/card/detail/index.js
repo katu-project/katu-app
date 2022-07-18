@@ -37,7 +37,7 @@ Page({
         'card.encrypted': card.encrypted,
         'card.title': card.title,
         'card.tags': card.tags,
-        'card.info': this.rebuildLabel(card.info),
+        'card.info': this.rebuildLabel(card.info||[]),
         'card.setLike': card.setLike || false,
         'card.image': card.image.map(pic=>{
           pic._url = pic.url
