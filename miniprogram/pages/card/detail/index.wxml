@@ -25,6 +25,13 @@
       <image class="pic-img card" data-index="{{index}}" mode="aspectFit" bindtap="tapToChoosePic" src="{{item._url}}"></image>
     </block>
   </view>
+  <view hidden="{{!card.info.length}}" class="padding-sm margin-sm" style="border-radius: 12rpx;border: 1px solid rgb(167, 236, 236);">
+    <view class="cu-form-group" wx:for="{{card.info}}" data-value="{{item.value}}" bindtap="tapToCopyValue" wx:key="key">
+      <view class="title">{{item.name}}</view>
+      <input placeholder="{{item.value}}" disabled></input>
+      <text class="cuIcon-copy text-gray"></text>
+    </view>
+  </view>
   <view class="padding-tb flex-row">
     <button class="text-red bg-red light gfw" bindtap="tapToDeleteCard" style="width: 40vw">
       <text class="cuIcon-delete"></text>
@@ -33,6 +40,7 @@
       <text class="cuIcon-edit"></text>
     修改</button>
   </view>
+  <view class="padding"></view>
 </view>
 
 <read-key bind:confirm="inputKeyConfirm" show="{{showInputKey}}" />

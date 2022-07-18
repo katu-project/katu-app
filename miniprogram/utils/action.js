@@ -57,6 +57,15 @@ async function redirectTo(page, vibrate=false){
   })
 }
 
+async function setClipboardData(data, vibrate=true){
+  vibrate && wx.vibrateShort({
+    type: 'light',
+  })
+  wx.setClipboardData({
+    data
+  })
+}
+
 async function navigateBack(backData={},delta=1){
   const pages = getCurrentPages()
   const prevPage = pages[pages.length - delta - 1]
@@ -143,5 +152,6 @@ module.exports = {
   redirectTo,
   navigateBack,
   switchTab,
-  loadData
+  loadData,
+  setClipboardData
 }

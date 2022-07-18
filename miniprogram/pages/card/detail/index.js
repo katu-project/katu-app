@@ -1,5 +1,5 @@
 const { getCardManager } = require('../../../class/card')
-const { showChoose, showError, loadData, navigateBack } = require('../../../utils/index')
+const { showChoose, showError, loadData, navigateBack, setClipboardData } = require('../../../utils/index')
 const { DefaultShowLockImage, DefaultShowImage } = require('../../../const')
 const globalData = getApp().globalData
 
@@ -37,6 +37,7 @@ Page({
         'card.encrypted': card.encrypted,
         'card.title': card.title,
         'card.tags': card.tags,
+        'card.info': this.rebuildLabel(card.info),
         'card.setLike': card.setLike || false,
         'card.image': card.image.map(pic=>{
           pic._url = pic.url
@@ -83,10 +84,11 @@ Page({
     }
 
     loadData(cardManager.decryptImage, image, '解码中').then(data=>{
-      console.log(data);
-      this.setData({
-        [`card.image[${this.chooseIdx}]._url`]: data.imagePath
-      })
+      const setData = {
+        [`card.image[${this.chooseIdx}]._url`]: data.imagePath,
+        [`card.info`]: this.rebuildLabel(data.extraData)
+      }
+      this.setData(setData)
     })
   },
   async previewImage(){
@@ -98,6 +100,9 @@ Page({
     wx.redirectTo({
       url: '../add/index?id='+ this.id,
     })
+  },
+  tapToCopyValue(e){
+    setClipboardData(e.currentTarget.dataset.value)
   },
   tapToDeleteCard(){
     showChoose("确认删除卡片","卡片删除后不可恢复！").then(({cancel})=>{
@@ -120,6 +125,14 @@ Page({
       this.showEncryptedImage()
     }).catch(error=>{
       showChoose(error.message,'',{showCancel:false})
+    })
+  },
+  rebuildLabel(meta){
+    return meta.map(item=>{
+      let label = globalData.app.Config.extraDataLabels.find(e=>e.key===item[0])
+      label = Object.assign({name: '未知', value: '无'},label)
+      label.value = item[1]
+      return label
     })
   }
 })
