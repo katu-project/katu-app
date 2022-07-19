@@ -7,7 +7,7 @@
   <view class="margin-tb" style="min-height: 40vh;border-bottom: 1px solid darkcyan">
     <view class="cu-form-group" wx:for="{{list}}" wx:key="key">
       <view class="title">{{item.name}} :</view>
-      <input value="{{item.value}}" data-idx="{{index}}" bindinput="onBindinput" placeholder="输入{{item.name}}"></input>
+      <input focus="{{index == list.length-1}}" value="{{item.value}}" data-idx="{{index}}" bindinput="onBindinput" placeholder="输入{{item.name}}"></input>
       <view bindtap="tapToRemoveLabel" data-key="{{item.key}}" class="text-lg margin-left padding-xs bg-red light flex-col" style="border-radius: 14rpx;">
         <text class="cuIcon-move"></text>
       </view>
@@ -17,7 +17,7 @@
     </view>
   </view>
   <view class="padding">
-    <text class="cuIcon-warn text-sm"> 如果卡片启用加密，附加的数据也会与卡片一起加密保存。</text>
+    <text class="cuIcon-warn text-grey text-sm"> 如果卡片启用加密，附加的数据也会与卡片一起加密保存。</text>
   </view>
   <view class="padding flex-row justify-center" style="align-items: center">
     <button class="bg-cyan gfw" style="margin: 0 10px" bindtap="tapToSave">保存</button>
