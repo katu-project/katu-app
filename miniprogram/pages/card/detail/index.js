@@ -64,7 +64,7 @@ Page({
     this.chooseIdx = e.currentTarget.dataset.index
     const image = this.data.card.image[this.chooseIdx]
     if(!this.data.card.encrypted || image._url !== DefaultShowLockImage){
-      return this.previewImage()
+      return this.previewImage(this.chooseIdx)
     }
     this.showEncryptedImage()
   },
@@ -91,9 +91,11 @@ Page({
       this.setData(setData)
     })
   },
-  async previewImage(){
+  async previewImage(idx=0){
+    const pics = this.data.card.image.filter(e=>e._url !== DefaultShowLockImage).map(e=>e._url)
     wx.previewImage({
-      urls: this.data.card.image.filter(e=>e._url !== DefaultShowLockImage).map(e=>e._url)
+      urls: pics,
+      current: pics[idx]
     })
   },
   tapToEditCard(){

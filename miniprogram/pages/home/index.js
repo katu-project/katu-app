@@ -33,9 +33,9 @@ Page({
     await this.loadCateList()
   },
   async loadLikeList(){
-    this.setData({
-      likeList: []
-    })
+    // this.setData({
+    //   likeList: []
+    // })
     let likeList = await loadData(globalData.app.api.getLikeCard)
     likeList = likeList.map(card=>{
       if(card.encrypted){
@@ -68,9 +68,9 @@ Page({
     }
   },
   async loadCateList(){
-    this.setData({
-      list: []
-    })
+    // this.setData({
+    //   list: []
+    // })
     const list = await loadData(globalData.app.api.getCardSummary)
     this.setData({
       list
