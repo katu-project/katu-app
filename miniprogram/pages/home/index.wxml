@@ -25,9 +25,8 @@
     bindscrolltolower="onBindscrolltolower"
     bindscrolltoupper="onBindscrolltoupper"
     paging-enabled="true">
-    <view style="width: {{likeList.length?'2':'1'}}00vw;min-height: 100vh;" class="flex-row">
-
-      <view class="padding-lr-sm like-list" wx:if="{{likeList.length}}" style="width: 100vw;">
+    <view style="width: {{likeList.length?'2':'1'}}00vw;" class="flex-row">
+      <view class="padding-lr-sm scroll-item like-list" hidden="{{!likeList.length}}">
         <scroll-view
           scroll-y="true"
           enable-flex="true"
@@ -48,8 +47,7 @@
           </view>
         </scroll-view>
       </view>
-
-      <view class="padding-lr-sm cate-list" style="width: 100vw;">
+      <view class="padding-lr-sm scroll-item cate-list">
         <scroll-view
           scroll-y="true"
           enable-flex="true"

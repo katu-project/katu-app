@@ -6,6 +6,9 @@
   opacity: 0.8;
 }
 
+.scroll-item{
+  width: 100vw;
+}
 .like-list .item {
   background: rgba(53, 80, 80, 0.6);
   padding: 10rpx;
