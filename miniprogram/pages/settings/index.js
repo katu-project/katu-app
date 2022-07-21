@@ -16,6 +16,11 @@ Page({
         url: 'account'
       },
       {
+        icon: 'file',
+        title: '数据',
+        url: 'data'
+      },
+      {
         icon: 'unlock',
         title: '安全',
         url: 'security'

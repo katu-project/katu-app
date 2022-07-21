@@ -16,16 +16,17 @@
     "pages/qa/index",
     "pages/qa/detail/index",
     "pages/settings/index",
+    "pages/settings/data/index",
     "pages/settings/security/index",
     "pages/settings/security/master-key/index",
-    "pages/debug/crypto/index",
     "pages/settings/account/index",
     "pages/settings/general/index",
     "pages/qa/list/index",
     "pages/about/index",
     "pages/change-log/index",
     "pages/profile/edit/index",
-    "pages/card/edit-extra/index"
+    "pages/card/edit-extra/index",
+    "pages/debug/crypto/index"
   ],
   "window": {
     "backgroundColor": "#ffffff",
