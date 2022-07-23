@@ -58,6 +58,8 @@ module.exports = {
 
   setMasterKeyInfo: keyPack => request('user/setMasterKeyInfo',{keyPack}),
 
+  setRecoveryKey: keyPack => request('user/setRecoveryKey',{keyPack}),
+
   uploadAvatar: async (filePath, url) => {
     const {fileID} = await wx.cloud.uploadFile({
       cloudPath: url,

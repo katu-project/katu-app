@@ -301,6 +301,42 @@ class AppManager {
     return this.navToDoc(this.Config.doc.userUsageProtocol)
   }
 
+  //数据备份
+  //数据备份结束
+
+  //主密码备份/重置
+  generateRecoveryWords(){
+    return utils.bip39.generateMnemonic().split(' ')
+  }
+
+  createRecoveryKeyPack(recoveryWords){
+    if(!this._masterKey) throw Error("输入主密码")
+    const recoveryWordsHex = utils.bip39.mnemonicToEntropy(recoveryWords)
+    const keyPack = {}
+    keyPack.pack = utils.crypto.encryptString(this._masterKey, recoveryWordsHex)
+    keyPack.keyId = this._calculateKeyId(recoveryWordsHex)
+    return api.setRecoveryKey(keyPack)
+  }
+
+  _extractMasterKeyFromRecoveryKeyPack(recoveryWords){
+    if(!this.user.recoveryKeyPack) throw Error("没有设置备份主密码")
+    const recoveryWordsHex = utils.bip39.mnemonicToEntropy(recoveryWords)
+    const masterKey = utils.crypto.decryptString(this.user.recoveryKeyPack.pack, recoveryWordsHex)
+    if(!masterKey) throw Error("密码有误")
+    return masterKey
+  }
+
+  async resetMasterKeyWithRecoveryWords(recoveryWords, key){
+    this.checkMasterKeyFormat(key)
+    const masterKey = this._extractMasterKeyFromRecoveryKeyPack(recoveryWords)
+    const newHexCode = this._convertToHex(key)
+    // 重新生成新的主密码包
+    const masterKeyPack = await this._createMasterKeyPack(newHexCode, masterKey)
+    // 更新主密码包
+    return api.setMasterKeyInfo(masterKeyPack)
+  }
+
+  //主密码备份/重置 结束
   navToDoc(id){
     navigateTo(`/pages/qa/detail/index?id=${id}`)
   }

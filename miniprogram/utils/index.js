@@ -4,6 +4,7 @@ const convert = require('./convert')
 const action = require('./action')
 const cv = require('./opencv/index')
 const upng = require('./upng')
+const bip39 = require('./bip39/index')
 
 function selfish (target) {
   const cache = new WeakMap();
@@ -41,5 +42,6 @@ module.exports = {
   convert,
   cv,
   upng,
+  bip39,
   ...action
 }
