@@ -4,7 +4,7 @@ const api = require('../api')
 const config = require('../config')
 
 const { APP_TEMP_DIR ,MASTER_KEY_NAME } = require('../const')
-const { navigateTo } = require('../utils/index')
+const { navigateTo, showChoose } = require('../utils/index')
 
 class AppManager {
   static instance = null
@@ -302,6 +302,9 @@ class AppManager {
   }
 
   //数据备份
+  exportCardData(){
+    showChoose('温馨提示','由于小程序平台限制，导出数据功能需要前往卡兔web端操作。')
+  }
   //数据备份结束
 
   //主密码备份/重置

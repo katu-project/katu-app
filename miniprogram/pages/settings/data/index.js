@@ -17,7 +17,7 @@ Page({
   },
   tapToExportData(){
     loadData().then(()=>{
-      showSuccess("数据导出成功")
+      globalData.app.exportCardData()
     })
   }
 })
