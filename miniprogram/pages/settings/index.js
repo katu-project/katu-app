@@ -38,7 +38,7 @@ Page({
   },
   onReady() {
     this.setData({
-      'menu[3].hide': !globalData.app.isDev
+      'menu[4].hide': !globalData.app.isDev
     })
   },
   onShow() {
