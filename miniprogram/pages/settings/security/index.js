@@ -6,6 +6,7 @@ Page({
     setMasterKey: false,
     config_security_rememberPassword: false,
     config_security_lockOnExit: true,
+    config_security_setRecoveryKey: false
   },
 
   onShow(){
@@ -13,7 +14,8 @@ Page({
     this.setData({
       setMasterKey: globalData.app.user.setMasterKey,
       config_security_rememberPassword: config.security.rememberPassword,
-      config_security_lockOnExit: config.security.lockOnExit
+      config_security_lockOnExit: config.security.lockOnExit,
+      config_security_setRecoveryKey: config.security.setRecoveryKey,
     })
   },
   tapToConfig(e){
@@ -33,8 +35,8 @@ Page({
       globalData.app.reloadUserConfig(configItem)
     })
   },
-  tapToMasterKey(){
-    navigateTo('./master-key/index')
+  tapToPage({currentTarget:{dataset:{page}}}){
+    navigateTo(page)
   },
   tapToReadDoc(e){
     globalData.app.navToDoc(globalData.app.Config.doc.rememberKeyNotice)
