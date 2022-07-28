@@ -27,8 +27,8 @@
     "pages/about/index",
     "pages/change-log/index",
     "pages/profile/edit/index",
-    "pages/card/edit-extra/index",
-    "pages/debug/crypto/index"
+    "pages/debug/crypto/index",
+    "pages/debug/qrcode/index"
   ],
   "window": {
     "backgroundColor": "#ffffff",

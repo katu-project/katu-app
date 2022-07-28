@@ -31,4 +31,11 @@
       </view>
     </navigator>
   </view>
+  <view class="cu-item arrow">
+    <navigator url="./qrcode/index" hover-class="none">
+      <view class="content">
+        <text class="text-grey">二维码</text>
+      </view>
+    </navigator>
+  </view>
 </view>
