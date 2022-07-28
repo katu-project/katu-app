@@ -308,30 +308,33 @@ class AppManager {
   //数据备份结束
 
   //主密码备份/重置
-  generateRecoveryWords(){
-    return utils.bip39.generateMnemonic().split(' ')
+  _generateRecoveryKeyWords(){
+    return utils.bip39.generateMnemonic()
   }
 
-  createRecoveryKeyPack(recoveryWords){
+  generateRecoveryKey(){
+    const words = this._generateRecoveryKeyWords()
+    return utils.bip39.mnemonicToEntropy(words)
+  }
+
+  createRecoveryKeyPack(recoveryKey){
     if(!this._masterKey) throw Error("输入主密码")
-    const recoveryWordsHex = utils.bip39.mnemonicToEntropy(recoveryWords)
     const keyPack = {}
-    keyPack.pack = utils.crypto.encryptString(this._masterKey, recoveryWordsHex)
-    keyPack.keyId = this._calculateKeyId(recoveryWordsHex)
+    keyPack.pack = utils.crypto.encryptString(this._masterKey, recoveryKey)
+    keyPack.keyId = this._calculateKeyId(recoveryKey)
     return api.setRecoveryKey(keyPack)
   }
 
-  _extractMasterKeyFromRecoveryKeyPack(recoveryWords){
+  _extractMasterKeyFromRecoveryKeyPack(recoveryKey){
     if(!this.user.recoveryKeyPack) throw Error("没有设置备份主密码")
-    const recoveryWordsHex = utils.bip39.mnemonicToEntropy(recoveryWords)
-    const masterKey = utils.crypto.decryptString(this.user.recoveryKeyPack.pack, recoveryWordsHex)
+    const masterKey = utils.crypto.decryptString(this.user.recoveryKeyPack.pack, recoveryKey)
     if(!masterKey) throw Error("密码有误")
     return masterKey
   }
 
-  async resetMasterKeyWithRecoveryWords(recoveryWords, key){
+  async resetMasterKeyWithRecoveryWords(recoveryKey, key){
     this.checkMasterKeyFormat(key)
-    const masterKey = this._extractMasterKeyFromRecoveryKeyPack(recoveryWords)
+    const masterKey = this._extractMasterKeyFromRecoveryKeyPack(recoveryKey)
     const newHexCode = this._convertToHex(key)
     // 重新生成新的主密码包
     const masterKeyPack = await this._createMasterKeyPack(newHexCode, masterKey)
