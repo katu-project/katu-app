@@ -20,11 +20,13 @@ Page({
     })
     if(!this.data.setRecoveryKey){
       this.initCanvas().then(ctx =>{
+        this.setCanvasBg(ctx, '#ccefee')
         this.drawNotice(ctx, '还未设置主密码重置凭证','red')
         this.drawNotice(ctx, `点击下方按钮开始设置`,'grey',175)
       })
     }else{
       this.initCanvas().then(ctx =>{
+        this.setCanvasBg(ctx, '#ccefee')
         this.drawNotice(ctx, '已设置过主密码重置凭证','green')
         this.drawNotice(ctx, `凭证ID: ${this.data.recoveryKeyId}`,'green',175)
       })
@@ -39,18 +41,25 @@ Page({
       .exec((res) => {
           // Canvas 对象
           const canvas = res[0].node
-          const renderWidth = res[0].width
-          const renderHeight = res[0].height
+          // const renderWidth = res[0].width
+          // const renderHeight = res[0].height
           // Canvas 绘制上下文
           this._canvasCtx = canvas.getContext('2d')
           // 初始化画布大小
-          const dpr = wx.getWindowInfo().pixelRatio
-          canvas.width = renderWidth * dpr
-          canvas.height = renderHeight * dpr
-          this._canvasCtx.scale(dpr, dpr)
+          // const dpr = wx.getWindowInfo().pixelRatio
+          // console.log({dpr,renderWidth,renderHeight},this._canvasCtx.canvas);
+          // canvas.width = renderWidth * dpr
+          // canvas.height = renderHeight * dpr
+          // this._canvasCtx.scale(dpr, dpr)
+          canvas.width = 300
+          canvas.height = 400
           resolve(this._canvasCtx)
       })
     })
+  },
+  async setCanvasBg(ctx, color){
+    ctx.fillStyle = color || '#ccefee'
+    ctx.fillRect(0, 0, 300, 400)
   },
   async drawNotice(ctx, text, color, h){
     ctx.fillStyle = color
@@ -102,7 +111,10 @@ Page({
     ctx.fillText(`ID_${id} ${time}`,150, 335)
 
     const bottom = await this.getImageData('../../../../static/qrcode-bottom.png')
-    ctx.putImageData(bottom, 0, 710)
+    // console.log(bottom,1);
+    // ctx.fillStyle = '#ff00ff';
+    // ctx.fillRect(0, 350, 300, 10)
+    ctx.putImageData(bottom, 0, ctx.canvas.height - bottom.height,1,1,bottom.width-2,bottom.height)
   },
   async getImageData(url){
     const offscreenCanvas = wx.createOffscreenCanvas({type: '2d'})
@@ -112,11 +124,9 @@ Page({
 			image.onerror = reject
 			image.src = url
     })
-    const dpr = wx.getWindowInfo().pixelRatio
-		offscreenCanvas.width = image.width * dpr
-    offscreenCanvas.height = image.height * dpr
+		offscreenCanvas.width = image.width
+    offscreenCanvas.height = image.height
     const ctx = offscreenCanvas.getContext('2d')
-    ctx.scale(dpr, dpr)
     ctx.drawImage(image, 0, 0, image.width, image.height)
     return ctx.getImageData(0, 0, offscreenCanvas.width, offscreenCanvas.height)
   },
