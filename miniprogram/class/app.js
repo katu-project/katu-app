@@ -312,16 +312,28 @@ class AppManager {
     return utils.bip39.generateMnemonic()
   }
 
-  generateRecoveryKey(){
+  _generateRecoveryKey(){
     const words = this._generateRecoveryKeyWords()
     return utils.bip39.mnemonicToEntropy(words)
   }
 
-  createRecoveryKeyPack(recoveryKey){
+  generateRecoveryKeyQrcodeContent(){
+    const rk = this._generateRecoveryKey()
+    const qrContent = {
+      i: utils.crypto.random(2).toString().toUpperCase(),
+      t: new Date().toLocaleDateString(),
+      rk
+    }
+    return qrContent
+  }
+
+  createRecoveryKeyPack(qrCodeData){
     if(!this._masterKey) throw Error("输入主密码")
     const keyPack = {}
-    keyPack.pack = utils.crypto.encryptString(this._masterKey, recoveryKey)
-    keyPack.keyId = this._calculateKeyId(recoveryKey)
+    keyPack.qrId = qrCodeData.i
+    keyPack.createTime = qrCodeData.t
+    keyPack.keyId = this._calculateKeyId(qrCodeData.rk)
+    keyPack.pack = utils.crypto.encryptString(this._masterKey, qrCodeData.rk)
     return api.setRecoveryKey(keyPack)
   }
 

@@ -9,6 +9,8 @@
       <canvas type="2d" style="border-radius: 10rpx;width: 600rpx; height: 800rpx;" id="reqrcode"></canvas>
     </view>
     <button class="margin padding-tb-lg cu-btn bg-green light" style="width: 60vw;border-radius: 10rpx;" bindtap="tapToGenKey">{{setRecoveryKey?'重新':''}}生成凭证</button>
-    <button class="cu-btn padding-tb-lg bg-black light" style="width: 60vw;border-radius: 10rpx;" disabled="{{!readyExport}}" bindtap="tapToExport">保存到本地</button>
+    <button class="cu-btn padding-tb-lg bg-black light" style="width: 60vw;border-radius: 10rpx;" disabled="{{!readyExport}}" bindtap="tapToExport">导出凭证到本地</button>
   </view>
 </view>
+
+<read-key bind:confirm="inputKeyConfirm" show="{{showInputKey}}" />
