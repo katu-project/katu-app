@@ -110,5 +110,8 @@ Page({
   },
   tapToOpenDoc(){
     globalData.app.navToDoc(globalData.app.Config.doc.masterKeyNotice)
+  },
+  tapToResetKey(){
+    navigateTo('../reset-key/index')
   }
 })

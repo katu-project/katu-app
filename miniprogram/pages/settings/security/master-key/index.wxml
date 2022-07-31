@@ -45,5 +45,9 @@
     </block>
 
     <button class="cu-btn block line-cyan lg margin-top-lg gfw" bindtap="tapToSetMasterKey">{{setMasterKey?'更新':'设置'}}主密码</button>
+
+    <view class="padding-top-lg solids-bottom margin" bindtap="tapToResetKey">
+      <text class="text-orange">重置主密码</text>
+    </view>
   </view>
 </view>
