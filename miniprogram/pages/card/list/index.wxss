@@ -2,5 +2,4 @@
   height: 80rpx;
   width: 130rpx;
   padding: 1px;
-  border-radius: 16rpx;
 }

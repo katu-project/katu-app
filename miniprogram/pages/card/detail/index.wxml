@@ -25,7 +25,7 @@
       <image class="pic-img card" data-index="{{index}}" mode="aspectFit" bindtap="tapToChoosePic" src="{{item._url}}"></image>
     </block>
   </view>
-  <view hidden="{{!card.info.length}}" class="padding-sm margin-sm" style="border-radius: 12rpx;border: 1px solid rgb(167, 236, 236);">
+  <view hidden="{{!card.info.length}}" class="padding-sm margin-sm br-12" style="border: 1px solid rgb(167, 236, 236);">
     <view class="cu-form-group" wx:for="{{card.info}}" data-value="{{item.value}}" bindtap="tapToCopyValue" wx:key="key">
       <view class="title">{{item.name}}</view>
       <input placeholder="{{item.value}}" disabled></input>

@@ -4,7 +4,7 @@
 </cu-custom>
 
 <view class="flex-col justify-center align-center padding margin-top-lg">
-  <image src="{{url}}" mode="aspectFill" style="height:200rpx;width:200rpx;border: 1px solid darkcyan;border-radius: 16rpx;"></image>
+  <image src="{{url}}" class="br-16" mode="aspectFill" style="height:200rpx;width:200rpx;border: 1px solid darkcyan;"></image>
   <button class="cu-btn margin line-cyan" style="width: 200rpx;" open-type="chooseAvatar" bindchooseavatar="onBindChooseAvatar">选择头像</button>
   
   <view class="cu-form-group margin-top">

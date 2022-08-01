@@ -8,7 +8,7 @@
     <view class="cu-form-group" wx:for="{{list}}" wx:key="key">
       <view class="title">{{item.name}} :</view>
       <input focus="{{index == list.length-1}}" value="{{item.value}}" data-idx="{{index}}" bindinput="onBindinput" placeholder="输入{{item.name}}"></input>
-      <view bindtap="tapToRemoveLabel" data-key="{{item.key}}" class="text-lg margin-left padding-xs bg-red light flex-col" style="border-radius: 14rpx;">
+      <view bindtap="tapToRemoveLabel" data-key="{{item.key}}" class="text-lg margin-left padding-xs bg-red light flex-col br-14">
         <text class="cuIcon-move"></text>
       </view>
     </view>
@@ -22,7 +22,7 @@
   <view class="padding flex-row justify-center" style="align-items: center">
     <button class="bg-cyan gfw" style="margin: 0 10px" bindtap="tapToSave">保存</button>
     <picker range='{{labels}}' bindchange="onBindchange" range-key='name'>
-      <view class="text-xl padding-sm bg-orange flex-col" style="border-radius: 14rpx;">
+      <view class="text-xl padding-sm bg-orange flex-col br-14">
         <text class="cuIcon-add"></text>
       </view>
     </picker>

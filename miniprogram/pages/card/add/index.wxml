@@ -28,7 +28,7 @@
     </view>
   </view>
 
-  <view class="cu-list menu sm-border margin-tb" style="border-radius: 12rpx;border: 1px solid cornflowerblue;">
+  <view class="cu-list menu sm-border margin-tb br-12" style="border: 1px solid cornflowerblue;">
     <view class="cu-item arrow" bindtap="tapToEditTitle">
       <view class="content">
         <text class="cuIcon-wenzi text-cyan"></text>

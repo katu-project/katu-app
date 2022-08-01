@@ -4,7 +4,7 @@
 </cu-custom>
 
 <view class="page">
-  <view class="margin padding-left" style="height: 50px;border: 2rpx solid darkcyan;border-radius: 10rpx;">
+  <view class="margin padding-left br-10" style="height: 50px;border: 2rpx solid darkcyan;">
     <input type="text" focus="true" model:value="{{content}}" bindinput="checkContent" style="height: 50px;" placeholder="输入名称"/>
   </view>
   <view class="padding flex-row">

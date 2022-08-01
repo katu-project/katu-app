@@ -22,15 +22,6 @@
   justify-content: start;
 }
 
-.action-list .save {
-  margin-top: 20rpx;
-  padding: 20rpx;
-  border-radius: 10rpx;
-  text-align: center;
-  flex: 1;
-  border: 1px solid slateblue;
-}
-
 .add-card-pic{
   align-items: center;
 }

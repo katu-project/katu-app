@@ -5,11 +5,11 @@
 
 <view class="page">
   <view class="flex-col align-center justify-center padding">
-    <view class="padding-xs" style="border-radius: 12rpx;background-color:#ccefee;">
-      <canvas type="2d" style="border-radius: 10rpx;width: 600rpx; height: 800rpx;" id="reqrcode"></canvas>
+    <view class="padding-xs br-10" style="background-color:#ccefee;">
+      <canvas type="2d" class="br-10" style="width: 600rpx; height: 800rpx;" id="reqrcode"></canvas>
     </view>
-    <button class="margin padding-tb-lg cu-btn bg-green light" style="width: 60vw;border-radius: 10rpx;" bindtap="tapToGenKey">{{setRecoveryKey?'重新':''}}生成凭证</button>
-    <button class="cu-btn padding-tb-lg bg-black light" style="width: 60vw;border-radius: 10rpx;" disabled="{{!readyExport}}" bindtap="tapToExport">导出凭证到本地</button>
+    <button class="margin padding-tb-lg cu-btn bg-green light" style="width: 60vw;" bindtap="tapToGenKey">{{setRecoveryKey?'重新':''}}生成凭证</button>
+    <button class="cu-btn padding-tb-lg bg-black light" style="width: 60vw;" disabled="{{!readyExport}}" bindtap="tapToExport">导出凭证到本地</button>
   </view>
 </view>
 

@@ -7,10 +7,10 @@
 
 <view class="page flex-col">
   <view class="padding-top-sm"></view>
-  <view class="margin-bottom padding shadow flex-col align-start" style="border-radius: 15rpx;background-color: cadetblue;">
+  <view class="margin-bottom padding shadow flex-col align-start br-14" style="background-color: cadetblue;">
     <view class="flex">
-      <view class="bg-gray light flex" style="border-radius: 15rpx;padding:4rpx">
-        <image src="{{user.isActive? user.avatarUrl:'/static/images/user.svg'}}" bindtap="tapToEditInfo" style="height: 160rpx; width: 160rpx;border-radius: 10rpx;"></image>
+      <view class="bg-gray light flex br-14" style="padding:4rpx">
+        <image src="{{user.isActive? user.avatarUrl:'/static/images/user.svg'}}" bindtap="tapToEditInfo" class="br-10" style="height: 160rpx; width: 160rpx;"></image>
       </view>
       <view class="margin-left flex-col justify-between padding-top-xs">
         <view wx:if="{{user.isActive}}" class="flex justify-between align-center">
@@ -60,7 +60,7 @@
 </view>
 
 <view class="cu-modal {{showActiveNotice?'show':''}}">
-  <view class="cu-dialog bg-white" style="width: 75vw;border-radius: 18rpx;">
+  <view class="cu-dialog bg-white br-16" style="width: 75vw;">
     <view class="cu-bar justify-end">
       <view class="content text-black">温馨提示</view>
     </view>

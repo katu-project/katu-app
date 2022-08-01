@@ -95,7 +95,7 @@
       </view>
     </view>
     <view class="action flex justify-center">
-      <view class="padding-sm margin-sm bg-cyan light" bindtap="tapToMarkRead" style="border-radius: 10rpx;width:50vw">
+      <view class="padding-sm margin-sm bg-cyan light br-10" bindtap="tapToMarkRead" style="width:50vw">
         <text class="text-cyan">我知道了</text>
       </view>
     </view>

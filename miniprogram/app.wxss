@@ -43,6 +43,22 @@ page {
   font-weight: 400;
 }
 
+.br-10{
+  border-radius: 10rpx;
+}
+
+.br-12{
+  border-radius: 12rpx;
+}
+
+.br-14{
+  border-radius: 14rpx;
+}
+
+.br-16{
+  border-radius: 16rpx;
+}
+
 .card {
   width: 700rpx;
   height: 440rpx;
