@@ -20,7 +20,7 @@
   <view class="action-list">
     <view class="flex-row-sb align-center">
       <switch class="switch-lock" bindchange="changeEncrypt" checked="{{card.encrypted}}"></switch>
-      <button class="cu-btn line-{{card.image.length==1?'cyan':'orange'}} add-card-pic margin-lr-sm" style="width: 200rpx;margin: 0 " bindtap="addCardPic">
+      <button class="cu-btn line-{{card.image.length==1?'cyan':'orange'}} add-card-pic margin-lr-sm" style="width: 200rpx;margin: unset;" bindtap="addCardPic">
         <view class="text-df" style="white-space:nowrap">
           <text class="{{card.image.length==1?'cuIcon-add text-cyan':'cuIcon-move text-orange'}}">{{card.image.length==1?' 添加':' 移除'}}卡面</text>
         </view>
@@ -85,11 +85,12 @@
     </view>
     <view class="padding-sm flex flex-wrap">
       <view wx:for="{{tags}}" class="padding-xs" wx:key="index">
-        <button bindtap="tapToSelectTag" style="width: fit-content;" class="cu-btn orange lg block {{item.selected?'bg-cyan':'line-orange'}} light" data-value="{{item.name}}"> {{item.name}}
+        <button bindtap="tapToSelectTag" style="width: fit-content;" class="cu-btn orange lg block {{item.selected?'bg-cyan':'line-orange'}} light gfw" data-value="{{item.name}}"> {{item.name}}
         </button>
       </view>
       <view class="padding-xs">
-        <button bindtap="tapToCustomTag" style="width: 200rpx;" class="cu-btn orange lg block line-yellow">自定义
+        <button bindtap="tapToCustomTag" style="width: 220rpx;" class="cu-btn orange lg block line-yellow">
+          <text class="cuIcon-add"></text>自定义
         </button>
       </view>
     </view>
