@@ -1,8 +1,7 @@
-const { loadData } = require('../../utils/index')
-const { navigateTo } = require('../../utils/action')
-const globalData = getApp().globalData
-
+const { loadData, navigateTo } = require('../../utils/index')
 const { DefaultShowLockImage, DefaultShowImage } = require('../../const')
+
+const globalData = getApp().globalData
 
 Page({
   data: {
@@ -122,12 +121,6 @@ Page({
   },
   tapToCardDetail(e){
     navigateTo(`/pages/card/detail/index?id=${e.currentTarget.dataset.item._id}`)
-  },
-  goAddCard(){
-    navigateTo('/pages/card/add/index', true)
-  },
-  goProfile(){
-    navigateTo('/pages/profile/index', true)
   },
   onBindRefresh(e){
     const key = e.currentTarget.dataset.view

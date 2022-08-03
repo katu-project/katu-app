@@ -8,11 +8,11 @@
 <view class="flex align-end justify-end padding-lr">
   <view class="flex align-end">
     <view class="search margin-bottom" bindtap="tapToShowNotice">
-      <image style="height: 6vw;width: 6vw;" mode="aspectFit" src="/static/images/bell.svg"></image>
+      <image class="right-item" mode="aspectFit" src="/static/images/bell.svg"></image>
       <view wx:if="{{notice.newNotice}}" class="dot"></view>
     </view>
     <view class="notice margin" bindtap="tapToSearch">
-      <image style="height: 6vw;width: 6vw;" mode="aspectFit" src="/static/images/search.svg"></image>
+      <image class="right-item" mode="aspectFit" src="/static/images/search.svg"></image>
     </view>
   </view>
 </view>

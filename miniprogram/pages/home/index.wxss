@@ -6,6 +6,11 @@
   opacity: 0.8;
 }
 
+.right-item {
+  height: 6vw;
+  width: 6vw;
+}
+
 .scroll-item{
   width: 100vw;
 }
