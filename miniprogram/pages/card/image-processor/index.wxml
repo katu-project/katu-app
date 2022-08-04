@@ -30,11 +30,11 @@
     </view>
   </radio-group>
   <view class="margin-top padding flex">
-    <button class="cu-btn round lg margin-tb btn bg-red light" bindtap="goBack">
+    <button class="cu-btn lg margin-tb btn bg-red light" bindtap="goBack">
       <text class="gfw">重新选择</text>
     </button>
     <view class="padding-lr"></view>
-    <button class="cu-btn round lg margin-tb btn bg-cyan light" bindtap="useAndBack">
+    <button class="cu-btn lg margin-tb btn bg-cyan light" bindtap="useAndBack">
       <text class="gfw">使用图片</text>
     </button>
   </view>
