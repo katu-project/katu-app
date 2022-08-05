@@ -1,11 +1,9 @@
 const utils = require('../utils/index')
 const { cv } = require('../utils/index')
-const { KATU_MARK } = require('../const')
+const { KATU_MARK, PACKAGE_TAIL_LENGTH } = require('../const')
 const { getAppManager } = require('./app')
 const { saveCard } = require('../api')
 const { string2hex, hex2string } = require('../utils/convert')
-
-const PACKAGE_TAIL_LENGTH = -48
 
 class CardManager {
   static instance = null
@@ -122,7 +120,7 @@ class CardManager {
                                         .concat(flag).concat(extraDataInfo.lengthData)
                                         .concat(KATU_MARK)
 
-    console.log('encryptPackage:',encryptedData.length, encryptPackage.slice(PACKAGE_TAIL_LENGTH), salt);
+    console.log('encryptPackage:',encryptedData.length, encryptPackage.slice(-PACKAGE_TAIL_LENGTH), salt);
     const tempFilePath = await utils.file.getTempFilePath(salt,'_enc')
     await utils.file.writeFile(tempFilePath, encryptPackage, 'hex')
     return {
@@ -178,8 +176,8 @@ class CardManager {
     const encryptedHexData = await utils.file.readFile(imageFilePath, 'hex')
     const {key:secretKey} = this.generateKeyByMasterKey({salt})
     // 解密数据
-    const metaData = encryptedHexData.slice(PACKAGE_TAIL_LENGTH)
-    const mixHexData = encryptedHexData.slice(0, PACKAGE_TAIL_LENGTH)
+    const metaData = encryptedHexData.slice(-PACKAGE_TAIL_LENGTH)
+    const mixHexData = encryptedHexData.slice(0, -PACKAGE_TAIL_LENGTH)
 
     const decryptedData = utils.crypto.decryptFile(mixHexData, secretKey)
     if(!decryptedData) throw Error("主密码错误")
