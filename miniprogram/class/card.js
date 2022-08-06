@@ -105,7 +105,8 @@ class CardManager {
   }
 
   _cardDataCheck(card){
-    if(card.image.length>2) throw Error("卡面数量错误")
+    // 检查卡面数量
+    if(card.image.length > this.app.Config.cardImageMaxNum) throw Error("卡面数量错误")
   }
   async encryptImage(imagePath, extraData=[]){
     const imageHexData = await utils.file.readFile(imagePath, 'hex')

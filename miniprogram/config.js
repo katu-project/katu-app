@@ -1,6 +1,7 @@
 const AppConfig = {
   uploadCardNamePrefix: 'card',
   allowUploadImageType: ['jpeg','png','jpg'],
+  cardImageMaxNum: 2,
   qaDocType: [{
     icon: 'apps',
     color: 'green',
