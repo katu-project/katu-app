@@ -112,7 +112,7 @@ class CardManager {
     const imageHexData = await utils.file.readFile(imagePath, 'hex')
     const {key:imageKey, salt} = this.generateKeyByMasterKey()
     const flag = '00000000'
-    const extraDataInfo = this.packExtraData(extraData)
+    const extraDataInfo = this._packExtraData(extraData)
     
     const mixHexData = imageHexData.concat(extraDataInfo.data)
     const encryptedData = utils.crypto.encryptFile(mixHexData, imageKey)
@@ -130,33 +130,6 @@ class CardManager {
     }
   }
 
-  packExtraData(extraData=[]){
-    const retDataInfo = {
-      data: '',
-      lengthData: '00000000'
-    }
-    extraData = JSON.stringify(extraData)
-    if(extraData !== '[]') {
-      const hexStr = string2hex(extraData)
-      retDataInfo.data = hexStr
-      retDataInfo.lengthData = hexStr.length.toString().padStart(8,0)
-    }
-    return retDataInfo
-  }
-
-  unpackExtraData(mixHexData, metaData){
-    const retDataInfo = {
-      dataLength: 0,
-      data: ''
-    }
-    const extraDataLength = parseInt(metaData.slice(-24,-16))
-    if(extraDataLength){
-      retDataInfo.dataLength = extraDataLength
-      retDataInfo.data = JSON.parse(hex2string(mixHexData.slice(-extraDataLength)))
-    }
-    return retDataInfo
-  }
-
   async decryptImage(card){
     const salt = card.salt
     const decryptImage = {
@@ -167,7 +140,8 @@ class CardManager {
     try {
       await utils.file.checkAccess(decryptImage.imagePath)
       console.log('命中缓存数据: 已经存在相同解密数据')
-      decryptImage.extraData = (await wx.getStorage({ key: decryptImage.imagePath })).data
+      const {data:extraData} = await wx.getStorage({ key: decryptImage.imagePath })
+      decryptImage.extraData = extraData
       return decryptImage
     } catch (error) {
       console.log('未发现缓存数据，开始解密数据')
@@ -183,7 +157,7 @@ class CardManager {
     const decryptedData = utils.crypto.decryptFile(mixHexData, secretKey)
     if(!decryptedData) throw Error("主密码错误")
     // 检测并解密附加数据
-    const {data:extraData, dataLength: extraDataLength} = this.unpackExtraData(decryptedData, metaData)
+    const {data:extraData, dataLength: extraDataLength} = this._unpackExtraData(decryptedData, metaData)
     if(extraDataLength){
       decryptImage.extraData = extraData
       wx.setStorage({
@@ -195,6 +169,33 @@ class CardManager {
 
     await utils.file.writeFile(decryptImage.imagePath, imageData, 'hex')
     return decryptImage
+  }
+
+  _packExtraData(extraData=[]){
+    const retDataInfo = {
+      data: '',
+      lengthData: '00000000'
+    }
+    extraData = JSON.stringify(extraData)
+    if(extraData !== '[]') {
+      const hexStr = string2hex(extraData)
+      retDataInfo.data = hexStr
+      retDataInfo.lengthData = hexStr.length.toString().padStart(8,0)
+    }
+    return retDataInfo
+  }
+
+  _unpackExtraData(mixHexData, metaData){
+    const retDataInfo = {
+      dataLength: 0,
+      data: ''
+    }
+    const extraDataLength = parseInt(metaData.slice(-24,-16))
+    if(extraDataLength){
+      retDataInfo.dataLength = extraDataLength
+      retDataInfo.data = JSON.parse(hex2string(mixHexData.slice(-extraDataLength)))
+    }
+    return retDataInfo
   }
 
   async getHash(imagePath){
