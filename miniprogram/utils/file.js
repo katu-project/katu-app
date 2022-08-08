@@ -101,6 +101,18 @@ async function getTempFilePath(cacheId, suffix=''){
   return tempFile
 }
 
+async function getImageType(picPath){
+  try {
+    const info = await wx.getImageInfo({
+      src: picPath,
+    })
+    return info.type
+  } catch (error) {
+    console.log('getImageType error :',error);
+  }
+  return ''
+}
+
 module.exports = {
   readFile,
   writeFile,
@@ -109,5 +121,6 @@ module.exports = {
   getStats,
   download,
   getSavedFileList,
-  getTempFilePath
+  getTempFilePath,
+  getImageType
 }
