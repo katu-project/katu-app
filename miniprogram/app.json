@@ -28,7 +28,9 @@
     "pages/change-log/index",
     "pages/profile/edit/index",
     "pages/debug/crypto/index",
-    "pages/debug/qrcode/index"
+    "pages/debug/qrcode/index",
+    "pages/settings/security/reset-key/index",
+    "pages/settings/security/reset-key/qrcode/index"
   ],
   "window": {
     "backgroundColor": "#ffffff",

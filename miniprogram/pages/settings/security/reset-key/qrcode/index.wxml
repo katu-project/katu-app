@@ -1,0 +1,8 @@
+<cu-custom bgColor="bg-cyan" isBack="{{true}}">
+  <view slot="backText">返回</view>
+  <view slot="content">重置主密码</view>
+</cu-custom>
+
+<view class="page">
+
+</view>
