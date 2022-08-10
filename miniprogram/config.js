@@ -68,7 +68,8 @@ const AppConfig = {
     masterKeyNotice: '0a4ec1f9628b5501063149ac75a21cb7',
     rememberKeyNotice: '0a4ec1f962c4f45f0ea61cd706dd10ca',
     imageProcessorTip_1: '0ab5303b62b975a20b880414327d5628',
-    imageProcessorTip_2: '058dfefe62b9720f0ad5eca959e4f456'
+    imageProcessorTip_2: '058dfefe62b9720f0ad5eca959e4f456',
+    forgetKeyNotice: 'f6e08a64628b55a704a899564e10cf2e'
   }
 }
 

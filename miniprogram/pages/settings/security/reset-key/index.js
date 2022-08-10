@@ -21,5 +21,8 @@ Page({
   },
   tapToPage({currentTarget:{dataset:{page}}}){
     navigateTo(page)
+  },
+  tapToDoc(){
+    globalData.app.navToDoc(globalData.app.Config.doc.forgetKeyNotice)
   }
 })
