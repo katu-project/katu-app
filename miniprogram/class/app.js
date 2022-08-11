@@ -344,7 +344,11 @@ class AppManager {
     return masterKey
   }
 
-  async resetMasterKeyWithRecoveryWords(recoveryKey, key){
+  async extractRecoveryKeyFromQrcodePath(path){
+    throw Error("an error here")
+  }
+
+  async resetMasterKeyWithRecoveryWords({rk:recoveryKey, key}){
     this.checkMasterKeyFormat(key)
     const masterKey = this._extractMasterKeyFromRecoveryKeyPack(recoveryKey)
     const newHexCode = this._convertToHex(key)

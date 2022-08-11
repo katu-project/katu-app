@@ -5,7 +5,7 @@
 
 <view class="page">
   <view class="padding-top-xl">
-    <text class="text-xl">选择适用您的重置方式</text>
+    <text class="text-xl text-cyan">选择适用您的重置方式</text>
   </view>
   <view class="cu-list menu margin-top">
     <view class="cu-item item arrow" bindtap="tapToPage" data-page="./qrcode/index">
