@@ -17,16 +17,22 @@ Page({
   },
   async tapToSelectQrcode(){
     try {
-      const file = await globalData.app.chooseFile()
-      if(!file) return
-      const recoveryKey = await globalData.app.extractRecoveryKeyFromQrcodePath(file)
-
+      const scan_res = await wx.scanCode({
+        onlyFromCamera: false,
+        scanType: ['qrCode']
+      })
+      const recoveryKeyInfo = await globalData.app.extractRecoveryKeyFromQrcode(scan_res)
+      console.log(recoveryKeyInfo);
+      
+      if(recoveryKeyInfo.i !== globalData.app.user.recoveryKeyPack.qrId){
+        await showChoose("重置凭证ID不匹配！")
+      }
       this.setData({
         showInputKey: true,
-        recoveryKey
+        recoveryKey: recoveryKeyInfo.rk
       })
     } catch (error) {
-      showError(error.message)
+      showError(error.message || '未知错误')
     }
   },
   checkInput(){

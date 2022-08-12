@@ -344,8 +344,13 @@ class AppManager {
     return masterKey
   }
 
-  async extractRecoveryKeyFromQrcodePath(path){
-    throw Error("an error here")
+  async extractRecoveryKeyFromQrcode(qrcode){
+    try {
+      const rk = JSON.parse(qrcode.result)
+      return rk
+    } catch (error) {
+      throw Error("解析凭证数据出错!")
+    }
   }
 
   async resetMasterKeyWithRecoveryWords({rk:recoveryKey, key}){
