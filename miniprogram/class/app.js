@@ -353,10 +353,10 @@ class AppManager {
     }
   }
 
-  async resetMasterKeyWithRecoveryWords({rk:recoveryKey, key}){
+  async resetMasterKeyWithRecoveryKey({rk:recoveryKey, key}){
     this.checkMasterKeyFormat(key)
     const masterKey = this._extractMasterKeyFromRecoveryKeyPack(recoveryKey)
-    const newHexCode = this._convertToHex(key)
+    const newHexCode = await this._convertToHex(key)
     // 重新生成新的主密码包
     const masterKeyPack = await this._createMasterKeyPack(newHexCode, masterKey)
     // 更新主密码包

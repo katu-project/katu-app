@@ -25,12 +25,15 @@ Page({
       console.log(recoveryKeyInfo);
       
       if(recoveryKeyInfo.i !== globalData.app.user.recoveryKeyPack.qrId){
-        await showChoose("重置凭证ID不匹配！")
+        await showChoose("警告","重置凭证ID不匹配！",{showCancel: false})
+      }else{
+        const {cancel} = await showChoose("温馨提示","重置凭证数据读取成功，去设置新密码？")
+        if(cancel) return
+        this.setData({
+          showInputKey: true,
+          recoveryKey: recoveryKeyInfo.rk
+        })
       }
-      this.setData({
-        showInputKey: true,
-        recoveryKey: recoveryKeyInfo.rk
-      })
     } catch (error) {
       showError(error.message || '未知错误')
     }
@@ -55,9 +58,9 @@ Page({
   setMasterKey(){
     globalData.app.checkMasterKeyFormat(this.data.masterKey)
 
-    showChoose('确认使用该密码？').then(({cancel})=>{
+    showChoose('温馨提示','确认使用该密码？').then(({cancel})=>{
       if(cancel) return
-      loadData(globalData.app.resetMasterKeyWithRecoveryWords,{
+      loadData(globalData.app.resetMasterKeyWithRecoveryKey,{
         rk: this.data.recoveryKey,
         key: this.data.masterKey
       }).then(()=>{
