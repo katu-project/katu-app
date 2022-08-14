@@ -1,4 +1,4 @@
-const { navigateTo } = require("../../utils/index")
+import { navigateTo } from "../../utils/index"
 
 const globalData = getApp().globalData
 
