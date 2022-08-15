@@ -26,9 +26,16 @@
       <view class="action"></view>
     </view>
 
-    <view class="cu-item arrow" bindtap="tapToDoc">
+    <view class="cu-item arrow" bindtap="tapToDoc" data-key="usage">
       <view class="content">
         <text class="">用户使用协议</text>
+      </view>
+      <view class="action"></view>
+    </view>
+
+    <view class="cu-item arrow" bindtap="tapToDoc" data-key="privacy">
+      <view class="content">
+        <text class="">隐私保护指引</text>
       </view>
       <view class="action"></view>
     </view>

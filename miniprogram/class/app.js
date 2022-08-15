@@ -301,6 +301,10 @@ class AppManager {
     return this.navToDoc(this.Config.doc.userUsageProtocol)
   }
 
+  openUserPrivacyProtocol(){
+    return this.navToDoc(this.Config.doc.userPrivacyProtocol)
+  }
+
   //数据备份
   exportCardData(){
     showChoose('温馨提示','由于小程序平台限制，导出数据功能需要前往卡兔web端操作。')

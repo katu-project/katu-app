@@ -65,6 +65,7 @@ const AppConfig = {
   imageMogr2: '&imageMogr2/thumbnail/100x/rquality/80/format/png/interlace/1/strip',
   doc: {
     userUsageProtocol: 'f6e08a6462b0879e08d6b0a15725ecbb',
+    userPrivacyProtocol: '6d85a2b962c283280e7a269719a44f88',
     masterKeyNotice: '0a4ec1f9628b5501063149ac75a21cb7',
     rememberKeyNotice: '0a4ec1f962c4f45f0ea61cd706dd10ca',
     imageProcessorTip_1: '0ab5303b62b975a20b880414327d5628',

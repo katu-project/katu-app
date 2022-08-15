@@ -24,7 +24,11 @@ Page({
   tapToChangeLog(){
     navigateTo('../change-log/index')
   },
-  tapToDoc(){
-    globalData.app.openUserUsageProtocol()
+  tapToDoc({currentTarget:{dataset:{key}}}){
+    if(key == 'usage'){
+      globalData.app.openUserUsageProtocol()
+    }else{
+      globalData.app.openUserPrivacyProtocol()
+    }
   }
 })
