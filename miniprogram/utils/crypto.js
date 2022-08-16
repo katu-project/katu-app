@@ -90,7 +90,11 @@ function encryptString(string, code){
 }
 
 function decryptString(string, code){
-  return CryptoJS.AES.decrypt(string, code).toString(CryptoJS.enc.Utf8)
+  try {
+    return CryptoJS.AES.decrypt(string, code).toString(CryptoJS.enc.Utf8)
+  } catch (error) {
+    return ''
+  }
 }
 
 /**
