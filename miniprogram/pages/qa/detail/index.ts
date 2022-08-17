@@ -1,11 +1,7 @@
-const { loadData, showChoose } = require('../../../utils/index')
+import { loadData, showChoose, navigateBack } from '../../../utils/index'
 const globalData = getApp().globalData
 
 Page({
-
-  /**
-   * 页面的初始数据
-   */
   data: {
     doc: {
       title: '',
@@ -24,7 +20,7 @@ Page({
   },
   loadData(){
     if(!this.id){
-      showChoose('该文档不存在').then(wx.navigateBack)
+      showChoose('该文档不存在').then(navigateBack)
       return
     }
     loadData(globalData.app.api.getDoc,{_id:this.id}).then(doc=>{
