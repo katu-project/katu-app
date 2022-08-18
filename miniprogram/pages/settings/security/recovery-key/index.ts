@@ -1,4 +1,4 @@
-const { loadData, showSuccess, showChoose, showError } = require("../../../../utils/index")
+import { loadData, showSuccess, showChoose, showError } from "../../../../utils/index"
 const drawQrcode = require("../../../../utils/qrcode/index")
 const globalData = getApp().globalData
 
@@ -14,7 +14,10 @@ Page({
   onReady() {
   },
   onShow() {
-    const setData = {}
+    const setData = {
+      setRecoveryKey: false,
+      recoveryKeyId: ''
+    }
     if(globalData.app.user.config.security.setRecoveryKey){
       setData.setRecoveryKey = globalData.app.user.config.security.setRecoveryKey
     }

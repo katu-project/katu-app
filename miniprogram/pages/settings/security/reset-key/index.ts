@@ -1,4 +1,4 @@
-const { showError, loadData, showChoose, navigateTo } = require('../../../../utils/index')
+import { showError, loadData, showChoose, navigateTo } from '../../../../utils/index'
 const globalData = getApp().globalData
 
 Page({
@@ -13,7 +13,9 @@ Page({
 
   },
   onShow() {
-    const setData = {}
+    const setData = {
+      setRecoveryKey: false
+    }
     if(globalData.app.user.config.security.setRecoveryKey){
       setData.setRecoveryKey = globalData.app.user.config.security.setRecoveryKey
     }

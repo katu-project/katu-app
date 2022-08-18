@@ -1,4 +1,4 @@
-const { showError, loadData, showChoose, navigateTo } = require('../../../../utils/index')
+import { showError, loadData, showChoose, navigateTo } from '../../../../utils/index'
 const globalData = getApp().globalData
 
 Page({

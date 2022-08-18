@@ -1,4 +1,4 @@
-const { loadData, showSuccess, navigateTo } = require("../../../utils/index")
+import { loadData, showSuccess, navigateTo } from "../../../utils/index"
 const globalData = getApp().globalData
 
 Page({
