@@ -1,4 +1,5 @@
-const drawQrcode = require("../../../utils/qrcode/index")
+const globalData = getApp().globalData
+const { drawQrcode } = globalData.utils
 
 Page({
   data: {

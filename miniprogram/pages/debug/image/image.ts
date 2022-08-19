@@ -1,6 +1,5 @@
-const { writeFile } = require('../../../utils/file');
-const { crypto: {encryptFile, decryptFile}, file: {getTempFilePath} } = require('../../../utils/index')
-
+const globalData = getApp().globalData
+const { crypto: {encryptFile, decryptFile}, file: {getTempFilePath, writeFile} } = globalData.utils
 Page({
 
   /**
@@ -18,7 +17,7 @@ Page({
   choosePic(){
     wx.chooseMedia({
       count: 1,
-      mediaType: 'image',
+      mediaType: ['image'],
       success: ({tempFiles:[file]}) =>{
         this.setData({
           pic: file.tempFilePath,
@@ -39,7 +38,7 @@ Page({
     const key = '123456'
     console.time('加密用时')
     const data = wx.getFileSystemManager().readFileSync(this.data.pic,'hex')
-    console.log(data,data.length);
+    console.log(data);
     const encryptedData = await encryptFile(data, key)
     console.log('加密数据长度:',encryptedData,encryptedData.length);
     console.timeEnd('加密用时')
@@ -55,7 +54,7 @@ Page({
     })
 
     const readData = wx.getFileSystemManager().readFileSync(saveTempFile,'hex')
-    console.log("读取加密文件数据：",readData.length, readData);
+    console.log("读取加密文件数据：", readData);
     console.time('解密用时')
     const imageHexData = await decryptFile(readData, key)
     console.timeEnd('解密用时')

@@ -1,4 +1,6 @@
-const { crypto: {md5, encryptString, decryptString} } = require('../../../utils/index')
+const globalData = getApp().globalData
+const { crypto: {md5, encryptString, decryptString} } = globalData.utils
+
 Page({
 
   /**

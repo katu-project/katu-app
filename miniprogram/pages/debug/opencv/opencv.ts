@@ -1,6 +1,5 @@
-const cv = require('../../../utils/opencv/index');
-const file = require('../../../utils/file')
-const upng = require('../../../utils/upng')
+const globalData = getApp().globalData
+const { cv,file,upng } = globalData.utils
 const defaultImage = '/static/images/image.svg'
 
 Page({
