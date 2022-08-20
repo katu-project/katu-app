@@ -1,5 +1,5 @@
-const { loadData } = require("../../utils/index")
 const globalData = getApp().globalData
+const { loadData } = globalData.utils
 
 Page({
   data: {
