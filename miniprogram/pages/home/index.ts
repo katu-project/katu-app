@@ -1,7 +1,6 @@
-const { loadData, navigateTo } = require('../../utils/index')
-const { DefaultShowLockImage, DefaultShowImage } = require('../../const')
-
 const globalData = getApp().globalData
+const { loadData, navigateTo } = globalData.utils
+const { DefaultShowLockImage, DefaultShowImage } = require('../../const')
 
 Page({
   data: {
