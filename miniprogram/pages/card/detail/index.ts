@@ -1,7 +1,7 @@
-const { getCardManager } = require('../../../class/card')
-const { showChoose, showError, loadData, navigateBack, setClipboardData } = require('../../../utils/index')
-const { DefaultShowLockImage, DefaultShowImage } = require('../../../const')
 const globalData = getApp().globalData
+const { showChoose, showError, loadData, navigateBack, setClipboardData } = globalData.utils
+const { getCardManager } = require('../../../class/card')
+const { DefaultShowLockImage, DefaultShowImage } = require('../../../const')
 
 Page({
   data: {
