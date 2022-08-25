@@ -1,5 +1,5 @@
-const { showChoose, loadData, showSuccess, showError, switchTab } = require("../../../utils/index")
 const globalData = getApp().globalData
+const { showChoose, loadData, showSuccess, showError, switchTab } = globalData.utils
 
 Page({
   data: {
