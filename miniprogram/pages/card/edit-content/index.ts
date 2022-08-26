@@ -1,4 +1,5 @@
-const { navigateBack } = require("../../../utils/index")
+const globalData = getApp().globalData
+const { navigateBack } = globalData.utils
 
 Page({
   data: {
