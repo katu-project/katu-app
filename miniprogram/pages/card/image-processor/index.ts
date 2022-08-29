@@ -1,6 +1,6 @@
-const { getCardManager } = require('../../../class/card')
-const { loadData, showChoose, navigateTo, showError, navigateBack } = require('../../../utils/index')
 const globalData = getApp().globalData
+const { loadData, showChoose, navigateTo, showError, navigateBack } = globalData.utils
+const { getCardManager } = require('../../../class/card')
 
 Page({
   useRemoteApiConfirm: false,
