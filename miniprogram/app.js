@@ -1,4 +1,5 @@
 const { getAppManager } = require('class/app')
+const utils = require('./utils/index')
 App({
   onLaunch: function () {
     wx.cloud.init({
@@ -57,6 +58,7 @@ App({
     })
   },
   globalData: {
+    utils,
     ColorList: [{
         title: '嫣红',
         name: 'red',
