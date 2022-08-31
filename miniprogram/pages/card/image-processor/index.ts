@@ -2,6 +2,8 @@ const globalData = getApp().globalData
 const { loadData, showChoose, navigateTo, showError, navigateBack } = globalData.utils
 const { getCardManager } = require('../../../class/card')
 
+export {}
+
 Page({
   useRemoteApiConfirm: false,
   data: {

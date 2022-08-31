@@ -3,6 +3,8 @@ const { showNotice, showChoose, navigateTo, showError, loadData } = globalData.u
 const { getCardManager } = require('../../../class/card')
 const { DefaultAddImage } = require('../../../const')
 
+export {}
+
 Page({
   data: {
     edit: false,

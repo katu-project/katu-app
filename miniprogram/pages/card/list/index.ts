@@ -1,6 +1,8 @@
 const globalData = getApp().globalData
 const { loadData, navigateTo } = globalData.utils
 
+export {}
+
 Page({
   data: {
     key: '',

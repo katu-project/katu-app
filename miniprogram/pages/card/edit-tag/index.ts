@@ -1,6 +1,8 @@
 const globalData = getApp().globalData
 const { showChoose, loadData, showSuccess, showError, switchTab } = globalData.utils
 
+export {}
+
 Page({
   data: {
     list: [],

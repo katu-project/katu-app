@@ -3,6 +3,8 @@ const { showChoose, showError, loadData, navigateBack, setClipboardData } = glob
 const { getCardManager } = require('../../../class/card')
 const { DefaultShowLockImage, DefaultShowImage } = require('../../../const')
 
+export {}
+
 Page({
   data: {
     showInputKey: false,

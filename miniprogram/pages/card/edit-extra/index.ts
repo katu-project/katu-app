@@ -1,6 +1,8 @@
 const globalData = getApp().globalData
 const { navigateBack } = globalData.utils
 
+export {}
+
 Page({
   data: {
     labels: globalData.app.Config.extraDataLabels,
