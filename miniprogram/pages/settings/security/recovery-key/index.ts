@@ -2,6 +2,8 @@ import { loadData, showSuccess, showChoose, showError } from "../../../../utils/
 const drawQrcode = require("../../../../utils/qrcode/index")
 const globalData = getApp().globalData
 
+export {}
+
 Page({
   data: {
     setRecoveryKey: false,

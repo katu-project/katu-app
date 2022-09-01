@@ -1,6 +1,8 @@
 import { loadData, showSuccess, navigateTo } from "../../../utils/index"
 const globalData = getApp().globalData
 
+export {}
+
 Page({
   data: {
     setMasterKey: false,

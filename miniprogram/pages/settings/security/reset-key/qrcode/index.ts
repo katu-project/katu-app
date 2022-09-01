@@ -1,6 +1,8 @@
 import utils, { showError, showChoose, loadData } from '../../../../../utils/index'
 const globalData = getApp().globalData
 
+export {}
+
 Page({
   data: {
     masterKey: '',

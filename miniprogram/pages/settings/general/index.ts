@@ -1,6 +1,8 @@
 import { loadData, showSuccess } from "../../../utils/index"
 const globalData = getApp().globalData
 
+export {}
+
 Page({
   data: {
     config_general_defaultUseEncrytion: false,

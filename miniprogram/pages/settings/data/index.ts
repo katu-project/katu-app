@@ -1,5 +1,7 @@
-import { loadData } from "../../../utils/index"
 const globalData = getApp().globalData
+const { loadData } = globalData.utils
+
+export {}
 
 Page({
   data: {

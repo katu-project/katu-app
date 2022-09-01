@@ -1,6 +1,7 @@
 import { navigateTo } from "../../utils/index"
-
 const globalData = getApp().globalData
+
+export {}
 
 Page({
   data: {

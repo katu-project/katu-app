@@ -1,6 +1,8 @@
 import { loadData, showChoose, showNotice } from "../../../utils/index"
 const globalData = getApp().globalData
 
+export {}
+
 Page({
   data: {
 
