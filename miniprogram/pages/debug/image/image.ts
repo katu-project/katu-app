@@ -1,5 +1,8 @@
 const globalData = getApp().globalData
 const { crypto: {encryptFile, decryptFile}, file: {getTempFilePath, writeFile} } = globalData.utils
+
+export {}
+
 Page({
 
   /**

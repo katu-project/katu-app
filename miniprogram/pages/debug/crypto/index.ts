@@ -1,6 +1,8 @@
 const globalData = getApp().globalData
 const { crypto: {md5, encryptString, decryptString} } = globalData.utils
 
+export {}
+
 Page({
 
   /**

@@ -2,6 +2,8 @@ const globalData = getApp().globalData
 const { cv,file,upng } = globalData.utils
 const defaultImage = '/static/images/image.svg'
 
+export {}
+
 Page({
 	data: {
     originImage: defaultImage,

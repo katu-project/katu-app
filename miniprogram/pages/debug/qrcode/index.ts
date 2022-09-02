@@ -1,6 +1,8 @@
 const globalData = getApp().globalData
 const { drawQrcode } = globalData.utils
 
+export {}
+
 Page({
   data: {
   },

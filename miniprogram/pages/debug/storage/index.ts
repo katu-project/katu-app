@@ -2,6 +2,8 @@ const globalData = getApp().globalData
 const { file: {getSavedFileList, readDir, getStats} } = globalData.utils
 const { APP_TEMP_DIR } = require('../../../const')
 
+export {}
+
 Page({
   /**
    * 页面的初始数据
