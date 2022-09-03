@@ -1,6 +1,8 @@
 const globalData = getApp().globalData
 const { loadData, navigateTo, showSuccess, showNotice } = globalData.utils
 
+export {}
+
 Page({
   data: {
     user: {},

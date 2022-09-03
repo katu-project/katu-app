@@ -1,6 +1,8 @@
 const globalData = getApp().globalData
 const { loadData, showError, showSuccess, showNotice, navigateBack } = globalData.utils
 
+export {}
+
 Page({
   data: {
     url: '/static/images/user.svg',
