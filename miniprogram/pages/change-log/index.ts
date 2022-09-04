@@ -1,6 +1,8 @@
 const globalData = getApp().globalData
 const { loadData } = globalData.utils
 
+export {}
+
 Page({
   data: {
     list: []
