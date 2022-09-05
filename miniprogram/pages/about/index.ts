@@ -1,5 +1,7 @@
 const globalData = getApp().globalData
-const { navigateTo } = globalData.utils
+import { navigateTo } from '@/utils/index'
+
+export {}
 
 Page({
   data: {

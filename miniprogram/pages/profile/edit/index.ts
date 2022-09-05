@@ -1,5 +1,5 @@
 const globalData = getApp().globalData
-const { loadData, showError, showSuccess, showNotice, navigateBack } = globalData.utils
+import { loadData, showError, showSuccess, showNotice, navigateBack } from '@/utils/index'
 
 export {}
 

@@ -1,5 +1,5 @@
 const globalData = getApp().globalData
-const { showChoose, showError, loadData, navigateBack, setClipboardData } = globalData.utils
+import { showChoose, showError, loadData, navigateBack, setClipboardData } from '@/utils/index'
 const { getCardManager } = require('../../../class/card')
 const { DefaultShowLockImage, DefaultShowImage } = require('../../../const')
 

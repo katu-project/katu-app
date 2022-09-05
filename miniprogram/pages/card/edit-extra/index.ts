@@ -1,9 +1,10 @@
 const globalData = getApp().globalData
-const { navigateBack } = globalData.utils
+import { navigateBack } from '@/utils/index'
 
 export {}
 
 Page({
+  returnContentKey: '',
   data: {
     labels: globalData.app.Config.extraDataLabels,
     list: []

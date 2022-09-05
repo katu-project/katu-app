@@ -1,5 +1,5 @@
 const globalData = getApp().globalData
-const { loadData, showChoose, navigateTo, showError, navigateBack } = globalData.utils
+import { loadData, showChoose, navigateTo, showError, navigateBack } from '@/utils/index'
 const { getCardManager } = require('../../../class/card')
 
 export {}

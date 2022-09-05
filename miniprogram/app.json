@@ -43,6 +43,10 @@
   "usingComponents": {
     "cu-custom": "/colorui/components/cu-custom"
   },
+  "resolveAlias": {
+    "@/*": "/*",
+    "@/class/*": "/class/*"
+  },
   "tabBar": {
     "color": "#000000",
     "selectedColor": "#ff0000",

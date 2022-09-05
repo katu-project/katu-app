@@ -1,5 +1,5 @@
 const globalData = getApp().globalData
-const { loadData } = globalData.utils
+import { loadData } from '@/utils/index'
 
 export {}
 
