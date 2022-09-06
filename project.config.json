@@ -41,7 +41,8 @@
       "sass"
     ],
     "minifyWXML": true,
-    "useStaticServer": true
+    "useStaticServer": true,
+    "ignoreUploadUnusedFiles": false
   },
   "appid": "",
   "projectname": "",
