@@ -1,5 +1,5 @@
 const globalData = getApp().globalData
-const { cv,file,upng } = globalData.utils
+import { cv,file,upng } from '@/utils/index'
 const defaultImage = '/static/images/image.svg'
 
 export {}
@@ -44,7 +44,7 @@ Page({
       targetImage: defaultImage
     })
     const imageBuffer = upng.encode([mat.data],mat.cols,mat.rows,0)
-    const path = await file.getTempFilePath()
+    const path = await file.getTempFilePath({dir:'temp', cacheId: '111'})
     await file.writeFile(path, imageBuffer)
     const info = await wx.getImageInfo({
       src: path,
@@ -60,7 +60,7 @@ Page({
     })
     console.log(imageData.data.length);
     const imageBuffer = upng.encode([imageData.data],imageData.width,imageData.height,0)
-    const path = await file.getTempFilePath()
+    const path = await file.getTempFilePath({dir:'temp', cacheId: '1111'})
     await file.writeFile(path, imageBuffer)
     const info = await wx.getImageInfo({
       src: path,
@@ -260,7 +260,7 @@ Page({
     rect = cv.export(rect)
 
     const imageBuffer = upng.encode([rect.data],rect.cols,rect.rows,0)
-    const path = await file.getTempFilePath('1234')
+    const path = await file.getTempFilePath({dir:'temp', cacheId: '1234'})
     await file.writeFile(path, imageBuffer)
     return path
   }

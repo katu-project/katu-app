@@ -1,5 +1,5 @@
 const globalData = getApp().globalData
-const { drawQrcode } = globalData.utils
+import { drawQrcode } from '@/utils/index'
 
 export {}
 
