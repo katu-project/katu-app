@@ -1,6 +1,7 @@
 const CryptoJS = require('crypto-js')
+import { BufferToHex } from './convert'
 
-const KatuCryptoFormatter = {
+export const KatuCryptoFormatter = {
   stringify: function(cipherParams) {
     const KatuMark = [0x9527,0x4396]
     const SaltMark = [0x53616c74, 0x65645f5f]
@@ -44,52 +45,66 @@ const KatuCryptoFormatter = {
   }
 }
 
-function random(bytesLength){
-  return CryptoJS.lib.WordArray.random(bytesLength)
+export async function random(bytesLength: number){
+  if(!bytesLength || bytesLength % 2 === 1) {
+    throw Error("random bytesLength error")
+  }
+  let randomHexSring = ''
+  try {
+    const {randomValues} = await wx.getRandomValues({
+      length: bytesLength / 2,
+    })
+    randomHexSring = BufferToHex(randomValues)
+  } catch (error) {
+    console.log('获取系统随机数出错，将使用内置替代库：', error)
+    randomHexSring = CryptoJS.lib.WordArray.random(bytesLength / 2)
+  }
+  return randomHexSring
 }
 
-function md5(string){
+export function md5(string){
   return CryptoJS.MD5(string).toString()
 }
 
-function sha1(string){
+export function sha1(string){
   return CryptoJS.SHA1(string).toString()
 }
 
-function sha256(string){
+export function sha256(string){
   return CryptoJS.SHA256(string).toString()
 }
 
-function sha512(string){
+export function sha512(string){
   return CryptoJS.SHA256(string).toString()
 }
 
-function pbkdf2(masterKey, options={}){
-  const salt = options.salt ? CryptoJS.enc.Hex.parse(options.salt) : CryptoJS.lib.WordArray.random(64 / 8)
+type Pbkdf2Options = {salt:string, size:number}
+export function pbkdf2<T extends Pbkdf2Options = Pbkdf2Options>(masterKey: string, options?: Partial<T>){
+  const salt = options?.salt ? CryptoJS.enc.Hex.parse(options.salt) : CryptoJS.lib.WordArray.random(64 / 8)
   const key = CryptoJS.PBKDF2(masterKey,salt,{
-    keySize: options.size || 4, 
+    keySize: options?.size || 4, 
     iterations: 5000
   }).toString()
   return {key, salt: salt.toString()}
 }
 
-function encode(text, code){
+export function encrypt(text, code){
   return CryptoJS.AES.encrypt(text, code, {
     format: KatuCryptoFormatter
   });
 }
 
-function decode(text, code){
+export function decrypt(text, code){
   return CryptoJS.AES.decrypt(text, code, {
     format: KatuCryptoFormatter
   })
 }
 
-function encryptString(string, code){
+export function encryptString(string, code){
   return CryptoJS.AES.encrypt(string, code).toString()
 }
 
-function decryptString(string, code){
+export function decryptString(string, code){
   try {
     return CryptoJS.AES.decrypt(string, code).toString(CryptoJS.enc.Utf8)
   } catch (error) {
@@ -103,7 +118,7 @@ function decryptString(string, code){
  * @param {string} code 
  * @return { Hex String }
  */
-function encryptFile(fileHexString, code){
+export function encryptFile(fileHexString, code){
   const hexData = CryptoJS.enc.Hex.parse(fileHexString)
   return CryptoJS.AES.encrypt(hexData, code, {
                     format: KatuCryptoFormatter
@@ -116,7 +131,7 @@ function encryptFile(fileHexString, code){
  * @param {*} code 
  * @return { Hex String }
  */
-function decryptFile(fileHexString, code){
+export function decryptFile(fileHexString, code){
   const decryptedHexString = CryptoJS.AES.decrypt(fileHexString, code, {
     format: KatuCryptoFormatter
   }).toString()
@@ -124,7 +139,7 @@ function decryptFile(fileHexString, code){
   return decryptedHexString
 }
 
-module.exports = {
+export default {
   random,
   md5,
   sha1,
@@ -132,9 +147,9 @@ module.exports = {
   sha512,
   pbkdf2,
   encryptString,
-  decryptString,
+  decryptString,  
   encryptFile,
   decryptFile,
-  encrypt: encode,
-  decrypt: decode
+  encrypt,
+  decrypt
 }

@@ -2,8 +2,7 @@ global.wasm_url = '/static/opencv3.4.16.wasm.br'
 
 var _scriptDir = typeof document !== 'undefined' && document.currentScript ? document.currentScript.src : undefined;
 
-function cv() {
-    var cv = {};
+export const cv = {};
     var wasmBinaryFile = global.wasm_url
     var Module = typeof cv !== "undefined" ? cv : {};
     var moduleOverrides = {};
@@ -9339,9 +9338,5 @@ function cv() {
         mat.data.set(imageData.data);
         return mat
     }
-        ;
 
-    return cv
-}
-
-module.exports = cv()
+export default cv

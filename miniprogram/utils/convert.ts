@@ -1,6 +1,6 @@
-const { Base64 } = require('js-base64')
+import { Base64 } from 'js-base64'
 
-function ArrayBufferToBase64( buffer ){
+export function ArrayBufferToBase64( buffer ){
   let binary = ''
   const bytes = new Uint8Array( buffer )
   const len = bytes.byteLength
@@ -10,23 +10,23 @@ function ArrayBufferToBase64( buffer ){
   return Base64.btoa(binary)
 }
 
-function Base64ToArrayBuffer(base64) {
+export function Base64ToArrayBuffer(base64) {
   const binary_string = Base64.atob(base64)
   const len = binary_string.length
   const bytes = new Uint8Array(len)
-  for (const i = 0; i < len; i++) {
+  for (let i = 0; i < len; i++) {
       bytes[i] = binary_string.charCodeAt(i)
   }
   return bytes.buffer
 }
 
-function BufferToHex(buffer) {
+export function BufferToHex(buffer) {
   return [...new Uint8Array(buffer)]
       .map(x => x.toString(16).padStart(2, '0'))
       .join('');
 }
 
-function string2hex(str){
+export function string2hex(str){
   let result = ""
   for (let i=0; i < str.length; i++) {
       result += str.charCodeAt(i).toString(16).padStart(4,0)
@@ -34,7 +34,7 @@ function string2hex(str){
   return result
 }
 
-function hex2string(hex){
+export function hex2string(hex){
   const hexes = hex.match(/.{1,4}/g) || []
   let back = ""
   for(let j = 0; j<hexes.length; j++) {
@@ -43,7 +43,7 @@ function hex2string(hex){
   return back
 }
 
-module.exports = {
+export default {
   ArrayBufferToBase64,
   Base64ToArrayBuffer,
   BufferToHex,

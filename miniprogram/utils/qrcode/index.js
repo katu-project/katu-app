@@ -21,7 +21,7 @@ function utf16to8 (str) {
   return out
 }
 
-function drawQrcode (options) {
+export function drawQrcode (options) {
   options = options || {}
   options = Object.assign({}, {
     width: 256,
@@ -84,5 +84,3 @@ function drawQrcode (options) {
     options.callback && options.callback(qrcode,options)
   }
 }
-
-module.exports = drawQrcode

@@ -139,10 +139,11 @@ function validateMnemonic(mnemonic, wordlist) {
     return true;
 }
 
-module.exports = {
+const wordlists = DEFAULT_WORDLIST
+export {
     mnemonicToEntropy,
     entropyToMnemonic,
     generateMnemonic,
     validateMnemonic,
-    wordlists: DEFAULT_WORDLIST
+    wordlists
 }

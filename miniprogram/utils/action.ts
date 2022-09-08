@@ -4,7 +4,7 @@ async function showInfo(msg, typeIdx=3, mask=true, options={}){
   const type = ['success', 'error', 'loading', 'none']
   return wx.showToast({
     title: msg,
-    icon: type[typeIdx],
+    icon: type[typeIdx] as 'success' | 'error' | 'loading' | 'none',
     mask,
     ...options
   })
@@ -27,8 +27,8 @@ async function showNotice(msg){
 }
 
 // showChoose(title,content)
-async function showChoose(title, content='', options={}){
-  return new Promise((resolve,reject)=>{
+async function showChoose(title, content='', options={}): Promise<WechatMiniprogram.ShowModalSuccessCallbackResult> {
+  return new Promise((resolve)=>{
     wx.showModal({
       title,
       content,
@@ -141,7 +141,7 @@ async function loadData(func, params, options){
   })
 }
 
-module.exports = {
+export {
   showInfo,
   showSuccess,
   showChoose,

@@ -1,6 +1,6 @@
 const pako = require('pako')
 
-var UPNG = {};
+export var UPNG = {};
 
 UPNG.toRGBA8 = function(out)
 {
@@ -1104,5 +1104,3 @@ UPNG.encode.dither = function(sb, w, h, plte, tb, oind) {
 		}
 	}
 }
-
-module.exports = UPNG
