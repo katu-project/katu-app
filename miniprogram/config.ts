@@ -1,4 +1,4 @@
-const AppConfig = {
+export const AppConfig = {
   uploadCardNamePrefix: 'card',
   allowUploadImageType: ['jpeg','png','jpg'],
   cardImageMaxNum: 2,
@@ -73,5 +73,3 @@ const AppConfig = {
     forgetKeyNotice: 'f6e08a64628b55a704a899564e10cf2e'
   }
 }
-
-module.exports = AppConfig

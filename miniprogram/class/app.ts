@@ -1,13 +1,17 @@
-const utils = require('../utils/index')
-const constData = require('../const')
-const api = require('../api')
-const config = require('../config')
-
-const { APP_TEMP_DIR ,MASTER_KEY_NAME } = require('../const')
-const { navigateTo, showChoose } = require('../utils/index')
+import utils,{ navigateTo, showChoose } from '@/utils/index'
+import * as constData from '@/const'
+import { AppConfig } from '@/config'
+import api from '@/api'
 
 class AppManager {
-  static instance = null
+  static instance: AppManager
+  Config = AppConfig
+  api = api
+  AppInfo = wx.getAccountInfoSync()
+  Constant = constData
+
+  user: Partial<User> = {}
+  _masterKey: string = ''
   
   static getInstance(){
     if(!this.instance){
@@ -16,25 +20,19 @@ class AppManager {
     }
     return this.instance
   }
+
   init(){
-    this.loadAppBaseInfo()
     this.loadAppConfig()
-    this.loadConstant()
   }
 
-  loadAppBaseInfo(){
-    this.api = api
-    this.AppInfo = wx.getAccountInfoSync()
-    this.appVersion = this.AppInfo.miniProgram.version || 'develop'
-    this.isDev = this.AppInfo.miniProgram.envVersion !== 'release'
+  get appVersion(){
+    return this.AppInfo.miniProgram.version || 'develop'
   }
-  
-  loadConstant(){
-    this.Constant = constData
+  get isDev(){
+    return this.AppInfo.miniProgram.envVersion !== 'release'
   }
 
   loadAppConfig(){
-    this.Config = config
     this.rewriteConfig()
   }
 
@@ -56,11 +54,11 @@ class AppManager {
     throw Error('可使用卡片量不足')
   }
 
-  async syncUserTag(tags){
+  async syncUserTag(tags: Tag[]){
     this.user.customTag = tags
   }
 
-  async setUserMasterKey(key){
+  async setUserMasterKey(key: string){
     const hexCode = await this._convertToHex(key)
     const masterKeyPack = await this._createMasterKeyPack(hexCode)
     return api.setMasterKeyInfo(masterKeyPack)
@@ -72,7 +70,7 @@ class AppManager {
     const hexCode = await this._convertToHex(key)
     const newHexCode = await this._convertToHex(newKey)
     // 获取主密码
-    const masterKey = await this._fetchMasterKeyFromKeyPack(this.user.masterKeyPack.keyPack, hexCode)
+    const masterKey = await this._fetchMasterKeyFromKeyPack(this.user.masterKeyPack?.keyPack, hexCode)
     if(!masterKey) throw Error("主密码错误")
     // 重新生成新的主密码包
     const masterKeyPack = await this._createMasterKeyPack(newHexCode, masterKey)
@@ -85,10 +83,10 @@ class AppManager {
   }
 
   async loadUserConfig(){
-    if(!this.user) {
+    if(!this.user._id) {
       await this.loadUserInfo()
     }
-    if(this.user.config.security.rememberPassword){
+    if(this.user.config?.security.rememberPassword){
       console.log("启用记住密码: 加载主密码");
       this._loadMasterKey()
     }
@@ -107,7 +105,7 @@ class AppManager {
 
   async clearUserInfo(){
     this.user = await api.getUser() // 获取基础用户数据
-    this._masterKey = null
+    this._masterKey = ''
   }
 
   async uploadUserAvatar(filePath){
@@ -123,7 +121,7 @@ class AppManager {
     
     if(this._masterKey) {
       try {
-        this._verifyKey(this._masterKey, this.user.masterKeyPack.keyId)
+        this._verifyKey(this._masterKey, this.user.masterKeyPack?.keyId)
       } catch (error) {
         console.log('主密码不匹配，正常使用不应该出现这个问题！')
         await this.clearMasterKey()
@@ -135,7 +133,7 @@ class AppManager {
   async _readMasterKey(){
     try {
       const {data} = await wx.getStorage({
-        key: MASTER_KEY_NAME
+        key: this.Constant.MASTER_KEY_NAME
       })
       return data
     } catch (error) {
@@ -145,7 +143,7 @@ class AppManager {
   }
 
   async clearMasterKey(){
-    this._masterKey = null
+    this._masterKey = ''
     this._removeMasterKeyCache()
   }
 
@@ -153,20 +151,20 @@ class AppManager {
   async loadMasterKeyWithKey(key){
     this.checkMasterKeyFormat(key)
     const hexCode = await this._convertToHex(key)
-    this._masterKey = await this._fetchMasterKeyFromKeyPack(this.user.masterKeyPack.keyPack, hexCode)
+    this._masterKey = await this._fetchMasterKeyFromKeyPack(this.user.masterKeyPack?.keyPack, hexCode)
   }
 
   async cacheMasterKey(){
     if(!this._masterKey) return
     await wx.setStorage({
-      key: MASTER_KEY_NAME,
+      key: this.Constant.MASTER_KEY_NAME,
       data: this._masterKey
     })
   }
 
   async _removeMasterKeyCache(){
     return wx.removeStorage({
-      key: MASTER_KEY_NAME
+      key: this.Constant.MASTER_KEY_NAME
     })
   }
 
@@ -182,7 +180,7 @@ class AppManager {
       throw error
     }
 
-    if(!this.user.config.security.rememberPassword && !this._masterKey){
+    if(!this.user.config?.security.rememberPassword && !this._masterKey){
       error.code = '21'
       error.message = '请输入主密码'
       throw error
@@ -195,7 +193,7 @@ class AppManager {
     }
 
     try {
-      this._verifyKey(this._masterKey, this.user.masterKeyPack.keyId)
+      this._verifyKey(this._masterKey, this.user.masterKeyPack?.keyId)
     } catch (err) {
       error.code = '22'
       error.message = '主密码不匹配'
@@ -215,7 +213,7 @@ class AppManager {
   }
 
   // 生成主密码 256 bit
-  async _createMasterKeyPack(hexKey, masterKey){
+  async _createMasterKeyPack(hexKey: string, masterKey ?: string){
     if(!masterKey){
       try {
         const {randomValues} = await wx.getRandomValues({
@@ -227,7 +225,7 @@ class AppManager {
         masterKey = utils.crypto.random(16).toString()
       }
     }
-    const keyPack = {}
+    const keyPack: Partial<MasterKeyPack> = {}
     keyPack.keyPack = utils.crypto.encryptString(masterKey, hexKey)
     keyPack.hexKeyId = this._calculateKeyId(hexKey)
     keyPack.keyId = this._calculateKeyId(masterKey)
@@ -256,7 +254,7 @@ class AppManager {
     try {
       const pics = await wx.chooseMedia({
         count: 1,
-        mediaType: 'image'
+        mediaType: ['image']
       })
   
       if(!pics.tempFiles.length) return
@@ -279,7 +277,7 @@ class AppManager {
   }
 
   async downloadFile(pic){
-    const savePath = `${APP_TEMP_DIR}/${pic.salt || new Date().getTime() }_down`
+    const savePath = `${this.Constant.APP_TEMP_DIR}/${pic.salt || new Date().getTime() }_down`
     try {
       await utils.file.checkAccess(savePath)
       console.log('hit cache file, reuse it')
@@ -288,9 +286,7 @@ class AppManager {
       console.log('no cache file, download it')
     }
     const {fileList: [imageInfo]} = await wx.cloud.getTempFileURL({
-      fileList: [{
-        fileID: pic.url
-      }]
+      fileList: [pic.url]
     })
     console.warn('downloadFile:', imageInfo);
     const downloadFile = await utils.file.download(imageInfo.tempFileURL, savePath)
@@ -321,10 +317,10 @@ class AppManager {
     return utils.bip39.mnemonicToEntropy(words)
   }
 
-  generateRecoveryKeyQrcodeContent(){
+  async generateRecoveryKeyQrcodeContent(){
     const rk = this._generateRecoveryKey()
     const qrContent = {
-      i: utils.crypto.random(2).toString().toUpperCase(),
+      i: await utils.crypto.random(2).toString().toUpperCase(),
       t: new Date().toLocaleDateString(),
       rk
     }
@@ -333,7 +329,7 @@ class AppManager {
 
   createRecoveryKeyPack(qrCodeData){
     if(!this._masterKey) throw Error("输入主密码")
-    const keyPack = {}
+    const keyPack: Partial<RecoveryKeyPack> = {}
     keyPack.qrId = qrCodeData.i
     keyPack.createTime = qrCodeData.t
     keyPack.keyId = this._calculateKeyId(qrCodeData.rk)
@@ -371,6 +367,14 @@ class AppManager {
   navToDoc(id){
     navigateTo(`/pages/qa/detail/index?id=${id}`)
   }
+  
+  async getTempFilePath(cacheId:string, suffix?:string){
+    return utils.file.getTempFilePath({
+      dir: this.Constant.APP_TEMP_DIR,
+      cacheId,
+      suffix
+    })
+  }
 
   setHomeRefresh(){
     const pages = getCurrentPages()
@@ -380,10 +384,10 @@ class AppManager {
   }
 }
 
-function getAppManager(...args){
-  return AppManager.getInstance(...args)
+function getAppManager(){
+  return AppManager.getInstance()
 }
 
-module.exports = {
+export {
   getAppManager
 }

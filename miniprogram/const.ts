@@ -14,7 +14,7 @@ const STANDARD_CARD_DATA = {
   ratio: 53.98 / 85.60
 }
 
-module.exports = {
+export {
   DefaultShowImage,
   DefaultShowLockImage,
   DefaultAddImage,

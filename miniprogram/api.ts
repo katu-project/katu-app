@@ -1,13 +1,18 @@
-
-const request = (action, data={}) => {
+const request = <T>(action: string, data={}): Promise<T> => {
   const error = {
     code: 0,
     message: ''
   }
   return new Promise((resolve,reject)=>{
-    const wxLog = wx.getLogManager()
+    const wxLog = wx.getLogManager({level:1})
     wx.cloud.callFunction({ name: 'api', data: { action, data } })
     .then(({result})=>{
+      if(typeof result !== 'object'){
+        error.message = '基础请求响应错误: '+ JSON.stringify(result)
+        error.code = 500 // 1 业务报错 其他 系统错误
+        wxLog.debug(error)
+        return reject(error)
+      }
       if(result.code === 0){
         resolve(result.data)
       }else{
@@ -23,38 +28,38 @@ const request = (action, data={}) => {
       wxLog.debug(error)
       reject(error)
     })
-})
+  })
 }
 
-module.exports = {
+export default {
   request,
   // sys
-  getAppConfig: name => request('app/config', {name}),
-  getDefaultTag: () => request('app/tags'),
+  getAppConfig: (name:string) => request('app/config', {name}),
+  getDefaultTag: () => request<Tag[]>('app/tags'),
   getChangeLog: () => request('app/changeLog'),
 
-  getNotice: data => request('app/notice', data), 
+  getNotice: (data?:any) => request<Notice>('app/notice', data), 
   // user
 
-  updateUserConfig: configItem => request('user/updateConfig', configItem),
+  updateUserConfig: (configItem:any) => request('user/updateConfig', configItem),
 
-  updateUserProfile: data => request('user/updateProfile', data),
+  updateUserProfile: (data:any) => request('user/updateProfile', data),
   
-  deleteTag: name => request('user/tagDelete', {name}),
+  deleteTag: (name:string) => request('user/tagDelete', {name}),
 
-  createTag: name => request('user/tagCreate', {name}),
+  createTag: (name:string) => request('user/tagCreate', {name}),
 
-  updateTag: tags => request('user/tagUpdate', {tags}),
+  updateTag: (tags:any) => request('user/tagUpdate', {tags}),
 
-  getUser: () => request('user/getUser'),
+  getUser: () => request<User>('user/getUser'),
 
-  markRead: id => request('user/markRead',{id}),
+  markRead: (id: string) => request('user/markRead',{id}),
 
-  activeAccount: data => request('user/active', wx.cloud.CloudID(data.cloudId)),
+  activeAccount: (data:any) => request('user/active', wx.cloud.CloudID(data.cloudId)),
 
   removeAccount: () => request('user/removeAccount'),
   
-  usageStatistic: () => request('user/usage'),
+  usageStatistic: () => request<UsageStatistic>('user/usage'),
 
   setMasterKeyInfo: keyPack => request('user/setMasterKeyInfo',{keyPack}),
 
@@ -67,15 +72,14 @@ module.exports = {
     })
     return fileID
   },
-  // card 
+  // card
+  getCardSummary: ():Promise<CardSummary[]> => request('card/summary'),
 
-  getCardSummary: () => request('card/summary'),
-
-  getLikeCard: () => request('card/like'),
+  getLikeCard: ():Promise<Card[]> => request<Card[]>('card/like'),
 
   setCardLike: data => request('card/setLike', data),
 
-  captureCard: fileID => request('card/capture', {fileId: fileID}),
+  captureCard: fileID => request<{fileID: string}>('card/capture', {fileId: fileID}),
 
   getCard: data => request('card/fetch', data),
 

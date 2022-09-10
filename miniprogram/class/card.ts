@@ -1,12 +1,11 @@
-const utils = require('../utils/index')
-const { cv } = require('../utils/index')
-const { KATU_MARK, PACKAGE_TAIL_LENGTH } = require('../const')
-const { getAppManager } = require('./app')
-const { saveCard } = require('../api')
-const { string2hex, hex2string } = require('../utils/convert')
+import { getAppManager } from '@/class/app'
+import utils,{cv, convert} from '@/utils/index'
+import { KATU_MARK, PACKAGE_TAIL_LENGTH } from '@/const'
 
 class CardManager {
-  static instance = null
+  static instance: CardManager
+
+  app = getAppManager()
 
   static getInstance(){
     if(!this.instance){
@@ -17,11 +16,10 @@ class CardManager {
   }
 
   init(){
-    this.app = getAppManager()
   }
 
   async update(card){
-    const cardModel = {image:[]}
+    const cardModel: Partial<Card> = {image:[]}
     cardModel._id = card._id
     cardModel.encrypted = card.encrypted || false
     cardModel.title = card.title || '未命名'
@@ -37,7 +35,7 @@ class CardManager {
     
     for (const idx in card.image) {
       const pic = card.image[idx]
-      const imageData = {url:'',salt:'',hash:''}
+      const imageData: CardImage = {url:'',salt:'',hash:''}
 
       // 统一转换成本地资源
       if(pic.url.startsWith('cloud://')){
@@ -53,18 +51,18 @@ class CardManager {
         imageData.salt = ''
         imageData.url = await this.upload(pic.url)
       }
-      cardModel.image.push(imageData)
+      cardModel.image?.push(imageData)
     }
 
     if(cardModel.encrypted){
       delete cardModel.info
     }
 
-    return saveCard(cardModel)
+    return this.app.api.saveCard(cardModel)
   }
 
   async add(card){
-    const cardModel = {image:[]}
+    const cardModel: Partial<Card> = {image:[]}
     cardModel.encrypted = card.encrypted || false
     cardModel.title = card.title || '未命名'
     cardModel.tags = card.tags || ['其他']
@@ -94,27 +92,28 @@ class CardManager {
       }else{
         imageData.url = await this.upload(pic.url)
       }
-      cardModel.image.push(imageData)
+      cardModel.image?.push(imageData)
     }
 
     if(cardModel.encrypted){
       delete cardModel.info
     }
 
-    return saveCard(cardModel)
+    return this.app.api.saveCard(cardModel)
   }
 
   _cardDataCheck(card){
     // 检查卡面数量
     if(card.image.length > this.app.Config.cardImageMaxNum) throw Error("卡面数量错误")
   }
-  async encryptImage(imagePath, extraData=[]){
+
+  async encryptImage(imagePath: string, extraData?: any[]){
     const imageHexData = await utils.file.readFile(imagePath, 'hex')
     const {key:imageKey, salt} = this.generateKeyByMasterKey()
     const flag = '00000000'
     const extraDataInfo = this._packExtraData(extraData)
     
-    const mixHexData = imageHexData.concat(extraDataInfo.data)
+    const mixHexData = (imageHexData as string).concat(extraDataInfo.data)
     const encryptedData = utils.crypto.encryptFile(mixHexData, imageKey)
     
     const encryptPackage = encryptedData.concat(salt)
@@ -122,7 +121,7 @@ class CardManager {
                                         .concat(KATU_MARK)
 
     console.log('encryptPackage:',encryptedData.length, encryptPackage.slice(-PACKAGE_TAIL_LENGTH), salt);
-    const tempFilePath = await utils.file.getTempFilePath(salt,'_enc')
+    const tempFilePath = await this.app.getTempFilePath(salt,'_enc')
     await utils.file.writeFile(tempFilePath, encryptPackage, 'hex')
     return {
       imageSecretKey: salt,
@@ -132,8 +131,8 @@ class CardManager {
 
   async decryptImage(card){
     const salt = card.salt
-    const decryptImage = {
-      imagePath: await utils.file.getTempFilePath(salt,'_dec'),
+    const decryptImage:{imagePath: string, extraData: any[] | string} = {
+      imagePath: await this.app.getTempFilePath(salt,'_dec'),
       extraData: []
     }
 
@@ -171,16 +170,16 @@ class CardManager {
     return decryptImage
   }
 
-  _packExtraData(extraData=[]){
+  _packExtraData(extraData){
     const retDataInfo = {
       data: '',
       lengthData: '00000000'
     }
     extraData = JSON.stringify(extraData)
     if(extraData !== '[]') {
-      const hexStr = string2hex(extraData)
+      const hexStr = convert.string2hex(extraData)
       retDataInfo.data = hexStr
-      retDataInfo.lengthData = hexStr.length.toString().padStart(8,0)
+      retDataInfo.lengthData = hexStr.length.toString().padStart(8,'0')
     }
     return retDataInfo
   }
@@ -193,28 +192,28 @@ class CardManager {
     const extraDataLength = parseInt(metaData.slice(-24,-16))
     if(extraDataLength){
       retDataInfo.dataLength = extraDataLength
-      retDataInfo.data = JSON.parse(hex2string(mixHexData.slice(-extraDataLength)))
+      retDataInfo.data = JSON.parse(convert.hex2string(mixHexData.slice(-extraDataLength)))
     }
     return retDataInfo
   }
 
   async getHash(imagePath){
     const imageHexData = await utils.file.readFile(imagePath, 'hex')
-    console.log('getHash: ',imagePath ,imageHexData.length, imageHexData.slice(0,32), imageHexData.slice(-32));
+    console.log('getHash: ',imagePath ,typeof imageHexData === 'string' ? imageHexData.length: 'ArrayBuffer', imageHexData.slice(0,32), imageHexData.slice(-32));
     return utils.crypto.md5(imageHexData)
   }
 
   async upload(filePath){
-    const uploadFileId = `${this.app.Config.uploadCardNamePrefix}/${this.app.user.openid}/${utils.crypto.random(16)}`
+    const uploadFileId = `${this.app.Config.uploadCardNamePrefix}/${this.app.user.openid}/${await utils.crypto.random(16)}`
     return this.app.uploadFile(filePath, uploadFileId)
   }
 
-  generateKeyByMasterKey(options){
+  generateKeyByMasterKey(options?:any){
     return utils.crypto.pbkdf2(this.app._masterKey, options)
   }
 
-  async choosePic(...args){
-    return this.app.chooseFile(...args)
+  async choosePic(){
+    return this.app.chooseFile()
   }
 
   async parseCardImageByRemoteApi(imagePath){
@@ -288,7 +287,7 @@ class CardManager {
                 ]
     }
     function four_point_transform(src, contour){
-        let [theWidth, theHeight, selectedCoords] = getSize(contour)
+        let [theWidth, theHeight, selectedCoords] = getSize(contour) as [theWidth:number,theHeight:number,selectedCoords:number[]]
 
         if(theWidth<theHeight){
             [theWidth, theHeight] = [theHeight, theWidth]
@@ -317,7 +316,7 @@ class CardManager {
     let hierarchy = new cv.Mat();
     cv.findContours(src, contours, hierarchy, cv.RETR_LIST, cv.CHAIN_APPROX_SIMPLE)
 
-    let sortedCnts = []
+    let sortedCnts: {i:number,area:number}[] = []
     for (let i = 0; i < contours.size(); ++i) {
         let cnt = contours.get(i)
         let area = cv.arcLength(cnt, true)
@@ -362,7 +361,7 @@ class CardManager {
     rect = cv.export(rect)
 
     const imageBuffer = utils.upng.encode([rect.data],rect.cols,rect.rows,0)
-    const path = await utils.file.getTempFilePath('1234')
+    const path = await this.app.getTempFilePath('1234')
     await utils.file.writeFile(path, imageBuffer)
     return path
   }
@@ -372,6 +371,6 @@ function getCardManager(){
   return CardManager.getInstance()
 }
 
-module.exports = {
+export {
   getCardManager
 }

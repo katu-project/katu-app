@@ -1,11 +1,12 @@
-const { getAppManager } = require('class/app')
-const utils = require('./utils/index')
+import { getAppManager } from '@/class/app'
+
+wx.cloud.init({
+  env: 'dev-4gglcut52bffa0ff',
+  traceUser: true,
+})
+
 App({
   onLaunch: function () {
-    wx.cloud.init({
-      env: 'dev-4gglcut52bffa0ff',
-      traceUser: true,
-    });
     wx.getSystemInfo({
       success: e => {
         this.globalData.StatusBar = e.statusBarHeight;
@@ -14,7 +15,6 @@ App({
         this.globalData.CustomBar = custom.bottom + custom.top - e.statusBarHeight;
       }
     })
-    this.globalData.app = getAppManager()
     this.globalData.app.loadUserConfig()
     this.checkUpdate()
   },
@@ -40,11 +40,11 @@ App({
   onHide(){
     if(!this.globalData.app.user) return
 
-    if(this.globalData.app.user.config.security.rememberPassword){
+    if(this.globalData.app.user.config?.security.rememberPassword){
       console.log('缓存主密码');
       this.globalData.app.cacheMasterKey()
     }else{
-      if(this.globalData.app.user.config.security.lockOnExit){
+      if(this.globalData.app.user.config?.security.lockOnExit){
         console.log('退出并清除主密码');
         this.globalData.app.clearMasterKey()
       }
@@ -57,8 +57,14 @@ App({
       url: 'pages/home/index',
     })
   },
+  onUnhandledRejection(e){
+    console.log(e);
+  },
   globalData: {
-    utils,
+    StatusBar: 0,
+    CustomBar: 0,
+    Custom: {},
+    app: getAppManager(),
     ColorList: [{
         title: '嫣红',
         name: 'red',
