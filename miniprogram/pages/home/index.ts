@@ -1,23 +1,30 @@
-const globalData = getApp().globalData
-import { loadData, navigateTo } from '@/utils/index'
+import { loadData, navigateTo, showNotice } from '@/utils/index'
 import { DefaultShowLockImage, DefaultShowImage } from '@/const'
-
+import { getAppManager } from '@/class/app'
+import api from '@/api'
+const app = getAppManager()
 export {}
 
 Page({
+  backData: {
+    refresh: false
+  },
   data: {
-    list: [],
-    likeList: [],
+    list: [] as CardSummary[],
+    likeList: [] as Card[],
     notice: {
-      newNotice: false,
-      content: '暂无新消息'
-    },
+      _id: '',
+      content: '暂无新消息',
+      updateTime: '',
+      auto_show: false
+    } as Notice,
     isRefresh: false,
     curTab: 0
   },
 
-  onLoad(options) {
+  onLoad() {
   },
+
 
   onReady() {
     this.loadData()
@@ -36,12 +43,13 @@ Page({
     // this.setData({
     //   likeList: []
     // })
-    let likeList = await loadData(globalData.app.api.getLikeCard)
+    wx.navigateBack()
+    let likeList = await loadData(api.getLikeCard)
     likeList = likeList.map(card=>{
       if(card.encrypted){
-        card.url = DefaultShowLockImage
+        card._url = DefaultShowLockImage
       }else{
-        card.url = DefaultShowImage
+        card._url = DefaultShowImage
       }
       return card
     })
@@ -55,13 +63,11 @@ Page({
       const card = this.data.likeList[idx]
       if(!card.encrypted){
         wx.cloud.getTempFileURL({
-          fileList: [{
-            fileID: card.image[0].url
-          }]
+          fileList: [card.image[0].url]
         }).then(({fileList:[file]})=>{
-          const key = `likeList[${idx}].url`
+          const key = `likeList[${idx}]._url`
           this.setData({
-            [key]: file.tempFileURL + globalData.app.Config.imageMogr2
+            [key]: file.tempFileURL + app.Config.imageMogr2
           })
         })
       }
@@ -71,7 +77,7 @@ Page({
     // this.setData({
     //   list: []
     // })
-    const list = await loadData(globalData.app.api.getCardSummary)
+    const list = await loadData(api.getCardSummary)
     this.setData({
       list
     })
@@ -79,18 +85,16 @@ Page({
   checkDataRefresh(){
     if(this.backData && this.backData.refresh){
       this.loadData()
-      this.backData.refresh = null
+      this.backData.refresh = false
       console.log("刷新数据");
     }
   },
   async loadNotice(){
-    return globalData.app.api.getNotice().then(notice=>{
+    return api.getNotice().then(notice=>{
       if(!notice) return 
+      notice.updateTime = new Date(notice.updateTime).toLocaleDateString()
       this.setData({
-        'notice.id': notice._id,
-        'notice.time': new Date(notice.updateTime).toLocaleDateString(),
-        'notice.newNotice': true,
-        'notice.content': notice.content
+        notice
       })
       if(notice.auto_show){
         this.tapToShowNotice()
@@ -98,12 +102,12 @@ Page({
     }).catch(console.warn)
   },
   tapToMarkRead(){
-    if(!this.data.notice.id) {
+    if(!this.data.notice._id) {
       return this.hideModal('showNotice')
     }
-    globalData.app.api.markRead(this.data.notice.id)
+    api.markRead(this.data.notice._id)
     this.setData({
-      'notice.newNotice': false
+      'notice._id': ''
     })
     this.hideModal('showNotice')
   },
@@ -114,8 +118,12 @@ Page({
     navigateTo('../card/list/index', true)
   },
   tapToShowNotice(){
-    const data = {showNotice: true}
-    this.setData(data)
+    if(this.data.notice._id){
+      const data = {showNotice: true}
+      this.setData(data)
+    }else{
+      showNotice('暂无新通知')
+    }
   },
   tapToCardList(e){
     navigateTo('../card/list/index?tag='+e.currentTarget.dataset.tag, true)
