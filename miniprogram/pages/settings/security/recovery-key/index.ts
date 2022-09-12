@@ -1,10 +1,10 @@
-import { loadData, showSuccess, showChoose, showError } from "../../../../utils/index"
-const drawQrcode = require("../../../../utils/qrcode/index")
+import { loadData, showSuccess, showChoose, showError, qrcode } from "@/utils/index"
 const globalData = getApp().globalData
 
 export {}
 
 Page({
+  _canvasCtx: '',
   data: {
     setRecoveryKey: false,
     recoveryKeyId: '0000',
@@ -73,7 +73,7 @@ Page({
     ctx.fillStyle = color || '#ccefee'
     ctx.fillRect(0, 0, 300, 400)
   },
-  async drawNotice(ctx, text, color, h){
+  async drawNotice(ctx, text, color, h?: number){
     ctx.fillStyle = color
     ctx.font = '20px serif'
     ctx.textAlign = 'center';
@@ -98,7 +98,7 @@ Page({
     ctx.strokeStyle = 'green'
     ctx.lineWidth = 2
     ctx.strokeRect(49, 79, 202, 202)
-    drawQrcode({
+    qrcode({
       x: 50,
       y: 80,
       width: 200,
@@ -172,12 +172,11 @@ Page({
       }
       return
     }
-    const qrData = globalData.app.generateRecoveryKeyQrcodeContent()
-    await loadData(globalData.app.createRecoveryKeyPack, qrData)
-    globalData.app.reloadUserConfig()
-
+    const qrData = await globalData.app.generateRecoveryKeyQrcodeContent()
     const canvasCtx = await this.initCanvas()
     await this.drawRecoveryKey(canvasCtx, qrData)
+    await loadData(globalData.app.createRecoveryKeyPack, qrData)
+    globalData.app.reloadUserConfig()
 
     this.setData({
       recoveryKeyId: qrData.i,
@@ -198,7 +197,7 @@ Page({
     if(cancel) return
     const url = await this.getCanvasImage()
     wx.saveImageToPhotosAlbum({
-      filePath: url,
+      filePath: url as string,
       success: ()=>{
         this.setData({
           readyExport: false
