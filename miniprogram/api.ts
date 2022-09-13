@@ -34,7 +34,7 @@ const request = <T>(action: string, data={}): Promise<T> => {
 export default {
   request,
   // sys
-  getAppConfig: (name:string) => request('app/config', {name}),
+  getAppConfig: <T extends keyof AppConfig>(name: T) => request<filterAppConfigItem<T>>('app/config', {name}),
   getDefaultTag: () => request<Tag[]>('app/tags'),
   getChangeLog: () => request('app/changeLog'),
 
@@ -88,7 +88,7 @@ export default {
   deleteCard: id => request('card/delete', id),
 
   // doc
-  getDoc: data => request('doc/getDoc', data),
+  getDoc: data => request<Doc>('doc/getDoc', data),
 
   getHotDoc: () => request('doc/getDoc', {field:{title: true}, where: {type: 2, hot: true}}),
 

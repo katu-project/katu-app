@@ -1,37 +1,24 @@
-const globalData = getApp().globalData
 import { loadData, navigateTo, showSuccess, showNotice } from '@/utils/index'
+import { getAppManager } from '@/class/app'
+import { PAGES_MENU } from '@/const'
+import api from '@/api'
+const app = getAppManager()
 
 export {}
 
 Page({
   data: {
-    user: {},
-    activeInfo: null,
+    user: {} as Partial<User>,
+    activeInfo: {} as Partial<AppConfig['active']>,
     usedCardCount: 0,
     usedEncryptedCardCount: 0,
-    profileList: [
-      {
-        icon: 'tag',
-        name: '标签管理',
-        url: '../card/edit-tag/index'
-      },
-      {
-        icon: 'question',
-        name: '使用帮助 ( Q&A )',
-        url: '../qa/index'
-      },
-      {
-        icon: 'info',
-        name: '关于卡兔',
-        url: '../about/index'
-      }
-    ]
+    menus: PAGES_MENU.profile
   },
-  onLoad(options) {
+  onLoad() {
   },
   onReady() {
     this.setData({
-      user: globalData.app.user
+      user: app.user
     })
   },
   onShow() {
@@ -40,7 +27,7 @@ Page({
     this.loadCardUsageStatistic()
   },
   loadCardUsageStatistic(){
-    globalData.app.api.usageStatistic().then(stats=>{
+    api.usageStatistic().then(stats=>{
       this.setData({
         usedCardCount: stats.usedCardCount ||  0,
         usedEncryptedCardCount: stats.usedEncryptedCardCount || 0
@@ -61,47 +48,51 @@ Page({
       desc: '用于完善会员资料',
       success: ({cloudID}) => {
         wx.hideLoading({})
-        loadData(globalData.app.api.activeAccount, {cloudId: cloudID}).then(()=>{
+        loadData(api.activeAccount, {cloudId: cloudID}).then(()=>{
           showSuccess("激活成功")
           this.reloadUserInfo()
           this.hideActiveNotice()
         })
       },
-      fail: err => {
+      fail: () => {
         wx.hideLoading({})
         showNotice('取消授权')
       }
     })
   },
   reloadUserInfo(){
-    globalData.app.reloadUserInfo().then(()=>{
+    app.reloadUserInfo().then(()=>{
       this.setData({
-        user: globalData.app.user
+        user: app.user
       })
     })
   },
+
   tapToEditInfo(){
     if(!this.data.user.isActive) return
     navigateTo('./edit/index')
   },
+
   checkRefreshUserData(){
-    if(globalData.app.user && (this.data.user.nickName !== globalData.app.user.nickName || this.data.user.avatarUrl !== globalData.app.user.avatarUrl)){
+    if(app.user && (this.data.user.nickName !== app.user.nickName || this.data.user.avatarUrl !== app.user.avatarUrl)){
       this.setData({
-        'user.avatarUrl': globalData.app.user.avatarUrl,
-        'user.nickName': globalData.app.user.nickName,
+        'user.avatarUrl': app.user.avatarUrl,
+        'user.nickName': app.user.nickName,
       })
     }
   },
   async tapToShowActiveTip(){
     await this.loadActiveData()
-    globalData.app.navToDoc(this.data.activeInfo.tip)
+    if(this.data.activeInfo.tip){
+      app.navToDoc(this.data.activeInfo.tip)
+    }
   },
   tapToItem(e){
     const item = e.currentTarget.dataset.item
     navigateTo(item.url || item)
   },
   tapToReadDoc(e){
-    globalData.app.navToDoc(e.currentTarget.dataset.item.id)
+    app.navToDoc(e.currentTarget.dataset.item.id)
   },
   async showActiveNotice(){
     await this.loadActiveData()
@@ -115,9 +106,9 @@ Page({
     })
   },
   async loadActiveData(){
-    if(this.data.activeInfo) return
-    const activeInfo = await loadData(globalData.app.api.getAppConfig, 'active')
-    const doc = await loadData(globalData.app.api.getDoc, {_id: activeInfo.id})
+    if(this.data.activeInfo.id) return
+    const activeInfo = await loadData(api.getAppConfig, 'active')
+    const doc = await loadData(api.getDoc, {_id: activeInfo.id})
     this.setData({
       activeInfo,
       'activeInfo.notice': doc.content

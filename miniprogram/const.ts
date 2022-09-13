@@ -14,6 +14,26 @@ const STANDARD_CARD_DATA = {
   ratio: 53.98 / 85.60
 }
 
+const PAGES_MENU = {
+  profile: [
+    {
+      icon: 'tag',
+      name: '标签管理',
+      url: '../card/edit-tag/index'
+    },
+    {
+      icon: 'question',
+      name: '使用帮助 ( Q&A )',
+      url: '../qa/index'
+    },
+    {
+      icon: 'info',
+      name: '关于卡兔',
+      url: '../about/index'
+    }
+  ]
+}
+
 export {
   DefaultShowImage,
   DefaultShowLockImage,
@@ -23,5 +43,6 @@ export {
   APP_TEMP_DIR,
   KATU_MARK,
   PACKAGE_TAIL_LENGTH,
-  STANDARD_CARD_DATA
+  STANDARD_CARD_DATA,
+  PAGES_MENU
 }

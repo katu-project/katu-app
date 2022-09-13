@@ -44,7 +44,7 @@
   </view>
 
   <view class="cu-list menu margin-top">
-    <view class="cu-item arrow item" wx:for="{{profileList}}" wx:key="index" data-item="{{item}}" bindtap="tapToItem">
+    <view class="cu-item arrow item" wx:for="{{menus}}" wx:key="index" data-item="{{item}}" bindtap="tapToItem">
       <view class="content">
         <text class="cuIcon-{{item.icon}} text-grey"></text>
         <text class="">{{item.name}}</text>

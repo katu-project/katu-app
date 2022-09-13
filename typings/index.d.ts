@@ -20,7 +20,22 @@ type Card = {
   image: CardImage[],
   tags: string[],
   info: any[],
-  setLike: boolean
+  setLike: boolean,
+
+  _url?: string
+}
+
+type CardSummary = {
+  name: string,
+  count: number,
+  color: string
+}
+
+type Notice = {
+  _id: string,
+  updateTime: string,
+  content: string,
+  auto_show: boolean
 }
 
 type Tag = {
@@ -40,11 +55,18 @@ type RecoveryKeyPack = {
   qrId: string
 }
 
-type UsageStatistic = { canUseCardCount: number, canUseEncryptedCardCount:number }
+type UsageStatistic = { 
+  canUseCardCount: number, 
+  canUseEncryptedCardCount:number,
+  usedCardCount: number,
+  usedEncryptedCardCount: number
+}
 
 type User = {
   _id: string,
   openid: string,
+  nickName: string,
+  avatarUrl: string,
   isActive: boolean,
   setMasterKey: boolean,
   masterKeyPack: MasterKeyPack,
@@ -70,3 +92,20 @@ type User = {
     }
   }
 }
+
+type Doc = {
+  _id: string,
+  content: string
+}
+
+type AppConfig = {
+  active: {
+    id: string,
+    protocols: any[],
+    tip: string
+  }
+}
+
+type filterAppConfigItem<T> = 
+    T extends "active" ? AppConfig['active'] :
+    never;
