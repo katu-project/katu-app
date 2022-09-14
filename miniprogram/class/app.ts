@@ -320,7 +320,7 @@ class AppManager {
   async generateRecoveryKeyQrcodeContent(){
     const rk = this._generateRecoveryKey()
     const qrContent = {
-      i: await utils.crypto.random(2).toString().toUpperCase(),
+      i: (await utils.crypto.random(4)).toUpperCase(),
       t: new Date().toLocaleDateString(),
       rk
     }
