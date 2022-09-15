@@ -215,15 +215,7 @@ class AppManager {
   // 生成主密码 256 bit
   async _createMasterKeyPack(hexKey: string, masterKey ?: string){
     if(!masterKey){
-      try {
-        const {randomValues} = await wx.getRandomValues({
-          length: 16,
-        })
-        masterKey = utils.convert.BufferToHex(randomValues)
-      } catch (error) {
-        console.log('获取系统随机数出错，将使用内置替代库：', error)
-        masterKey = utils.crypto.random(16).toString()
-      }
+      masterKey = await utils.crypto.random(16)
     }
     const keyPack: Partial<MasterKeyPack> = {}
     keyPack.keyPack = utils.crypto.encryptString(masterKey, hexKey)
