@@ -14,29 +14,32 @@
 .scroll-item{
   width: 100vw;
 }
-.like-list .item {
-  background: rgba(53, 80, 80, 0.6);
-  padding: 10rpx;
-  height: 35vw;
-  width: 40vw; 
-  border-radius: 10rpx;
+.like-list {
+  .item {
+    background: rgba(53, 80, 80, 0.6);
+    padding: 10rpx;
+    height: 35vw;
+    width: 40vw; 
+    border-radius: 10rpx;
+    .img {
+      border: 1rpx solid darkcyan;
+      background: rgba(202, 226, 226, 0.6);
+      width: 40vw;
+      height: 25.14vw;
+      padding: 1px;
+      border-radius: 10rpx;
+    }
+  }
 }
 
-.like-list .item .img {
-  border: 1rpx solid darkcyan;
-  background: rgba(202, 226, 226, 0.6);
-  width: 40vw;
-  height: 25.14vw;
-  padding: 1px;
-  border-radius: 10rpx;
-}
-
-.cate-list .item {
-  background: rgba(152, 180, 185, 0.6);
-  padding: 20rpx;
-  height: 25vw;
-  width: 40vw; 
-  border-radius: 10rpx;
+.cate-list {
+  .item {
+    background: rgba(152, 180, 185, 0.6);
+    padding: 20rpx;
+    height: 25vw;
+    width: 40vw; 
+    border-radius: 10rpx;
+  }
 }
 
 .search, .notice{
@@ -50,14 +53,13 @@
   justify-content: center;
   align-items: center;
   position: relative;
-}
-
-.search .dot{
-  background-color: red;
-  position: absolute;
-  width: 16rpx;
-  height: 16rpx;
-  border-radius: 50%;
-  top: 2.5vw;
-  right: 2vw;
+  .dot{
+    background-color: red;
+    position: absolute;
+    width: 16rpx;
+    height: 16rpx;
+    border-radius: 50%;
+    top: 2.5vw;
+    right: 2vw;
+  }
 }
