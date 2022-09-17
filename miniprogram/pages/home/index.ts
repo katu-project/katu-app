@@ -91,7 +91,7 @@ Page({
   },
   async loadNotice(){
     return api.getNotice().then(notice=>{
-      if(!notice) return 
+      if(!notice._id) return 
       notice.updateTime = new Date(notice.updateTime).toLocaleDateString()
       this.setData({
         notice
