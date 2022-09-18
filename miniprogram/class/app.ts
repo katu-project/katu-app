@@ -96,7 +96,7 @@ class AppManager {
     this.user = await api.getUser()
   }
 
-  async reloadUserConfig(configItem){
+  async reloadUserConfig(configItem?:{key:string,value:string}){
     if(configItem){
       return utils.objectSetValue(this.user, configItem.key, configItem.value)
     }

@@ -1,5 +1,6 @@
 import { loadData, showSuccess, showChoose, showError, qrcode } from "@/utils/index"
-const globalData = getApp().globalData
+import { getAppManager } from '@/class/app'
+const app = getAppManager()
 
 export {}
 
@@ -20,11 +21,11 @@ Page({
       setRecoveryKey: false,
       recoveryKeyId: ''
     }
-    if(globalData.app.user.config.security.setRecoveryKey){
-      setData.setRecoveryKey = globalData.app.user.config.security.setRecoveryKey
+    if(app.user.config?.security.setRecoveryKey){
+      setData.setRecoveryKey = app.user.config.security.setRecoveryKey
     }
-    if(globalData.app.user.recoveryKeyPack.qrId){
-      setData.recoveryKeyId = globalData.app.user.recoveryKeyPack.qrId
+    if(app.user.recoveryKeyPack?.qrId){
+      setData.recoveryKeyId = app.user.recoveryKeyPack.qrId
     }
     this.setData(setData)
     this.initCanvasContent()
@@ -163,7 +164,7 @@ Page({
   },
   async genCert(){
     try {
-      globalData.app.checkMasterKey()
+      app.checkMasterKey()
     } catch (error) {
       if(error.code[0] === '2'){
         this.showInputKey()
@@ -172,11 +173,11 @@ Page({
       }
       return
     }
-    const qrData = await globalData.app.generateRecoveryKeyQrcodeContent()
+    const qrData = await app.generateRecoveryKeyQrcodeContent()
     const canvasCtx = await this.initCanvas()
     await this.drawRecoveryKey(canvasCtx, qrData)
-    await loadData(globalData.app.createRecoveryKeyPack, qrData)
-    globalData.app.reloadUserConfig()
+    await loadData(app.createRecoveryKeyPack, qrData)
+    app.reloadUserConfig()
 
     this.setData({
       recoveryKeyId: qrData.i,
@@ -218,7 +219,7 @@ Page({
   },
   inputKeyConfirm(e){
     const key = e.detail.value
-    globalData.app.loadMasterKeyWithKey(key).then(()=>{
+    app.loadMasterKeyWithKey(key).then(()=>{
       this.genCert()
     }).catch(error=>{
       showChoose(error.message,'',{showCancel:false})
