@@ -1,5 +1,6 @@
-import { showError, loadData, showChoose, navigateTo } from '../../../../utils/index'
-const globalData = getApp().globalData
+import { navigateTo } from "@/utils/index"
+import { getAppManager } from '@/class/app'
+const app = getAppManager()
 
 export {}
 
@@ -8,18 +9,12 @@ Page({
     setRecoveryKey: false,
 
   },
-  onLoad(options) {
-
-  },
-  onReady() {
-
-  },
   onShow() {
     const setData = {
       setRecoveryKey: false
     }
-    if(globalData.app.user.config.security.setRecoveryKey){
-      setData.setRecoveryKey = globalData.app.user.config.security.setRecoveryKey
+    if(app.user.config?.security.setRecoveryKey){
+      setData.setRecoveryKey = app.user.config.security.setRecoveryKey
     }
     this.setData(setData)
   },
@@ -27,6 +22,6 @@ Page({
     navigateTo(page)
   },
   tapToDoc(){
-    globalData.app.navToDoc(globalData.app.Config.doc.forgetKeyNotice)
+    app.navToDoc(app.Config.doc.forgetKeyNotice)
   }
 })
