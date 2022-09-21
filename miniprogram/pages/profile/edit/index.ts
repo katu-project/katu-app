@@ -1,19 +1,22 @@
-const globalData = getApp().globalData
 import { loadData, showError, showSuccess, showNotice, navigateBack } from '@/utils/index'
+import { getAppManager } from '@/class/app'
+import api from '@/api'
+const app = getAppManager()
 
 export {}
 
 Page({
+  originData: {} as {name:string, url:string},
   data: {
     url: '/static/images/user.svg',
     name: ''
   },
-  onLoad(options) {
+  onLoad() {
   },
   onReady() {
     this.setData({
-      url: globalData.app.user.avatarUrl,
-      name: globalData.app.user.nickName
+      url: app.user.avatarUrl,
+      name: app.user.nickName
     })
     this.originData = Object.assign({},this.data)
   },
@@ -25,7 +28,6 @@ Page({
     })
   },
   onBindChooseAvatar(e){
-    console.log(e.detail.avatarUrl);
     this.setData({
       url: e.detail.avatarUrl
     })
@@ -35,19 +37,21 @@ Page({
       showNotice('数据无变动!')
       return
     }
-    if(this.data.name.length>6){
-      return showError("昵称长度有误")
+    if(this.data.name.length>8){
+      showError("昵称长度有误")
+      return 
     }
     const userData = {
-      name: this.data.name
+      name: this.data.name,
+      url: this.data.url
     }
     if(!this.data.url.startsWith('https') && !this.data.url.startsWith('cloud:')){
-      const url = await loadData(globalData.app.uploadUserAvatar, this.data.url, '正在上传头像')
+      const url = await loadData(app.uploadUserAvatar, this.data.url, '正在上传头像')
       userData.url = url
     }
     
-    loadData(globalData.app.api.updateUserProfile, userData, '正在保存信息').then(()=>{
-      globalData.app.reloadUserInfo().then(()=>{
+    loadData(api.updateUserProfile, userData, '正在保存信息').then(()=>{
+      app.reloadUserInfo().then(()=>{
         showSuccess('修改成功').then(()=>{
           setTimeout(()=>{
             navigateBack()
