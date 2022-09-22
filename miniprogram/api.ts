@@ -81,7 +81,7 @@ export default {
 
   captureCard: fileID => request<{fileID: string}>('card/capture', {fileId: fileID}),
 
-  getCard: data => request('card/fetch', data),
+  getCard: data => request<Card>('card/fetch', data),
 
   saveCard: data => request('card/save', data),
   
