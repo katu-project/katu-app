@@ -1,9 +1,9 @@
-const globalData = getApp().globalData
 import { navigateBack } from '@/utils/index'
 
 export {}
 
 Page({
+  returnContentKey: '',
   data: {
     content: ''
   },
