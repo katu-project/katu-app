@@ -1,22 +1,25 @@
-const globalData = getApp().globalData
 import { showChoose, loadData, showSuccess, showError, switchTab } from '@/utils/index'
+import api from '@/api'
+import { getAppManager } from '@/class/app'
+const app = getAppManager()
 
 export {}
 
 Page({
   data: {
-    list: [],
+    list: [] as Tag[],
     tempTagName: '',
+    selectedTagIdx: -1,
     tempTagColor: '',
     hasEdit: false,
-    colors: globalData.ColorList
+    colors: app.Constant.ColorList
   },
   onReady() {
     
   },
   onShow(){
     this.setData({
-      list: globalData.app.user.customTag
+      list: JSON.parse(JSON.stringify(app.user.customTag))
     })
   },
   checkInputTag(){
@@ -46,17 +49,18 @@ Page({
       })
     })
   },
-  tapToAddTag(){
+  async tapToAddTag(){
     if(!this.data.tempTagName){
       showError("请输入名字")
       return
     }
 
-    if(!globalData.app.user || !globalData.app.user.isActive){
-      return showChoose("警告","账户未激活，不可使用此功能。", {confirmText:'去激活'}).then(({cancel})=>{
+    if(!app.user || !app.user.isActive){
+      await showChoose("警告","账户未激活，不可使用此功能。", {confirmText:'去激活'}).then(({cancel})=>{
         if(cancel) return
         switchTab('../../profile/index')
       })
+      return
     }
 
     if(this.data.list.find(tag=>tag.name === this.data.tempTagName)){
@@ -73,15 +77,15 @@ Page({
     })
   },
   async syncTag(){
-    return loadData(globalData.app.api.updateTag, this.data.list).then(()=>{
-      globalData.app.syncUserTag(this.data.list)
+    return loadData(api.updateTag, this.data.list).then(()=>{
+      app.syncUserTag(this.data.list)
     })
   },
   tapToShowSetColor(e){
     const idx = parseInt(e.currentTarget.dataset.idx)
     this.setData({
       selectedTagIdx: idx,
-      tempTagColor: this.data.list[idx].color
+      tempTagColor: this.data.list[idx].color || 'gray'
     })
     this.showSetColor()
   },
@@ -114,8 +118,9 @@ Page({
     })
   },
   tapToBack(){
-    if(JSON.stringify(globalData.app.user.customTag) === JSON.stringify(this.data.list)){
-      return wx.navigateBack()
+    if(JSON.stringify(app.user.customTag) === JSON.stringify(this.data.list)){
+      wx.navigateBack()
+      return
     }
     if(!this.data.hasEdit) {
       wx.navigateBack()
