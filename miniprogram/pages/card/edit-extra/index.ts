@@ -1,13 +1,15 @@
-const globalData = getApp().globalData
 import { navigateBack } from '@/utils/index'
+import api from '@/api'
+import { getAppManager } from '@/class/app'
+const app = getAppManager()
 
 export {}
 
 Page({
   returnContentKey: '',
   data: {
-    labels: globalData.app.Config.extraDataLabels,
-    list: []
+    labels: app.Config.extraDataLabels,
+    list: [] as CardLabel[]
   },
   onLoad(options) {
     this.returnContentKey = options.returnContentKey || 'tempData'
@@ -60,8 +62,8 @@ Page({
       return
     }
 
-    const list = this.data.list.filter((e,i)=> e.key !== key)
-    const labels = this.data.labels.concat(globalData.app.Config.extraDataLabels.find(e=>e.key === key)).sort((a,b)=> a.xid-b.xid)
+    const list = this.data.list.filter((e)=> e.key !== key)
+    const labels = this.data.labels.concat(app.Config.extraDataLabels.find(e=>e.key === key)!).sort((a,b)=> a.xid-b.xid)
 
     this.setData({
       labels,
