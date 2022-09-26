@@ -88,7 +88,7 @@ type LoadDataOptions = {
   returnFailed: boolean
 }
 
-async function loadData<T>(func?: (args:any) => Promise<T>, params?: Object, options?: Partial<LoadDataOptions>): Promise<T> {
+async function loadData<T>(func?: (args:any) => Promise<T>, params?: Object, options?: Partial<LoadDataOptions> | string): Promise<T> {
   let loadingTitle = '正在处理请求', returnFailed = false
   if(options){
     if(typeof options === 'string'){
