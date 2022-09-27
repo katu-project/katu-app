@@ -1,17 +1,23 @@
-const globalData = getApp().globalData
+import api from '@/api'
 import { loadData, navigateTo } from '@/utils/index'
+import { getAppManager } from '@/class/app'
+const app = getAppManager()
 
 export {}
 
 Page({
+  backData: {
+    refresh: false
+  },
+  where: {},
+  originList: [] as Card[],
   data: {
     key: '',
     tag: '',
-    list: [],
+    list: [] as Card[],
     isRefresh: false
   },
   onLoad(options) {
-    this.where = {}
     if(options.tag){
       this.where = {tag: options.tag}
       this.setData({
@@ -23,20 +29,20 @@ Page({
     this.loadData()
   },
   onShow() {
-    if(this.backData && this.backData.refresh){
+    if(this.backData.refresh){
       this.loadData()
-      this.backData.refresh = null
+      this.backData.refresh = false
     }
   },
   loadData(){
-    return loadData(globalData.app.api.getCard, {where: this.where}).then(list=>{
+    return loadData(api.getCardList, {where: this.where}).then(list=>{
       this.originList = list
       this.setData({
         list: list.map(card=>{
           if(card.encrypted){
-            card.url = globalData.app.Constant.DefaultShowLockImage
+            card._url = app.Constant.DefaultShowLockImage
           }else{
-            card.url = globalData.app.Constant.DefaultShowImage
+            card._url = app.Constant.DefaultShowImage
           }
           return card
         })
@@ -49,13 +55,11 @@ Page({
       const card = this.data.list[idx]
       if(!card.encrypted){
         wx.cloud.getTempFileURL({
-          fileList: [{
-            fileID: card.image[0].url
-          }]
+          fileList: [card.image[0].url]
         }).then(({fileList:[file]})=>{
           const key = `list[${idx}].url`
           this.setData({
-            [key]: file.tempFileURL + globalData.app.Config.imageMogr2
+            [key]: file.tempFileURL + app.Config.imageMogr2
           })
         })
       }
