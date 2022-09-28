@@ -67,7 +67,8 @@ Page({
   },
   onBindRefresh(){
     this.setData({
-      isRefresh: true
+      isRefresh: true,
+      key: ''
     })
     this.loadData().then(()=>{
       this.setData({
