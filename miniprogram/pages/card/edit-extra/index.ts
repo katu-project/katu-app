@@ -1,5 +1,4 @@
 import { navigateBack } from '@/utils/index'
-import api from '@/api'
 import { getAppManager } from '@/class/app'
 const app = getAppManager()
 
