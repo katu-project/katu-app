@@ -1,10 +1,13 @@
-const globalData = getApp().globalData
-import { loadData, showChoose, navigateTo, showError, navigateBack } from '@/utils/index'
-const { getCardManager } = require('../../../class/card')
+import { loadData, showChoose, showError, navigateBack } from '@/utils/index'
+import { getCardManager } from '@/class/card'
+import { getAppManager } from '@/class/app'
+const app = getAppManager()
 
 export {}
 
 Page({
+  returnContentKey: '',
+  originImagePath: '',
   useRemoteApiConfirm: false,
   data: {
     selectedMethod: 0,
@@ -13,9 +16,13 @@ Page({
   onLoad(options) {
     this.returnContentKey = options.returnContentKey || 'tempData'
     this.setData({
-      tmpImagePath: globalData.app.Constant.DefaultShowImage
+      tmpImagePath: app.Constant.DefaultShowImage
     })
-    this.originImagePath = options.value
+    if(options.value){
+      this.originImagePath = options.value
+    }else{
+      navigateBack()
+    }
   },
   onReady() {
     this.setData({
@@ -26,7 +33,7 @@ Page({
 
   },
   goBack(){
-    wx.navigateBack({})
+    navigateBack()
   },
   useAndBack() {
     navigateBack({[this.returnContentKey]: this.data.tmpImagePath})
@@ -94,14 +101,14 @@ Page({
     showChoose("温馨提示","未识别出卡片？\n查看这些小技巧也许能提高卡片识别率！",{confirmText:'去查看'})
     .then(({cancel})=>{
       if(cancel) return
-      globalData.app.navToDoc(globalData.app.Config.doc.imageProcessorTip_1)
+      app.navToDoc(app.Config.doc.imageProcessorTip_1)
     })
   },
-  showTip2(cancelText){
+  showTip2(cancelText?:string){
     showChoose("警告","外部接口服务由第三方提供!\n更多信息请查看帮助文档。",{confirmText:'去查看',cancelText: cancelText||'取消'})
     .then(({cancel})=>{
       if(cancel) return
-      globalData.app.navToDoc(globalData.app.Config.doc.imageProcessorTip_2)
+      app.navToDoc(app.Config.doc.imageProcessorTip_2)
     })
   },
   tapToShowWarn(){
