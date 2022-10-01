@@ -35,7 +35,7 @@ export default {
   request,
   // sys
   getAppConfig: <T extends keyof AppConfig>(name: T) => request<filterAppConfigItem<T>>('app/config', {name}),
-  getDefaultTag: () => request<Tag[]>('app/tags'),
+  getDefaultTag: () => request<ICardTag[]>('app/tags'),
   getChangeLog: () => request('app/changeLog'),
 
   getNotice: (data?:any) => request<Notice>('app/notice', data), 
@@ -82,6 +82,8 @@ export default {
   captureCard: fileID => request<{fileID: string}>('card/capture', {fileId: fileID}),
 
   getCard: data => request<Card>('card/fetch', data),
+
+  getCardList: data => request<Card[]>('card/fetch', data),
 
   saveCard: data => request('card/save', data),
   

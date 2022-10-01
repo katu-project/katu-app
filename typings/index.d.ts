@@ -1,4 +1,5 @@
 /// <reference path="./types/index.d.ts" />
+/// <reference path="./edit.d.ts" />
 
 interface IAppOption {
   globalData: {
@@ -10,7 +11,9 @@ interface IAppOption {
 type CardImage = {
   hash: string,
   url: string,
-  salt: string
+  salt: string,
+
+  _url?: string
 }
 
 type Card = {
@@ -38,8 +41,17 @@ type Notice = {
   auto_show: boolean
 }
 
-type Tag = {
+interface ICardTag {
   name: string
+
+  color?: string
+}
+
+interface ICardLabel {
+  key: string
+  name: string
+  xid: number
+  value?: string
 }
 
 type MasterKeyPack = {
@@ -75,7 +87,7 @@ type User = {
     cardCount: number,
     encryptedCardCount: number
   },
-  customTag: Tag[],
+  customTag: ICardTag[],
   noticeReadLog: string[],
   config: {
     general: {

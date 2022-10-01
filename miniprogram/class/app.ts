@@ -54,7 +54,7 @@ class AppManager {
     throw Error('可使用卡片量不足')
   }
 
-  async syncUserTag(tags: Tag[]){
+  async syncUserTag(tags: ICardTag[]){
     this.user.customTag = tags
   }
 

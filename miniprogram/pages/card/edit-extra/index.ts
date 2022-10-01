@@ -8,7 +8,7 @@ Page({
   returnContentKey: '',
   data: {
     labels: app.Config.extraDataLabels,
-    list: [] as CardLabel[]
+    list: [] as ICardLabel[]
   },
   onLoad(options) {
     this.returnContentKey = options.returnContentKey || 'tempData'

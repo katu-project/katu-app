@@ -7,7 +7,7 @@ export {}
 
 Page({
   data: {
-    list: [] as Tag[],
+    list: [] as ICardTag[],
     tempTagName: '',
     selectedTagIdx: -1,
     tempTagColor: '',
