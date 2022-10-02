@@ -43,7 +43,6 @@ Page({
     // this.setData({
     //   likeList: []
     // })
-    wx.navigateBack()
     let likeList = await loadData(api.getLikeCard)
     likeList = likeList.map(card=>{
       if(card.encrypted){
