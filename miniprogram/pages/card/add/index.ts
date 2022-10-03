@@ -1,17 +1,25 @@
-const globalData = getApp().globalData
-import { showNotice, showChoose, navigateTo, showError, loadData } from '@/utils/index'
-const { getCardManager } = require('../../../class/card')
-const { DefaultAddImage } = require('../../../const')
-
+import { showNotice, showChoose, navigateTo, showError, loadData, navigateBack } from '@/utils/index'
+import { DefaultAddImage } from '@/const'
+import api from '@/api'
+import { getCardManager } from '@/class/card'
+import { getAppManager } from '@/class/app'
+const app = getAppManager()
 export {}
 
 Page({
+  id: '',
+  backData: {
+    resolveCardExtraData: '',
+    resolveImagePath: '',
+    resolveCardTitle: ''
+  },
+  resolveImageIdx: -1,
   data: {
     edit: false,
     card: {
       encrypted: false,
       title: '卡片名称1',
-      tags: [],
+      tags: [] as String[],
       setLike: false,
       image: [
         { url: DefaultAddImage }
@@ -20,7 +28,7 @@ Page({
     },
     curShowPicIdx: 0,
     showInputKey: false,
-    tags: []
+    tags: [] as ECardTag[]
   },
   onLoad(options){
     if(options.id){
@@ -45,45 +53,44 @@ Page({
     this.loadTagData()
   },
   loadTagData(){
-    const useDefaultTag = globalData.app.user.config.general.useDefaultTag
-    const tags = [...(useDefaultTag ?globalData.app.Config.tags: []),...globalData.app.user.customTag]
+    const useDefaultTag = app.user.config?.general.useDefaultTag
+    const tags = [...(useDefaultTag ?app.Config.tags: []),...app.user.customTag!]
     this.setData({
       tags
     })
   },
   receiveChoosePic(){
-    if(this.backData && this.backData.resolveImagePath){
+    if(this.backData.resolveImagePath){
       const key = `card.image[${this.resolveImageIdx}].url`
       this.setData({
         [key]: this.backData.resolveImagePath
       })
-      this.backData.resolveImagePath = null
+      this.backData.resolveImagePath = ''
       this.resolveImageIdx = 0
     }
   },
   receiveCardTitle(){
-    if(this.backData && this.backData.resolveCardTitle){
+    if(this.backData.resolveCardTitle){
       const key = `card.title`
       this.setData({
         [key]: this.backData.resolveCardTitle
       })
-      this.backData.resolveCardTitle = null
+      this.backData.resolveCardTitle = ''
     }
   },
   receiveExtraData(){
-    if(this.backData && this.backData.resolveCardExtraData){
+    if(this.backData.resolveCardExtraData){
       console.log('处理额外数据:',this.backData.resolveCardExtraData);
       const key = `card.info`
       const data = JSON.parse(this.backData.resolveCardExtraData)
       this.setData({
         [key]: data
       })
-      this.backData.resolveCardExtraData = null
+      this.backData.resolveCardExtraData = ''
     }
   },
   checkSetting(){
-    const {app:{user}} = globalData
-    if(user.config.general.defaultUseEncrytion){
+    if(app.user.config?.general.defaultUseEncrytion){
       this.setData({
         'card.encrypted': true
       })
@@ -91,7 +98,7 @@ Page({
     }
   },
   loadCardData(){
-    loadData(globalData.app.api.getCard, {_id: this.id}).then(async card=>{
+    loadData(api.getCard, {_id: this.id}).then(async card=>{
       const setData = {
         edit: true,
         'card._id': card._id,
@@ -109,7 +116,7 @@ Page({
           const {imagePath, extraData} = await cardManager.decryptImage(pic)
           pic.url = imagePath
           if(extraData.length){
-            setData['card.info'] = extraData
+            setData['card.info'] = extraData as ICardLabel[]
           }
           setData['card.image'].push(pic)
         }
@@ -147,7 +154,7 @@ Page({
   },
   async saveDone(){
     showChoose('操作成功','卡片数据已保存',{showCancel: false}).then(()=>{
-      wx.navigateBack()
+      navigateBack()
     })
   },
   async saveFailed(error){
@@ -162,7 +169,7 @@ Page({
     }
   },
   async saveFinish(){
-    globalData.app.setHomeRefresh()
+    app.setHomeRefresh()
   },
   showInputKey(){
     this.setData({
@@ -208,14 +215,15 @@ Page({
       this.checkShowSetMasterKey()
     }
   },
+
   changeLikeState(e){
     this.setData({
       'card.setLike': e.detail.value
     })
   },
+
   checkShowSetMasterKey(){
-    const {app:{user}} = globalData
-    if(!user.setMasterKey){
+    if(!app.user.setMasterKey){
       showChoose("警告","未设置主密码",{confirmText:'去设置'}).then(({cancel})=>{
         if(cancel) {
           this.changeEncrypt({detail:{value: false}})
@@ -225,9 +233,10 @@ Page({
       })
     }
   },
+
   inputKeyConfirm(e){
     const key = e.detail.value
-    globalData.app.loadMasterKeyWithKey(key).then(()=>{
+    app.loadMasterKeyWithKey(key).then(()=>{
       this.tapToSaveCard()
     }).catch(error=>{
       showChoose(error.message,'',{showCancel:false})
@@ -248,30 +257,36 @@ Page({
     })
     this.hideSelectTag()
   },
+
   tapToShowSelectTag(){
     this.setData({
       showSelectTag: true
     })
   },
+
   tapToSelectTag(e){
     const index = this.data.tags.findIndex(tag=>tag.name === e.currentTarget.dataset.value)
     this.setData({
       [`tags[${index}].selected`]: !this.data.tags[index].selected
     })
   },
+
   tapToCustomTag(){
     navigateTo('../edit-tag/index')
   },
+
   tapToEditExtraData(){
     const rk = 'resolveCardExtraData'
     const c = JSON.stringify(this.data.card.info)
     navigateTo(`../edit-extra/index?returnContentKey=${rk}&value=${c}`)
   },
+
   hideSelectTag(){
     this.setData({
       showSelectTag: false
     })
   },
+
   tapToHideSelectTag(e){
     if(!e.target.dataset.hide) return
     this.renderTagState()
