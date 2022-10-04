@@ -36,7 +36,7 @@ export default {
   // sys
   getAppConfig: <T extends keyof AppConfig>(name: T) => request<filterAppConfigItem<T>>('app/config', {name}),
   getDefaultTag: () => request<ICardTag[]>('app/tags'),
-  getChangeLog: () => request('app/changeLog'),
+  getChangeLog: () => request<IChangeLog[]>('app/changeLog'),
 
   getNotice: (data?:any) => request<Notice>('app/notice', data), 
   // user

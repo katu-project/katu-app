@@ -1,13 +1,13 @@
-const globalData = getApp().globalData
 import { loadData } from '@/utils/index'
+import api from '@/api'
 
 export {}
 
 Page({
   data: {
-    list: []
+    list: [] as IChangeLog[]
   },
-  onLoad(options) {
+  onLoad() {
 
   },
   onReady() {
@@ -17,7 +17,7 @@ Page({
     this.loadData()
   },
   loadData(){
-    loadData(globalData.app.api.getChangeLog).then(list=>{
+    loadData(api.getChangeLog).then(list=>{
       this.setData({
         list: list.map(e=>{
           e.time = e.createTime.slice(0,10)

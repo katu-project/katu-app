@@ -8,6 +8,10 @@ interface IAppOption {
   userInfoReadyCallback?: WechatMiniprogram.GetUserInfoSuccessCallback,
 }
 
+interface IAnyObject {
+  [key:string]: unknown
+}
+
 type CardImage = {
   hash: string,
   url: string,
@@ -121,3 +125,12 @@ type AppConfig = {
 type filterAppConfigItem<T> = 
     T extends "active" ? AppConfig['active'] :
     never;
+
+interface IChangeLog extends IAnyObject{
+  createTime: string
+  desc: string
+  pre_release: Boolean
+  updateTime: string
+  version: string
+  _id: string
+}
