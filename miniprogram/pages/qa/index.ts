@@ -1,14 +1,16 @@
 import { loadData, navigateTo } from '../../utils/index'
-const globalData = getApp().globalData
+import { getAppManager } from '@/class/app'
+const app = getAppManager()
+import api from '@/api'
 
 Page({
   data: {
-    qaCate: [],
-    list: []
+    qaCate: [] as IAnyObject[],
+    list: [] as IAnyObject[]
   },
-  onLoad(options) {
+  onLoad() {
     this.setData({
-      qaCate: globalData.app.Config.qaDocType
+      qaCate: app.Config.qaDocType
     })
   },
   onReady() {
@@ -18,7 +20,7 @@ Page({
     // this.loadData()
   },
   loadData(){
-    loadData(globalData.app.api.getHotDoc).then(list=>{
+    loadData(api.getHotDoc).then(list=>{
       this.setData({list})
     })
   },
