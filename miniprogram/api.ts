@@ -94,5 +94,5 @@ export default {
 
   getHotDoc: ():Promise<IAnyObject[]> => request('doc/getDoc', {field:{title: true}, where: {type: 2, hot: true}}),
 
-  getCateDoc: cate => request('doc/getDoc', {field:{title: true}, where: {type: 2, cate}})
+  getCateDoc: (cate):Promise<IAnyObject[]> => request('doc/getDoc', {field:{title: true}, where: {type: 2, cate}})
 }
