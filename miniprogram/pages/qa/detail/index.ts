@@ -1,5 +1,5 @@
-import { loadData, showChoose, navigateBack } from '../../../utils/index'
-const globalData = getApp().globalData
+import { loadData, showChoose, navigateBack } from '@/utils/index'
+import api from '@/api'
 
 export {}
 
@@ -9,7 +9,7 @@ Page({
       title: '',
       content: '数据加载中',
       updateTime: ''
-    }
+    } as Doc
   },
   onLoad(options) {
     this.id = options.id
@@ -25,7 +25,7 @@ Page({
       showChoose('该文档不存在').then(navigateBack)
       return
     }
-    loadData(globalData.app.api.getDoc,{_id:this.id}).then(doc=>{
+    loadData(api.getDoc,{_id:this.id}).then(doc=>{
       doc.updateTime = new Date(doc.updateTime).toLocaleDateString()
       doc.content = doc.content.replaceAll('<p></p>','<br/>')
       this.setData({doc})

@@ -1,3 +1,4 @@
+/// <reference path="./base.d.ts" />
 /// <reference path="./types/index.d.ts" />
 /// <reference path="./edit.d.ts" />
 
@@ -110,7 +111,9 @@ type User = {
 }
 
 type Doc = {
-  _id: string,
+  _id: string
+  title: string
+  updateTime: string
   content: string
 }
 
