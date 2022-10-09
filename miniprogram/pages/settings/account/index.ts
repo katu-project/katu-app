@@ -1,5 +1,7 @@
-import { loadData, showChoose, showNotice } from "../../../utils/index"
-const globalData = getApp().globalData
+import { loadData, showChoose, showNotice } from "@/utils/index"
+import { getAppManager } from '@/class/app'
+const app = getAppManager()
+import api from '@/api'
 
 export {}
 
@@ -7,11 +9,10 @@ Page({
   data: {
 
   },
-  onLoad(options) {
+  onLoad() {
 
   },
   onReady() {
-    this.app = globalData.app
   },
 
   tapToDeleteAccount(){
@@ -24,11 +25,12 @@ Page({
     })
   },
   startDeleteAccount(){
-    if(!this.app.user.isActive) {
-      return showNotice("账户未激活，无需删除")
+    if(!app.user.isActive) {
+      showNotice("账户未激活，无需删除")
+      return
     }
-    loadData(this.app.api.removeAccount).then(()=>{
-      this.app.clearUserInfo()
+    loadData(api.removeAccount).then(()=>{
+      app.clearUserInfo()
       showChoose('操作成功','账户删除成功',{
         showCancel: false
       }).then(()=>{

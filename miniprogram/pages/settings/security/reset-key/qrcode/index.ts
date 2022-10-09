@@ -1,12 +1,14 @@
-import utils, { showError, showChoose, loadData } from '../../../../../utils/index'
-const globalData = getApp().globalData
+import { showError, showChoose, loadData, navigateBack } from '@/utils/index'
+import { getAppManager } from '@/class/app'
+const app = getAppManager()
 
 export {}
 
 Page({
   data: {
     masterKey: '',
-    masterKeyRepeat: ''
+    masterKeyRepeat: '',
+    recoveryKey: ''
   },
   onLoad() {
 
@@ -23,10 +25,10 @@ Page({
         onlyFromCamera: false,
         scanType: ['qrCode']
       })
-      const recoveryKeyInfo = await globalData.app.extractRecoveryKeyFromQrcode(scan_res)
+      const recoveryKeyInfo = await app.extractRecoveryKeyFromQrcode(scan_res)
       console.log(recoveryKeyInfo);
       
-      if(recoveryKeyInfo.i !== globalData.app.user.recoveryKeyPack.qrId){
+      if(recoveryKeyInfo.i !== app.user.recoveryKeyPack?.qrId){
         await showChoose("警告","重置凭证ID不匹配！",{showCancel: false})
       }else{
         const {cancel} = await showChoose("温馨提示","重置凭证数据读取成功，去设置新密码？")
@@ -58,11 +60,11 @@ Page({
     }
   },
   setMasterKey(){
-    globalData.app.checkMasterKeyFormat(this.data.masterKey)
+    app.checkMasterKeyFormat(this.data.masterKey)
 
     showChoose('温馨提示','确认使用该密码？').then(({cancel})=>{
       if(cancel) return
-      loadData(globalData.app.resetMasterKeyWithRecoveryKey,{
+      loadData(app.resetMasterKeyWithRecoveryKey,{
         rk: this.data.recoveryKey,
         key: this.data.masterKey
       }).then(()=>{
@@ -71,10 +73,10 @@ Page({
     })
   },
   finishTask(){
-    globalData.app.clearMasterKey()
-    globalData.app.reloadUserInfo()
+    app.clearMasterKey()
+    app.reloadUserInfo()
     showChoose(`主密码重置成功`,"",{showCancel:false}).then(()=>{
-      wx.navigateBack()
+      navigateBack()
     })
   },
 })

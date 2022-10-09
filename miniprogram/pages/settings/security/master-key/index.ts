@@ -1,6 +1,6 @@
-import { showError, loadData, showChoose, navigateTo } from '../../../../utils/index'
-const globalData = getApp().globalData
-
+import { showError, loadData, showChoose, navigateTo, navigateBack } from '@/utils/index'
+import { getAppManager } from '@/class/app'
+const app = getAppManager()
 export {}
 
 Page({
@@ -11,12 +11,12 @@ Page({
     newMasterKey: '',
     newMasterKeyRepeat: ''
   },
-  onLoad(options) {
+  onLoad() {
 
   },
   onShow(){
     this.setData({
-      setMasterKey: globalData.app.user.setMasterKey || false
+      setMasterKey: app.user.setMasterKey || false
     })
   },
   checkInput(){
@@ -62,7 +62,7 @@ Page({
     }
   },
   updateMasterKey(){
-    if(!globalData.app.user.setMasterKey){
+    if(!app.user.setMasterKey){
       throw Error('请先设置主密码')
     }
     const params = {
@@ -70,36 +70,36 @@ Page({
       newKey: this.data.newMasterKey
     }
 
-    globalData.app.checkMasterKeyFormat(this.data.newMasterKey)
+    app.checkMasterKeyFormat(this.data.newMasterKey)
 
     showChoose('确认使用该密码？').then(({cancel})=>{
       if(cancel) return
-      loadData(globalData.app.updateUserMasterKey,params).then(()=>{
+      loadData(app.updateUserMasterKey,params).then(()=>{
         this.finishTask()
       })
     })
   },
   setMasterKey(){
-    if(globalData.app.user.setMasterKey){
+    if(app.user.setMasterKey){
       showError('已设置过主密码')
       return
     }
 
-    globalData.app.checkMasterKeyFormat(this.data.masterKey)
+    app.checkMasterKeyFormat(this.data.masterKey)
 
     showChoose('确认使用该密码？').then(({cancel})=>{
       if(cancel) return
-      loadData(globalData.app.setUserMasterKey,this.data.masterKey).then(()=>{
+      loadData(app.setUserMasterKey,this.data.masterKey).then(()=>{
         this.finishTask()
       })
     })
   },
   finishTask(){
-    globalData.app.clearMasterKey()
-    globalData.app.reloadUserInfo()
+    app.clearMasterKey()
+    app.reloadUserInfo()
     this.resetContent()
     showChoose(`${this.data.setMasterKey?'更新':'设置'}成功`,"",{showCancel:false}).then(()=>{
-      wx.navigateBack()
+      navigateBack()
     })
   },
   resetContent(){
@@ -111,7 +111,7 @@ Page({
     })
   },
   tapToOpenDoc(){
-    globalData.app.navToDoc(globalData.app.Config.doc.masterKeyNotice)
+    app.navToDoc(app.Config.doc.masterKeyNotice)
   },
   tapToResetKey(){
     navigateTo('../reset-key/index')

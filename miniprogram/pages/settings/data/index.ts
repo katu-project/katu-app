@@ -1,14 +1,15 @@
-const globalData = getApp().globalData
 import { loadData } from '@/utils/index'
+import { getAppManager } from '@/class/app'
+const app = getAppManager()
 
 export {}
 
 Page({
   data: {
-    user: globalData.user
+    user: app.user
 
   },
-  onLoad(options) {
+  onLoad() {
 
   },
   onReady() {
@@ -19,7 +20,7 @@ Page({
   },
   tapToExportData(){
     loadData().then(()=>{
-      globalData.app.exportCardData()
+      app.exportCardData()
     })
   }
 })

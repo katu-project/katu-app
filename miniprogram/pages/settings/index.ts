@@ -1,5 +1,6 @@
-import { navigateTo } from "../../utils/index"
-const globalData = getApp().globalData
+import { navigateTo } from "@/utils/index"
+import { getAppManager } from '@/class/app'
+const app = getAppManager()
 
 export {}
 
@@ -34,12 +35,12 @@ Page({
       }
     ]
   },
-  onLoad(options) {
+  onLoad() {
 
   },
   onReady() {
     this.setData({
-      'menu[4].hide': !globalData.app.isDev
+      'menu[4].hide': !app.isDev
     })
   },
   onShow() {

@@ -1,6 +1,7 @@
-import { loadData, showSuccess, navigateTo } from "../../../utils/index"
-const globalData = getApp().globalData
-
+import { loadData, showSuccess, navigateTo } from "@/utils/index"
+import { getAppManager } from '@/class/app'
+const app = getAppManager()
+import api from '@/api'
 export {}
 
 Page({
@@ -12,12 +13,12 @@ Page({
   },
 
   onShow(){
-    const {app:{user:{config}}} = globalData
+    const {config} = app.user
     this.setData({
-      setMasterKey: globalData.app.user.setMasterKey,
-      config_security_rememberPassword: config.security.rememberPassword,
-      config_security_lockOnExit: config.security.lockOnExit,
-      config_security_setRecoveryKey: config.security.setRecoveryKey,
+      setMasterKey: app.user.setMasterKey,
+      config_security_rememberPassword: config?.security.rememberPassword,
+      config_security_lockOnExit: config?.security.lockOnExit,
+      config_security_setRecoveryKey: config?.security.setRecoveryKey,
     })
   },
   tapToConfig(e){
@@ -26,21 +27,21 @@ Page({
       value: e.detail.value
     }
     console.log(configItem)
-    loadData(globalData.app.api.updateUserConfig, configItem).then(()=>{
+    loadData(api.updateUserConfig, configItem).then(()=>{
       showSuccess('修改成功')
       if(configItem.key === 'config_security_rememberPassword' && configItem.value === false){
-        globalData.app.clearMasterKey()
+        app.clearMasterKey()
       }
       this.setData({
         [configItem.key]: configItem.value
       })
-      globalData.app.reloadUserConfig(configItem)
+      app.reloadUserConfig(configItem)
     })
   },
   tapToPage({currentTarget:{dataset:{page}}}){
     navigateTo(page)
   },
   tapToReadDoc(e){
-    globalData.app.navToDoc(globalData.app.Config.doc.rememberKeyNotice)
+    app.navToDoc(app.Config.doc.rememberKeyNotice)
   }
 })
