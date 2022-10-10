@@ -5,7 +5,7 @@ export {}
 
 Page({
   data: {
-    list:[]
+    list:[] as IAnyObject[]
   },
   onLoad(options) {
 
@@ -15,7 +15,7 @@ Page({
     console.log(files);
     const dir = await file.getStats(APP_TEMP_DIR, true)
     this.setData({
-      list: dir
+      list: dir as IAnyObject[]
     })
     console.log(dir);
   }

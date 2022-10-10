@@ -1,9 +1,9 @@
-const globalData = getApp().globalData
-import { drawQrcode } from '@/utils/index'
+import { qrcode } from '@/utils/index'
 
 export {}
 
 Page({
+  ctx: {} as WechatMiniprogram.CanvasContext,
   data: {
   },
   onLoad(options) {
@@ -34,7 +34,7 @@ Page({
     console.log('export',this.ctx);
     this.ctx.fillStyle = 'cyan';
     this.ctx.fillRect(0, 0, 300, 300)
-    drawQrcode({
+    qrcode({
       x: 10,
       y: 5,
       width: 200,

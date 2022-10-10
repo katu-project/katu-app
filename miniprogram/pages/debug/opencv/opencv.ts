@@ -1,4 +1,3 @@
-const globalData = getApp().globalData
 import { cv,file,upng } from '@/utils/index'
 const defaultImage = '/static/images/image.svg'
 
@@ -153,7 +152,7 @@ Page({
 		src.delete()
   },
   async detectCardByContour(src){
-    function getSize(contour){
+    function getSize(contour):[number,number,number[]]{
         let corner1 = new cv.Point(contour.data32S[0], contour.data32S[1]);
         let corner2 = new cv.Point(contour.data32S[2], contour.data32S[3]);
         let corner3 = new cv.Point(contour.data32S[4], contour.data32S[5]);
@@ -215,7 +214,7 @@ Page({
     let hierarchy = new cv.Mat();
     cv.findContours(src, contours, hierarchy, cv.RETR_LIST, cv.CHAIN_APPROX_SIMPLE)
 
-    let sortedCnts = []
+    let sortedCnts: {i:number,area:any}[] = []
     for (let i = 0; i < contours.size(); ++i) {
         let cnt = contours.get(i)
         let area = cv.arcLength(cnt, true)
