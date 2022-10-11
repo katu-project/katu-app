@@ -1,6 +1,6 @@
-const globalData = getApp().globalData
 import { navigateTo } from '@/utils/index'
-
+import { getAppManager } from '@/class/app'
+const app = getAppManager()
 export {}
 
 Page({
@@ -8,7 +8,7 @@ Page({
     logo: '/static/logo.svg',
     version: 'dev'
   },
-  onLoad(options) {
+  onLoad() {
 
   },
   onReady() {
@@ -19,7 +19,7 @@ Page({
   },
   loadAppInfo(){
     this.setData({
-      'version': globalData.app.appVersion
+      'version': app.appVersion
     })
   },
   tapToChangeLog(){
@@ -27,9 +27,9 @@ Page({
   },
   tapToDoc({currentTarget:{dataset:{key}}}){
     if(key == 'usage'){
-      globalData.app.openUserUsageProtocol()
+      app.openUserUsageProtocol()
     }else{
-      globalData.app.openUserPrivacyProtocol()
+      app.openUserPrivacyProtocol()
     }
   }
 })

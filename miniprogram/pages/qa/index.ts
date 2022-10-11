@@ -1,4 +1,4 @@
-import { loadData, navigateTo } from '../../utils/index'
+import { loadData, navigateTo } from '@/utils/index'
 import { getAppManager } from '@/class/app'
 const app = getAppManager()
 import api from '@/api'

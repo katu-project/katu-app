@@ -5,6 +5,8 @@ wx.cloud.init({
   traceUser: true,
 })
 
+const app = getAppManager()
+
 App({
   onLaunch: function () {
     wx.getSystemInfo({
@@ -15,7 +17,7 @@ App({
         this.globalData.CustomBar = custom.bottom + custom.top - e.statusBarHeight;
       }
     })
-    this.globalData.app.loadUserConfig()
+    app.loadUserConfig()
     this.checkUpdate()
   },
   checkUpdate(){
@@ -38,15 +40,15 @@ App({
     })
   },
   onHide(){
-    if(!this.globalData.app.user) return
+    if(!app.user) return
 
-    if(this.globalData.app.user.config?.security.rememberPassword){
+    if(app.user.config?.security.rememberPassword){
       console.log('缓存主密码');
-      this.globalData.app.cacheMasterKey()
+      app.cacheMasterKey()
     }else{
-      if(this.globalData.app.user.config?.security.lockOnExit){
+      if(app.user.config?.security.lockOnExit){
         console.log('退出并清除主密码');
-        this.globalData.app.clearMasterKey()
+        app.clearMasterKey()
       }
     }
 
@@ -63,7 +65,6 @@ App({
   globalData: {
     StatusBar: 0,
     CustomBar: 0,
-    Custom: {},
-    app: getAppManager()
+    Custom: {}
   }
 });

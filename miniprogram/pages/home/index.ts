@@ -3,7 +3,6 @@ import { DefaultShowLockImage, DefaultShowImage } from '@/const'
 import { getAppManager } from '@/class/app'
 import api from '@/api'
 const app = getAppManager()
-export {}
 
 Page({
   backData: {
