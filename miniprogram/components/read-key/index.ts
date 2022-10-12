@@ -1,4 +1,4 @@
-const { showError } = require("../../utils/index")
+import { showError } from "@/utils/index"
 
 Component({
   options: {
