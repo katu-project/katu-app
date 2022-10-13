@@ -1,4 +1,4 @@
-const { navigateTo, switchTab } = require('../utils/index')
+import { navigateTo, switchTab } from '@/utils/index'
 
 Component({
   data: {

@@ -1,0 +1,77 @@
+.nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  box-shadow: 0 5rpx 6rpx rgba(0, 0, 0, 0.01), 0 12rpx 10rpx rgba(0, 0, 0, 0.01), 0 30rpx 25rpx rgba(0, 0, 0, 0.012), 0 100rpx 80rpx rgba(0, 0, 0, 0.02);
+  .ul {
+    display: flex;
+    height: 75px;
+    justify-content: center;
+    margin-bottom: 10px;
+    .li {
+      display: flex;
+      flex: 1;
+      justify-content: center;
+      align-items: center;
+      background: rgb(188, 219, 219);
+      &.left {
+        padding-left: 10rpx;
+        border-top-left-radius: 20px;
+        border-bottom-left-radius: 20px;
+        /* border-top-right-radius: 10px; */
+        margin-left: 10px;
+      }
+      &.right {
+        padding-right: 10rpx;
+        border-top-right-radius: 20px;
+        border-bottom-right-radius: 20px;
+        /* border-top-left-radius: 10px; */
+        margin-right: 10px;
+      }
+    }
+  }
+  .svg {
+    width: 30px;
+    height: 30px;
+  }
+  .center  {
+    /* margin-bottom: 100px; */
+    border-radius: 50px;
+    background: rgb(109, 230, 230);
+    box-shadow: 0 0 0 12px lightcyan;
+    overflow: hidden;
+    .icon{
+      &.plus {
+        width: 55px;
+        height: 55px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      &.plus {
+        .svg{
+          width: 40px;
+          height: 40px;
+        }
+      }
+    }
+  }
+  .icon{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .active-dot{
+    width: 10rpx;
+    margin-top: 10rpx;
+    height: 10rpx;
+    background-color: cyan;
+    border-radius: 50%;
+    visibility: hidden;
+    &.active{
+      visibility: unset;
+    }
+  }
+}
