@@ -96,7 +96,7 @@ type User = {
   noticeReadLog: string[],
   config: {
     general: {
-      defaultUseEncrytion: number,
+      defaultUseEncrytion: boolean,
       useDefaultTag: boolean
     },
     account: {
