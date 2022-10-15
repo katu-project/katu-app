@@ -1,4 +1,4 @@
-const { sleep } = require('./base')
+import { sleep } from './base'
 
 async function showInfo(msg, typeIdx=3, mask=true, options={}){
   const type = ['success', 'error', 'loading', 'none']
