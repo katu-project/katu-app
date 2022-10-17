@@ -10,10 +10,10 @@ interface IAppOption {
 }
 
 interface IAnyObject {
-  [key:string]: unknown
+  [key:string]: any
 }
 
-type CardImage = {
+type ICardImage = {
   hash: string,
   url: string,
   salt: string,
@@ -21,28 +21,28 @@ type CardImage = {
   _url?: string
 }
 
-type Card = {
-  _id: string,
-  title: string,
-  encrypted: boolean,
-  image: CardImage[],
-  tags: string[],
-  info: any[],
-  setLike: boolean,
+interface ICard {
+  _id: string
+  title: string
+  encrypted: boolean
+  image: ICardImage[]
+  tags: string[]
+  info: any[]
+  setLike: boolean
 
   _url?: string
 }
 
-type CardSummary = {
-  name: string,
-  count: number,
+interface ICardSummary {
+  name: string
+  count: number
   color: string
 }
 
-type Notice = {
-  _id: string,
-  updateTime: string,
-  content: string,
+interface INotice {
+  _id: string
+  updateTime: string
+  content: string
   auto_show: boolean
 }
 
@@ -59,74 +59,74 @@ interface ICardLabel {
   value?: string
 }
 
-type MasterKeyPack = {
-  keyPack: string,
-  keyId: string,
+interface IMasterKeyPack {
+  keyPack: string
+  keyId: string
   hexKeyId: string
 }
 
-type RecoveryKeyPack = {
-  createTime: string,
-  keyId: string,
-  pack: string,
+interface IRecoveryKeyPack {
+  createTime: string
+  keyId: string
+  pack: string
   qrId: string
 }
 
-type UsageStatistic = { 
-  canUseCardCount: number, 
-  canUseEncryptedCardCount:number,
-  usedCardCount: number,
+interface IUsageStatistic { 
+  canUseCardCount: number 
+  canUseEncryptedCardCount: number
+  usedCardCount: number
   usedEncryptedCardCount: number
 }
 
-type User = {
-  _id: string,
-  openid: string,
-  nickName: string,
-  avatarUrl: string,
-  isActive: boolean,
-  setMasterKey: boolean,
-  masterKeyPack: MasterKeyPack,
-  recoveryKeyPack: RecoveryKeyPack,
+interface IUser {
+  _id: string
+  openid: string
+  nickName: string
+  avatarUrl: string
+  isActive: boolean
+  setMasterKey: boolean
+  masterKeyPack: IMasterKeyPack
+  recoveryKeyPack: IRecoveryKeyPack
   quota: {
-    cardCount: number,
+    cardCount: number
     encryptedCardCount: number
-  },
-  customTag: ICardTag[],
-  noticeReadLog: string[],
+  }
+  customTag: ICardTag[]
+  noticeReadLog: string[]
   config: {
     general: {
-      defaultUseEncrytion: boolean,
+      defaultUseEncrytion: boolean
       useDefaultTag: boolean
     },
     account: {
 
     },
     security: {
-      lockOnExit: boolean,
-      rememberPassword: boolean,
+      lockOnExit: boolean
+      rememberPassword: boolean
       setRecoveryKey: boolean
     }
   }
 }
 
-type Doc = {
+interface IDoc {
   _id: string
   title: string
   updateTime: string
   content: string
 }
 
-type AppConfig = {
+interface IAppConfig {
   active: {
-    id: string,
-    protocols: any[],
+    id: string
+    protocols: any[]
     tip: string
   }
 }
 
 type filterAppConfigItem<T> = 
-    T extends "active" ? AppConfig['active'] :
+    T extends "active" ? IAppConfig['active'] :
     never;
 
 interface IChangeLog extends IAnyObject{
