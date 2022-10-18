@@ -1,5 +1,5 @@
 import { DefaultShowLockImage, DefaultShowImage } from '@/const'
-import { showChoose, showError, loadData, navigateBack, setClipboardData } from '@/utils/index'
+import { showChoose, showError, loadData, navigateBack, setClipboardData, navigateTo } from '@/utils/index'
 import api from '@/api'
 import { getCardManager } from '@/class/card'
 import { getAppManager } from '@/class/app'
@@ -105,9 +105,7 @@ Page({
     })
   },
   tapToEditCard(){
-    wx.redirectTo({
-      url: '../add/index?id='+ this.id,
-    })
+    navigateTo(`../add/index?id=${this.id}`)
   },
   tapToCopyValue(e){
     setClipboardData(e.currentTarget.dataset.value)
