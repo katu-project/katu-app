@@ -19,7 +19,7 @@ class CardManager {
   }
 
   async update(card){
-    const cardModel: Partial<Card> = {image:[]}
+    const cardModel: Partial<ICard> = {image:[]}
     cardModel._id = card._id
     cardModel.encrypted = card.encrypted || false
     cardModel.title = card.title || '未命名'
@@ -35,7 +35,7 @@ class CardManager {
     
     for (const idx in card.image) {
       const pic = card.image[idx]
-      const imageData: CardImage = {url:'',salt:'',hash:''}
+      const imageData: ICardImage = {url:'',salt:'',hash:''}
 
       // 统一转换成本地资源
       if(pic.url.startsWith('cloud://')){
@@ -62,7 +62,7 @@ class CardManager {
   }
 
   async add(card){
-    const cardModel: Partial<Card> = {image:[]}
+    const cardModel: Partial<ICard> = {image:[]}
     cardModel.encrypted = card.encrypted || false
     cardModel.title = card.title || '未命名'
     cardModel.tags = card.tags || ['其他']

@@ -8,8 +8,8 @@ export {}
 
 Page({
   data: {
-    user: {} as Partial<User>,
-    activeInfo: {} as Partial<AppConfig['active']>,
+    user: {} as Partial<IUser>,
+    activeInfo: {} as Partial<IAppConfig['active']>,
     usedCardCount: 0,
     usedEncryptedCardCount: 0,
     menus: PAGES_MENU.profile

@@ -28,7 +28,7 @@ Page({
     },
     curShowPicIdx: 0,
     showInputKey: false,
-    tags: [] as ECardTag[]
+    tags: [] as ICardTag[]
   },
   onLoad(options){
     if(options.id){

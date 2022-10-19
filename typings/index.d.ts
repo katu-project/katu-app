@@ -1,6 +1,5 @@
 /// <reference path="./base.d.ts" />
 /// <reference path="./types/index.d.ts" />
-/// <reference path="./edit.d.ts" />
 
 interface IAppOption {
   globalData: {
@@ -13,10 +12,10 @@ interface IAnyObject {
   [key:string]: any
 }
 
-type ICardImage = {
-  hash: string,
-  url: string,
-  salt: string,
+interface ICardImage {
+  hash: string
+  url: string
+  salt: string
 
   _url?: string
 }
@@ -48,8 +47,8 @@ interface INotice {
 
 interface ICardTag {
   name: string
-
   color?: string
+  selected?: Boolean
 }
 
 interface ICardLabel {

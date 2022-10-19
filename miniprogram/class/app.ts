@@ -10,7 +10,7 @@ class AppManager {
   AppInfo = wx.getAccountInfoSync()
   Constant = constData
 
-  user: Partial<User> = {}
+  user: Partial<IUser> = {}
   _masterKey: string = ''
   
   static getInstance(){
@@ -217,7 +217,7 @@ class AppManager {
     if(!masterKey){
       masterKey = await utils.crypto.random(16)
     }
-    const keyPack: Partial<MasterKeyPack> = {}
+    const keyPack: Partial<IMasterKeyPack> = {}
     keyPack.keyPack = utils.crypto.encryptString(masterKey, hexKey)
     keyPack.hexKeyId = this._calculateKeyId(hexKey)
     keyPack.keyId = this._calculateKeyId(masterKey)
@@ -321,7 +321,7 @@ class AppManager {
 
   createRecoveryKeyPack(qrCodeData){
     if(!this._masterKey) throw Error("输入主密码")
-    const keyPack: Partial<RecoveryKeyPack> = {}
+    const keyPack: Partial<IRecoveryKeyPack> = {}
     keyPack.qrId = qrCodeData.i
     keyPack.createTime = qrCodeData.t
     keyPack.keyId = this._calculateKeyId(qrCodeData.rk)

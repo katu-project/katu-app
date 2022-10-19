@@ -9,7 +9,7 @@ Page({
       title: '',
       content: '数据加载中',
       updateTime: ''
-    } as Doc
+    } as IDoc
   },
   onLoad(options) {
     this.id = options.id

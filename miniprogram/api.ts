@@ -34,11 +34,11 @@ const request = <T>(action: string, data={}): Promise<T> => {
 export default {
   request,
   // sys
-  getAppConfig: <T extends keyof AppConfig>(name: T) => request<filterAppConfigItem<T>>('app/config', {name}),
+  getAppConfig: <T extends keyof IAppConfig>(name: T) => request<filterAppConfigItem<T>>('app/config', {name}),
   getDefaultTag: () => request<ICardTag[]>('app/tags'),
   getChangeLog: () => request<IChangeLog[]>('app/changeLog'),
 
-  getNotice: (data?:any) => request<Notice>('app/notice', data), 
+  getNotice: (data?:any) => request<INotice>('app/notice', data), 
   // user
 
   updateUserConfig: (configItem:any) => request('user/updateConfig', configItem),
@@ -51,7 +51,7 @@ export default {
 
   updateTag: (tags:any) => request('user/tagUpdate', {tags}),
 
-  getUser: () => request<User>('user/getUser'),
+  getUser: () => request<IUser>('user/getUser'),
 
   markRead: (id: string) => request('user/markRead',{id}),
 
@@ -59,7 +59,7 @@ export default {
 
   removeAccount: () => request('user/removeAccount'),
   
-  usageStatistic: () => request<UsageStatistic>('user/usage'),
+  usageStatistic: () => request<IUsageStatistic>('user/usage'),
 
   setMasterKeyInfo: keyPack => request('user/setMasterKeyInfo',{keyPack}),
 
@@ -73,24 +73,24 @@ export default {
     return fileID
   },
   // card
-  getCardSummary: ():Promise<CardSummary[]> => request('card/summary'),
+  getCardSummary: ():Promise<ICardSummary[]> => request('card/summary'),
 
-  getLikeCard: ():Promise<Card[]> => request<Card[]>('card/like'),
+  getLikeCard: ():Promise<ICard[]> => request<ICard[]>('card/like'),
 
   setCardLike: data => request('card/setLike', data),
 
   captureCard: fileID => request<{fileID: string}>('card/capture', {fileId: fileID}),
 
-  getCard: data => request<Card>('card/fetch', data),
+  getCard: data => request<ICard>('card/fetch', data),
 
-  getCardList: data => request<Card[]>('card/fetch', data),
+  getCardList: data => request<ICard[]>('card/fetch', data),
 
   saveCard: data => request('card/save', data),
   
   deleteCard: id => request('card/delete', id),
 
   // doc
-  getDoc: data => request<Doc>('doc/getDoc', data),
+  getDoc: data => request<IDoc>('doc/getDoc', data),
 
   getHotDoc: ():Promise<IAnyObject[]> => request('doc/getDoc', {field:{title: true}, where: {type: 2, hot: true}}),
 

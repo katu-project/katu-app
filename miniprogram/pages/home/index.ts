@@ -9,14 +9,14 @@ Page({
     refresh: false
   },
   data: {
-    list: [] as CardSummary[],
-    likeList: [] as Card[],
+    list: [] as ICardSummary[],
+    likeList: [] as ICard[],
     notice: {
       _id: '',
       content: '暂无新消息',
       updateTime: '',
       auto_show: false
-    } as Notice,
+    } as INotice,
     isRefresh: false,
     curTab: 0
   },

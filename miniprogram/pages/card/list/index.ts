@@ -10,11 +10,11 @@ Page({
     refresh: false
   },
   where: {},
-  originList: [] as Card[],
+  originList: [] as ICard[],
   data: {
     key: '',
     tag: '',
-    list: [] as Card[],
+    list: [] as ICard[],
     isRefresh: false
   },
   onLoad(options) {
