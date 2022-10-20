@@ -1,15 +1,11 @@
-const app = getApp();
+const app = getApp()
+import { APP_ENTRY_PATH } from '@/const'
+
 Component({
-  /**
-   * 组件的一些选项
-   */
   options: {
     addGlobalClass: true,
     multipleSlots: true
   },
-  /**
-   * 组件的对外属性
-   */
   properties: {
     bgColor: {
       type: String,
@@ -28,9 +24,6 @@ Component({
       default: ''
     },
   },
-  /**
-   * 组件的初始数据
-   */
   data: {
     StatusBar: app.globalData.StatusBar,
     CustomBar: app.globalData.CustomBar,
@@ -46,7 +39,7 @@ Component({
     },
     toHome(){
       wx.reLaunch({
-        url: '/pages/home/index',
+        url: APP_ENTRY_PATH,
       })
     }
   }
