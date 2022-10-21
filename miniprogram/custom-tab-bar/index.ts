@@ -1,11 +1,12 @@
 import { navigateTo, switchTab } from '@/utils/index'
+import { APP_ENTRY_PATH } from '@/const'
 
 Component({
   data: {
     selected: 0,
     list:[
       {
-        url: '/pages/home/index'
+        url: `/pages/${APP_ENTRY_PATH}`
       },
       {
         url: '/pages/card/add/index'

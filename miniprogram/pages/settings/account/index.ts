@@ -1,5 +1,7 @@
 import { loadData, showChoose, showNotice } from "@/utils/index"
 import { getAppManager } from '@/class/app'
+import { APP_ENTRY_PATH } from '@/const'
+
 const app = getAppManager()
 import api from '@/api'
 
@@ -35,7 +37,7 @@ Page({
         showCancel: false
       }).then(()=>{
         wx.reLaunch({
-          url: '/pages/home/index',
+          url: `/pages/${APP_ENTRY_PATH}`,
         })
       })
     })

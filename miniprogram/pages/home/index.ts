@@ -1,5 +1,5 @@
 import { loadData, navigateTo, showNotice } from '@/utils/index'
-import { DefaultShowLockImage, DefaultShowImage } from '@/const'
+import { DefaultShowLockImage, DefaultShowImage, APP_ENTRY_PATH } from '@/const'
 import { getAppManager } from '@/class/app'
 import api from '@/api'
 const app = getAppManager()
@@ -163,7 +163,7 @@ Page({
   onShareAppMessage(){
     return {
       title: '卡兔-安全好用的卡片管理助手',
-      path: '/pages/home/index',
+      path: `/pages/${APP_ENTRY_PATH}`,
       imageUrl: '../../static/share.png'
     }
   },

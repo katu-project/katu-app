@@ -111,6 +111,8 @@ const PAGES_MENU = {
   ]
 }
 
+const APP_ENTRY_PATH = 'home/index'
+
 export {
   DefaultShowImage,
   DefaultShowLockImage,
@@ -122,5 +124,6 @@ export {
   PACKAGE_TAIL_LENGTH,
   STANDARD_CARD_DATA,
   PAGES_MENU,
-  ColorList
+  ColorList,
+  APP_ENTRY_PATH
 }

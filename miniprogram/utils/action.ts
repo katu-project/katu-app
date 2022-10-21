@@ -70,9 +70,8 @@ async function navigateBack(backData={},delta=1){
   const pages = getCurrentPages()
   const prevPage = pages[pages.length - delta - 1]
   prevPage.backData = backData
-  wx.navigateBack({delta}).catch(e=>{
-    redirectTo('/pages/home/index')
-  })
+  throw Error('?????')
+  // wx.navigateBack({delta})
 }
 
 async function switchTab(page, vibrate=true){

@@ -39,7 +39,7 @@ Component({
     },
     toHome(){
       wx.reLaunch({
-        url: APP_ENTRY_PATH,
+        url: `/pages/${APP_ENTRY_PATH}`,
       })
     }
   }

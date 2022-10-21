@@ -370,7 +370,7 @@ class AppManager {
 
   setHomeRefresh(){
     const pages = getCurrentPages()
-    const homePage = pages.find(page=>page.route==='pages/home/index')
+    const homePage = pages.find(page=>page.route ===  `pages/${this.Constant.APP_ENTRY_PATH}`)
     if(!homePage) return
     homePage.backData = {refresh:true}
   }
