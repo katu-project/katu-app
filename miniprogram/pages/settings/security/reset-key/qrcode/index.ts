@@ -39,6 +39,9 @@ Page({
         })
       }
     } catch (error) {
+      if(error && error.errMsg.includes('cancel')){
+        return showError('取消选择')
+      }
       showError(error.message || '未知错误')
     }
   },
