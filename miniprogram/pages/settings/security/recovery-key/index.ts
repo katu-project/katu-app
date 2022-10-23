@@ -1,4 +1,4 @@
-import { loadData, showSuccess, showChoose, showError, qrcode } from "@/utils/index"
+import { loadData, showSuccess, showChoose, showError, qrcode, showLoading } from "@/utils/index"
 import { getAppManager } from '@/class/app'
 const app = getAppManager()
 
@@ -55,20 +55,23 @@ Page({
       })
     })
   },
-  initCanvasContent(){
+  async initCanvasContent(){
+    await showLoading('检查数据',1000)
+
+    const ctx = await this.initCanvas()
+    this.setCanvasBg(ctx, '#ccefee')
+
     if(!this.data.setRecoveryKey){
-      this.initCanvas().then(ctx =>{
-        this.setCanvasBg(ctx, '#ccefee')
-        this.drawNotice(ctx, '还未设置主密码重置凭证','red')
-        this.drawNotice(ctx, `点击下方按钮开始设置`,'grey',175)
-      })
+      this.drawNotice(ctx, '还未设置主密码重置凭证','red')
+      this.drawNotice(ctx, `点击下方按钮开始设置`,'grey',175)
     }else{
-      this.initCanvas().then(ctx =>{
-        this.setCanvasBg(ctx, '#ccefee')
-        this.drawNotice(ctx, '已设置过主密码重置凭证','green')
-        this.drawNotice(ctx, `凭证ID: ${this.data.recoveryKeyId}`,'green',175)
-      })
+      this.drawNotice(ctx, '已设置过主密码重置凭证','green')
+      this.drawNotice(ctx, `凭证ID: ${this.data.recoveryKeyId}`,'green',175)
     }
+
+    this.setData({
+      showCanvas: true
+    })
   },
   async setCanvasBg(ctx, color){
     ctx.fillStyle = color || '#ccefee'
@@ -203,8 +206,9 @@ Page({
         this.setData({
           readyExport: false
         })
-        this.initCanvasContent()
-        showSuccess("保存成功")
+        this.initCanvasContent().then(()=>{
+          showSuccess("保存成功")
+        })
       },
       fail: error => {
         console.log(error);

@@ -19,7 +19,15 @@ async function showError(msg){
 }
 
 async function showLoading(msg, duration=500){
-  return showInfo(msg,2, true, {duration})
+  return new Promise((resolve)=>{
+    wx.showLoading({
+      title: msg,
+    })
+    sleep(duration).then(()=>{
+      wx.hideLoading()
+      resolve('')
+    })
+  })
 }
 
 async function showNotice(msg){
