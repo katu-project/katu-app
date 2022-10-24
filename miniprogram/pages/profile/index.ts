@@ -1,4 +1,4 @@
-import { loadData, navigateTo, showSuccess, showNotice } from '@/utils/index'
+import { loadData, navigateTo, showSuccess, showNotice, showLoading } from '@/utils/index'
 import { getAppManager } from '@/class/app'
 import { PAGES_MENU } from '@/const'
 import api from '@/api'
@@ -40,14 +40,11 @@ Page({
     }
     return this.showActiveNotice()
   },
-  tapToActiveAccount(){
-    wx.showLoading({
-      title: '等待获取授权',
-    })
+  async tapToActiveAccount(){
+    showLoading('等待获取授权')
     wx.getUserProfile({
       desc: '用于完善会员资料',
       success: ({cloudID}) => {
-        wx.hideLoading({})
         loadData(api.activeAccount, {cloudId: cloudID}).then(()=>{
           showSuccess("激活成功")
           this.reloadUserInfo()
@@ -55,7 +52,6 @@ Page({
         })
       },
       fail: () => {
-        wx.hideLoading({})
         showNotice('取消授权')
       }
     })
