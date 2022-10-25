@@ -42,6 +42,7 @@ export { cv } from './opencv/index'
 export { UPNG as upng } from './upng'
 export * as bip39 from './bip39/index'
 export { drawQrcode as qrcode } from './qrcode/index'
+export * from './cache'
 
 export default {
   selfish,
