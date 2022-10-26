@@ -1,4 +1,4 @@
-import utils,{ navigateTo, showChoose } from '@/utils/index'
+import utils,{ navigateTo, getCache, setCache, delCache, showChoose } from '@/utils/index'
 import * as constData from '@/const'
 import { AppConfig } from '@/config'
 import api from '@/api'
@@ -132,9 +132,7 @@ class AppManager {
 
   async _readMasterKey(){
     try {
-      const {data} = await wx.getStorage({
-        key: this.Constant.MASTER_KEY_NAME
-      })
+      const {data} = await getCache(this.Constant.MASTER_KEY_NAME)
       return data
     } catch (error) {
       console.log("读取主密码缓存失败");
@@ -156,16 +154,11 @@ class AppManager {
 
   async cacheMasterKey(){
     if(!this._masterKey) return
-    await wx.setStorage({
-      key: this.Constant.MASTER_KEY_NAME,
-      data: this._masterKey
-    })
+    return setCache(this.Constant.MASTER_KEY_NAME, this._masterKey)
   }
 
   async _removeMasterKeyCache(){
-    return wx.removeStorage({
-      key: this.Constant.MASTER_KEY_NAME
-    })
+    return delCache(this.Constant.MASTER_KEY_NAME)
   }
 
   // 使用前检测主密码状态

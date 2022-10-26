@@ -1,5 +1,5 @@
 import { getAppManager } from '@/class/app'
-import utils,{cv, convert} from '@/utils/index'
+import utils,{cv, convert, getCache, setCache} from '@/utils/index'
 import { KATU_MARK, PACKAGE_TAIL_LENGTH } from '@/const'
 
 class CardManager {
@@ -138,9 +138,8 @@ class CardManager {
 
     try {
       await utils.file.checkAccess(decryptImage.imagePath)
+      decryptImage.extraData = await getCache(decryptImage.imagePath)
       console.log('命中缓存数据: 已经存在相同解密数据')
-      const {data:extraData} = await wx.getStorage({ key: decryptImage.imagePath })
-      decryptImage.extraData = extraData
       return decryptImage
     } catch (error) {
       console.log('未发现缓存数据，开始解密数据')
@@ -159,10 +158,7 @@ class CardManager {
     const {data:extraData, dataLength: extraDataLength} = this._unpackExtraData(decryptedData, metaData)
     if(extraDataLength){
       decryptImage.extraData = extraData
-      wx.setStorage({
-        key: decryptImage.imagePath,
-        data: extraData
-      })
+      await setCache(decryptImage.imagePath, extraData)
     }
     const imageData = extraDataLength?decryptedData.slice(0, -extraDataLength): decryptedData
 
