@@ -5,6 +5,7 @@ const DefaultAddImage = '/static/images/add.svg'
 const APP_ROOT_DIR = `${wx.env.USER_DATA_PATH}/katu`
 const APP_TEMP_DIR = `${APP_ROOT_DIR}/temp`
 const MASTER_KEY_NAME = 'KATU_MASTER_KEY'
+const CARD_LABEL_CACHE_KEY = 'CARD_LABEL_CACHE_KEY'
 const KATU_MARK = '0000952700004396'
 const PACKAGE_TAIL_LENGTH = 48
 
@@ -125,5 +126,6 @@ export {
   STANDARD_CARD_DATA,
   PAGES_MENU,
   ColorList,
-  APP_ENTRY_PATH
+  APP_ENTRY_PATH,
+  CARD_LABEL_CACHE_KEY
 }

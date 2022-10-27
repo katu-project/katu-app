@@ -138,7 +138,7 @@ class CardManager {
 
     try {
       await utils.file.checkAccess(decryptImage.imagePath)
-      decryptImage.extraData = await getCache(decryptImage.imagePath)
+      decryptImage.extraData = await this.getCacheLabelData(decryptImage.imagePath)
       console.log('命中缓存数据: 已经存在相同解密数据')
       return decryptImage
     } catch (error) {
@@ -158,7 +158,7 @@ class CardManager {
     const {data:extraData, dataLength: extraDataLength} = this._unpackExtraData(decryptedData, metaData)
     if(extraDataLength){
       decryptImage.extraData = extraData
-      await setCache(decryptImage.imagePath, extraData)
+      await this.cacheLabelData(decryptImage.imagePath, extraData)
     }
     const imageData = extraDataLength?decryptedData.slice(0, -extraDataLength): decryptedData
 
@@ -220,6 +220,27 @@ class CardManager {
     })
     const {fileID: fileUrl} = await this.app.api.captureCard(fileID)
     return fileUrl
+  }
+
+  async cacheLabelData(id, data){
+    let cacheData = {}
+    try {
+      cacheData = await getCache(this.app.Constant.CARD_LABEL_CACHE_KEY)
+    } catch (error) {
+      cacheData = {}
+    }
+
+    cacheData[id] = data
+    return setCache(this.app.Constant.CARD_LABEL_CACHE_KEY, cacheData)
+  }
+
+  async getCacheLabelData(id){
+    try {
+      const cacheData = await getCache(this.app.Constant.CARD_LABEL_CACHE_KEY)
+      return cacheData[id]
+    } catch (error) {
+      return []
+    }
   }
 
   async checkImageType(picPath){
