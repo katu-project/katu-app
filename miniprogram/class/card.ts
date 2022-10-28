@@ -131,7 +131,7 @@ class CardManager {
 
   async decryptImage(card){
     const salt = card.salt
-    const decryptImage:{imagePath: string, extraData: any[] | string} = {
+    const decryptImage:{imagePath: string, extraData: any[]} = {
       imagePath: await this.app.getTempFilePath(salt,'_dec'),
       extraData: []
     }
@@ -183,7 +183,7 @@ class CardManager {
   _unpackExtraData(mixHexData, metaData){
     const retDataInfo = {
       dataLength: 0,
-      data: ''
+      data: []
     }
     const extraDataLength = parseInt(metaData.slice(-24,-16))
     if(extraDataLength){
