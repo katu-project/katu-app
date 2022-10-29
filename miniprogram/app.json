@@ -41,7 +41,8 @@
   "sitemapLocation": "sitemap.json",
   "style": "v2",
   "usingComponents": {
-    "cu-custom": "/colorui/components/cu-custom"
+    "cu-custom": "/colorui/components/cu-custom",
+    "input-key": "/components/input-key"
   },
   "resolveAlias": {
     "@/*": "/*",

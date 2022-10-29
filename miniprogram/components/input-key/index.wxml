@@ -1,0 +1,15 @@
+<view class="cu-modal {{display?'show':''}}">
+  <view class="cu-dialog">
+    <view class="padding-xl cu-bar bg-white flex justify-center">
+      <view class="solids-bottom" style="width: 50vw;">
+        <input class="padding-sm" style="height: 50px;" adjust-position="{{display}}" bindinput="checkKey" model:value="{{key}}" password="true" focus="{{display}}" placeholder="输入主密码"
+        placeholder-style="padding-top:20rpx"
+        />
+      </view>
+    </view>
+    <view class="cu-bar bg-white">
+      <view class="action margin-0 flex-sub solid-left" bindtap="hideModal">取消</view>
+      <view class="action margin-0 flex-sub solid-left text-green" bindtap="tapToSetKey">确定</view>
+    </view>
+  </view>
+</view>
