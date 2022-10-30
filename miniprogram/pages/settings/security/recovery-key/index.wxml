@@ -13,4 +13,4 @@
   </view>
 </view>
 
-<read-key bind:confirm="inputKeyConfirm" show="{{showInputKey}}" />
+<input-key bind:confirm="inputKeyConfirm" show="{{showInputKey}}" />
