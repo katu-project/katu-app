@@ -130,7 +130,8 @@ Page({
     app.loadMasterKeyWithKey(key).then(()=>{
       this.showEncryptedImage()
     }).catch(error=>{
-      showChoose(error.message,'',{showCancel:false})
+      showError(error.message)
+      this.showInputKey()
     })
   },
   rebuildLabel(meta){
