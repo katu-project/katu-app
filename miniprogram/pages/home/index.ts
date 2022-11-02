@@ -24,15 +24,14 @@ Page({
   onLoad() {
   },
 
-
   onReady() {
     this.loadData()
   },
 
   onShow() {
-    setTimeout(()=>this.loadNotice(),2000)
-    this.getTabBar().setData({selected: 0})
+    this.setTabState()
     this.checkDataRefresh()
+    setTimeout(()=>this.loadNotice(),2000)
   },
   async loadData(){
     await this.loadLikeList()
@@ -81,7 +80,7 @@ Page({
     })
   },
   checkDataRefresh(){
-    if(this.backData && this.backData.refresh){
+    if(this.backData.refresh){
       this.loadData()
       this.backData.refresh = false
       console.log("刷新数据");
@@ -159,6 +158,9 @@ Page({
         curTab: 1
       })
     }
+  },
+  setTabState(){
+    this.getTabBar().setData({selected: 0})
   },
   onShareAppMessage(){
     return {
