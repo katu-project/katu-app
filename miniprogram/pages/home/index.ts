@@ -9,7 +9,7 @@ Page({
     refresh: false
   },
   data: {
-    list: [] as ICardSummary[],
+    cateList: [] as ICardSummary[],
     likeList: [] as ICard[],
     notice: {
       _id: '',
@@ -71,12 +71,9 @@ Page({
     }
   },
   async loadCateList(){
-    // this.setData({
-    //   list: []
-    // })
-    const list = await loadData(api.getCardSummary)
+    const cateList = await loadData(api.getCardSummary)
     this.setData({
-      list
+      cateList
     })
   },
   checkDataRefresh(){
