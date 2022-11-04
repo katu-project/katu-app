@@ -37,7 +37,9 @@ class AppManager {
   }
 
   rewriteConfig(){
-    this.loadDefaultTag()
+    wx.nextTick(()=>{
+      this.loadDefaultTag()
+    })
   }
 
   loadDefaultTag(){
