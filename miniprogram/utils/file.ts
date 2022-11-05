@@ -1,16 +1,20 @@
-const CryptoJS = require('crypto-js')
-import { random } from './crypto'
+import { random, md5 } from './crypto'
 
 export const toPromise = <T>(func, options={}, returnKey?:string): Promise<T> => {
   return new Promise((resolve,reject)=>{
     func({
       ...options,
       success: res=>{
-        if(res.data && res.data.length > 200){
-          console.warn(`${func.name}:`, res.data.slice(-200))
+        if(['checkAccess'].includes(func.name)){
+
         }else{
-          console.warn(`${func.name}:`, res);
+          if(res.data && res.data.length > 200){
+            console.warn(`${func.name}:`, res.data.slice(-200))
+          }else{
+            console.warn(`${func.name}:`, res);
+          }
         }
+       
         if(returnKey && res.hasOwnProperty(returnKey)){
           resolve(res[returnKey])
         }else{
@@ -41,9 +45,9 @@ export async function writeFile(filePath, fileData, encoding?: string){
 }
 
 export async function checkAccess(path) {
-  const access = args => wx.getFileSystemManager().access(args)
+  const checkAccess = args => wx.getFileSystemManager().access(args)
   const options = {path}
-  return toPromise(access, options)
+  return toPromise(checkAccess, options)
 }
 
 export async function mkdir(dirPath, recursive?:boolean) {
@@ -94,7 +98,7 @@ export async function getTempFilePath<T extends {dir: string, cacheId?:string, s
     }
   
     if(cacheId){
-      tempFile = `${tempDir}/${CryptoJS.MD5(cacheId)}`
+      tempFile = `${tempDir}/${md5(cacheId)}`
     }else{
       tempFile = `${tempDir}/${randomFileName}`
     }
