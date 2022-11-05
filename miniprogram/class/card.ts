@@ -107,6 +107,22 @@ class CardManager {
     if(card.image.length > this.app.Config.cardImageMaxNum) throw Error("卡面数量错误")
   }
 
+  async getCard(card){
+    if(card.salt){
+      try {
+        return await this.getCardCache(card)
+      } catch (error) {
+        console.log('未发现缓存数据，开始解密数据')
+      }
+      return this.decryptImage(card)
+    }else{
+      return {
+        imagePath: card.url,
+        extraData: []
+      }
+    }
+  }
+
   async encryptImage(imagePath: string, extraData?: any[]){
     const imageHexData = await utils.file.readFile(imagePath, 'hex')
     const {key:imageKey, salt} = this.generateKeyByMasterKey()
@@ -135,16 +151,7 @@ class CardManager {
       imagePath: await this.app.getTempFilePath(salt,'_dec'),
       extraData: []
     }
-
-    try {
-      await utils.file.checkAccess(decryptImage.imagePath)
-      decryptImage.extraData = await this.getCacheLabelData(decryptImage.imagePath)
-      console.log('命中缓存数据: 已经存在相同解密数据')
-      return decryptImage
-    } catch (error) {
-      console.log('未发现缓存数据，开始解密数据')
-    }
-
+    
     const imageFilePath = await this.app.downloadFile(card)
     const encryptedHexData = await utils.file.readFile(imageFilePath, 'hex')
     const {key:secretKey} = this.generateKeyByMasterKey({salt})
@@ -193,6 +200,23 @@ class CardManager {
     return retDataInfo
   }
 
+  async getCardCache(card){
+    const cacheData = {
+      imagePath: '',
+      extraData: []
+    }
+    cacheData.imagePath = await this.getCardImagePathCache(card)
+    cacheData.extraData = await this.getCacheLabelData(cacheData.imagePath)
+    console.log('命中缓存数据: 已经存在相同解密数据')
+    return cacheData
+  }
+
+  async getCardImagePathCache(card){
+    const picPath = await this.app.getTempFilePath(card.salt,'_dec')
+    await utils.file.checkAccess(picPath)
+    return picPath
+  }
+
   async getHash(imagePath){
     const imageHexData = await utils.file.readFile(imagePath, 'hex')
     console.log('getHash: ',imagePath ,typeof imageHexData === 'string' ? imageHexData.length: 'ArrayBuffer', imageHexData.slice(0,32), imageHexData.slice(-32));
@@ -237,7 +261,7 @@ class CardManager {
   async getCacheLabelData(id){
     try {
       const cacheData = await getCache(this.app.Constant.CARD_LABEL_CACHE_KEY)
-      return cacheData[id]
+      return cacheData[id] || []
     } catch (error) {
       return []
     }

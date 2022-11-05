@@ -53,6 +53,10 @@ Page({
         return pic
       })
     })
+
+    if(this.data.card.encrypted){
+      this.showEncryptedImage()
+    }
   },
   onShow() {
   },
@@ -89,8 +93,8 @@ Page({
       return
     }
 
-    const imageData = await loadData(cardManager.decryptImage, image, '解码中')
-
+    const imageData = await loadData(cardManager.getCard, image, '解码中')
+    
     const setData = {
       [`card.image[${this.chooseIdx}]._url`]: imageData.imagePath,
       [`card.info`]: this.rebuildLabel(imageData.extraData)
