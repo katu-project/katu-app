@@ -78,8 +78,7 @@ async function navigateBack(backData={},delta=1){
   const pages = getCurrentPages()
   const prevPage = pages[pages.length - delta - 1]
   prevPage.backData = backData
-  throw Error('?????')
-  // wx.navigateBack({delta})
+  wx.navigateBack({delta})
 }
 
 async function switchTab(page, vibrate=true){
