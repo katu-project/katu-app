@@ -1,8 +1,10 @@
 import { loadData, navigateTo, showNotice } from '@/utils/index'
 import { DefaultShowLockImage, DefaultShowImage, APP_ENTRY_PATH } from '@/const'
-import { getAppManager } from '@/class/app'
 import api from '@/api'
+import { getAppManager } from '@/class/app'
+import { getCardManager } from '@/class/card'
 const app = getAppManager()
+const cardManager = getCardManager()
 
 Page({
   backData: {
@@ -36,11 +38,9 @@ Page({
   async loadData(){
     await this.loadLikeList()
     await this.loadCateList()
+    return
   },
   async loadLikeList(){
-    // this.setData({
-    //   likeList: []
-    // })
     let likeList = await loadData(api.getLikeCard)
     likeList = likeList.map(card=>{
       if(card.encrypted){
@@ -53,22 +53,38 @@ Page({
     this.setData({
       likeList
     })
-    this.loadImage()
+    return this.loadImage()
   },
-  loadImage(){
+  async loadImage(){
+    let loadEncryptedImage = false
+    try {
+      app.checkMasterKey()
+      loadEncryptedImage = true
+    } catch (error) {
+      console.warn('未缓存主密码，取消显示加密卡片数据')
+    }
+
+    const setData = {}
+
     for (const idx in this.data.likeList) {
       const card = this.data.likeList[idx]
       if(!card.encrypted){
-        wx.cloud.getTempFileURL({
-          fileList: [card.image[0].url]
-        }).then(({fileList:[file]})=>{
-          const key = `likeList[${idx}]._url`
-          this.setData({
-            [key]: file.tempFileURL + app.Config.imageMogr2
+        try {
+          const {fileList:[file]} = await wx.cloud.getTempFileURL({
+            fileList: [card.image[0].url]
           })
-        })
+          setData[`likeList[${idx}]._url`] = file.tempFileURL + app.Config.imageMogr2
+        } catch (error) {}
+      }else{
+        if(loadEncryptedImage){
+          try {
+            const picPath = await cardManager.getCardImagePathCache(card.image[0])
+            setData[`likeList[${idx}]._url`] = picPath
+          } catch (error) {}
+        }
       }
     }
+    this.setData(setData)
   },
   async loadCateList(){
     const cateList = await loadData(api.getCardSummary)
@@ -77,7 +93,7 @@ Page({
     })
   },
   checkDataRefresh(){
-    if(this.backData.refresh){
+    if(this.backData?.refresh){
       this.loadData()
       this.backData.refresh = false
       console.log("刷新数据");
