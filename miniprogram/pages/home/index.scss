@@ -6,6 +6,13 @@
   opacity: 0.8;
 }
 
+@media screen and (min-height: 800px){
+  .topLogo{
+    margin-top: 40rpx;
+    margin-left: 20rpx;
+  }
+}
+
 .right-item {
   height: 6vw;
   width: 6vw;

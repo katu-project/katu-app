@@ -1,8 +1,6 @@
 <cu-custom></cu-custom>
 <view class="home-bg">
-  <view class="flex align-end justify-between">
-    <image class="topLogo" mode="aspectFit" src="/static/logo-t.svg"></image>
-  </view>
+  <image class="topLogo" mode="aspectFit" src="/static/logo-t.svg"></image>
 </view>
 
 <view class="flex align-end justify-end padding-lr">
