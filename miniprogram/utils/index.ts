@@ -1,4 +1,5 @@
 import { selfish, objectSetValue } from './base'
+import { request } from './net'
 import * as crypto from './crypto'
 import * as file from './file'
 import * as convert from './convert'
@@ -8,6 +9,7 @@ import * as bip39 from './bip39/index'
 import { drawQrcode as qrcode } from './qrcode/index'
 
 export { selfish, objectSetValue } from './base'
+export { request } from './net'
 export * as crypto from './crypto'
 export * as file from './file'
 export * as convert from './convert'
@@ -27,5 +29,6 @@ export default {
   cv,
   upng,
   bip39,
-  qrcode
+  qrcode,
+  request
 }
