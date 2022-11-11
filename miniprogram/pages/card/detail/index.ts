@@ -109,6 +109,19 @@ Page({
     })
   },
   tapToEditCard(){
+    if(this.data.card.encrypted){
+      try {
+        app.checkMasterKey()
+      } catch (error) {
+        if(error.code[0] === '2'){
+          this.showInputKey()
+        }else{
+          showChoose('解密卡片出错',error.message)
+        }
+        return
+      }
+    }
+
     navigateTo(`../add/index?id=${this.id}`)
   },
   tapToCopyValue(e){
