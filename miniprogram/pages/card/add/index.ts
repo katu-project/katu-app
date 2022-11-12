@@ -4,6 +4,7 @@ import api from '@/api'
 import { getCardManager } from '@/class/card'
 import { getAppManager } from '@/class/app'
 const app = getAppManager()
+const cardManager = getCardManager()
 export {}
 
 Page({
@@ -60,7 +61,7 @@ Page({
     })
   },
   receiveChoosePic(){
-    if(this.backData.resolveImagePath){
+    if(this.backData?.resolveImagePath){
       const key = `card.image[${this.resolveImageIdx}].url`
       this.setData({
         [key]: this.backData.resolveImagePath
@@ -70,7 +71,7 @@ Page({
     }
   },
   receiveCardTitle(){
-    if(this.backData.resolveCardTitle){
+    if(this.backData?.resolveCardTitle){
       const key = `card.title`
       this.setData({
         [key]: this.backData.resolveCardTitle
@@ -79,7 +80,7 @@ Page({
     }
   },
   receiveExtraData(){
-    if(this.backData.resolveCardExtraData){
+    if(this.backData?.resolveCardExtraData){
       console.log('处理额外数据:',this.backData.resolveCardExtraData);
       const key = `card.info`
       const data = JSON.parse(this.backData.resolveCardExtraData)
@@ -97,34 +98,35 @@ Page({
       this.checkShowSetMasterKey()
     }
   },
-  loadCardData(){
-    loadData(api.getCard, {_id: this.id}).then(async card=>{
-      const setData = {
-        edit: true,
-        'card._id': card._id,
-        'card.encrypted': card.encrypted,
-        'card.image': card.image,
-        'card.tags': card.tags,
-        'card.info': card.info || [],
-        'card.title': card.title,
-        'card.setLike': card.setLike
-      }
-      if(card.encrypted){
-        const cardManager = getCardManager()
-        setData['card.image'] = []
-        for (const pic of card.image) {
-          const {imagePath, extraData} = await cardManager.decryptImage(pic)
-          pic.url = imagePath
-          if(extraData.length){
-            setData['card.info'] = extraData as ICardLabel[]
-          }
-          setData['card.image'].push(pic)
+  async loadCardData(){
+    const card = await loadData(api.getCard, {_id: this.id})
+    const setData = {
+      edit: true,
+      'card._id': card._id,
+      'card.encrypted': card.encrypted,
+      'card.image': card.image,
+      'card.tags': card.tags,
+      'card.info': card.info || [],
+      'card.title': card.title,
+      'card.setLike': card.setLike
+    }
+    if(card.encrypted){
+      setData['card.image'] = []
+      for (const pic of card.image) {
+        const {imagePath, extraData} = await cardManager.getCard(pic)
+        pic.url = imagePath
+        console.warn({imagePath, extraData});
+        
+        // 每个图片都包含了附加数据，因此下面操作只需要执行一次就好
+        if(extraData.length){
+          setData['card.info'] = extraData as ICardLabel[]
         }
+        setData['card.image'].push(pic)
       }
-      this.setData(setData)
-      // 处理标签
-      this.renderTagState()
-    })
+    }
+    this.setData(setData)
+    // 处理标签
+    this.renderTagState()
   },
   renderTagState(){
     const tags = this.data.tags.map(tag=>{
@@ -146,7 +148,6 @@ Page({
     }
 
     const card = Object.assign({},this.data.card)
-    const cardManager = getCardManager()
     loadData(this.data.edit?cardManager.update:cardManager.add, card, {returnFailed: true})
             .then(this.saveDone)
             .catch(this.saveFailed)
