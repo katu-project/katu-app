@@ -55,7 +55,7 @@ class CardManager {
     }
 
     if(cardModel.encrypted){
-      delete cardModel.info
+      cardModel.info = []
     }
 
     return this.app.api.saveCard(cardModel)
