@@ -142,12 +142,32 @@ Page({
     })
   },
   async tapToSaveCard(){
-    if(this.data.card.image.filter(e=>e.url === DefaultAddImage).length > 0) {
+    const card = Object.assign({},this.data.card)
+    // 卡片数据有效性检查
+    if(card.image.filter(e=>e.url === DefaultAddImage).length > 0) {
       showNotice('卡面数据不完整')
       return
     }
-
-    const card = Object.assign({},this.data.card)
+    // 检查卡面数量
+    if(card.image.length > app.Config.cardImageMaxNum) {
+      showNotice("卡面数量错误")
+      return
+    }
+    // 加密模式下，主密码有效性预检查
+    if(card.encrypted){
+      try {
+        app.checkMasterKey()
+      } catch (error) {
+        if(error.code[0] === '2'){
+          this.showInputKey()
+        }else{
+          showChoose('保存卡片出错',error.message)
+        }
+        return
+      }
+    }
+    // 相关警告提示
+    
     loadData(this.data.edit?cardManager.update:cardManager.add, card, {returnFailed: true})
             .then(this.saveDone)
             .catch(this.saveFailed)
@@ -159,15 +179,7 @@ Page({
     })
   },
   async saveFailed(error){
-    if(error.code){
-      if(error.code[0] === '2'){
-        this.showInputKey()
-      }else{
-        showChoose('保存卡片出错',error.message)
-      }
-    }else{
-      showChoose('保存卡片出错',error.message)
-    }
+    showChoose('保存卡片出错',error.message)
   },
   async saveFinish(){
     app.setHomeRefresh()

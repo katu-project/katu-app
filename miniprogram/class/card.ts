@@ -26,12 +26,6 @@ class CardManager {
     cardModel.tags = card.tags || ['其他']
     cardModel.info = card.info || []
     cardModel.setLike = card.setLike || false
-
-    if(cardModel.encrypted){
-      this.app.checkMasterKey()
-    }
-
-    this._cardDataCheck(card)
     
     for (const idx in card.image) {
       const pic = card.image[idx]
@@ -69,12 +63,7 @@ class CardManager {
     cardModel.info = card.info || []
     cardModel.setLike = card.setLike || false
     
-    if(cardModel.encrypted){
-      this.app.checkMasterKey()
-    }
-
-    this._cardDataCheck(card)
-    
+    // 提前检查可用额度，避免因为可用额度不足而导致处理卡片数据产生无效的消耗
     await this.app.checkQuota(cardModel.encrypted)
     
     for (const idx in card.image) {
@@ -100,11 +89,6 @@ class CardManager {
     }
 
     return this.app.api.saveCard(cardModel)
-  }
-
-  _cardDataCheck(card){
-    // 检查卡面数量
-    if(card.image.length > this.app.Config.cardImageMaxNum) throw Error("卡面数量错误")
   }
 
   async getCard(card){
