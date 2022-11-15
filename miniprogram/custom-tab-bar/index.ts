@@ -9,7 +9,7 @@ Component({
         url: `/pages/${APP_ENTRY_PATH}`
       },
       {
-        url: '/pages/card/add/index'
+        url: '/pages/card/edit/index'
       },
       {
         url: '/pages/profile/index'

@@ -122,7 +122,7 @@ Page({
       }
     }
 
-    navigateTo(`../add/index?id=${this.id}`)
+    navigateTo(`../edit/index?id=${this.id}`)
   },
   tapToCopyValue(e){
     setClipboardData(e.currentTarget.dataset.value)
