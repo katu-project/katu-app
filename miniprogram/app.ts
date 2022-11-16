@@ -41,7 +41,12 @@ App({
   },
   onHide(){
     if(!app.user) return
-
+    // 暂时解决图片预览引起的清除主密码的bug
+    if(this.globalData.state.inPreviewPic){
+      this.globalData.state.inPreviewPic = false
+      return
+    }
+    
     if(app.user.config?.security.rememberPassword){
       console.log('缓存主密码');
       app.cacheMasterKey()
@@ -65,6 +70,9 @@ App({
   globalData: {
     StatusBar: 0,
     CustomBar: 0,
-    Custom: {}
+    Custom: {},
+    state: {
+      inPreviewPic: false
+    }
   }
 });

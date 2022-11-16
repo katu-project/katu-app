@@ -103,10 +103,7 @@ Page({
   },
   async previewImage(idx=0){
     const pics = this.data.card.image.filter(e=>e._url !== DefaultShowLockImage).map(e=>e._url)
-    wx.previewImage({
-      urls: pics,
-      current: pics[idx]
-    })
+    app.previewImage(pics, idx)
   },
   tapToEditCard(){
     if(this.data.card.encrypted){

@@ -280,6 +280,14 @@ class AppManager {
     return downloadFile.filePath
   }
 
+  async previewImage(pics: string[], idx?:number){
+    getApp().globalData.state.inPreviewPic = true
+    wx.previewImage({
+      urls: pics,
+      current: pics[idx || 0]
+    })
+  }
+
   openUserUsageProtocol(){
     return this.navToDoc(this.Config.doc.userUsageProtocol)
   }
