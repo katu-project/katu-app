@@ -263,7 +263,7 @@ class AppManager {
     return fileID
   }
 
-  async downloadFile(pic){
+  async downloadFile(pic: ICardImage){
     const savePath = `${this.Constant.APP_TEMP_DIR}/${pic.salt || new Date().getTime() }_down`
     try {
       await utils.file.checkAccess(savePath)

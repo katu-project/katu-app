@@ -1,6 +1,7 @@
 const DefaultShowImage = '/static/images/image.svg'
 const DefaultShowLockImage = '/static/images/lock.svg'
 const DefaultAddImage = '/static/images/add.svg'
+const WX_CLOUD_STORAGE_FILE_HEAD = 'cloud://'
 
 const APP_ROOT_DIR = `${wx.env.USER_DATA_PATH}/katu`
 const APP_TEMP_DIR = `${APP_ROOT_DIR}/temp`
@@ -127,5 +128,6 @@ export {
   PAGES_MENU,
   ColorList,
   APP_ENTRY_PATH,
-  CARD_LABEL_CACHE_KEY
+  CARD_LABEL_CACHE_KEY,
+  WX_CLOUD_STORAGE_FILE_HEAD
 }

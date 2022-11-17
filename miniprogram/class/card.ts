@@ -1,6 +1,7 @@
 import { getAppManager } from '@/class/app'
 import utils,{cv, convert, getCache, setCache} from '@/utils/index'
-import { KATU_MARK, PACKAGE_TAIL_LENGTH } from '@/const'
+import { KATU_MARK, PACKAGE_TAIL_LENGTH, WX_CLOUD_STORAGE_FILE_HEAD } from '@/const'
+import api from '@/api'
 
 class CardManager {
   static instance: CardManager
@@ -19,7 +20,7 @@ class CardManager {
   }
 
   async update(card){
-    const cardModel: Partial<ICard> = {image:[]}
+    const cardModel: Partial<ICard> = { image: [] }
     cardModel._id = card._id
     cardModel.encrypted = card.encrypted || false
     cardModel.title = card.title || '未命名'
@@ -29,10 +30,10 @@ class CardManager {
     
     for (const idx in card.image) {
       const pic = card.image[idx]
-      const imageData: ICardImage = {url:'',salt:'',hash:''}
+      const imageData = {url:'',salt:'',hash:''}
 
       // 统一转换成本地资源
-      if(pic.url.startsWith('cloud://')){
+      if(pic.url.startsWith(WX_CLOUD_STORAGE_FILE_HEAD)){
         pic.url = await this.app.downloadFile(pic)
       }
 
@@ -45,18 +46,18 @@ class CardManager {
         imageData.salt = ''
         imageData.url = await this.upload(pic.url)
       }
-      cardModel.image?.push(imageData)
+      cardModel.image!.push(imageData)
     }
 
     if(cardModel.encrypted){
       cardModel.info = []
     }
 
-    return this.app.api.saveCard(cardModel)
+    return api.saveCard(cardModel)
   }
 
   async add(card){
-    const cardModel: Partial<ICard> = {image:[]}
+    const cardModel: Partial<ICard> = { image: [] }
     cardModel.encrypted = card.encrypted || false
     cardModel.title = card.title || '未命名'
     cardModel.tags = card.tags || ['其他']
@@ -69,7 +70,8 @@ class CardManager {
     for (const idx in card.image) {
       const pic = card.image[idx]
       const imageData = {url:'',salt:'',hash:''}
-      if(pic.url.startsWith('cloud://')){
+
+      if(pic.url.startsWith(WX_CLOUD_STORAGE_FILE_HEAD)){
         pic.url = await this.app.downloadFile(pic)
       }
       
@@ -81,14 +83,14 @@ class CardManager {
       }else{
         imageData.url = await this.upload(pic.url)
       }
-      cardModel.image?.push(imageData)
+      cardModel.image!.push(imageData)
     }
 
     if(cardModel.encrypted){
-      delete cardModel.info
+      cardModel.info = []
     }
 
-    return this.app.api.saveCard(cardModel)
+    return api.saveCard(cardModel)
   }
 
   async getCard(card){
@@ -226,7 +228,7 @@ class CardManager {
       cloudPath: `tmp/pic-${imagePath.slice(-32)}`,
       filePath: imagePath
     })
-    const {fileID: fileUrl} = await this.app.api.captureCard(fileID)
+    const {fileID: fileUrl} = await api.captureCard(fileID)
     return fileUrl
   }
 
