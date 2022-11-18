@@ -151,6 +151,28 @@ async function loadData<T>(func?: (args:any) => Promise<T>, params?: Object, opt
   })
 }
 
+async function chooseLocalImage(){
+  try {
+    const pics = await wx.chooseMedia({
+      count: 1,
+      mediaType: ['image']
+    })
+
+    if(!pics.tempFiles.length) return
+    const tempFile = pics.tempFiles[0]
+    return tempFile.tempFilePath
+  } catch (error) {
+    if(error?.errMsg === 'chooseMedia:fail cancel'){
+      wx.showToast({
+        title: '取消选择',
+        icon: 'none'
+      })
+      return
+    }
+    throw error
+  }
+}
+
 export {
   showInfo,
   showSuccess,
@@ -163,5 +185,6 @@ export {
   navigateBack,
   switchTab,
   loadData,
-  setClipboardData
+  setClipboardData,
+  chooseLocalImage
 }

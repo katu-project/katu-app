@@ -218,10 +218,6 @@ class CardManager {
     return utils.crypto.pbkdf2(this.app._masterKey, options)
   }
 
-  async choosePic(){
-    return this.app.chooseFile()
-  }
-
   async parseCardImageByRemoteApi(imagePath){
     await this.checkImageType(imagePath)
     const {fileID} = await wx.cloud.uploadFile({
