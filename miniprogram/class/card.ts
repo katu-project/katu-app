@@ -1,6 +1,6 @@
 import { getAppManager } from '@/class/app'
 import utils,{cv, convert, getCache, setCache} from '@/utils/index'
-import { KATU_MARK, PACKAGE_TAIL_LENGTH, WX_CLOUD_STORAGE_FILE_HEAD } from '@/const'
+import { DECRYPTED_IMAGE_CACHE_SUFFIX, ENCRYPTED_IMAGE_CACHE_SUFFIX, KATU_MARK, PACKAGE_TAIL_LENGTH, WX_CLOUD_STORAGE_FILE_HEAD } from '@/const'
 import api from '@/api'
 
 class CardManager {
@@ -123,7 +123,7 @@ class CardManager {
                                         .concat(KATU_MARK)
 
     console.log('encryptPackage:',encryptedData.length, encryptPackage.slice(-PACKAGE_TAIL_LENGTH), salt);
-    const tempFilePath = await this.app.getTempFilePath(salt,'_enc')
+    const tempFilePath = await this.app.getTempFilePath(salt, ENCRYPTED_IMAGE_CACHE_SUFFIX)
     await utils.file.writeFile(tempFilePath, encryptPackage, 'hex')
     return {
       imageSecretKey: salt,
@@ -134,7 +134,7 @@ class CardManager {
   async decryptImage(card){
     const salt = card.salt
     const decryptImage:{imagePath: string, extraData: any[]} = {
-      imagePath: await this.app.getTempFilePath(salt,'_dec'),
+      imagePath: await this.app.getTempFilePath(salt, DECRYPTED_IMAGE_CACHE_SUFFIX),
       extraData: []
     }
     
@@ -198,7 +198,7 @@ class CardManager {
   }
 
   async getCardImagePathCache(card){
-    const picPath = await this.app.getTempFilePath(card.salt,'_dec')
+    const picPath = await this.app.getTempFilePath(card.salt, DECRYPTED_IMAGE_CACHE_SUFFIX)
     await utils.file.checkAccess(picPath)
     return picPath
   }
