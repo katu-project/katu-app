@@ -32,6 +32,10 @@ class AppManager {
     return this.AppInfo.miniProgram.envVersion !== 'release'
   }
 
+  get masterKey(){
+    return this._masterKey
+  }
+
   loadAppConfig(){
     this.rewriteConfig()
   }
@@ -107,7 +111,7 @@ class AppManager {
 
   async clearUserInfo(){
     this.user = await api.getUser() // 获取基础用户数据
-    this._masterKey = ''
+    this.setMasterKey('')
   }
 
   async uploadUserAvatar(filePath){
@@ -119,11 +123,12 @@ class AppManager {
   // master key section
   async _loadMasterKey(){
     if(!this.user.setMasterKey) return
-    this._masterKey = await this._readMasterKey()
+    const masterKey = await this._readMasterKey()
+    this.setMasterKey(masterKey) 
     
-    if(this._masterKey) {
+    if(this.masterKey) {
       try {
-        this._verifyKey(this._masterKey, this.user.masterKeyPack?.keyId)
+        this._verifyKey(this.masterKey, this.user.masterKeyPack?.keyId)
       } catch (error) {
         console.log('主密码不匹配，正常使用不应该出现这个问题！')
         await this.clearMasterKey()
@@ -143,7 +148,7 @@ class AppManager {
   }
 
   async clearMasterKey(){
-    this._masterKey = ''
+    this.setMasterKey('')
     this._removeMasterKeyCache()
   }
 
@@ -151,12 +156,13 @@ class AppManager {
   async loadMasterKeyWithKey(key){
     this.checkMasterKeyFormat(key)
     const hexCode = await this._convertToHex(key)
-    this._masterKey = await this._fetchMasterKeyFromKeyPack(this.user.masterKeyPack?.keyPack, hexCode)
+    const masterKey = await this._fetchMasterKeyFromKeyPack(this.user.masterKeyPack?.keyPack, hexCode)
+    this.setMasterKey(masterKey)
   }
 
   async cacheMasterKey(){
-    if(!this._masterKey) return
-    return setCache(this.Constant.MASTER_KEY_NAME, this._masterKey)
+    if(!this.masterKey) return
+    return setCache(this.Constant.MASTER_KEY_NAME, this.masterKey)
   }
 
   async _removeMasterKeyCache(){
@@ -175,20 +181,20 @@ class AppManager {
       throw error
     }
 
-    if(!this.user.config?.security.rememberPassword && !this._masterKey){
+    if(!this.user.config?.security.rememberPassword && !this.masterKey){
       error.code = '21'
       error.message = '请输入主密码'
       throw error
     }
 
-    if(!this._masterKey) {
+    if(!this.masterKey) {
       error.code = '20'
       error.message = '请输入主密码'
       throw error
     }
 
     try {
-      this._verifyKey(this._masterKey, this.user.masterKeyPack?.keyId)
+      this._verifyKey(this.masterKey, this.user.masterKeyPack?.keyId)
     } catch (err) {
       error.code = '22'
       error.message = '主密码不匹配'
@@ -225,6 +231,10 @@ class AppManager {
     return masterKey
   }
 
+  setMasterKey(key){
+    this._masterKey = key
+  }
+
   _verifyKey(key, keyId){
     if(this._calculateKeyId(key) !== keyId){
       throw Error("密码错误")
@@ -235,7 +245,7 @@ class AppManager {
     return utils.crypto.sha1(key)
   }
 
-  // master key section
+  // master key section end
 
   async uploadFile(tempFilePath, saveName){
     const {fileID} = await wx.cloud.uploadFile({
@@ -305,12 +315,12 @@ class AppManager {
   }
 
   createRecoveryKeyPack(qrCodeData){
-    if(!this._masterKey) throw Error("输入主密码")
+    if(!this.masterKey) throw Error("输入主密码")
     const keyPack: Partial<IRecoveryKeyPack> = {}
     keyPack.qrId = qrCodeData.i
     keyPack.createTime = qrCodeData.t
     keyPack.keyId = this._calculateKeyId(qrCodeData.rk)
-    keyPack.pack = utils.crypto.encryptString(this._masterKey, qrCodeData.rk)
+    keyPack.pack = utils.crypto.encryptString(this.masterKey, qrCodeData.rk)
     return api.setRecoveryKey(keyPack)
   }
 

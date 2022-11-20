@@ -1,6 +1,6 @@
 import { getAppManager } from '@/class/app'
 import utils,{cv, convert, getCache, setCache} from '@/utils/index'
-import { DECRYPTED_IMAGE_CACHE_SUFFIX, ENCRYPTED_IMAGE_CACHE_SUFFIX, KATU_MARK, PACKAGE_TAIL_LENGTH, WX_CLOUD_STORAGE_FILE_HEAD } from '@/const'
+import { CARD_LABEL_CACHE_KEY, DECRYPTED_IMAGE_CACHE_SUFFIX, ENCRYPTED_IMAGE_CACHE_SUFFIX, KATU_MARK, PACKAGE_TAIL_LENGTH, WX_CLOUD_STORAGE_FILE_HEAD } from '@/const'
 import api from '@/api'
 
 class CardManager {
@@ -215,7 +215,7 @@ class CardManager {
   }
 
   generateKeyByMasterKey(options?:any){
-    return utils.crypto.pbkdf2(this.app._masterKey, options)
+    return utils.crypto.pbkdf2(this.app.masterKey, options)
   }
 
   async parseCardImageByRemoteApi(imagePath){
@@ -231,18 +231,18 @@ class CardManager {
   async cacheLabelData(id, data){
     let cacheData = {}
     try {
-      cacheData = await getCache(this.app.Constant.CARD_LABEL_CACHE_KEY)
+      cacheData = await getCache(CARD_LABEL_CACHE_KEY)
     } catch (error) {
       cacheData = {}
     }
 
     cacheData[id] = data
-    return setCache(this.app.Constant.CARD_LABEL_CACHE_KEY, cacheData)
+    return setCache(CARD_LABEL_CACHE_KEY, cacheData)
   }
 
   async getCacheLabelData(id){
     try {
-      const cacheData = await getCache(this.app.Constant.CARD_LABEL_CACHE_KEY)
+      const cacheData = await getCache(CARD_LABEL_CACHE_KEY)
       return cacheData[id] || []
     } catch (error) {
       return []
