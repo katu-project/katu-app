@@ -1,6 +1,8 @@
 import { showChoose, loadData, showSuccess, showError, switchTab } from '@/utils/index'
 import api from '@/api'
 import { getAppManager } from '@/class/app'
+import { ColorList } from '@/const'
+
 const app = getAppManager()
 
 export {}
@@ -12,7 +14,7 @@ Page({
     selectedTagIdx: -1,
     tempTagColor: '',
     hasEdit: false,
-    colors: app.Constant.ColorList
+    colors: ColorList
   },
   onReady() {
     

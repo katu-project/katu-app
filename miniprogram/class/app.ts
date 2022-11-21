@@ -1,14 +1,12 @@
 import utils,{ navigateTo, getCache, setCache, delCache, showChoose } from '@/utils/index'
-import * as constData from '@/const'
 import { AppConfig } from '@/config'
 import api from '@/api'
+import { APP_ENTRY_PATH, APP_TEMP_DIR, DOWNLOAD_IMAGE_CACHE_SUFFIX, MASTER_KEY_NAME } from '@/const'
 
 class AppManager {
   static instance: AppManager
   Config = AppConfig
-  api = api
   AppInfo = wx.getAccountInfoSync()
-  Constant = constData
 
   user: Partial<IUser> = {}
   _masterKey: string = ''
@@ -139,7 +137,7 @@ class AppManager {
 
   async _readMasterKey(){
     try {
-      const {data} = await getCache(this.Constant.MASTER_KEY_NAME)
+      const {data} = await getCache(MASTER_KEY_NAME)
       return data
     } catch (error) {
       console.log("读取主密码缓存失败");
@@ -162,11 +160,11 @@ class AppManager {
 
   async cacheMasterKey(){
     if(!this.masterKey) return
-    return setCache(this.Constant.MASTER_KEY_NAME, this.masterKey)
+    return setCache(MASTER_KEY_NAME, this.masterKey)
   }
 
   async _removeMasterKeyCache(){
-    return delCache(this.Constant.MASTER_KEY_NAME)
+    return delCache(MASTER_KEY_NAME)
   }
 
   // 使用前检测主密码状态
@@ -256,7 +254,7 @@ class AppManager {
   }
 
   async downloadFile(pic: ICardImage){
-    const savePath = `${this.Constant.APP_TEMP_DIR}/${pic.salt || new Date().getTime() }${constData.DOWNLOAD_IMAGE_CACHE_SUFFIX}`
+    const savePath = `${APP_TEMP_DIR}/${pic.salt || new Date().getTime() }${DOWNLOAD_IMAGE_CACHE_SUFFIX}`
     try {
       await utils.file.checkAccess(savePath)
       console.log('hit cache file, reuse it')
@@ -357,7 +355,7 @@ class AppManager {
   
   async getTempFilePath(cacheId:string, suffix?:string){
     return utils.file.getTempFilePath({
-      dir: this.Constant.APP_TEMP_DIR,
+      dir: APP_TEMP_DIR,
       cacheId,
       suffix
     })
@@ -365,7 +363,7 @@ class AppManager {
 
   setHomeRefresh(){
     const pages = getCurrentPages()
-    const homePage = pages.find(page=>page.route ===  `pages/${this.Constant.APP_ENTRY_PATH}`)
+    const homePage = pages.find(page=>page.route ===  `pages/${APP_ENTRY_PATH}`)
     if(!homePage) return
     homePage.backData = {refresh:true}
   }

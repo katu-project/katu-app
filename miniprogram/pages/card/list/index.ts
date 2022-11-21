@@ -1,5 +1,6 @@
 import api from '@/api'
 import { loadData, navigateTo } from '@/utils/index'
+import { DefaultShowImage, DefaultShowLockImage } from '@/const'
 import { getAppManager } from '@/class/app'
 const app = getAppManager()
 
@@ -40,9 +41,9 @@ Page({
       this.setData({
         list: list.map(card=>{
           if(card.encrypted){
-            card._url = app.Constant.DefaultShowLockImage
+            card._url = DefaultShowLockImage
           }else{
-            card._url = app.Constant.DefaultShowImage
+            card._url = DefaultShowImage
           }
           return card
         })
