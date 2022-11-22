@@ -20,10 +20,10 @@ class AppManager {
   }
 
   init(){
-    this.loadAppConfig()
+    this.loadConfig()
   }
 
-  get appVersion(){
+  get version(){
     return this.AppInfo.miniProgram.version || 'develop'
   }
   get isDev(){
@@ -34,7 +34,7 @@ class AppManager {
     return this._masterKey
   }
 
-  loadAppConfig(){
+  loadConfig(){
     this.rewriteConfig()
   }
 

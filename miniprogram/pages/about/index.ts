@@ -19,7 +19,7 @@ Page({
   },
   loadAppInfo(){
     this.setData({
-      'version': app.appVersion
+      'version': app.version
     })
   },
   tapToChangeLog(){
