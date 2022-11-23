@@ -8,7 +8,7 @@ class AppManager {
   Config = AppConfig
   AppInfo = wx.getAccountInfoSync()
 
-  user: Partial<IUser> = {}
+  _user: Partial<IUser> = {}
   _masterKey: string = ''
   
   static getInstance(){
@@ -28,6 +28,10 @@ class AppManager {
   }
   get isDev(){
     return this.AppInfo.miniProgram.envVersion !== 'release'
+  }
+
+  get user(){
+    return this._user
   }
 
   get masterKey(){
@@ -83,7 +87,7 @@ class AppManager {
   }
 
   async loadUserInfo(){
-    this.user = await api.getUser()
+    this._user = await api.getUser()
   }
 
   async loadUserConfig(){
@@ -97,7 +101,7 @@ class AppManager {
   }
 
   async reloadUserInfo(){
-    this.user = await api.getUser()
+    this._user = await api.getUser()
   }
 
   async reloadUserConfig(configItem?:{key:string,value:string}){
@@ -108,7 +112,7 @@ class AppManager {
   }
 
   async clearUserInfo(){
-    this.user = await api.getUser() // 获取基础用户数据
+    this._user = await api.getUser() // 获取基础用户数据
     this.setMasterKey('')
   }
 
