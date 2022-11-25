@@ -20,13 +20,8 @@ class CardManager {
   }
 
   async update(card){
-    const cardModel: Partial<ICard> = { image: [] }
+    const cardModel = this._createCardDefaultData(card)
     cardModel._id = card._id
-    cardModel.encrypted = card.encrypted || false
-    cardModel.title = card.title || '未命名'
-    cardModel.tags = card.tags || ['其他']
-    cardModel.info = card.info || []
-    cardModel.setLike = card.setLike || false
     
     for (const idx in card.image) {
       const pic = card.image[idx]
@@ -57,12 +52,7 @@ class CardManager {
   }
 
   async add(card){
-    const cardModel: Partial<ICard> = { image: [] }
-    cardModel.encrypted = card.encrypted || false
-    cardModel.title = card.title || '未命名'
-    cardModel.tags = card.tags || ['其他']
-    cardModel.info = card.info || []
-    cardModel.setLike = card.setLike || false
+    const cardModel = this._createCardDefaultData(card)
     
     // 提前检查可用额度，避免因为可用额度不足而导致处理卡片数据产生无效的消耗
     await this.app.checkQuota(cardModel.encrypted)
@@ -91,6 +81,17 @@ class CardManager {
     }
 
     return api.saveCard(cardModel)
+  }
+
+  _createCardDefaultData(card){
+    const cardModel: Partial<ICard> = { image: [] }
+    cardModel.encrypted = card.encrypted || false
+    cardModel.title = card.title || '未命名'
+    cardModel.tags = card.tags || ['其他']
+    cardModel.info = card.info || []
+    cardModel.setLike = card.setLike || false
+
+    return cardModel
   }
 
   async getCard(card){
