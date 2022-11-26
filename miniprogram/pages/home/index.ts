@@ -70,10 +70,13 @@ Page({
       const card = this.data.likeList[idx]
       if(!card.encrypted){
         try {
-          const {fileList:[file]} = await wx.cloud.getTempFileURL({
-            fileList: [card.image[0].url]
-          })
-          setData[`likeList[${idx}]._url`] = file.tempFileURL + app.Config.imageMogr2
+          const tempUrl = await app.getCloudFileTempUrl(card.image[0].url)
+          if(tempUrl.startsWith('/')){
+            setData[`likeList[${idx}]._url`] = tempUrl
+            setData[`likeList[${idx}]._mode`] = 'scaleToFill'
+          }else{
+            setData[`likeList[${idx}]._url`] = tempUrl + app.Config.imageMogr2
+          }
         } catch (error) {}
       }else{
         if(loadEncryptedImage){

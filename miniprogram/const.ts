@@ -1,5 +1,6 @@
 const DefaultShowImage = '/static/images/image.svg'
 const DefaultShowLockImage = '/static/images/lock.svg'
+const DefaultLoadFailedImage = '/static/images/load-failed.svg'
 const DefaultAddImage = '/static/images/add.svg'
 const WX_CLOUD_STORAGE_FILE_HEAD = 'cloud://'
 
@@ -123,6 +124,7 @@ export {
   DefaultShowImage,
   DefaultShowLockImage,
   DefaultAddImage,
+  DefaultLoadFailedImage,
   MASTER_KEY_NAME,
   APP_ROOT_DIR,
   APP_TEMP_DIR,

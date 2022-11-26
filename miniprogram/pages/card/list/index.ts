@@ -55,13 +55,15 @@ Page({
     for (const idx in this.data.list) {
       const card = this.data.list[idx]
       if(!card.encrypted){
-        wx.cloud.getTempFileURL({
-          fileList: [card.image[0].url]
-        }).then(({fileList:[file]})=>{
-          const key = `list[${idx}].url`
-          this.setData({
-            [key]: file.tempFileURL + app.Config.imageMogr2
-          })
+        app.getCloudFileTempUrl(card.image[0].url).then( tempUrl =>{
+          const setData = {}
+          if(tempUrl.startsWith('/')){
+            setData[`list[${idx}]._url`] = tempUrl
+            setData[`list[${idx}]._mode`] = 'scaleToFill'
+          }else{
+            setData[`list[${idx}]._url`] = tempUrl + app.Config.imageMogr2
+          }
+          this.setData(setData)
         })
       }
     }

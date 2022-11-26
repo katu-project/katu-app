@@ -1,7 +1,7 @@
 import utils,{ navigateTo, getCache, setCache, delCache, showChoose } from '@/utils/index'
 import { AppConfig } from '@/config'
 import api from '@/api'
-import { APP_ENTRY_PATH, APP_TEMP_DIR, DOWNLOAD_IMAGE_CACHE_SUFFIX, MASTER_KEY_NAME } from '@/const'
+import { APP_ENTRY_PATH, APP_TEMP_DIR, DefaultLoadFailedImage, DOWNLOAD_IMAGE_CACHE_SUFFIX, MASTER_KEY_NAME } from '@/const'
 
 class AppManager {
   static instance: AppManager
@@ -363,6 +363,17 @@ class AppManager {
       cacheId,
       suffix
     })
+  }
+
+  async getCloudFileTempUrl(url:string){
+    const {fileList:[file]} = await wx.cloud.getTempFileURL({
+      fileList: [url]
+    })
+    if(file.status !== 0){
+      console.warn('获取云文件临时URL错误:', file.errMsg);
+      return DefaultLoadFailedImage
+    }
+    return file.tempFileURL
   }
 
   setHomeRefresh(){
