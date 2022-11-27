@@ -97,6 +97,7 @@ interface IUser {
     general: {
       defaultUseEncrytion: boolean
       useDefaultTag: boolean
+      autoShowContent: boolean
     },
     account: {
 

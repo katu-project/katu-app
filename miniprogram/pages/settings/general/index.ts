@@ -7,13 +7,15 @@ export {}
 Page({
   data: {
     config_general_defaultUseEncrytion: false,
-    config_general_useDefaultTag: true
+    config_general_useDefaultTag: true,
+    config_general_autoShowContent: false
   },
   onShow(){
     const {config} = app.user
     this.setData({
       config_general_defaultUseEncrytion: config?.general.defaultUseEncrytion,
-      config_general_useDefaultTag: config?.general.useDefaultTag
+      config_general_useDefaultTag: config?.general.useDefaultTag,
+      config_general_autoShowContent: config?.general.autoShowContent
     })
   },
   tapToConfig(e){
