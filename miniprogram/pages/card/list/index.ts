@@ -2,8 +2,9 @@ import api from '@/api'
 import { loadData, navigateTo } from '@/utils/index'
 import { DefaultShowImage, DefaultShowLockImage } from '@/const'
 import { getAppManager } from '@/class/app'
+import { getCardManager } from '@/class/card'
 const app = getAppManager()
-
+const cardManager = getCardManager()
 export {}
 
 Page({
@@ -30,7 +31,7 @@ Page({
     this.loadData()
   },
   onShow() {
-    if(this.backData.refresh){
+    if(this.backData?.refresh){
       this.loadData()
       this.backData.refresh = false
     }
@@ -51,22 +52,28 @@ Page({
       this.loadImage()
     })
   },
-  loadImage(){
+  async loadImage(){
+    const setData = {}
     for (const idx in this.data.list) {
       const card = this.data.list[idx]
-      if(!card.encrypted){
-        app.getCloudFileTempUrl(card.image[0].url).then( tempUrl =>{
-          const setData = {}
-          if(tempUrl.startsWith('/')){
-            setData[`list[${idx}]._url`] = tempUrl
-            setData[`list[${idx}]._mode`] = 'scaleToFill'
-          }else{
-            setData[`list[${idx}]._url`] = tempUrl + app.Config.imageMogr2
-          }
-          this.setData(setData)
-        })
+      if(card.encrypted){
+        if(app.user.config?.general.autoShowContent){
+          try {
+            const picPath = await cardManager.getCardImagePathCache(card.image[0])
+            setData[`list[${idx}]._url`] = picPath
+          } catch (error) {}
+        }
+      }else{
+        const tempUrl = await app.getCloudFileTempUrl(card.image[0].url)
+        if(tempUrl.startsWith('/')){
+          setData[`list[${idx}]._url`] = tempUrl
+          setData[`list[${idx}]._mode`] = 'scaleToFill'
+        }else{
+          setData[`list[${idx}]._url`] = tempUrl + app.Config.imageMogr2
+        }
       }
     }
+    this.setData(setData)
   },
   onBindRefresh(){
     this.setData({

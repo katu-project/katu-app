@@ -4,7 +4,7 @@ import api from '@/api'
 import { getCardManager } from '@/class/card'
 import { getAppManager } from '@/class/app'
 const app = getAppManager()
-
+const cardManager = getCardManager()
 export {}
 
 Page({
@@ -55,7 +55,29 @@ Page({
     })
 
     if(this.data.card.encrypted){
-      this.showEncryptedImage()
+      if(app.user.config?.general.autoShowContent){
+        const setData = {}
+        for (const idx in this.data.card.image) {
+          const image = this.data.card.image[idx]
+          try {
+            const imageData = await cardManager.getCardCache(image)
+            setData[`card.image[${idx}]._url`] = imageData.imagePath 
+            setData[`card.info`] = this.rebuildLabel(imageData.extraData)
+          } catch (error) {}
+        }
+        if(Object.keys(setData).length){
+          this.setData(setData)
+          return
+        }
+      }
+      
+      try {
+        app.checkMasterKey()
+      } catch (error) {
+        if(error.code[0] === '2'){
+          this.showInputKey()
+        }
+      }
     }
   },
   onShow() {
@@ -79,9 +101,7 @@ Page({
     }
     this.showEncryptedImage()
   },
-  async showEncryptedImage(){
-    const image = this.data.card.image[this.chooseIdx]
-    const cardManager = getCardManager()
+  async showEncryptedImage(){       
     try {
       app.checkMasterKey()
     } catch (error) {
@@ -93,6 +113,7 @@ Page({
       return
     }
 
+    const image = this.data.card.image[this.chooseIdx]
     const imageData = await loadData(cardManager.getCard, image, '解码中')
     
     const setData = {

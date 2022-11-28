@@ -56,19 +56,18 @@ Page({
     return this.loadImage()
   },
   async loadImage(){
-    let loadEncryptedImage = false
-    try {
-      app.checkMasterKey()
-      loadEncryptedImage = true
-    } catch (error) {
-      console.warn('未缓存主密码，取消显示加密卡片数据')
-    }
-
     const setData = {}
 
     for (const idx in this.data.likeList) {
       const card = this.data.likeList[idx]
-      if(!card.encrypted){
+      if(card.encrypted){
+        if(app.user.config?.general.autoShowContent){
+          try {
+            const picPath = await cardManager.getCardImagePathCache(card.image[0])
+            setData[`likeList[${idx}]._url`] = picPath
+          } catch (error) {}
+        }
+      }else{
         try {
           const tempUrl = await app.getCloudFileTempUrl(card.image[0].url)
           if(tempUrl.startsWith('/')){
@@ -78,13 +77,6 @@ Page({
             setData[`likeList[${idx}]._url`] = tempUrl + app.Config.imageMogr2
           }
         } catch (error) {}
-      }else{
-        if(loadEncryptedImage){
-          try {
-            const picPath = await cardManager.getCardImagePathCache(card.image[0])
-            setData[`likeList[${idx}]._url`] = picPath
-          } catch (error) {}
-        }
       }
     }
     this.setData(setData)
