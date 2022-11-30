@@ -35,12 +35,12 @@ async function showNotice(msg){
 }
 
 // showChoose(title,content)
-async function showChoose(title, content='', options={}): Promise<WechatMiniprogram.ShowModalSuccessCallbackResult> {
+async function showChoose(title:string, content?:string, options?: WechatMiniprogram.ShowModalOption): Promise<WechatMiniprogram.ShowModalSuccessCallbackResult> {
   return new Promise((resolve)=>{
     wx.showModal({
       title,
-      content,
-      ...options
+      content: content || '',
+      ...(options || {})
     }).then((e)=>{
       return resolve(e)
     }).catch(console.warn)
