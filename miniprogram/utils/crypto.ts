@@ -46,20 +46,24 @@ export const KatuCryptoFormatter = {
 }
 
 export async function random(bytesLength: number){
-  if(!bytesLength || bytesLength % 2 === 1) {
+  if(!bytesLength) {
     throw Error("random bytesLength error")
   }
   let randomHexSring = ''
   try {
     const {randomValues} = await wx.getRandomValues({
-      length: bytesLength / 2,
+      length: bytesLength,
     })
     randomHexSring = BufferToHex(randomValues)
   } catch (error) {
-    console.log('获取系统随机数出错，将使用内置替代库：', error)
-    randomHexSring = CryptoJS.lib.WordArray.random(bytesLength / 2)
+    console.warn('获取系统随机数出错，将使用内置替代库：', error)
+    randomHexSring = CryptoJS.lib.WordArray.random(bytesLength).toString()
   }
   return randomHexSring
+}
+
+export async function randomBytesHexString(len: number){
+  return random(len)
 }
 
 export function md5(string){
@@ -78,12 +82,21 @@ export function sha512(string){
   return CryptoJS.SHA256(string).toString()
 }
 
-type Pbkdf2Options = {salt:string, size:number}
-export function pbkdf2<T extends Pbkdf2Options = Pbkdf2Options>(masterKey: string, options?: Partial<T>){
-  const salt = options?.salt ? CryptoJS.enc.Hex.parse(options.salt) : CryptoJS.lib.WordArray.random(64 / 8)
+/**
+ * use sha1
+ * keySize 4(4x32bits)
+ * iterations 1
+ * output hex 128bits
+ * masterKey sha1 => 16 bytes
+ * salt no limit, use random value: 16bytes
+ */
+type Pbkdf2Options = {salt:string, size:number, iterations:number}
+export async function pbkdf2(masterKey: string, options?: Partial<Pbkdf2Options>){
+  const salt = options?.salt ? CryptoJS.enc.Hex.parse(options.salt) : await randomBytesHexString(16)
+  const iterations = options?.iterations || 1
   const key = CryptoJS.PBKDF2(masterKey,salt,{
     keySize: options?.size || 4, 
-    iterations: 5000
+    iterations
   }).toString()
   return {key, salt: salt.toString()}
 }
@@ -141,6 +154,7 @@ export function decryptFile(fileHexString, code){
 
 export default {
   random,
+  randomBytesHexString,
   md5,
   sha1,
   sha256,
