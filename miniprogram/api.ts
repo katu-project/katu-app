@@ -7,6 +7,10 @@ export default {
   getChangeLog: () => request<IChangeLog[]>('app/changeLog'),
 
   getNotice: (data?:any) => request<INotice>('app/notice', data), 
+
+  getShareItem: (data?:any) => request<IShareItem>('app/share', data),
+
+  setShareItem: (data?:any) => request('app/setShare', data),
   // user
 
   updateUserConfig: (configItem:any) => request('user/updateConfig', configItem),
