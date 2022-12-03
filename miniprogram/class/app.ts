@@ -1,4 +1,4 @@
-import utils,{ navigateTo, getCache, setCache, delCache, showChoose } from '@/utils/index'
+import utils,{ navigateTo, getCache, setCache, delCache, showChoose, chooseLocalImage } from '@/utils/index'
 import { AppConfig } from '@/config'
 import api from '@/api'
 import { APP_ENTRY_PATH, APP_TEMP_DIR, DefaultLoadFailedImage, DOWNLOAD_IMAGE_CACHE_SUFFIX, MASTER_KEY_NAME } from '@/const'
@@ -280,6 +280,11 @@ class AppManager {
       urls: pics,
       current: pics[idx || 0]
     })
+  }
+
+  async chooseLocalImage(){
+    getApp().globalData.state.inChooseLocalImage = true
+    return chooseLocalImage()
   }
 
   openUserUsageProtocol(){

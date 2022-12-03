@@ -45,6 +45,9 @@ App({
     if(this.globalData.state.inPreviewPic){
       this.globalData.state.inPreviewPic = false
       return
+    }else if(this.globalData.state.inChooseLocalImage){
+      this.globalData.state.inChooseLocalImage = false
+      return
     }
     
     if(app.user.config?.security.rememberPassword){
@@ -65,7 +68,8 @@ App({
     CustomBar: 0,
     Custom: {},
     state: {
-      inPreviewPic: false
+      inPreviewPic: false,
+      inChooseLocalImage: false
     }
   }
 });

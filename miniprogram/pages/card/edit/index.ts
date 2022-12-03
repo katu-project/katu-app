@@ -1,4 +1,4 @@
-import { showNotice, showChoose, navigateTo, showError, loadData, navigateBack, chooseLocalImage } from '@/utils/index'
+import { showNotice, showChoose, navigateTo, showError, loadData, navigateBack } from '@/utils/index'
 import { DefaultAddImage } from '@/const'
 import api from '@/api'
 import { getCardManager } from '@/class/card'
@@ -192,7 +192,7 @@ Page({
   async tapToChoosePic(e){
     const index = e.currentTarget.dataset.index
     try {
-      const picPath = await chooseLocalImage()
+      const picPath = await app.chooseLocalImage()
       if(!picPath) return
 
       this.resolveImageIdx = index
