@@ -10,7 +10,7 @@ export default {
 
   getShareItem: (data?:any) => request<IShareItem>('app/share', data),
 
-  setShareItem: (data?:any) => request('app/setShare', data),
+  setShareItem: (data?:any) => request<IAnyObject>('app/setShare', data),
   // user
 
   updateUserConfig: (configItem:any) => request('user/updateConfig', configItem),
@@ -45,9 +45,9 @@ export default {
     return fileID
   },
   // card
-  getCardSummary: ():Promise<ICardSummary[]> => request('card/summary'),
+  getCardSummary: () => request<ICardSummary[]>('card/summary'),
 
-  getLikeCard: ():Promise<ICard[]> => request<ICard[]>('card/like'),
+  getLikeCard: () => request<ICard[]>('card/like'),
 
   setCardLike: data => request('card/setLike', data),
 
@@ -64,7 +64,7 @@ export default {
   // doc
   getDoc: data => request<IDoc>('doc/getDoc', data),
 
-  getHotDoc: ():Promise<IAnyObject[]> => request('doc/getDoc', {field:{title: true}, where: {type: 2, hot: true}}),
+  getHotDoc: () => request<IAnyObject[]>('doc/getDoc', {field:{title: true}, where: {type: 2, hot: true}}),
 
-  getCateDoc: (cate):Promise<IAnyObject[]> => request('doc/getDoc', {field:{title: true}, where: {type: 2, cate}})
+  getCateDoc: (cate:string) => request<IAnyObject[]>('doc/getDoc', {field:{title: true}, where: {type: 2, cate}})
 }
