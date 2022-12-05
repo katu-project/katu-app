@@ -1,0 +1,1 @@
+type KeyPair = {key:string, salt:string}

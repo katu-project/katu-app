@@ -111,8 +111,18 @@ class CardManager {
   }
 
   async encryptImage(imagePath: string, extraData?: any[]){
+    const keyPair = await this.generateKeypairWithMasterKey()
+    return this._encryptImage(keyPair, imagePath, extraData)
+  }
+
+  async encryptImageWithKey(key:string, imagePath: string, extraData?: any[]){
+    const keyPair = await this._generateKeypairByKey(key)
+    return this._encryptImage(keyPair, imagePath, extraData)
+  }
+
+  async _encryptImage(keyPair: KeyPair, imagePath: string, extraData?: any[]){
     const imageHexData = await utils.file.readFile(imagePath, 'hex')
-    const {key:imageKey, salt} = this.generateKeyByMasterKey()
+    const {key:imageKey, salt} = keyPair
     const flag = '00000000'
     const extraDataInfo = this._packExtraData(extraData)
     
@@ -123,7 +133,7 @@ class CardManager {
                                         .concat(flag).concat(extraDataInfo.lengthData)
                                         .concat(KATU_MARK)
 
-    console.log('encryptPackage:',encryptedData.length, encryptPackage.slice(-PACKAGE_TAIL_LENGTH), salt);
+    console.log('encryptPackage:',encryptedData.length, encryptPackage.slice(-PACKAGE_TAIL_LENGTH), salt, imageKey);
     const tempFilePath = await this.app.getTempFilePath(salt, ENCRYPTED_IMAGE_CACHE_SUFFIX)
     await utils.file.writeFile(tempFilePath, encryptPackage, 'hex')
     return {
@@ -132,21 +142,30 @@ class CardManager {
     }
   }
 
-  async decryptImage(card){
-    const salt = card.salt
+  async decryptImage(image:ICardImage){
+    const salt = image.salt
+    const {key} = await this.generateKeypairWithMasterKey({salt})
+    return this._decryptImage(image, key)
+  }
+
+  async decryptImageWithKey(image:ICardImage, key:string){
+    return this._decryptImage(image,key)
+  }
+
+  async _decryptImage(image:ICardImage, key:string){
+    const salt = image.salt
     const decryptImage:{imagePath: string, extraData: any[]} = {
       imagePath: await this.app.getTempFilePath(salt, DECRYPTED_IMAGE_CACHE_SUFFIX),
       extraData: []
     }
     
-    const imageFilePath = await this.app.downloadFile(card)
+    const imageFilePath = await this.app.downloadFile(image)
     const encryptedHexData = await utils.file.readFile(imageFilePath, 'hex')
-    const {key:secretKey} = this.generateKeyByMasterKey({salt})
     // 解密数据
     const metaData = encryptedHexData.slice(-PACKAGE_TAIL_LENGTH)
     const mixHexData = encryptedHexData.slice(0, -PACKAGE_TAIL_LENGTH)
 
-    const decryptedData = utils.crypto.decryptFile(mixHexData, secretKey)
+    const decryptedData = utils.crypto.decryptFile(mixHexData, key)
     if(!decryptedData) throw Error("主密码错误")
     // 检测并解密附加数据
     const {data:extraData, dataLength: extraDataLength} = this._unpackExtraData(decryptedData, metaData)
@@ -215,8 +234,12 @@ class CardManager {
     return this.app.uploadFile(filePath, uploadFileId)
   }
 
-  generateKeyByMasterKey(options?:any){
-    return utils.crypto.pbkdf2(this.app.masterKey, options)
+  generateKeypairWithMasterKey(options?){
+    return this._generateKeypairByKey(this.app.masterKey, options)
+  }
+
+  _generateKeypairByKey(key:string, options?:{salt: string}){
+    return utils.crypto.pbkdf2(key, { iterations: 5000, ...options })
   }
 
   async parseCardImageByRemoteApi(imagePath){

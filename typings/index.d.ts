@@ -1,4 +1,5 @@
 /// <reference path="./base.d.ts" />
+/// <reference path="./crypto.d.ts" />
 /// <reference path="./types/index.d.ts" />
 
 interface IAppOption {
@@ -43,6 +44,13 @@ interface INotice {
   updateTime: string
   content: string
   auto_show: boolean
+}
+
+interface IShareItem {
+  _id: string
+  shareTime: string
+  expiredTime: string
+  card: Partial<ICard>
 }
 
 interface ICardTag {
