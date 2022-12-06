@@ -234,6 +234,11 @@ class CardManager {
     return this.app.uploadFile(filePath, uploadFileId)
   }
 
+  async uploadShare(filePath){
+    const uploadFileId = `${this.app.Config.uploadShareCardNamePrefix}/${this.app.user.openid}/${await utils.crypto.random(16)}`
+    return this.app.uploadFile(filePath, uploadFileId)
+  }
+
   generateKeypairWithMasterKey(options?){
     return this._generateKeypairByKey(this.app.masterKey, options)
   }
