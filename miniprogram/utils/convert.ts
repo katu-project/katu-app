@@ -43,10 +43,20 @@ export function hex2string(hex){
   return back
 }
 
+export function base64ToString(base64String){
+  return Base64.decode(base64String)
+}
+
+export function stringToBase64(str:string, urlsafe?:boolean){
+  return Base64.encode(str, urlsafe)
+}
+
 export default {
   ArrayBufferToBase64,
   Base64ToArrayBuffer,
   BufferToHex,
   string2hex,
-  hex2string
+  hex2string,
+  base64ToString,
+  stringToBase64
 }
