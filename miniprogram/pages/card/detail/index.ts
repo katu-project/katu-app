@@ -1,5 +1,5 @@
-import { DefaultShowLockImage, DefaultShowImage } from '@/const'
-import { showChoose, showError, loadData, navigateBack, setClipboardData, navigateTo } from '@/utils/index'
+import { DefaultShowLockImage, DefaultShowImage, DefaultShareImage } from '@/const'
+import { showChoose, showError, loadData, navigateBack, setClipboardData, navigateTo, showNotice } from '@/utils/index'
 import api from '@/api'
 import { getCardManager } from '@/class/card'
 import { getAppManager } from '@/class/app'
@@ -10,6 +10,11 @@ export {}
 Page({
   id: '',
   chooseIdx: 0,
+  shareData: {
+    sid: '',
+    sk: '',
+    dk: ''
+  },
   data: {
     showInputKey: false,
     card: {
@@ -20,15 +25,19 @@ Page({
       encrypted: false,
       image: [
         {
-          _url: DefaultShowImage
+          _url: DefaultShowImage,
+          url: '',
+          salt: '',
+          hash: ''
         }
       ]
-    }
+    } as Partial<ICard>
   },
   onLoad(options) {
     if(options.id){
       this.id = options.id
     }
+    wx.hideShareMenu()
   },
   async onReady() {
     if(!this.id) {
@@ -95,7 +104,7 @@ Page({
   },
   async tapToChoosePic(e){
     this.chooseIdx = e.currentTarget.dataset.index
-    const image = this.data.card.image[this.chooseIdx]
+    const image = this.data.card.image![this.chooseIdx]
     if(!this.data.card.encrypted || image._url !== DefaultShowLockImage){
       return this.previewImage(this.chooseIdx)
     }
@@ -113,7 +122,7 @@ Page({
       return
     }
 
-    const image = this.data.card.image[this.chooseIdx]
+    const image = this.data.card.image![this.chooseIdx]
     const imageData = await loadData(cardManager.getCard, image, '解码中')
     
     const setData = {
@@ -123,7 +132,7 @@ Page({
     this.setData(setData)
   },
   async previewImage(idx=0){
-    const pics = this.data.card.image.filter(e=>e._url !== DefaultShowLockImage).map(e=>e._url)
+    const pics = this.data.card.image!.filter(e=>e._url !== DefaultShowLockImage).map(e=>e._url!)
     app.previewImage(pics, idx)
   },
   tapToEditCard(){
@@ -155,6 +164,38 @@ Page({
       })
     })
   },
+  onShareAppMessage(){
+    const params = `sid=${this.shareData?.sid}&sk=${this.shareData?.sk}&dk=${this.shareData?.dk}`
+    return {
+      title: `来自 ${app.user.nickName} 分享的内容`,
+      path: `/pages/share/index?${params}`,
+      imageUrl: DefaultShareImage
+    }
+  },
+  tapToShowShareDialog(){
+    if(this.data.card.encrypted){
+      if(this.data.card.image?.some(pic => pic._url === DefaultShowLockImage )){
+        showNotice('请先解密卡片内容')
+        return
+      }
+    }
+
+    showChoose('温馨提示','更多分享帮助点击【了解详情】',{
+      cancelText: '了解详情',
+      confirmText: '不再提示'
+    }).then(res=>{
+      if(res.confirm){
+        loadData(app.createShareItem,{card:this.data.card}).then(shareInfo=>{
+          this.shareData = shareInfo
+          console.log(shareInfo);
+          this.showShareDialog()
+        })
+      }
+      if(res.cancel){
+        app.openDataShareDoc()
+      }
+    })
+  },
   showInputKey(){
     this.setData({
       showInputKey: true
@@ -175,6 +216,16 @@ Page({
       label = Object.assign({name: '未知', value: '无'},label)
       label.value = item[1]
       return label
+    })
+  },
+  showShareDialog(){
+    this.setData({
+      showShareDialog: true
+    })
+  },
+  hideShareDialog(){
+    this.setData({
+      showShareDialog: false
     })
   }
 })

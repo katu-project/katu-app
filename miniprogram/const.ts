@@ -2,6 +2,7 @@ const DefaultShowImage = '/static/images/image.svg'
 const DefaultShowLockImage = '/static/images/lock.svg'
 const DefaultLoadFailedImage = '/static/images/load-failed.svg'
 const DefaultAddImage = '/static/images/add.svg'
+const DefaultShareImage = '/static/share.png'
 const WX_CLOUD_STORAGE_FILE_HEAD = 'cloud://'
 
 const APP_ROOT_DIR = `${wx.env.USER_DATA_PATH}/katu`
@@ -125,6 +126,7 @@ export {
   DefaultShowLockImage,
   DefaultAddImage,
   DefaultLoadFailedImage,
+  DefaultShareImage,
   MASTER_KEY_NAME,
   APP_ROOT_DIR,
   APP_TEMP_DIR,

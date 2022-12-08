@@ -1,7 +1,10 @@
 import utils,{ navigateTo, getCache, setCache, delCache, showChoose, chooseLocalImage } from '@/utils/index'
 import { AppConfig } from '@/config'
 import api from '@/api'
-import { APP_ENTRY_PATH, APP_TEMP_DIR, DefaultLoadFailedImage, DOWNLOAD_IMAGE_CACHE_SUFFIX, MASTER_KEY_NAME } from '@/const'
+import { APP_ENTRY_PATH, APP_TEMP_DIR, DefaultLoadFailedImage, DOWNLOAD_IMAGE_CACHE_SUFFIX, MASTER_KEY_NAME, WX_CLOUD_STORAGE_FILE_HEAD } from '@/const'
+import { randomBytesHexString } from '@/utils/crypto'
+import { checkAccess } from '@/utils/file'
+import { getCardManager } from './card'
 
 class AppManager {
   static instance: AppManager
@@ -266,11 +269,21 @@ class AppManager {
     } catch (error) {
       console.log('no cache file, download it')
     }
-    const {fileList: [imageInfo]} = await wx.cloud.getTempFileURL({
-      fileList: [pic.url]
-    })
-    console.warn('downloadFile:', imageInfo);
-    const downloadFile = await utils.file.download(imageInfo.tempFileURL, savePath)
+    
+    let fileUrl = pic.url
+    if(pic.url.startsWith(WX_CLOUD_STORAGE_FILE_HEAD)){
+      const {fileList: [imageInfo]} = await wx.cloud.getTempFileURL({
+        fileList: [pic.url]
+      })
+      if(imageInfo.status !== 0){
+        console.warn('get cloud file tempUrl error:', imageInfo.errMsg)
+        throw Error('下载文件错误')
+      }
+      fileUrl = imageInfo.tempFileURL
+    }
+
+    console.warn('start download file:', fileUrl);
+    const downloadFile = await utils.file.download(fileUrl, savePath)
     return downloadFile.filePath
   }
 
@@ -279,6 +292,60 @@ class AppManager {
     wx.previewImage({
       urls: pics,
       current: pics[idx || 0]
+    })
+  }
+
+  async createShareItem({card, scope, expiredTime}:CreateShareOptions){
+    scope = scope?.length ? scope : []
+    expiredTime = expiredTime || 3600
+    let sk = await randomBytesHexString(3)
+    let dk = await randomBytesHexString(16)
+    const extraData = card.info?.map(e=>([e.key,e.value]))
+    const shareCard: Partial<ICard> = {
+      encrypted: card.encrypted,
+      image: [],
+      info: []
+    }
+    if(card.encrypted){
+      for (const image of card.image!) {
+        if(!image._url || !await checkAccess(image._url)) throw Error("分享生成错误")
+        const imageData = {url:'',salt:'',hash: image.hash}
+        const encrytedPic = await getCardManager().encryptImageWithKey(dk, image._url!, extraData)
+        imageData.url = await getCardManager().uploadShare(encrytedPic.imagePath)
+        imageData.salt = encrytedPic.imageSecretKey
+
+        shareCard.image!.push(imageData)
+      }
+    }else{
+      dk = ''
+      shareCard.info = extraData
+      for (const image of card.image!) {
+        shareCard.image!.push({
+          url: image.url,
+          salt: '',
+          hash: image.hash
+        })
+      }
+    }
+    const resp = await api.setShareItem({
+      card: shareCard,
+      scope,
+      expiredTime,
+      sk
+    })
+    return {
+      sid: resp.shareId,
+      sk,
+      dk
+    }
+  }
+
+  rebuildLabel(meta){
+    return meta.map(item=>{
+      let label = this.Config.extraDataLabels.find(e=>e.key===item[0])
+      label = Object.assign({name: '未知', value: '无'},label)
+      label.value = item[1]
+      return label
     })
   }
 
@@ -293,6 +360,10 @@ class AppManager {
 
   openUserPrivacyProtocol(){
     return this.navToDoc(this.Config.doc.userPrivacyProtocol)
+  }
+
+  openDataShareDoc(){
+    return this.navToDoc(this.Config.doc.dataShareNotice)
   }
 
   //数据备份

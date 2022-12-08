@@ -48,9 +48,16 @@ interface INotice {
 
 interface IShareItem {
   _id: string
-  shareTime: string
   expiredTime: string
+  addTime: string
+  endTime: string
   card: Partial<ICard>
+}
+
+interface CreateShareOptions {
+  card:Partial<ICard>
+  scope?: string[]
+  expiredTime?: number
 }
 
 interface ICardTag {

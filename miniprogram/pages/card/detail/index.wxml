@@ -16,7 +16,7 @@
     <view class="text-cyan text-xl padding-top-sm flex align-center">
       <text class="cuIcon-tag padding-right-xs padding-left-xs"></text>
       <view style="width: 80vw; overflow-x: scroll;" class="flex">
-        <text class="cu-tag margin-right radius line-orange text-orange" wx:for="{{card.tags}}" wx:key="index">{{item}}</text>
+        <text class="cu-tag margin-right-sm radius line-orange text-orange" wx:for="{{card.tags}}" wx:key="index">{{item}}</text>
       </view>
     </view>
   </view>
@@ -32,15 +32,42 @@
       <text class="cuIcon-copy text-gray"></text>
     </view>
   </view>
-  <view class="padding-tb flex-row">
-    <button class="text-red bg-red light gfw" bindtap="tapToDeleteCard" style="width: 40vw">
-      <text class="cuIcon-delete"></text>
+
+  <view class="padding-sm flex justify-between align-center">
+    <button class="cu-btn text-red bg-red light gfw" bindtap="tapToDeleteCard">
+      <text class="cuIcon-delete margin-right-xs"></text>
     删除</button>
-    <button class="text-green bg-cyan light gfw" bindtap="tapToEditCard" style="width: 40vw">
-      <text class="cuIcon-edit"></text>
+    <view style="width: 20rpx;"></view>
+    <button class="cu-btn text-green bg-cyan light gfw" bindtap="tapToEditCard">
+      <text class="cuIcon-edit margin-right-xs"></text>
     修改</button>
+    <view style="width: 20rpx;"></view>
+    <button class="cu-btn text-green bg-olive light gfw" bindtap="tapToShowShareDialog">
+      <text class="cuIcon-share margin-right-xs"></text>
+    分享</button>
   </view>
   <view class="padding"></view>
+</view>
+
+<view class="cu-modal {{ showShareDialog?'show':''}}">
+  <view class="cu-dialog">
+    <view class="padding-bottom-lg">
+      <view class="cu-bar justify-center padding-tb-lg">
+        <text class="text-lg text-cyan light">选择分享类型</text>
+      </view>
+      <view class="flex-row">
+        <button class="cu-btn icon text-xl" style="width: 10vw;height:10vw;" open-type="share">
+          <image src="/static/weixin.png" mode="aspectFit" style="height: 100rpx;"></image>
+        </button>
+        <view style="width: 20vw;"></view>
+        <view style="width: 20vw;"></view>
+        <view style="width: 20vw;"></view>
+      </view>
+    </view>
+    <view class="cu-bar bg-gray">
+      <view class="action margin-0 flex-sub" bindtap="hideShareDialog">取消</view>
+    </view>
+  </view>
 </view>
 
 <input-key bind:confirm="inputKeyConfirm" show="{{showInputKey}}" />
