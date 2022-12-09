@@ -86,7 +86,7 @@ export async function download(url, filePath){
 }
 // ------- wx function end----
 export async function getTempFilePath<T extends {dir: string, cacheId?:string, suffix?:string}>(options?:T){
-  const randomFileName = await random(128 / 8)
+  const randomFileName = await random(16)
   let tempFile = randomFileName
   if(options){
     const {dir:tempDir, cacheId, suffix} = options

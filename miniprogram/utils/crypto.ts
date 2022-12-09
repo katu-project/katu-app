@@ -92,7 +92,7 @@ export function sha512(string){
  */
 type Pbkdf2Options = {salt:string, size:number, iterations:number}
 export async function pbkdf2(masterKey: string, options?: Partial<Pbkdf2Options>){
-  const salt = options?.salt ? CryptoJS.enc.Hex.parse(options.salt) : await randomBytesHexString(16)
+  const salt = CryptoJS.enc.Hex.parse(options?.salt || await randomBytesHexString(8))
   const iterations = options?.iterations || 1
   const key = CryptoJS.PBKDF2(masterKey,salt,{
     keySize: options?.size || 4, 
@@ -148,7 +148,6 @@ export function decryptFile(fileHexString, code){
   const decryptedHexString = CryptoJS.AES.decrypt(fileHexString, code, {
     format: KatuCryptoFormatter
   }).toString()
-  if(!decryptedHexString) throw Error("decrypt fail")
   return decryptedHexString
 }
 
