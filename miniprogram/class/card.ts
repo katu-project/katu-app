@@ -149,7 +149,8 @@ class CardManager {
   }
 
   async decryptImageWithKey(image:ICardImage, key:string){
-    return this._decryptImage(image,key)
+    const {key: imageKey} = await this._generateKeypairByKey(key, {salt: image.salt})
+    return this._decryptImage(image, imageKey)
   }
 
   async _decryptImage(image:ICardImage, key:string){
