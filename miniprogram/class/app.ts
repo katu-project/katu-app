@@ -340,7 +340,8 @@ class AppManager {
     }
   }
 
-  rebuildLabel(meta){
+  rebuildLabel(meta?: Partial<ICardLabel>[]){
+    meta = meta || []
     return meta.map(item=>{
       let label = this.Config.extraDataLabels.find(e=>e.key===item[0])
       label = Object.assign({name: '未知', value: '无'},label)

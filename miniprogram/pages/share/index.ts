@@ -41,7 +41,7 @@ Page({
           if(card.encrypted) pic._url = DefaultShowLockImage
           return pic
         }),
-        [`card.info`]: app.rebuildLabel(card.info || []),
+        [`card.info`]: app.rebuildLabel(card.info),
         endTime: new Date(endTime).toLocaleString()
       })
       if(card.encrypted){

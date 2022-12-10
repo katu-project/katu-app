@@ -54,7 +54,7 @@ Page({
       'card.encrypted': card.encrypted,
       'card.title': card.title,
       'card.tags': card.tags,
-      'card.info': card.encrypted ? [] : this.rebuildLabel(card.info||[]),
+      'card.info': card.encrypted ? [] : app.rebuildLabel(card.info),
       'card.setLike': card.setLike || false,
       'card.image': card.image.map(pic=>{
         pic._url = pic.url
@@ -71,7 +71,7 @@ Page({
           try {
             const imageData = await cardManager.getCardCache(image)
             setData[`card.image[${idx}]._url`] = imageData.imagePath 
-            setData[`card.info`] = this.rebuildLabel(imageData.extraData)
+            setData[`card.info`] = app.rebuildLabel(imageData.extraData)
           } catch (error) {}
         }
         if(Object.keys(setData).length){
@@ -127,7 +127,7 @@ Page({
     
     const setData = {
       [`card.image[${this.chooseIdx}]._url`]: imageData.imagePath,
-      [`card.info`]: this.rebuildLabel(imageData.extraData)
+      [`card.info`]: app.rebuildLabel(imageData.extraData)
     }
     this.setData(setData)
   },
@@ -208,14 +208,6 @@ Page({
     }).catch(error=>{
       showError(error.message)
       this.showInputKey()
-    })
-  },
-  rebuildLabel(meta){
-    return meta.map(item=>{
-      let label = app.Config.extraDataLabels.find(e=>e.key===item[0])
-      label = Object.assign({name: '未知', value: '无'},label)
-      label.value = item[1]
-      return label
     })
   },
   onImageShowError(e){
