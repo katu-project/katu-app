@@ -22,7 +22,7 @@
   </view>
   <view class="pic">
     <block wx:for="{{card.image}}" wx:key="index">
-      <image class="pic-img card" data-index="{{index}}" mode="aspectFit" bindtap="tapToChoosePic" src="{{item._url}}"></image>
+      <image class="pic-img card" data-index="{{index}}" binderror="onImageShowError" mode="aspectFit" bindtap="tapToChoosePic" src="{{item._url}}"></image>
     </block>
   </view>
   <view hidden="{{!card.info.length}}" class="padding-sm margin-sm br-12" style="border: 1px solid rgb(167, 236, 236);">

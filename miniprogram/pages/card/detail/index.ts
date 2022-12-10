@@ -1,4 +1,4 @@
-import { DefaultShowLockImage, DefaultShowImage, DefaultShareImage } from '@/const'
+import { DefaultShowLockImage, DefaultShowImage, DefaultShareImage, DefaultLoadFailedImage } from '@/const'
 import { showChoose, showError, loadData, navigateBack, setClipboardData, navigateTo, showNotice } from '@/utils/index'
 import api from '@/api'
 import { getCardManager } from '@/class/card'
@@ -217,6 +217,12 @@ Page({
       label.value = item[1]
       return label
     })
+  },
+  onImageShowError(e){
+    const setData = {}
+    setData[`card.image[${e.currentTarget.dataset.index}]._url`] = DefaultLoadFailedImage
+    this.setData(setData)
+    showError('数据加载出错')
   },
   showShareDialog(){
     this.setData({
