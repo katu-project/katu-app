@@ -69,12 +69,19 @@ export async function getSavedFileList(){
   return toPromise(getSavedFileList, {}, 'fileList')
 }
 
-export async function getStats(path, recursive=false){
+export async function getStats<T = any>(path, recursive=false){
   const getStats = args => wx.getFileSystemManager().stat(args)
-  return toPromise(getStats, {
+  return toPromise<T>(getStats, {
     path,
     recursive
   }, 'stats')
+}
+
+export async function readdir(dirPath){
+  const readdir = args => wx.getFileSystemManager().readdir(args)
+  return toPromise<string[]>(readdir, {
+    dirPath
+  }, 'files')
 }
 
 export async function download(url, filePath){
@@ -84,7 +91,13 @@ export async function download(url, filePath){
     filePath
   })
 }
-// ------- wx function end----
+// ------- wx function end ----
+
+// ------- 扩展方法 ----
+export async function advReaddir(dir:string){
+  return getStats<{path:string,stats:WechatMiniprogram.Stats}[]>(dir,true)
+}
+
 export async function getTempFilePath<T extends {dir: string, cacheId?:string, suffix?:string}>(options?:T){
   const randomFileName = await random(16)
   let tempFile = randomFileName
@@ -128,6 +141,8 @@ export default {
   readDir,
   checkAccess,
   getStats,
+  readdir,
+  advReaddir,
   download,
   getSavedFileList,
   getTempFilePath,
