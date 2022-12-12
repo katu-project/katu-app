@@ -111,7 +111,7 @@ export async function getTempFilePath<T extends {dir: string, cacheId?:string, s
     }
   
     if(cacheId){
-      tempFile = `${tempDir}/${md5(cacheId)}`
+      tempFile = `${tempDir}/${cacheId}`
     }else{
       tempFile = `${tempDir}/${randomFileName}`
     }
