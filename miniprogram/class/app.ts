@@ -261,7 +261,7 @@ class AppManager {
   }
 
   async downloadFile(pic: ICardImage){
-    const savePath = `${APP_TEMP_DIR}/${pic.salt || new Date().getTime() }.${DOWNLOAD_IMAGE_CACHE_SUFFIX}`
+    const savePath = `${APP_TEMP_DIR}/${pic.hash || new Date().getTime() }.${DOWNLOAD_IMAGE_CACHE_SUFFIX}`
     try {
       await utils.file.checkAccess(savePath)
       console.log('hit cache file, reuse it')
