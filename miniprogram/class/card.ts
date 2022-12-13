@@ -155,7 +155,7 @@ class CardManager {
 
   async _decryptImage(image:ICardImage, key:string){
     const decryptImage:{imagePath: string, extraData: any[]} = {
-      imagePath: await this._getCardImagePath(image, 'dec'),
+      imagePath: await this._genCardImagePath(image, 'dec'),
       extraData: []
     }
     
@@ -206,34 +206,34 @@ class CardManager {
     return retDataInfo
   }
 
-  async getCardCache(card){
+  async getCardCache(image: ICardImage){
     const cacheData = {
       imagePath: '',
       extraData: []
     }
-    cacheData.imagePath = await this.getCardImagePathCache(card)
+    cacheData.imagePath = await this.getCardImagePathCache(image)
     cacheData.extraData = await this.getCacheLabelData(cacheData.imagePath)
     console.log('命中缓存数据: 已经存在相同解密数据')
     return cacheData
   }
-
+  // 检测并返回图片缓存的路径
   async getCardImagePathCache(image: ICardImage){
-    const imagePath = await this._getCardImagePath(image, 'dec')
+    const imagePath = await this._genCardImagePath(image, 'dec')
     await utils.file.checkAccess(imagePath)
     return imagePath
   }
 
-  async _getCardImagePath(image: Pick<ICardImage, 'hash'>, type: 'down'|'dec'|'enc'){
+  async _genCardImagePath(image: Pick<ICardImage, 'hash'>, type: 'down'|'dec'|'enc'){
     const suffix = type === 'down' ? DOWNLOAD_IMAGE_CACHE_SUFFIX
                             : type === 'enc' ? ENCRYPTED_IMAGE_CACHE_SUFFIX
                             : DECRYPTED_IMAGE_CACHE_SUFFIX
     return this.app.getTempFilePath(image.hash, suffix)
   }
 
-  async removeCardImageCache(image: ICardImage){
+  async _removeCardImageCache(image: ICardImage){
     const imageTypes: ('down'|'dec'|'enc')[] = ['dec', 'enc', 'down']
     for (const type of imageTypes) {
-      const path = await this._getCardImagePath(image, type)
+      const path = await this._genCardImagePath(image, type)
       wx.getFileSystemManager().unlink({
         filePath: path,
         success: console.log,
@@ -441,7 +441,7 @@ class CardManager {
     // check local cache and remove
     for (const image of card.image!) {
       try {
-        await this.removeCardImageCache(image)
+        await this._removeCardImageCache(image)
       } catch (error) {
       }
     }
