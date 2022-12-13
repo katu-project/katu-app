@@ -112,15 +112,19 @@ class CardManager {
 
   async encryptImage(imagePath: string, extraData?: any[]){
     const keyPair = await this.generateKeypairWithMasterKey()
-    return this._encryptImage(keyPair, imagePath, extraData)
+    const hash = await this.getHash(imagePath)
+    const savePath = await this._genCardImagePath({hash}, 'enc')
+    return this._encryptImage({keyPair, imagePath, savePath, extraData})
   }
 
   async encryptImageWithKey(key:string, imagePath: string, extraData?: any[]){
     const keyPair = await this._generateKeypairByKey(key)
-    return this._encryptImage(keyPair, imagePath, extraData)
+    const hash = await this.getHash(imagePath)
+    const savePath = await this._genCardImagePath({hash}, 'enc')
+    return this._encryptImage({keyPair, imagePath, savePath, extraData})
   }
 
-  async _encryptImage(keyPair: KeyPair, imagePath: string, extraData?: any[]){
+  async _encryptImage({keyPair, imagePath, savePath, extraData}: {keyPair: KeyPair, imagePath: string, savePath: string, extraData?: any[]}){
     const imageHexData = await utils.file.readFile(imagePath, 'hex')
     const {key:imageKey, salt} = keyPair
     const flag = '00000000'
@@ -133,12 +137,11 @@ class CardManager {
                                         .concat(flag).concat(extraDataInfo.lengthData)
                                         .concat(KATU_MARK)
 
-    console.log('encryptPackage:',encryptedData.length, encryptPackage.slice(-PACKAGE_TAIL_LENGTH), salt, imageKey);
-    const tempFilePath = await this.app.getTempFilePath(salt, ENCRYPTED_IMAGE_CACHE_SUFFIX)
-    await utils.file.writeFile(tempFilePath, encryptPackage, 'hex')
+    console.log('encryptPackage:',encryptedData.length, encryptPackage.slice(-PACKAGE_TAIL_LENGTH), salt, imageKey)
+    await utils.file.writeFile(savePath, encryptPackage, 'hex')
     return {
       imageSecretKey: salt,
-      imagePath: tempFilePath
+      imagePath: savePath
     }
   }
 
@@ -242,7 +245,7 @@ class CardManager {
     }
   }
 
-  async getHash(imagePath){
+  async getHash(imagePath:string): Promise<string>{
     const imageHexData = await utils.file.readFile(imagePath, 'hex')
     console.log('getHash: ',imagePath ,typeof imageHexData === 'string' ? imageHexData.length: 'ArrayBuffer', imageHexData.slice(0,32), imageHexData.slice(-32));
     return utils.crypto.md5(imageHexData)
