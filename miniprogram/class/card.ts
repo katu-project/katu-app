@@ -1,6 +1,6 @@
 import { getAppManager } from '@/class/app'
 import utils,{cv, convert, getCache, setCache} from '@/utils/index'
-import { CARD_LABEL_CACHE_KEY, DECRYPTED_IMAGE_CACHE_SUFFIX, ENCRYPTED_IMAGE_CACHE_SUFFIX, KATU_MARK, PACKAGE_TAIL_LENGTH, WX_CLOUD_STORAGE_FILE_HEAD } from '@/const'
+import { CARD_LABEL_CACHE_KEY, DECRYPTED_IMAGE_CACHE_SUFFIX, DOWNLOAD_IMAGE_CACHE_SUFFIX, ENCRYPTED_IMAGE_CACHE_SUFFIX, KATU_MARK, PACKAGE_TAIL_LENGTH, WX_CLOUD_STORAGE_FILE_HEAD } from '@/const'
 import api from '@/api'
 
 class CardManager {
@@ -154,9 +154,8 @@ class CardManager {
   }
 
   async _decryptImage(image:ICardImage, key:string){
-    const salt = image.salt
     const decryptImage:{imagePath: string, extraData: any[]} = {
-      imagePath: await this.app.getTempFilePath(salt, DECRYPTED_IMAGE_CACHE_SUFFIX),
+      imagePath: await this._getCardImagePath(image, 'dec'),
       extraData: []
     }
     
@@ -218,10 +217,29 @@ class CardManager {
     return cacheData
   }
 
-  async getCardImagePathCache(card){
-    const picPath = await this.app.getTempFilePath(card.salt, DECRYPTED_IMAGE_CACHE_SUFFIX)
-    await utils.file.checkAccess(picPath)
-    return picPath
+  async getCardImagePathCache(image: ICardImage){
+    const imagePath = await this._getCardImagePath(image, 'dec')
+    await utils.file.checkAccess(imagePath)
+    return imagePath
+  }
+
+  async _getCardImagePath(image: Pick<ICardImage, 'hash'>, type: 'down'|'dec'|'enc'){
+    const suffix = type === 'down' ? DOWNLOAD_IMAGE_CACHE_SUFFIX
+                            : type === 'enc' ? ENCRYPTED_IMAGE_CACHE_SUFFIX
+                            : DECRYPTED_IMAGE_CACHE_SUFFIX
+    return this.app.getTempFilePath(image.hash, suffix)
+  }
+
+  async removeCardImageCache(image: ICardImage){
+    const imageTypes: ('down'|'dec'|'enc')[] = ['dec', 'enc', 'down']
+    for (const type of imageTypes) {
+      const path = await this._getCardImagePath(image, type)
+      wx.getFileSystemManager().unlink({
+        filePath: path,
+        success: console.log,
+        fail: console.log
+      })
+    }
   }
 
   async getHash(imagePath){
@@ -417,6 +435,17 @@ class CardManager {
     const path = await this.app.getTempFilePath('1234')
     await utils.file.writeFile(path, imageBuffer)
     return path
+  }
+
+  async deleteCard(card: Partial<ICard>){
+    // check local cache and remove
+    for (const image of card.image!) {
+      try {
+        await this.removeCardImageCache(image)
+      } catch (error) {
+      }
+    }
+    return api.deleteCard({_id: card._id})
   }
 }
 

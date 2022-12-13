@@ -158,7 +158,7 @@ Page({
     showChoose("确认删除卡片","卡片删除后不可恢复！").then(({cancel})=>{
       if(cancel) return
 
-      loadData(api.deleteCard,{_id: this.id}).then(()=>{
+      loadData(cardManager.deleteCard, this.data.card).then(()=>{
         app.setHomeRefresh()
         navigateBack({ refresh: true })
       })
