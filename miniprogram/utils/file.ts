@@ -1,5 +1,3 @@
-import { random, md5 } from './crypto'
-
 export const toPromise = <T>(func, options={}, returnKey?:string): Promise<T> => {
   return new Promise((resolve,reject)=>{
     func({
@@ -44,7 +42,7 @@ export async function writeFile(filePath, fileData, encoding?: string){
   return toPromise(writeFile, options)
 }
 
-export async function checkAccess(path) {
+export async function checkAccess(path: string) {
   const checkAccess = args => wx.getFileSystemManager().access(args)
   const options = {path}
   return toPromise(checkAccess, options)
@@ -98,29 +96,19 @@ export async function advReaddir(dir:string){
   return getStats<{path:string,stats:WechatMiniprogram.Stats}[]>(dir,true)
 }
 
-export async function getTempFilePath<T extends {dir: string, cacheId?:string, suffix?:string}>(options?:T){
-  const randomFileName = await random(16)
-  let tempFile = randomFileName
-  if(options){
-    const {dir:tempDir, cacheId, suffix} = options
-
-    try {
-      await checkAccess(tempDir)
-    } catch (error) {
-      await mkdir(tempDir)
-    }
-  
-    if(cacheId){
-      tempFile = `${tempDir}/${cacheId}`
-    }else{
-      tempFile = `${tempDir}/${randomFileName}`
-    }
-
-    if(suffix){
-      tempFile += `.${suffix}`
-    }
+export async function getFilePath({dir, name, suffix}:{dir: string, name:string, suffix?:string}){
+  let filePath = ''
+  try {
+    await checkAccess(dir)
+  } catch (error) {
+    await mkdir(dir)
   }
-  return tempFile
+
+  filePath = `${dir}/${name}`
+  if(suffix){
+    filePath += `.${suffix}`
+  }
+  return filePath
 }
 
 export async function getImageType(picPath){
@@ -145,6 +133,6 @@ export default {
   advReaddir,
   download,
   getSavedFileList,
-  getTempFilePath,
+  getFilePath,
   getImageType
 }

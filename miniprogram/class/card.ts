@@ -228,9 +228,9 @@ class CardManager {
 
   async _genCardImagePath(image: Pick<ICardImage, 'hash'>, type: 'down'|'dec'|'enc'){
     const suffix = type === 'down' ? DOWNLOAD_IMAGE_CACHE_SUFFIX
-                            : type === 'enc' ? ENCRYPTED_IMAGE_CACHE_SUFFIX
-                            : DECRYPTED_IMAGE_CACHE_SUFFIX
-    return this.app.getTempFilePath(image.hash, suffix)
+                  : type === 'enc' ? ENCRYPTED_IMAGE_CACHE_SUFFIX
+                  : DECRYPTED_IMAGE_CACHE_SUFFIX
+    return this.app.getLocalFilePath(image.hash, suffix)
   }
 
   async _removeCardImageCache(image: ICardImage){

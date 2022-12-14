@@ -1,7 +1,7 @@
 import utils,{ navigateTo, getCache, setCache, delCache, showChoose, chooseLocalImage } from '@/utils/index'
 import { AppConfig } from '@/config'
 import api from '@/api'
-import { APP_ENTRY_PATH, APP_TEMP_DIR, DefaultLoadFailedImage, DOWNLOAD_IMAGE_CACHE_SUFFIX, MASTER_KEY_NAME, WX_CLOUD_STORAGE_FILE_HEAD } from '@/const'
+import { APP_ENTRY_PATH, APP_TEMP_DIR, APP_DOWN_DIR, APP_IMAGE_DIR, DefaultLoadFailedImage, MASTER_KEY_NAME, WX_CLOUD_STORAGE_FILE_HEAD } from '@/const'
 import { randomBytesHexString } from '@/utils/crypto'
 import { checkAccess } from '@/utils/file'
 import { getCardManager } from './card'
@@ -260,8 +260,8 @@ class AppManager {
     return fileID
   }
 
-  async downloadFile(pic: ICardImage){
-    const savePath = `${APP_TEMP_DIR}/${pic.hash || new Date().getTime() }.${DOWNLOAD_IMAGE_CACHE_SUFFIX}`
+  async downloadFile(image: ICardImage){
+    const savePath = await this.getLocalFilePath(image.hash, 'down')
     try {
       await utils.file.checkAccess(savePath)
       console.log('hit cache file, reuse it')
@@ -270,10 +270,10 @@ class AppManager {
       console.log('no cache file, download it')
     }
     
-    let fileUrl = pic.url
-    if(pic.url.startsWith(WX_CLOUD_STORAGE_FILE_HEAD)){
+    let fileUrl = image.url
+    if(image.url.startsWith(WX_CLOUD_STORAGE_FILE_HEAD)){
       const {fileList: [imageInfo]} = await wx.cloud.getTempFileURL({
-        fileList: [pic.url]
+        fileList: [image.url]
       })
       if(imageInfo.status !== 0){
         console.warn('get cloud file tempUrl error:', imageInfo.errMsg)
@@ -434,10 +434,21 @@ class AppManager {
     navigateTo(`/pages/qa/detail/index?id=${id}`)
   }
   
-  async getTempFilePath(cacheId:string, suffix?:string){
-    return utils.file.getTempFilePath({
+  async getTempFilePath(name:string, suffix?:string){
+    return utils.file.getFilePath({
       dir: APP_TEMP_DIR,
-      cacheId,
+      name,
+      suffix
+    })
+  }
+
+  async getLocalFilePath(name:string, suffix?:string){
+    const dir = suffix === 'down' ? APP_DOWN_DIR
+                : suffix === 'dec' ? APP_IMAGE_DIR
+                : APP_TEMP_DIR
+    return utils.file.getFilePath({
+      dir,
+      name,
       suffix
     })
   }
