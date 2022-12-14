@@ -3,6 +3,20 @@
 </cu-custom>
 <view class="page">
   <view class="cu-list menu margin-top" style="min-height: 50vh;">
+    <view class="padding-tb flex-row-sb">
+      <text class="text-red text-xl">{{cwd}}</text>
+      <text>{{files.length}} files</text>
+    </view>
+    <view class="padding-tb flex-row-sb">
+      <view bindtap="tapToBack">返回</view>
+    </view>
+    <view class="cu-item {{item.isDir?'arrow':''}} item" wx:for="{{files}}" wx:key="path">
+      <view class="content flex-col" bindtap="tapToSelectDir" data-dir="{{item.isDir}}" data-path="{{item.path}}">
+        <view class="text-sm {{item.isDir?'text-blue':''}}">{{cwd}}/{{item.path}}{{item.isDir?'/':''}}</view>
+        <text class="text-sm">{{item.size}}</text>
+      </view>
+    </view>
+
     <view class="cu-item arrow item" wx:for="{{list}}" wx:key="path">
       <view class="content">
         <text class="text-black">{{item.path}}</text>

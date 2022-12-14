@@ -41,7 +41,7 @@ Page({
     console.log('加密数据长度:',encryptedData,encryptedData.length);
     console.timeEnd('加密用时')
 
-    const saveTempFile = await file.getTempFilePath({dir:'temp', cacheId: '111'})
+    const saveTempFile = await file.getFilePath({dir:'temp', name: '111'})
     await file.writeFile(saveTempFile, encryptedData, 'hex')
 
     wx.getFileSystemManager().getFileInfo({
@@ -57,7 +57,7 @@ Page({
     const imageHexData = await crypto.decryptFile(readData, key)
     console.timeEnd('解密用时')
 
-    const imageTempFile = await file.getTempFilePath({dir:'temp', cacheId: '111'})
+    const imageTempFile = await file.getFilePath({dir:'temp', name: '111'})
     await file.writeFile(imageTempFile, imageHexData, 'hex')
 
     this.setData({
