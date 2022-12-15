@@ -19,6 +19,6 @@ Page({
 
   },
   tapToSetContent(){
-    navigateBack({[this.returnContentKey]: this.data.content})
+    navigateBack({backData:{[this.returnContentKey]: this.data.content}})
   }
 })

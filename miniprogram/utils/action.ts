@@ -74,10 +74,15 @@ async function setClipboardData(data, vibrate=true){
   })
 }
 
-async function navigateBack(backData={},delta=1){
-  const pages = getCurrentPages()
-  const prevPage = pages[pages.length - delta - 1]
-  prevPage.backData = backData
+async function navigateBack(options?:{backData?:IAnyObject,delta?: number}){
+  const backData = options?.backData
+  const delta = options?.delta || 1
+
+  if(backData){
+    const pages = getCurrentPages()
+    const prevPage = pages[pages.length - delta - 1]
+    prevPage.backData = backData
+  }
   wx.navigateBack({delta})
 }
 

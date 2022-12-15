@@ -37,7 +37,7 @@ Page({
     navigateBack()
   },
   useAndBack() {
-    navigateBack({[this.returnContentKey]: this.data.tmpImagePath})
+    navigateBack({backData: {[this.returnContentKey]: this.data.tmpImagePath}})
   },
   async selectMethod(e){
     return this.processImage(parseInt(e.detail.value))

@@ -22,7 +22,7 @@ Page({
   },
   loadData(){
     if(!this.id){
-      showChoose('该文档不存在').then(navigateBack)
+      showChoose('该文档不存在').then(()=> navigateBack())
       return
     }
     loadData(api.getDoc,{_id:this.id}).then(doc=>{

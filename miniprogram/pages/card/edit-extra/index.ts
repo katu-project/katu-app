@@ -71,6 +71,6 @@ Page({
   },
   tapToSave(){
     const miniData = JSON.stringify(this.data.list.map(e=>([e.key,e.value])))
-    navigateBack({[this.returnContentKey]: miniData})
+    navigateBack({backData: {[this.returnContentKey]: miniData}})
   }
 })

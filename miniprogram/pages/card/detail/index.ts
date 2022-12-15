@@ -160,7 +160,7 @@ Page({
 
       loadData(cardManager.deleteCard, this.data.card).then(()=>{
         app.setHomeRefresh()
-        navigateBack({ refresh: true })
+        navigateBack({backData:{ refresh: true }})
       })
     })
   },
