@@ -172,7 +172,7 @@ Page({
       imageUrl: DefaultShareImage
     }
   },
-  tapToShowShareDialog(){
+  async tapToShowShareDialog(){
     if(this.data.card.encrypted){
       if(this.data.card.image?.some(pic => pic._url === DefaultShowLockImage )){
         showNotice('请先解密卡片内容')
@@ -180,20 +180,23 @@ Page({
       }
     }
 
-    showChoose('温馨提示','更多分享帮助点击【了解详情】',{
-      cancelText: '了解详情',
-      confirmText: '不再提示'
-    }).then(res=>{
-      if(res.confirm){
-        loadData(app.createShareItem,{card:this.data.card}).then(shareInfo=>{
-          this.shareData = shareInfo
-          console.log(shareInfo);
-          this.showShareDialog()
-        })
-      }
+    const noticeReadCheck = await app.getLocalData('knowShareNotice')
+    if(!noticeReadCheck){
+      const res = await showChoose('温馨提示','更多分享帮助点击【了解详情】',{
+        cancelText: '了解详情',
+        confirmText: '不再提示'
+      })
       if(res.cancel){
         app.openDataShareDoc()
+        return 
       }
+    }
+
+    loadData(app.createShareItem,{card:this.data.card}).then(shareInfo=>{
+      this.shareData = shareInfo
+      console.log(shareInfo);
+      app.setLocalData('knowShareNotice',true)
+      this.showShareDialog()
     })
   },
   showInputKey(){

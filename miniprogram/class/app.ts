@@ -295,6 +295,18 @@ class AppManager {
     })
   }
 
+  async setLocalData(key, data){
+    return setCache(key, data)
+  }
+
+  async getLocalData(key){
+    try {
+      return await getCache(key)
+    } catch (error) {
+    }
+    return null
+  }
+
   async createShareItem({card, scope, expiredTime}:CreateShareOptions){
     scope = scope?.length ? scope : []
     expiredTime = expiredTime || 3600
