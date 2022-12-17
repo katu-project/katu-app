@@ -122,6 +122,10 @@ const PAGES_MENU = {
   ]
 }
 
+const LocalCacheKeyMap = {
+  knowShareNotice: 'knowShareNotice'
+}
+
 const APP_ENTRY_PATH = 'home/index'
 
 export {
@@ -145,5 +149,6 @@ export {
   WX_CLOUD_STORAGE_FILE_HEAD,
   ENCRYPTED_IMAGE_CACHE_SUFFIX,
   DECRYPTED_IMAGE_CACHE_SUFFIX,
-  DOWNLOAD_IMAGE_CACHE_SUFFIX
+  DOWNLOAD_IMAGE_CACHE_SUFFIX,
+  LocalCacheKeyMap
 }
