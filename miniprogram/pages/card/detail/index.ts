@@ -187,15 +187,17 @@ Page({
         confirmText: '不再提示'
       })
       if(res.cancel){
-        app.openDataShareDoc()
+        app.openDataSaveSecurityNoticeDoc()
         return 
+      }
+      if(res.confirm){
+        app.setLocalData(LocalCacheKeyMap.knowShareNotice,true)
       }
     }
 
     loadData(app.createShareItem,{card:this.data.card}).then(shareInfo=>{
       this.shareData = shareInfo
-      console.log(shareInfo);
-      app.setLocalData(LocalCacheKeyMap.knowShareNotice,true)
+      console.log(shareInfo)
       this.showShareDialog()
     })
   },
