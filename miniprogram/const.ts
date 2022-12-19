@@ -123,7 +123,8 @@ const PAGES_MENU = {
 }
 
 const LocalCacheKeyMap = {
-  knowShareNotice: 'knowShareNotice'
+  knowShareNotice: 'knowShareNotice',
+  knowEncryptSave: 'knowEncryptSave'
 }
 
 const APP_ENTRY_PATH = 'home/index'

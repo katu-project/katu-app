@@ -375,6 +375,10 @@ class AppManager {
     return this.navToDoc(this.Config.doc.userPrivacyProtocol)
   }
 
+  openDataSaveSecurityNoticeDoc(){
+    return this.navToDoc(this.Config.doc.dataSaveSecurityNotice)
+  }
+
   openDataShareDoc(){
     return this.navToDoc(this.Config.doc.dataShareNotice)
   }

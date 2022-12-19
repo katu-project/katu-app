@@ -1,5 +1,5 @@
 import { showNotice, showChoose, navigateTo, showError, loadData, navigateBack } from '@/utils/index'
-import { DefaultAddImage } from '@/const'
+import { DefaultAddImage, LocalCacheKeyMap } from '@/const'
 import api from '@/api'
 import { getCardManager } from '@/class/card'
 import { getAppManager } from '@/class/app'
@@ -153,6 +153,24 @@ Page({
       showNotice("卡面数量错误")
       return
     }
+
+    if(!card.encrypted){
+      const noticeReadCheck = await app.getLocalData(LocalCacheKeyMap.knowEncryptSave)
+      if(!noticeReadCheck){
+        const res = await showChoose('温馨提示','非加密保存有数据泄漏风险！',{
+          cancelText: '了解详情',
+          confirmText: '不再提示'
+        })
+        if(res.cancel){
+          app.openDataSaveSecurityNoticeDoc()
+          return 
+        }
+        if(res.confirm){
+          app.setLocalData(LocalCacheKeyMap.knowEncryptSave,true)
+        }
+      }
+    }
+    
     // 加密模式下，主密码有效性预检查
     if(card.encrypted){
       try {
