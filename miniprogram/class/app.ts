@@ -261,7 +261,7 @@ class AppManager {
   }
 
   async downloadFile(image: ICardImage){
-    const savePath = await this.getLocalFilePath(image.hash, 'down')
+    const savePath = await this.getLocalFilePath(image.salt, 'down')
     try {
       await utils.file.checkAccess(savePath)
       console.log('hit cache file, reuse it')

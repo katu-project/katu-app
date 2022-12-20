@@ -112,15 +112,13 @@ class CardManager {
 
   async encryptImage(imagePath: string, extraData?: any[]){
     const keyPair = await this.generateKeypairWithMasterKey()
-    const hash = await this.getHash(imagePath)
-    const savePath = await this._genCardImagePath({hash}, 'enc')
+    const savePath = await this._genCardImagePath(keyPair, 'enc')
     return this._encryptImage({keyPair, imagePath, savePath, extraData})
   }
 
   async encryptImageWithKey(key:string, imagePath: string, extraData?: any[]){
     const keyPair = await this._generateKeypairByKey(key)
-    const hash = await this.getHash(imagePath)
-    const savePath = await this._genCardImagePath({hash}, 'enc')
+    const savePath = await this._genCardImagePath(keyPair, 'enc')
     return this._encryptImage({keyPair, imagePath, savePath, extraData})
   }
 
@@ -226,11 +224,11 @@ class CardManager {
     return imagePath
   }
 
-  async _genCardImagePath(image: Pick<ICardImage, 'hash'>, type: 'down'|'dec'|'enc'){
+  async _genCardImagePath(image: Pick<ICardImage, 'salt'>, type: 'down'|'dec'|'enc'){
     const suffix = type === 'down' ? DOWNLOAD_IMAGE_CACHE_SUFFIX
                   : type === 'enc' ? ENCRYPTED_IMAGE_CACHE_SUFFIX
                   : DECRYPTED_IMAGE_CACHE_SUFFIX
-    return this.app.getLocalFilePath(image.hash, suffix)
+    return this.app.getLocalFilePath(image.salt, suffix)
   }
 
   async _removeCardImageCache(image: ICardImage){
