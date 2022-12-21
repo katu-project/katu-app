@@ -165,6 +165,8 @@ Page({
     })
   },
   onShareAppMessage(){
+    // 取消由于分享导致的小程序 hide 事件
+    getApp().globalData.state.inShareData = true
     const params = `sid=${this.shareData?.sid}&sk=${this.shareData?.sk}&dk=${this.shareData?.dk}`
     return {
       title: `来自 ${app.user.nickName} 分享的内容`,
@@ -197,7 +199,6 @@ Page({
 
     loadData(app.createShareItem,{card:this.data.card}).then(shareInfo=>{
       this.shareData = shareInfo
-      console.log(shareInfo)
       this.showShareDialog()
     })
   },

@@ -48,6 +48,9 @@ App({
     }else if(this.globalData.state.inChooseLocalImage){
       this.globalData.state.inChooseLocalImage = false
       return
+    }else if(this.globalData.state.inShareData){
+      this.globalData.state.inShareData = false
+      return
     }
     
     if(app.user.config?.security.rememberPassword){
@@ -69,7 +72,8 @@ App({
     Custom: {},
     state: {
       inPreviewPic: false,
-      inChooseLocalImage: false
+      inChooseLocalImage: false,
+      inShareData: false
     }
   }
 });
