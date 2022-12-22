@@ -23,13 +23,20 @@ Page({
   onShow(){
   },
   nameInput(e){
-    this.setData({
+    const setData = {
       name: e.detail.value
-    })
+    }
+    if(setData.name !== this.originData.name){
+      setData['dataChange'] = true
+    }else{
+      setData['dataChange'] = false
+    }
+    this.setData(setData)
   },
   onBindChooseAvatar(e){
     this.setData({
-      url: e.detail.avatarUrl
+      url: e.detail.avatarUrl,
+      dataChange: true
     })
   },
   async tapToSaveUserInfo(){

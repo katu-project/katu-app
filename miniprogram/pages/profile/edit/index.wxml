@@ -4,12 +4,17 @@
 </cu-custom>
 
 <view class="flex-col justify-center align-center padding margin-top-lg">
-  <image src="{{url}}" class="br-16" mode="aspectFit" style="height:200rpx;width:200rpx;border: 1px solid darkcyan;"></image>
-  <button class="cu-btn margin line-cyan" style="width: 200rpx;" open-type="chooseAvatar" bindchooseavatar="onBindChooseAvatar">选择头像</button>
+  <view style="border: 1px solid rgb(158, 184, 184);padding: 1rpx;" class="flex-col br-16">
+    <image src="{{url}}" class="br-16" mode="aspectFit" style="height:200rpx;width:200rpx;"></image>
+  </view>
+
+  <button class="cu-btn line-cyan margin-top" style="width: 200rpx;" open-type="chooseAvatar" bindchooseavatar="onBindChooseAvatar">编辑头像</button>
   
   <view class="cu-form-group margin-top">
-		<view class="title">昵称</view>
-		<input value="{{name}}" bindinput="nameInput" placeholder="输入昵称"></input>
+		<view style="border-bottom: 1rpx solid darkcyan;">
+      <input value="{{name}}" bindinput="nameInput" style="text-align: center;" placeholder="输入昵称"></input>
+    </view>
 	</view>
-  <button class="cu-btn margin-top line-cyan" bindtap="tapToSaveUserInfo">保存</button>
+  <button class="cu-btn margin-top line-cyan" disabled="{{!dataChange}}" bindtap="tapToSaveUserInfo">保存</button>
 </view>
+
