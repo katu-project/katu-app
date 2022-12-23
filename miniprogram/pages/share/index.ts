@@ -14,7 +14,9 @@ Page({
   },
   chooseIdx: 0,
   data: {
-    card: {} as Partial<ICard>
+    card: {} as Partial<ICard>,
+    endTime: 0,
+    endTimeText: '**:**'
   },
   onLoad(options) {
     if(!options.sid || !options.sk){
@@ -27,27 +29,29 @@ Page({
     this.shareInfo.dk = options.dk || ''
   },
   onReady() {
-    this.loadData()
+    this.loadData().then(()=>{
+      this.renderTimeInfo()
+    })
   },
   onShow() {
 
   },
-  loadData(){
-    loadData(api.getShareItem, {sid: this.shareInfo.sid, sk: this.shareInfo.sk}).then(({card,endTime})=>{
-      this.setData({
-        'card.encrypted': card.encrypted,
-        'card.image': card.image?.map(pic=>{
-          pic._url = pic.url
-          if(card.encrypted) pic._url = DefaultShowLockImage
-          return pic
-        }),
-        [`card.info`]: app.rebuildLabel(card.info),
-        endTime: new Date(endTime).toLocaleString()
-      })
-      if(card.encrypted){
-        this.showEncryptedImage()
-      }
+  async loadData(){
+    const {card,endTime} = await loadData(api.getShareItem, {sid: this.shareInfo.sid, sk: this.shareInfo.sk})
+
+    this.setData({
+      'card.encrypted': card.encrypted,
+      'card.image': card.image?.map(pic=>{
+        pic._url = pic.url
+        if(card.encrypted) pic._url = DefaultShowLockImage
+        return pic
+      }),
+      [`card.info`]: app.rebuildLabel(card.info),
+      endTime: Math.floor((new Date(endTime).getTime() - new Date().getTime()) / 1000)
     })
+    if(card.encrypted){
+      await this.showEncryptedImage()
+    }
   },
   async tapToChoosePic(e){
     this.chooseIdx = e.currentTarget.dataset.index
@@ -72,7 +76,7 @@ Page({
       })
       return
     }
-    loadData(this.decryptImage)
+    return loadData(this.decryptImage)
   },
   async decryptImage(){
     const setData = {}
@@ -86,6 +90,23 @@ Page({
     }   
 
     this.setData(setData)
+  },
+  renderTimeInfo(){
+    setTimeout(()=>{
+      if(this.data.endTime) {
+        const sec = this.data.endTime % 60
+        const min = (this.data.endTime - sec) / 60 
+        this.setData({
+          endTimeText: `${min}:${sec.toString().padStart(2,'0')}`,
+          endTime: this.data.endTime - 1
+        })
+        return this.renderTimeInfo()
+      }else{
+        this.setData({
+          card: {}
+        })
+      }
+    },1000)
   },
   showInputKey(){
     this.setData({

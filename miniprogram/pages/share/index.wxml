@@ -1,5 +1,6 @@
 <cu-custom bgColor="bg-cyan" isBack="{{false}}" isCustom="{{true}}">
   <view slot="backText">返回</view>
+  <view slot="content">卡兔分享</view>
 </cu-custom>
 
 <view class="page">
@@ -17,8 +18,16 @@
     </view>
   </view>
 
-  <view class="padding-tb padding-left-sm br-12" hidden="{{!endTime}}">
-    <text class="cuIcon-warn text-gray"> 此分享在 <text class="text-red">{{endTime}}</text> 前有效</text>
+  <view class="padding-tb padding-left-sm br-12 text-center">
+    <text class="cuIcon-warn text-gray"> 此分享</text>
+    <block wx:if="{{endTime}}">
+      <text class="text-gray">将在 </text>
+      <text class="text-red">{{endTimeText}}</text>
+      <text class="text-gray"> 分钟后失效</text>
+    </block>
+    <block wx:else>
+      <text class="text-gray">已失效</text>
+    </block>
   </view>
 </view>
 
