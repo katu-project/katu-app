@@ -3,7 +3,7 @@ export const toPromise = <T>(func, options={}, returnKey?:string): Promise<T> =>
     func({
       ...options,
       success: res=>{
-        if(['checkAccess'].includes(func.name)){
+        if(['checkAccess','getStats'].includes(func.name)){
 
         }else{
           if(res.data && res.data.length > 200){
@@ -22,6 +22,12 @@ export const toPromise = <T>(func, options={}, returnKey?:string): Promise<T> =>
       fail: reject
     })
   })
+}
+
+export async function deleteFile(filePath){
+  const deleteFile = args => wx.getFileSystemManager().unlink(args)
+  const options = {filePath}
+  return toPromise<void>(deleteFile, options)
 }
 
 export async function readFile(filePath, encoding){
@@ -125,6 +131,7 @@ export async function getImageType(picPath){
 
 export default {
   readFile,
+  deleteFile,
   writeFile,
   readDir,
   checkAccess,
