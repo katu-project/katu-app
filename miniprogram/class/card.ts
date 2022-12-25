@@ -2,6 +2,7 @@ import { getAppManager } from '@/class/app'
 import utils,{cv, convert, getCache, setCache} from '@/utils/index'
 import { CARD_LABEL_CACHE_KEY, DECRYPTED_IMAGE_CACHE_SUFFIX, DOWNLOAD_IMAGE_CACHE_SUFFIX, ENCRYPTED_IMAGE_CACHE_SUFFIX, KATU_MARK, PACKAGE_TAIL_LENGTH, WX_CLOUD_STORAGE_FILE_HEAD } from '@/const'
 import api from '@/api'
+import { deleteFile } from '@/utils/file'
 
 class CardManager {
   static instance: CardManager
@@ -235,11 +236,11 @@ class CardManager {
     const imageTypes: ('down'|'dec'|'enc')[] = ['dec', 'enc', 'down']
     for (const type of imageTypes) {
       const path = await this._genCardImagePath(image, type)
-      wx.getFileSystemManager().unlink({
-        filePath: path,
-        success: console.log,
-        fail: console.log
-      })
+      try {
+        await deleteFile(path)
+      } catch (error) {
+        console.log(error)
+      }
     }
   }
 
