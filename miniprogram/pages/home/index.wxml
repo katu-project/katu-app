@@ -36,9 +36,10 @@
           <view style="height: 68vh;">
             <view class="margin-bottom-sm padding-lr flex flex-wrap justify-between" style="align-content: flex-start;">
               <block wx:for="{{likeList}}" wx:key="index">
-                <view class="margin-bottom-sm item shadow bg-black flex-col justify-around align-center" data-item="{{item}}" bindtap="tapToCardDetail">
-                  <image class="img" lazy-load="true" mode="{{item._mode || 'aspectFit'}}" data-idx="{{index}}" src="{{item._url}}"></image>
-                  <text class="text-white">{{item.title}}</text>
+                <view style="position: relative;" class="margin-bottom-sm item shadow bg-black flex-col justify-around align-center" data-item="{{item}}" bindtap="tapToCardDetail">
+                    <image class="img" lazy-load="true" mode="{{item._mode || 'aspectFit'}}" data-idx="{{index}}" src="{{item._url}}"></image>
+                    <text hidden="{{!item._showEncryptIcon}}" class="encrypt-icon cuIcon-lock text-grey"></text>
+                    <text class="text-white">{{item.title}}</text>
                 </view>
               </block>
             </view>

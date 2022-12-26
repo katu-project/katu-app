@@ -65,12 +65,13 @@ Page({
           try {
             const picPath = await cardManager.getCardImagePathCache(card.image[0])
             setData[`likeList[${idx}]._url`] = picPath
+            setData[`likeList[${idx}]._showEncryptIcon`] = true
           } catch (error) {}
         }
       }else{
         try {
           const tempUrl = await app.getCloudFileTempUrl(card.image[0].url)
-          if(tempUrl.startsWith('/')){
+          if(tempUrl.startsWith('/')){// 获取云文件链接出错，使用本地占位图片替代      
             setData[`likeList[${idx}]._url`] = tempUrl
             setData[`likeList[${idx}]._mode`] = 'scaleToFill'
           }else{
