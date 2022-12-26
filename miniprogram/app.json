@@ -47,7 +47,8 @@
   },
   "resolveAlias": {
     "@/*": "/*",
-    "@/class/*": "/class/*"
+    "@/class/*": "/class/*",
+    "@/components/*": "/components/*"
   },
   "tabBar": {
     "color": "#000000",

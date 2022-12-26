@@ -1,6 +1,6 @@
 import { file, showChoose } from '@/utils/index'
 import { APP_ROOT_DIR, APP_TEMP_DIR } from '@/const'
-import { checkAccess } from '@/utils/file'
+import { checkAccess, deleteFile } from '@/utils/file'
 import { fileSizeFormat } from '@/utils/convert'
 
 export {}
@@ -58,14 +58,12 @@ Page({
         confirmText: '删除'
       }).then(res=>{
         if(res.confirm){
-          wx.getFileSystemManager().unlink({
-            filePath: this.data.dirPath.concat(path).join('/'),
-            complete: ()=>{
+          deleteFile(this.data.dirPath.concat(path).join('/'))
+            .then(()=>{
               this.setData({
                 files: this.data.files.filter(e=>e.path !== path)
               })
-            }
-          })
+            })
         }
       })
       return
