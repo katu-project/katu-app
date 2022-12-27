@@ -1,3 +1,4 @@
+import Base from './base'
 import utils,{ navigateTo, getCache, setCache, delCache, showChoose, chooseLocalImage } from '@/utils/index'
 import { AppConfig } from '@/config'
 import api from '@/api'
@@ -7,20 +8,17 @@ import { checkAccess } from '@/utils/file'
 import { getCardManager } from './card'
 import { sleep } from '@/utils/base'
 
-class AppManager {
-  static instance: AppManager
+
+class AppManager extends Base {
   Config = AppConfig
   AppInfo = wx.getAccountInfoSync()
 
   _user: Partial<IUser> = {}
   _masterKey: string = ''
-  
-  static getInstance(){
-    if(!this.instance){
-      this.instance = utils.selfish(new AppManager())
-      this.instance.init()
-    }
-    return this.instance
+
+  constructor(){
+    super()
+    this.init()
   }
 
   init(){
@@ -521,7 +519,7 @@ class AppManager {
 }
 
 function getAppManager(){
-  return AppManager.getInstance()
+  return AppManager.getInstance<AppManager>()
 }
 
 export {

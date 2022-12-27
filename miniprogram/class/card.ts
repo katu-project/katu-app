@@ -3,18 +3,14 @@ import utils,{cv, convert, getCache, setCache} from '@/utils/index'
 import { CARD_LABEL_CACHE_KEY, DECRYPTED_IMAGE_CACHE_SUFFIX, DOWNLOAD_IMAGE_CACHE_SUFFIX, ENCRYPTED_IMAGE_CACHE_SUFFIX, KATU_MARK, PACKAGE_TAIL_LENGTH, WX_CLOUD_STORAGE_FILE_HEAD } from '@/const'
 import api from '@/api'
 import { deleteFile } from '@/utils/file'
+import Base from './base'
 
-class CardManager {
-  static instance: CardManager
-
+class CardManager extends Base{
   app = getAppManager()
 
-  static getInstance(){
-    if(!this.instance){
-      this.instance = utils.selfish(new CardManager())
-      this.instance.init()
-    }
-    return this.instance
+  constructor(){
+    super()
+    this.init()
   }
 
   init(){
@@ -460,7 +456,7 @@ class CardManager {
 }
 
 function getCardManager(){
-  return CardManager.getInstance()
+  return CardManager.getInstance<CardManager>()
 }
 
 export {
