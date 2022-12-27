@@ -1,7 +1,7 @@
 import utils,{ navigateTo, getCache, setCache, delCache, showChoose, chooseLocalImage } from '@/utils/index'
 import { AppConfig } from '@/config'
 import api from '@/api'
-import { APP_ENTRY_PATH, APP_TEMP_DIR, APP_DOWN_DIR, APP_IMAGE_DIR, DefaultLoadFailedImage, MASTER_KEY_NAME, WX_CLOUD_STORAGE_FILE_HEAD } from '@/const'
+import { APP_ENTRY_PATH, APP_TEMP_DIR, APP_DOWN_DIR, APP_IMAGE_DIR, DefaultLoadFailedImage, MASTER_KEY_NAME, WX_CLOUD_STORAGE_FILE_HEAD, LocalCacheKeyMap } from '@/const'
 import { randomBytesHexString } from '@/utils/crypto'
 import { checkAccess } from '@/utils/file'
 import { getCardManager } from './card'
@@ -301,6 +301,21 @@ class AppManager {
 
   async setLocalData(key, data){
     return setCache(key, data)
+  }
+
+  async _setReadNotice(key, value){
+    return this.setLocalData(key, value)
+  }
+
+  async _getReadNotice(key){
+    return this.getLocalData(key)
+  }
+
+  async getKnowEncryptSaveNotice(){
+    return this._getReadNotice(LocalCacheKeyMap.knowEncryptSave)
+  }
+  async setKnowEncryptSaveNotice(){
+    return this._setReadNotice(LocalCacheKeyMap.knowEncryptSave,true)
   }
 
   async getLocalData(key){
