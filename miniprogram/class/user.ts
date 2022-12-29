@@ -13,8 +13,17 @@ export default class User extends Base {
     return this.loadInfo()
   }
 
+  get config(){
+    return this.user.config
+  }
+
   get user(){
-    return this._user
+    return {
+      ...this._user,
+      get isDeactivated():boolean{
+        return this.status === 0
+      }
+    }
   }
 
   async loadInfo(){
@@ -46,8 +55,14 @@ export default class User extends Base {
   }
 
   async applyConfig(configItem:{key:string,value:string}){
-    utils.objectSetValue(this.user, configItem.key, configItem.value)
-    return await api.updateUserConfig(this.user.config)
+    try {
+      await api.updateUserConfig(configItem)
+      return utils.objectSetValue(this.user, configItem.key, configItem.value)
+    } catch (error) {
+      console.warn('applyConfig:',error.message)
+      await this.reloadInfo()
+      throw new Error("修改失败")
+    }
   }
 
   async clearInfo(){
@@ -61,10 +76,10 @@ export default class User extends Base {
 }
 
 
-function getUserInstance(){
+function getUserManager(){
   return User.getInstance<User>()
 }
 
 export {
-  getUserInstance
+  getUserManager
 }

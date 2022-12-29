@@ -1,8 +1,8 @@
-import { loadData, showSuccess, navigateTo } from "@/utils/index"
+import { loadData, showSuccess, navigateTo, showError } from "@/utils/index"
+import { getUserManager } from '@/class/user'
 import { getAppManager } from '@/class/app'
+const user = getUserManager()
 const app = getAppManager()
-import api from '@/api'
-export {}
 
 Page({
   data: {
@@ -13,7 +13,10 @@ Page({
   },
 
   onShow(){
-    const {config} = app.user
+    this.loadData()
+  },
+  loadData(){
+    const {config} = user
     this.setData({
       setMasterKey: app.user.setMasterKey,
       config_security_rememberPassword: config?.security.rememberPassword,
@@ -26,8 +29,7 @@ Page({
       key: e.currentTarget.dataset.key,
       value: e.detail.value
     }
-    console.log(configItem)
-    loadData(api.updateUserConfig, configItem).then(()=>{
+    loadData(user.applyConfig,configItem,{returnFailed: true}).then(()=>{
       showSuccess('修改成功')
       if(configItem.key === 'config_security_rememberPassword' && configItem.value === false){
         app.clearMasterKey()
@@ -35,7 +37,9 @@ Page({
       this.setData({
         [configItem.key]: configItem.value
       })
-      app.reloadUserConfig(configItem)
+    }).catch(err=>{
+      this.loadData()
+      showError(err.message)
     })
   },
   tapToPage({currentTarget:{dataset:{page}}}){

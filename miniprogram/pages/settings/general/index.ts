@@ -1,8 +1,6 @@
-import { loadData, showSuccess } from "@/utils/index"
-import { getAppManager } from '@/class/app'
-const app = getAppManager()
-import api from '@/api'
-export {}
+import { loadData, showError, showSuccess } from "@/utils/index"
+import { getUserManager } from '@/class/user'
+const user = getUserManager()
 
 Page({
   data: {
@@ -11,7 +9,10 @@ Page({
     config_general_autoShowContent: false
   },
   onShow(){
-    const {config} = app.user
+    this.loadData()
+  },
+  loadData(){
+    const {config} = user
     this.setData({
       config_general_defaultUseEncrytion: config?.general.defaultUseEncrytion,
       config_general_useDefaultTag: config?.general.useDefaultTag,
@@ -23,9 +24,11 @@ Page({
       key: e.currentTarget.dataset.key,
       value: e.detail.value
     }
-    loadData(api.updateUserConfig, configItem).then(()=>{
+    loadData(user.applyConfig,configItem,{returnFailed: true}).then(()=>{
       showSuccess('修改成功')
-      app.reloadUserConfig(configItem)
+    }).catch(err=>{
+      this.loadData()
+      showError(err.message)
     })
   }
 })
