@@ -1,11 +1,8 @@
 import { showChoose, loadData, showSuccess, showError, switchTab } from '@/utils/index'
-import api from '@/api'
-import { getAppManager } from '@/class/app'
+import { getUserManager } from '@/class/user'
 import { ColorList } from '@/const'
 
-const app = getAppManager()
-
-export {}
+const user = getUserManager()
 
 Page({
   data: {
@@ -13,19 +10,30 @@ Page({
     tempTagName: '',
     selectedTagIdx: -1,
     tempTagColor: '',
-    hasEdit: false,
     colors: ColorList
   },
   onReady() {
     
   },
   onShow(){
+    this.loadData()
+  },
+  loadData(){
     this.setData({
-      list: JSON.parse(JSON.stringify(app.user.customTag))
+      list: user.tags
     })
   },
   checkInputTag(){
 
+  },
+  syncTags(){
+    loadData(user.syncTag, this.data.list, {returnFailed: true}).then(()=>{
+      showSuccess("操作成功")
+    }).catch(err=>{
+      showError(err.message)
+    }).finally(()=>{
+      this.loadData()
+    })
   },
   tapToShowAddTag(){
     this.setData({
@@ -33,22 +41,21 @@ Page({
     })
   },
   hideModal(e){
-    const key = e.currentTarget.dataset.key
+    const modalKey = e.currentTarget.dataset.key
     this.setData({
-      [key]: false,
+      [modalKey]: false,
       selectedTagIdx: -1,
       tempTagName: '',
       tempTagColor: ''
     })
   },
   tapToDeleteTag(e){
-    showChoose('删除这个标签？').then(({cancel})=>{
+    const idx = parseInt(e.currentTarget.dataset.idx)
+    const tag = this.data.list[idx]
+    showChoose('删除这个标签？', tag.name).then(({cancel})=>{
       if(cancel) return
-      this.data.list.splice(parseInt(e.currentTarget.dataset.idx),1)
-      this.setData({
-        list: this.data.list,
-        hasEdit: true
-      })
+      this.data.list.splice(idx,1)
+      this.syncTags()
     })
   },
   async tapToAddTag(){
@@ -57,7 +64,7 @@ Page({
       return
     }
 
-    if(!app.user || !app.user.isActive){
+    if(!user.isActive){
       await showChoose("警告","账户未激活，不可使用此功能。", {confirmText:'去激活'}).then(({cancel})=>{
         if(cancel) return
         switchTab('../../profile/index')
@@ -72,16 +79,8 @@ Page({
     const tagName = this.data.tempTagName
     this.hideModal({currentTarget:{dataset:{key:'showCreateTag'}}})
 
-    const tags = this.data.list.concat({name: tagName})
-    this.setData({
-      list: tags,
-      hasEdit: true
-    })
-  },
-  async syncTag(){
-    return loadData(api.updateTag, this.data.list).then(()=>{
-      app.syncUserTag(this.data.list)
-    })
+    this.data.list.push({name: tagName})
+    this.syncTags()
   },
   tapToShowSetColor(e){
     const idx = parseInt(e.currentTarget.dataset.idx)
@@ -99,11 +98,8 @@ Page({
   },
   tapToSetColor(){
     if(this.data.tempTagColor && this.data.tempTagColor !== this.data.list[this.data.selectedTagIdx].color) {
-      const key = `list[${this.data.selectedTagIdx}].color`
-      this.setData({
-        hasEdit: true,
-        [key]: this.data.tempTagColor
-      })
+      this.data.list[this.data.selectedTagIdx].color = this.data.tempTagColor
+      this.syncTags()
     }
     this.hideSetColor()
   },
@@ -117,29 +113,6 @@ Page({
       tempTagColor: '',
       showSetColor: false,
       selectedTagIdx: -1
-    })
-  },
-  tapToBack(){
-    if(JSON.stringify(app.user.customTag) === JSON.stringify(this.data.list)){
-      wx.navigateBack()
-      return
-    }
-    if(!this.data.hasEdit) {
-      wx.navigateBack()
-      return
-    }
-    showChoose('保存修改?').then(({cancel})=>{
-      if(cancel){
-        wx.navigateBack()
-      }else{
-        this.syncTag().then(()=>{
-          this.setData({
-            hasEdit: false
-          })
-          showSuccess("修改成功")
-          setTimeout(()=>this.tapToBack(), 500)
-        })
-      }
     })
   }
 })

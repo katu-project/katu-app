@@ -17,6 +17,14 @@ export default class User extends Base {
     return this.user.config
   }
 
+  get tags(){
+    return this.user.customTag
+  }
+
+  get isActive():boolean{
+    return this.user.isActive!
+  }
+  
   get user(){
     return {
       ...this._user,
@@ -35,10 +43,6 @@ export default class User extends Base {
     if(encrypted && canUseEncryptedCardCount) return
     if(!encrypted && canUseCardCount) return
     throw Error('可使用卡片量不足')
-  }
-
-  async syncTag(tags: ICardTag[]){
-    this.user.customTag = tags
   }
 
   async setUserMasterKey(masterKeyPack){
@@ -60,6 +64,17 @@ export default class User extends Base {
       return utils.objectSetValue(this.user, configItem.key, configItem.value)
     } catch (error) {
       console.warn('applyConfig:',error.message)
+      await this.reloadInfo()
+      throw new Error("修改失败")
+    }
+  }
+
+  async syncTag(tags:ICardTag[]){
+    try {
+      await api.updateTag(tags)
+      return utils.objectSetValue(this.user, 'customTag', tags)
+    } catch (error) {
+      console.warn('syncTag:',error.message)
       await this.reloadInfo()
       throw new Error("修改失败")
     }
