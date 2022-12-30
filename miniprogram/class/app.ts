@@ -1,39 +1,43 @@
 import Base from './base'
-import utils,{ navigateTo, getCache, setCache, delCache, showChoose, chooseLocalImage } from '@/utils/index'
 import { AppConfig } from '@/config'
-import api from '@/api'
-import { APP_ENTRY_PATH, APP_TEMP_DIR, APP_DOWN_DIR, APP_IMAGE_DIR, DefaultLoadFailedImage, MASTER_KEY_NAME, WX_CLOUD_STORAGE_FILE_HEAD, LocalCacheKeyMap } from '@/const'
 import { randomBytesHexString } from '@/utils/crypto'
 import { checkAccess } from '@/utils/file'
-import { getCardManager } from './card'
+import utils,{ navigateTo, getCache, setCache, delCache, showChoose, chooseLocalImage } from '@/utils/index'
 import { sleep } from '@/utils/base'
-
+import { APP_ENTRY_PATH, APP_TEMP_DIR, APP_DOWN_DIR, APP_IMAGE_DIR, DefaultLoadFailedImage, MASTER_KEY_NAME, WX_CLOUD_STORAGE_FILE_HEAD, LocalCacheKeyMap } from '@/const'
+import api from '@/api'
+import { getCardManager } from './card'
+import { getUserManager } from './user'
 
 class AppManager extends Base {
   Config = AppConfig
   AppInfo = wx.getAccountInfoSync()
 
-  _user: Partial<IUser> = {}
+  _userManager = getUserManager()
   _masterKey: string = ''
 
   constructor(){
     super()
-    this.init()
   }
 
   init(){
-    this.loadConfig()
+    return this.loadConfig()
   }
 
   get version(){
     return this.AppInfo.miniProgram.version || 'develop'
   }
+
   get isDev(){
     return this.AppInfo.miniProgram.envVersion !== 'release'
   }
 
   get user(){
-    return this._user
+    return this.userManager.user
+  }
+
+  get userManager(){
+    return this._userManager
   }
 
   get masterKey(){
@@ -56,16 +60,11 @@ class AppManager extends Base {
     }).catch(console.log)
   }
 
-  // user action
   async checkQuota(encrypted=false){
     const { canUseCardCount, canUseEncryptedCardCount } = await api.usageStatistic()
     if(encrypted && canUseEncryptedCardCount) return
     if(!encrypted && canUseCardCount) return
     throw Error('可使用卡片量不足')
-  }
-
-  async syncUserTag(tags: ICardTag[]){
-    this.user.customTag = tags
   }
 
   async setUserMasterKey(key: string){
@@ -75,54 +74,23 @@ class AppManager extends Base {
   }
 
   async updateUserMasterKey({key, newKey}){
-    this.checkMasterKeyFormat(key)
-    this.checkMasterKeyFormat(newKey)
     const hexCode = await this._convertToHex(key)
     const newHexCode = await this._convertToHex(newKey)
     // 获取主密码
     const masterKey = await this._fetchMasterKeyFromKeyPack(this.user.masterKeyPack?.keyPack, hexCode)
-    if(!masterKey) throw Error("主密码错误")
     // 重新生成新的主密码包
     const masterKeyPack = await this._createMasterKeyPack(newHexCode, masterKey)
     // 更新主密码包
     return api.setMasterKeyInfo(masterKeyPack)
   }
 
-  async loadUserInfo(){
-    this._user = await api.getUser()
-  }
-
-  async loadUserConfig(){
-    if(!this.user._id) {
-      await this.loadUserInfo()
-    }
+  async initUserInfo(){
+    await this.userManager.init()
     if(this.user.config?.security.rememberPassword){
       console.log("启用记住密码: 加载主密码");
       this._loadMasterKey()
     }
   }
-
-  async reloadUserInfo(){
-    this._user = await api.getUser()
-  }
-
-  async reloadUserConfig(configItem?:{key:string,value:string}){
-    if(configItem){
-      return utils.objectSetValue(this.user, configItem.key, configItem.value)
-    }
-    return this.reloadUserInfo()
-  }
-
-  async clearUserInfo(){
-    this._user = await api.getUser() // 获取基础用户数据
-    this.setMasterKey('')
-  }
-
-  async uploadUserAvatar(filePath){
-    const s = new Date().getTime()
-    return api.uploadAvatar(filePath, `user/${this.user.openid}/avatar/${s}`)
-  }
-  // user action end
 
   // master key section
   async _loadMasterKey(){
@@ -149,6 +117,10 @@ class AppManager extends Base {
       console.log("读取主密码缓存失败");
     }
     return null
+  }
+
+  setMasterKey(key){
+    this._masterKey = key
   }
 
   async clearMasterKey(){
@@ -231,12 +203,8 @@ class AppManager extends Base {
 
   async _fetchMasterKeyFromKeyPack(masterPack, hexCode){
     const masterKey = utils.crypto.decryptString(masterPack, hexCode)
-    if(!masterKey) throw Error("密码有误")
+    if(!masterKey) throw Error("主密码有误")
     return masterKey
-  }
-
-  setMasterKey(key){
-    this._masterKey = key
   }
 
   _verifyKey(key, keyId){
