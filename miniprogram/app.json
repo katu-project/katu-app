@@ -31,7 +31,8 @@
     "pages/settings/security/recovery-key/index",
     "pages/settings/security/reset-key/index",
     "pages/settings/security/reset-key/qrcode/index",
-    "pages/share/index"
+    "pages/share/index",
+    "pages/about/contact/index"
   ],
   "window": {
     "backgroundColor": "#ffffff",
