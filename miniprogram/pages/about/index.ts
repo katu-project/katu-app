@@ -1,7 +1,6 @@
 import { navigateTo } from '@/utils/index'
 import { getAppManager } from '@/class/app'
 const app = getAppManager()
-export {}
 
 Page({
   data: {
@@ -25,6 +24,11 @@ Page({
   tapToChangeLog(){
     navigateTo('../change-log/index')
   },
+
+  tapToContactUs(){
+    navigateTo('./contact/index')
+  },
+
   tapToDoc({currentTarget:{dataset:{key}}}){
     if(key == 'usage'){
       app.openUserUsageProtocol()

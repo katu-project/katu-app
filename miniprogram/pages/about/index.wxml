@@ -26,6 +26,13 @@
       <view class="action"></view>
     </view>
 
+    <view class="cu-item arrow" bindtap="tapToContactUs">
+      <view class="content">
+        <text class="">联系我们</text>
+      </view>
+      <view class="action"></view>
+    </view>
+
     <view class="cu-item arrow" bindtap="tapToDoc" data-key="usage">
       <view class="content">
         <text class="">用户使用协议</text>
