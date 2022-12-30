@@ -26,7 +26,8 @@ Page({
   onLoad() {
   },
 
-  onReady() {
+  async onReady() {
+    await loadData(app.initUserInfo,{},'加载用户数据')
     this.loadData()
   },
 
