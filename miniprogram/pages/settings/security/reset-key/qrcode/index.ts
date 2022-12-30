@@ -1,8 +1,8 @@
 import { showError, showChoose, loadData, navigateBack } from '@/utils/index'
 import { getAppManager } from '@/class/app'
+import { getUserManager } from '@/class/user'
 const app = getAppManager()
-
-export {}
+const user = getUserManager()
 
 Page({
   data: {
@@ -77,7 +77,7 @@ Page({
   },
   finishTask(){
     app.clearMasterKey()
-    app.reloadUserInfo()
+    user.reloadInfo()
     showChoose(`主密码重置成功`,"",{showCancel:false}).then(()=>{
       navigateBack()
     })
