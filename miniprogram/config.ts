@@ -1,4 +1,7 @@
 export const AppConfig = {
+  contacts:{
+    email: 'katu@aong.cn'
+  },
   uploadCardNamePrefix: 'card',
   uploadShareCardNamePrefix: 'share',
   allowUploadImageType: ['jpeg','png','jpg'],
