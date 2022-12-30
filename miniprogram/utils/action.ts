@@ -121,6 +121,8 @@ async function loadData<T>(func?: (args:any) => Promise<T>, params?: Object, opt
     mask: true
   })
 
+  await sleep(300)
+
   return new Promise((resolve,reject)=>{
     pfunc(params).then(res=>{
       resolve(res)
@@ -131,7 +133,7 @@ async function loadData<T>(func?: (args:any) => Promise<T>, params?: Object, opt
           if(returnFailed) return reject(error)
           if(!error.code || error.code === 1){
             wx.showModal({
-              title: '操作未完成',
+              title: '操作错误',
               content: error.message,
               showCancel: false,
             })
@@ -140,7 +142,7 @@ async function loadData<T>(func?: (args:any) => Promise<T>, params?: Object, opt
             const showContent = error.code ? `错误代码: ${error.code}` : ''
             wx.showModal({
               title: `服务错误`,
-              content: `请稍后重试\n${showContent}`,
+              content: `${error.message || '请稍后重试'}\n${showContent}`,
               confirmText: '联系客服',
               success: ({confirm})=>{
                 if(!confirm) return
