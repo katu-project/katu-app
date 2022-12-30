@@ -24,7 +24,15 @@ export default class User extends Base {
   get isActive():boolean{
     return this.user.isActive!
   }
+
+  get isSetMasterKey():boolean{
+    return this.user.setMasterKey!
+  }
   
+  get baseInfo(){
+    return this.user
+  }
+
   get user(){
     return {
       ...this._user,
@@ -38,24 +46,19 @@ export default class User extends Base {
     this._user = await api.getUser()
   }
 
+  async reloadInfo(){
+    return this.loadInfo()
+  }
+
+  async clearInfo(){
+    return this.reloadInfo() // 获取默认用户数据
+  }
+
   async checkQuota(encrypted: boolean){
     const { canUseCardCount, canUseEncryptedCardCount } = await api.usageStatistic()
     if(encrypted && canUseEncryptedCardCount) return
     if(!encrypted && canUseCardCount) return
     throw Error('可使用卡片量不足')
-  }
-
-  async setUserMasterKey(masterKeyPack){
-    return api.setMasterKeyInfo(masterKeyPack)
-  }
-
-  async updateMasterKey(masterKeyPack){
-    // 更新主密码包
-    return api.setMasterKeyInfo(masterKeyPack)
-  }
-
-  async reloadInfo(){
-    return this.loadInfo()
   }
 
   async applyConfig(configItem:{key:string,value:string}){
@@ -78,10 +81,6 @@ export default class User extends Base {
       await this.reloadInfo()
       throw new Error("修改失败")
     }
-  }
-
-  async clearInfo(){
-    await this.reloadInfo() // 获取默认用户数据
   }
 
   async uploadAvatar(filePath){
