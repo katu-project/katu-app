@@ -17,7 +17,7 @@ App({
         this.globalData.CustomBar = custom.bottom + custom.top - e.statusBarHeight;
       }
     })
-    app.loadUserConfig()
+    app.init()
     this.checkUpdate()
   },
   checkUpdate(){
