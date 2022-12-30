@@ -1,9 +1,7 @@
 import { loadData, showError, showSuccess, showNotice, navigateBack } from '@/utils/index'
-import { getAppManager } from '@/class/app'
+import { getUserManager } from '@/class/user'
 import api from '@/api'
-const app = getAppManager()
-
-export {}
+const user = getUserManager()
 
 Page({
   originData: {} as {name:string, url:string},
@@ -15,8 +13,8 @@ Page({
   },
   onReady() {
     this.setData({
-      url: app.user.avatarUrl,
-      name: app.user.nickName
+      url: user.baseInfo.avatarUrl,
+      name: user.baseInfo.nickName
     })
     this.originData = Object.assign({},this.data)
   },
@@ -53,12 +51,12 @@ Page({
       url: this.data.url
     }
     if(!this.data.url.startsWith('https') && !this.data.url.startsWith('cloud:')){
-      const url = await loadData(app.uploadUserAvatar, this.data.url, '正在上传头像')
+      const url = await loadData(user.uploadAvatar, this.data.url, '正在上传头像')
       userData.url = url
     }
     
     loadData(api.updateUserProfile, userData, '正在保存信息').then(()=>{
-      app.reloadUserInfo().then(()=>{
+      user.reloadInfo().then(()=>{
         showSuccess('修改成功').then(()=>{
           setTimeout(()=>{
             navigateBack()
