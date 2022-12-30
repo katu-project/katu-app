@@ -140,17 +140,42 @@ async function loadData<T>(func?: (args:any) => Promise<T>, params?: Object, opt
           }else{
             console.warn(error)
             const showContent = error.code ? `错误代码: ${error.code}` : ''
-            wx.showModal({
+            const showModalOption: WechatMiniprogram.ShowModalOption = {
               title: `服务错误`,
               content: `${error.message || '请稍后重试'}\n${showContent}`,
               confirmText: '联系客服',
+              showCancel: false,
               success: ({confirm})=>{
                 if(!confirm) return
-                wx.navigateTo({
-                  url: '/pages/profile/index',
+                wx.redirectTo({
+                  url: '/pages/about/contact/index',
+                })
+              },
+              fail: ()=>{
+                wx.reLaunch({
+                  url: '/pages/home/index',
                 })
               }
-            })
+            }
+            // 400以上是用户账户相关问题
+            if(error.code.toString().startsWith('4')){
+              showModalOption.title = '账户状态异常'
+            }
+            // 500以上是应用程序出错
+            if(error.code.toString().startsWith('5')){
+              showModalOption.title = '应用报错'
+            }
+
+            if(!showModalOption.success){
+              showModalOption.success = ({confirm})=>{
+                if(!confirm) return
+                wx.reLaunch({
+                  url: '/pages/home/index',
+                })
+              }
+            }
+
+            wx.showModal(showModalOption)
           }
         }
       })
