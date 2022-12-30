@@ -1,7 +1,8 @@
 import { showError, loadData, showChoose, navigateTo, navigateBack } from '@/utils/index'
 import { getAppManager } from '@/class/app'
+import { getUserManager } from '@/class/user'
 const app = getAppManager()
-export {}
+const user = getUserManager()
 
 Page({
   data: {
@@ -16,7 +17,7 @@ Page({
   },
   onShow(){
     this.setData({
-      setMasterKey: app.user.setMasterKey || false
+      setMasterKey: user.isSetMasterKey
     })
   },
   checkInput(){
@@ -62,7 +63,7 @@ Page({
     }
   },
   updateMasterKey(){
-    if(!app.user.setMasterKey){
+    if(!user.isSetMasterKey){
       throw Error('请先设置主密码')
     }
     const params = {
@@ -80,7 +81,7 @@ Page({
     })
   },
   setMasterKey(){
-    if(app.user.setMasterKey){
+    if(user.isSetMasterKey){
       showError('已设置过主密码')
       return
     }
@@ -96,7 +97,7 @@ Page({
   },
   finishTask(){
     app.clearMasterKey()
-    app.reloadUserInfo()
+    user.reloadInfo()
     this.resetContent()
     showChoose(`${this.data.setMasterKey?'更新':'设置'}成功`,"",{showCancel:false}).then(()=>{
       navigateBack()
