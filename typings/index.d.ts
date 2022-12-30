@@ -99,6 +99,7 @@ interface IUser {
   nickName: string
   avatarUrl: string
   isActive: boolean
+  status: number
   setMasterKey: boolean
   masterKeyPack: IMasterKeyPack
   recoveryKeyPack: IRecoveryKeyPack
