@@ -1,8 +1,8 @@
 import { loadData, showSuccess, showChoose, showError, qrcode, showLoading } from "@/utils/index"
 import { getAppManager } from '@/class/app'
+import { getUserManager } from '@/class/user'
 const app = getAppManager()
-
-export {}
+const user = getUserManager()
 
 Page({
   _canvasCtx: '',
@@ -180,7 +180,7 @@ Page({
     const canvasCtx = await this.initCanvas()
     await this.drawRecoveryKey(canvasCtx, qrData)
     await loadData(app.createRecoveryKeyPack, qrData)
-    app.reloadUserConfig()
+    user.reloadInfo()
 
     this.setData({
       recoveryKeyId: qrData.i,
