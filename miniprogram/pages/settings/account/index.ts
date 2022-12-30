@@ -1,11 +1,11 @@
 import { loadData, showChoose, showNotice } from "@/utils/index"
 import { getAppManager } from '@/class/app'
+import { getUserManager } from '@/class/user'
 import { APP_ENTRY_PATH } from '@/const'
-
-const app = getAppManager()
 import api from '@/api'
 
-export {}
+const app = getAppManager()
+const user = getUserManager()
 
 Page({
   data: {
@@ -32,7 +32,8 @@ Page({
       return
     }
     loadData(api.removeAccount).then(()=>{
-      app.clearUserInfo()
+      user.clearInfo()
+      app.clearMasterKey()
       showChoose('操作成功','账户删除成功',{
         showCancel: false
       }).then(()=>{
