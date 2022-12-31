@@ -2,9 +2,11 @@ import { loadData, navigateTo, showNotice } from '@/utils/index'
 import { DefaultShowLockImage, DefaultShowImage, APP_ENTRY_PATH } from '@/const'
 import api from '@/api'
 import { getAppManager } from '@/class/app'
+import { getUserManager } from '@/class/user'
 import { getCardManager } from '@/class/card'
 const app = getAppManager()
 const cardManager = getCardManager()
+const user = getUserManager()
 
 Page({
   backData: {
@@ -27,7 +29,7 @@ Page({
   },
 
   async onReady() {
-    await loadData(app.initUserInfo,{},'加载用户数据')
+    await loadData(user.init,{},'加载用户数据')
     this.loadData()
   },
 

@@ -39,30 +39,6 @@ App({
       })
     })
   },
-  onHide(){
-    if(!app.user) return
-    // 暂时解决图片预览引起的清除主密码的bug
-    if(this.globalData.state.inPreviewPic){
-      this.globalData.state.inPreviewPic = false
-      return
-    }else if(this.globalData.state.inChooseLocalImage){
-      this.globalData.state.inChooseLocalImage = false
-      return
-    }else if(this.globalData.state.inShareData){
-      this.globalData.state.inShareData = false
-      return
-    }
-    
-    if(app.user.config?.security.rememberPassword){
-      console.log('缓存主密码');
-      app.cacheMasterKey()
-    }else{
-      if(app.user.config?.security.lockOnExit){
-        console.log('退出并清除主密码');
-        app.clearMasterKey()
-      }
-    }
-  },
   onUnhandledRejection(e){
     console.log(e);
   },

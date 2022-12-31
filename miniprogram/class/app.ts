@@ -84,14 +84,6 @@ class AppManager extends Base {
     return api.setMasterKeyInfo(masterKeyPack)
   }
 
-  async initUserInfo(){
-    await this.userManager.init()
-    if(this.user.config?.security.rememberPassword){
-      console.log("启用记住密码: 加载主密码");
-      this._loadMasterKey()
-    }
-  }
-
   // master key section
   async _loadMasterKey(){
     if(!this.user.setMasterKey) return

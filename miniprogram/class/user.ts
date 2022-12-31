@@ -1,6 +1,7 @@
 import api from "@/api"
 import utils from "@/utils/index"
 import Base from "./base"
+import { getAppManager } from "@/class/app";
 
 export default class User extends Base {
   _user: Partial<IUser> = {}
@@ -10,7 +11,12 @@ export default class User extends Base {
   }
 
   async init(){
-    return this.loadInfo()
+    await this.loadInfo()
+    if(this.user.config?.security.rememberPassword){
+      console.log("启用记住密码: 加载主密码");
+      getAppManager()._loadMasterKey()
+    }
+    this.loadOnAppHideConfig()
   }
 
   get config(){
@@ -86,6 +92,34 @@ export default class User extends Base {
   async uploadAvatar(filePath){
     const s = new Date().getTime()
     return api.uploadAvatar(filePath, `user/${this.user.openid}/avatar/${s}`)
+  }
+
+  loadOnAppHideConfig(){
+    wx.onAppHide(res=>{
+      const globalState = getApp().globalData.state
+      console.log('onAppHide:', res, globalState);
+          // 暂时解决图片预览引起的清除主密码的bug
+      if(globalState.inPreviewPic){
+        globalState.inPreviewPic = false
+        return
+      }else if(globalState.inChooseLocalImage){
+        globalState.inChooseLocalImage = false
+        return
+      }else if(globalState.inShareData){
+        globalState.inShareData = false
+        return
+      }
+
+      if(this.user.config?.security.rememberPassword){
+        console.log('缓存主密码');
+        getAppManager().cacheMasterKey()
+      }else{
+        if(this.user.config?.security.lockOnExit){
+          console.log('退出并清除主密码');
+          getAppManager().clearMasterKey()
+        }
+      }
+    })
   }
 }
 
