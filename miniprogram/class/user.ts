@@ -12,9 +12,9 @@ export default class User extends Base {
 
   async init(){
     await this.loadInfo()
-    if(this.user.config?.security.rememberPassword){
+    if(this.isSetMasterKey && this.config?.security.rememberPassword){
       console.log("启用记住密码: 加载主密码");
-      getAppManager()._loadMasterKey()
+      getAppManager().loadMasterKey()
     }
     this.loadOnAppHideConfig()
   }

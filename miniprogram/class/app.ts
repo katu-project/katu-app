@@ -60,6 +60,7 @@ class AppManager extends Base {
     }).catch(console.log)
   }
 
+  // user section
   async setUserMasterKey(key: string){
     const hexCode = await this._convertToHex(key)
     const masterKeyPack = await this._createMasterKeyPack(hexCode)
@@ -78,33 +79,25 @@ class AppManager extends Base {
   }
 
   // master key section
-  async _loadMasterKey(){
-    if(!this.user.setMasterKey) return
-    const masterKey = await this._readMasterKey()
-    this.setMasterKey(masterKey) 
-    
-    if(this.masterKey) {
-      try {
-        this._verifyKey(this.masterKey, this.user.masterKeyPack?.keyId)
-      } catch (error) {
-        console.log('主密码不匹配，正常使用不应该出现这个问题！')
-        await this.clearMasterKey()
-      }
-      console.log("加载主密码成功");
+  async loadMasterKey(){
+    const masterKey = await this._readLocalMasterKeyCache()
+    if(masterKey){
+      this.setMasterKey(masterKey) 
+      console.log("本地缓存的主密码加载成功")
     }
   }
 
-  async _readMasterKey(){
+  async _readLocalMasterKeyCache(){
     try {
       const {data} = await getCache(MASTER_KEY_NAME)
       return data
     } catch (error) {
       console.log("读取主密码缓存失败");
     }
-    return null
+    return ''
   }
 
-  setMasterKey(key){
+  setMasterKey(key:string){
     this._masterKey = key
   }
 
