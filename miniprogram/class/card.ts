@@ -51,9 +51,6 @@ class CardManager extends Base{
   async add(card){
     const cardModel = this._createCardDefaultData(card)
     
-    // 提前检查可用额度，避免因为可用额度不足而导致处理卡片数据产生无效的消耗
-    await this.app.checkQuota(cardModel.encrypted)
-    
     for (const idx in card.image) {
       const pic = card.image[idx]
       const imageData = {url:'',salt:'',hash:''}

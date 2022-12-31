@@ -3,9 +3,10 @@ import { DefaultAddImage } from '@/const'
 import api from '@/api'
 import { getCardManager } from '@/class/card'
 import { getAppManager } from '@/class/app'
+import { getUserManager } from '@/class/user'
 const app = getAppManager()
 const cardManager = getCardManager()
-export {}
+const user = getUserManager()
 
 Page({
   id: '',
@@ -186,6 +187,16 @@ Page({
       }
     }
     
+    // 提前检查可用额度，避免因为可用额度不足而导致处理卡片数据产生无效的消耗
+    if(!this.data.edit){
+      try {
+        await user.checkQuota(card.encrypted)
+      } catch (error) {
+        showChoose('保存卡片出错',error.message,{showCancel: false})
+        return
+      }
+    }
+
     loadData(this.data.edit?cardManager.update:cardManager.add, card, {returnFailed: true})
             .then(this.saveDone)
             .catch(this.saveFailed)

@@ -64,7 +64,7 @@ export default class User extends Base {
     const { canUseCardCount, canUseEncryptedCardCount } = await api.usageStatistic()
     if(encrypted && canUseEncryptedCardCount) return
     if(!encrypted && canUseCardCount) return
-    throw Error('可使用卡片量不足')
+    throw Error('创建卡片额度不足')
   }
 
   async applyConfig(configItem:{key:string,value:string}){

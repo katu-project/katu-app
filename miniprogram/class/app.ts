@@ -60,13 +60,6 @@ class AppManager extends Base {
     }).catch(console.log)
   }
 
-  async checkQuota(encrypted=false){
-    const { canUseCardCount, canUseEncryptedCardCount } = await api.usageStatistic()
-    if(encrypted && canUseEncryptedCardCount) return
-    if(!encrypted && canUseCardCount) return
-    throw Error('可使用卡片量不足')
-  }
-
   async setUserMasterKey(key: string){
     const hexCode = await this._convertToHex(key)
     const masterKeyPack = await this._createMasterKeyPack(hexCode)
