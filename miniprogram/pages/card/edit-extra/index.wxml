@@ -8,7 +8,7 @@
     <view class="cu-form-group" wx:for="{{extra_fields}}" wx:key="key">
       <view class="title">{{item.name}} :</view>
       <input focus="{{index == extra_fields.length-1}}" value="{{item.value}}" data-idx="{{index}}" bindinput="onBindinput" placeholder="输入{{item.name}}"></input>
-      <view bindtap="tapToRemoveLabel" data-key="{{item.key}}" class="text-lg margin-left padding-xs bg-red light flex-col br-12">
+      <view bindtap="tapToRemoveField" data-key="{{item.key}}" class="text-lg margin-left padding-xs bg-red light flex-col br-12">
         <text class="cuIcon-move"></text>
       </view>
     </view>
