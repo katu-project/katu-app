@@ -2,13 +2,12 @@ import { navigateBack } from '@/utils/index'
 import { getAppManager } from '@/class/app'
 const app = getAppManager()
 
-export {}
-
 Page({
   returnContentKey: '',
   data: {
     labels: app.Config.extraDataLabels,
-    list: [] as ICardLabel[]
+    list: [] as ICardLabel[],
+    dataChange: false
   },
   onLoad(options) {
     this.returnContentKey = options.returnContentKey || 'tempData'
@@ -29,6 +28,7 @@ Page({
   onBindinput({currentTarget:{dataset: {idx}}, detail: {value}}){
     const key = `list[${idx}].value`
     this.setData({
+      dataChange: value ? true : false,
       [key]: value
     })
   },
@@ -48,7 +48,7 @@ Page({
     }
 
     const list = this.data.list.concat(this.data.labels[idx]).sort((a,b)=> a.xid-b.xid)
-    const labels = this.data.labels.filter((e,i)=> i !== idx)
+    const labels = this.data.labels.filter((_,i)=> i !== idx)
     
     this.setData({
       labels,
@@ -65,6 +65,7 @@ Page({
     const labels = this.data.labels.concat(app.Config.extraDataLabels.find(e=>e.key === key)!).sort((a,b)=> a.xid-b.xid)
 
     this.setData({
+      dataChange: list.length > 0,
       labels,
       list
     })
