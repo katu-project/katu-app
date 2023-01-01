@@ -13,7 +13,6 @@ class AppManager extends Base {
   Config = AppConfig
   AppInfo = wx.getAccountInfoSync()
 
-  _userManager = getUserManager()
   _masterKey: string = ''
 
   constructor(){
@@ -33,11 +32,7 @@ class AppManager extends Base {
   }
 
   get user(){
-    return this.userManager.user
-  }
-
-  get userManager(){
-    return this._userManager
+    return getUserManager().user
   }
 
   get masterKey(){
