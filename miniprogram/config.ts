@@ -44,7 +44,7 @@ export const AppConfig = {
     { name: '名片' },
     { name: '其他' }
   ],
-  extraDataLabels: [
+  extraFieldsKeys: [
     {
       key: 'cn',
       name: '卡号',

@@ -313,7 +313,7 @@ class AppManager extends Base {
   rebuildLabel(meta?: Partial<ICardLabel>[]){
     meta = meta || []
     return meta.map(item=>{
-      let label = this.Config.extraDataLabels.find(e=>e.key===item[0])
+      let label = this.Config.extraFieldsKeys.find(e=>e.key===item[0])
       label = Object.assign({name: '未知', value: '无'},label)
       label.value = item[1]
       return label

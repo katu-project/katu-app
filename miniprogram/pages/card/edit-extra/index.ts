@@ -5,28 +5,28 @@ const app = getAppManager()
 Page({
   returnContentKey: '',
   data: {
-    labels: app.Config.extraDataLabels,
-    list: [] as ICardLabel[],
+    extra_fields_keys: app.Config.extraFieldsKeys,
+    extra_fields: [] as ICardLabel[],
     dataChange: false
   },
   onLoad(options) {
     this.returnContentKey = options.returnContentKey || 'tempData'
     if(options.value){
-      let labels = this.data.labels
-      const list = JSON.parse(options.value).map(item=>{
+      let labels = this.data.extra_fields_keys
+      const extra_fields = JSON.parse(options.value).map(item=>{
         labels = labels.filter(e=>e.key !== item[0])
-        const label = Object.assign({},this.data.labels.find(e=>e.key == item[0]))
+        const label = Object.assign({},this.data.extra_fields_keys.find(e=>e.key == item[0]))
         label.value = item[1]
         return label
       })
       this.setData({
         labels,
-        list
+        extra_fields
       })
     }
   },
   onBindinput({currentTarget:{dataset: {idx}}, detail: {value}}){
-    const key = `list[${idx}].value`
+    const key = `extra_fields[${idx}].value`
     this.setData({
       dataChange: value ? true : false,
       [key]: value
@@ -34,25 +34,25 @@ Page({
   },
   onBindchange(e){
     const idx = parseInt(e.detail.value)
-    if(!this.data.labels[idx]) return
-    if(this.data.labels[idx].key === 'custom') {
+    if(!this.data.extra_fields_keys[idx]) return
+    if(this.data.extra_fields_keys[idx].key === 'custom') {
       // const customLabel = Object.assign({},this.data.labels[idx])
-      // const cid = this.data.list.filter(e=>e.key.startsWith('custom_')).length + 1
+      // const cid = this.data.extra_fields.filter(e=>e.key.startsWith('custom_')).length + 1
       // customLabel.name = `自定义_${cid}`
       // customLabel.key = `custom_${cid}`
-      // const list = this.data.list.concat(customLabel)
+      // const extra_fields = this.data.extra_fields.concat(customLabel)
       // this.setData({
-      //   list
+      //   extra_fields
       // })
       return
     }
 
-    const list = this.data.list.concat(this.data.labels[idx]).sort((a,b)=> a.xid-b.xid)
-    const labels = this.data.labels.filter((_,i)=> i !== idx)
+    const extra_fields = this.data.extra_fields.concat(this.data.extra_fields_keys[idx]).sort((a,b)=> a.xid-b.xid)
+    const labels = this.data.extra_fields_keys.filter((_,i)=> i !== idx)
     
     this.setData({
       labels,
-      list
+      extra_fields
     })
   },
   tapToRemoveLabel(e){
@@ -61,17 +61,17 @@ Page({
       return
     }
 
-    const list = this.data.list.filter((e)=> e.key !== key)
-    const labels = this.data.labels.concat(app.Config.extraDataLabels.find(e=>e.key === key)!).sort((a,b)=> a.xid-b.xid)
+    const extra_fields = this.data.extra_fields.filter((e)=> e.key !== key)
+    const labels = this.data.extra_fields_keys.concat(app.Config.extraFieldsKeys.find(e=>e.key === key)!).sort((a,b)=> a.xid-b.xid)
 
     this.setData({
-      dataChange: list.length > 0,
+      dataChange: extra_fields.length > 0,
       labels,
-      list
+      extra_fields
     })
   },
   tapToSave(){
-    const miniData = JSON.stringify(this.data.list.map(e=>([e.key,e.value])))
+    const miniData = JSON.stringify(this.data.extra_fields.map(e=>([e.key,e.value])))
     navigateBack({backData: {[this.returnContentKey]: miniData}})
   }
 })
