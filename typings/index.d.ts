@@ -66,10 +66,11 @@ interface ICardTag {
   selected?: Boolean
 }
 
-interface ICardLabel {
+interface ICardExtraField {
   key: string
   name: string
   xid: number
+  cid?: number
   value?: string
 }
 

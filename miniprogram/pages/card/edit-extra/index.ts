@@ -6,7 +6,7 @@ Page({
   returnContentKey: '',
   data: {
     extra_fields_keys: app.Config.extraFieldsKeys,
-    extra_fields: [] as ICardLabel[],
+    extra_fields: [] as ICardExtraField[],
     dataChange: false
   },
   onLoad(options) {

@@ -65,7 +65,7 @@ export const AppConfig = {
       name: '失效日期',
       xid: 4
     }
-  ] as ICardLabel[],
+  ] as ICardExtraField[],
   imageMogr2: '&imageMogr2/thumbnail/100x/rquality/80/format/png/interlace/1/strip',
   doc: {
     userUsageProtocol: 'f6e08a6462b0879e08d6b0a15725ecbb',

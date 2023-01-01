@@ -310,7 +310,7 @@ class AppManager extends Base {
     }
   }
 
-  rebuildLabel(meta?: Partial<ICardLabel>[]){
+  rebuildLabel(meta?: Partial<ICardExtraField>[]){
     meta = meta || []
     return meta.map(item=>{
       let label = this.Config.extraFieldsKeys.find(e=>e.key===item[0])

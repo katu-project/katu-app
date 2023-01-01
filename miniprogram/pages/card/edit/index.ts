@@ -120,7 +120,7 @@ Page({
         
         // 每个图片都包含了附加数据，因此下面操作只需要执行一次就好
         if(extraData.length){
-          setData['card.info'] = extraData as ICardLabel[]
+          setData['card.info'] = extraData as ICardExtraField[]
         }
         setData['card.image'].push(pic)
       }
