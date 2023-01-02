@@ -64,6 +64,11 @@ export const AppConfig = {
       key: 'ed',
       name: '失效日期',
       xid: 4
+    },
+    {
+      key: 'cu',
+      name: '自定义',
+      xid: 5
     }
   ] as ICardExtraField[],
   imageMogr2: '&imageMogr2/thumbnail/100x/rquality/80/format/png/interlace/1/strip',

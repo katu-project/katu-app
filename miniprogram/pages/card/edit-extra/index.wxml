@@ -5,14 +5,23 @@
 
 <view class="page">
   <view class="margin-tb" style="min-height: 40vh;border-bottom: 1px solid darkcyan">
-    <view class="cu-form-group" wx:for="{{extra_fields}}" wx:key="key">
-      <view class="title">{{item.name}} :</view>
-      <input focus="{{index == extra_fields.length-1}}" value="{{item.value}}" data-idx="{{index}}" bindinput="onBindinput" placeholder="输入{{item.name}}"></input>
-      <view bindtap="tapToRemoveField" data-key="{{item.key}}" class="text-lg margin-left padding-xs bg-red light flex-col br-12">
+    <view class="cu-form-group" wx:for="{{extraFields}}" wx:key="index">
+      <view class="flex-row field" wx:if="{{item.key === 'cu'}}">
+        <input bindinput="onBindinput" maxlength="10" data-idx="{{index}}" data-cu="{{true}}" style="padding-right: 0;flex:unset" placeholder-style="color:#383838" value="{{item.name}}" placeholder="字段名称"></input>
+      </view>
+      <view class="field" wx:else>{{item.name}}</view>
+      <text style="padding-right: 10rpx;">:</text>
+      <input wx:if="{{item.key!=='ed'}}" style="text-align: right;" type="{{item.key === 'cn' ? 'number' : 'text'}}" focus="{{index == extraFields.length-1}}" value="{{item.value}}" data-idx="{{index}}" bindinput="onBindinput" placeholder="输入{{item.key === 'cu'? '自定义内容' : item.name}}"></input>
+      <picker wx:else mode="date" fields="month" value="{{item.value}}" data-idx="{{index}}"  start="2023-01" end="2050-12" bindchange="onBindDateChange">
+        <view class="picker">
+          {{item.value||'选择日期'}}
+        </view>
+      </picker>
+      <view bindtap="tapToRemoveField" data-idx="{{index}}" class="text-lg margin-left-xl padding-xs bg-red light flex-col br-12">
         <text class="cuIcon-move"></text>
       </view>
     </view>
-    <view wx:if="{{!extra_fields.length}}" class="text-center padding-top margin-top">
+    <view wx:if="{{!extraFields.length}}" class="text-center padding-top margin-top">
       <text class="text-gray">点击下方 <text class="cuIcon-add text-orange"></text> 添加数据</text>
     </view>
   </view>
@@ -21,7 +30,7 @@
   </view>
   <view class="padding flex-row justify-center" style="align-items: center">
     <button class="bg-cyan gfw br-14" disabled="{{!dataChange}}" style="margin: 0 10px" bindtap="tapToSave">保存</button>
-    <picker range='{{extra_fields_keys}}' bindchange="onBindchange" range-key='name'>
+    <picker range='{{extraFieldsKeys}}' bindchange="onBindchange" range-key='name'>
       <view class="text-xl padding-sm bg-orange flex-col br-14">
         <text class="cuIcon-add"></text>
       </view>

@@ -39,8 +39,8 @@
     </view>
   </view>
   <view hidden="{{!card.info.length}}" class="padding-sm margin-sm br-12" style="border: 1px solid rgb(167, 236, 236);">
-    <view class="cu-form-group" wx:for="{{card.info}}" data-value="{{item.value}}" bindtap="tapToCopyValue" wx:key="key">
-      <view class="title">{{item.name}}</view>
+    <view class="cu-form-group" wx:for="{{card.info}}" data-value="{{item.value}}" bindtap="tapToCopyValue" wx:key="idx">
+      <view class="title" style="width: 23vw;">{{item.name}} :</view>
       <input placeholder="{{item.value}}" disabled></input>
       <text class="cuIcon-copy text-gray"></text>
     </view>

@@ -55,7 +55,7 @@ Page({
       'card.encrypted': card.encrypted,
       'card.title': card.title,
       'card.tags': card.tags,
-      'card.info': card.encrypted ? [] : app.rebuildLabel(card.info),
+      'card.info': card.encrypted ? [] : app.rebuildExtraFields(card.info),
       'card.setLike': card.setLike || false,
       'card.image': card.image.map(pic=>{
         pic._url = pic.url
@@ -72,7 +72,7 @@ Page({
           try {
             const imageData = await cardManager.getCardCache(image)
             setData[`card.image[${idx}]._url`] = imageData.imagePath 
-            setData[`card.info`] = app.rebuildLabel(imageData.extraData)
+            setData[`card.info`] = app.rebuildExtraFields(imageData.extraData)
           } catch (error) {}
         }
         if(Object.keys(setData).length){
@@ -136,7 +136,7 @@ Page({
     
     const setData = {
       [`card.image[${this.chooseIdx}]._url`]: imageData.imagePath,
-      [`card.info`]: app.rebuildLabel(imageData.extraData)
+      [`card.info`]: app.rebuildExtraFields(imageData.extraData)
     }
     this.setData(setData)
   },

@@ -1,32 +1,30 @@
-import { navigateBack } from '@/utils/index'
+import { navigateBack, showError } from '@/utils/index'
 import { getAppManager } from '@/class/app'
 const app = getAppManager()
 
 Page({
   returnContentKey: '',
   data: {
-    extra_fields_keys: app.Config.extraFieldsKeys,
-    extra_fields: [] as ICardExtraField[],
+    extraFieldsKeys: app.Config.extraFieldsKeys,
+    extraFields: [] as ICardExtraField[],
     dataChange: false
   },
   onLoad(options) {
     this.returnContentKey = options.returnContentKey || 'tempData'
     if(options.value){
-      let extra_fields_keys = this.data.extra_fields_keys
-      const extra_fields = JSON.parse(options.value).map(item=>{
-        extra_fields_keys = extra_fields_keys.filter(e=>e.key !== item[0])
-        const extraField = Object.assign({},this.data.extra_fields_keys.find(e=>e.key == item[0]))
-        extraField.value = item[1]
-        return extraField
+      let extraFieldsKeys = this.data.extraFieldsKeys
+      const extraFields = app.rebuildExtraFields(JSON.parse(options.value))
+      extraFieldsKeys = extraFieldsKeys.filter(item=>{
+        return item.key === 'cu' || !extraFields.some(e=>item.key === e.key)
       })
       this.setData({
-        extra_fields_keys,
-        extra_fields
+        extraFieldsKeys,
+        extraFields
       })
     }
   },
-  onBindinput({currentTarget:{dataset: {idx}}, detail: {value}}){
-    const key = `extra_fields[${idx}].value`
+  onBindinput({currentTarget:{dataset: {idx, cu}}, detail: {value}}){
+    const key = `extraFields[${idx}].${cu?'name':'value'}`
     this.setData({
       dataChange: value ? true : false,
       [key]: value
@@ -34,50 +32,50 @@ Page({
   },
   onBindchange(e){
     const idx = parseInt(e.detail.value)
-    if(!this.data.extra_fields_keys[idx]) return
-    if(this.data.extra_fields_keys[idx].key === 'cu') {
-      // const customLabel = Object.assign({},this.data.labels[idx])
-      // const cid = this.data.extra_fields.filter(e=>e.key.startsWith('custom_')).length + 1
-      // customLabel.name = `自定义_${cid}`
-      // customLabel.key = `custom_${cid}`
-      // const extra_fields = this.data.extra_fields.concat(customLabel)
-      // this.setData({
-      //   extra_fields
-      // })
-      const extra_fields = this.data.extra_fields.concat(this.data.extra_fields_keys[idx]).sort((a,b)=> a.xid-b.xid)
-      const extra_fields_keys = this.data.extra_fields_keys.filter((_,i)=> i !== idx)
-      
-      this.setData({
-        extra_fields_keys,
-        extra_fields
-      })
+    if(!this.data.extraFieldsKeys[idx]) return
+
+    const extraField = Object.assign({},this.data.extraFieldsKeys[idx])
+ 
+    if(extraField.key === 'cu'){
+      extraField.name = ''
     }else{
-      const extra_fields = this.data.extra_fields.concat(this.data.extra_fields_keys[idx]).sort((a,b)=> a.xid-b.xid)
-      const extra_fields_keys = this.data.extra_fields_keys.filter((_,i)=> i !== idx)
-      
-      this.setData({
-        extra_fields_keys,
-        extra_fields
-      })
-    }
-  },
-  tapToRemoveField(e){
-    const key = e.currentTarget.dataset.key
-    if(key.startsWith('custom_')){
-      return
+      this.data.extraFieldsKeys.splice(idx,1)
     }
 
-    const extra_fields = this.data.extra_fields.filter((e)=> e.key !== key)
-    const extra_fields_keys = this.data.extra_fields_keys.concat(app.Config.extraFieldsKeys.find(e=>e.key === key)!).sort((a,b)=> a.xid-b.xid)
-
+    const extraFields = this.data.extraFields.concat(extraField).sort((a,b)=> a.xid-b.xid)
     this.setData({
-      dataChange: extra_fields.length > 0,
-      extra_fields_keys,
-      extra_fields
+      extraFields,
+      extraFieldsKeys: this.data.extraFieldsKeys
     })
   },
+  onBindDateChange({currentTarget:{dataset: {idx}}, detail: {value}}){
+    const key = `extraFields[${idx}].value`
+    this.setData({
+      dataChange: value ? true : false,
+      [key]: value
+    })
+  },
+  tapToRemoveField(e){
+    const idx = parseInt(e.currentTarget.dataset.idx)
+    const selectedField = this.data.extraFields[idx]
+
+    this.data.extraFields.splice(idx,1)
+    const setData = {
+      extraFields: this.data.extraFields,
+      dataChange: this.data.extraFields.length > 0
+    }
+    if(selectedField.key !== 'cu'){
+      setData[`extraFieldsKeys`] = this.data.extraFieldsKeys.concat(app.Config.extraFieldsKeys.find(e=>e.key === selectedField.key)!).sort((a,b)=> a.xid-b.xid)
+    }
+
+    this.setData(setData)
+  },
   tapToSave(){
-    const miniData = JSON.stringify(this.data.extra_fields.map(e=>([e.key,e.value])))
-    navigateBack({backData: {[this.returnContentKey]: miniData}})
+    if(this.data.extraFields.some(field=>!field.value)){
+      showError('填写有误')
+      return
+    }
+    const extraFields = JSON.stringify(app.condenseExtraFields(this.data.extraFields))
+    navigateBack({backData: {[this.returnContentKey]: extraFields}})
   }
 })

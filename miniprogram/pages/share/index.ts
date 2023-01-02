@@ -46,7 +46,7 @@ Page({
         if(card.encrypted) pic._url = DefaultShowLockImage
         return pic
       }),
-      [`card.info`]: app.rebuildLabel(card.info),
+      [`card.info`]: app.rebuildExtraFields(card.info || []),
       endTime: Math.floor((new Date(endTime).getTime() - new Date().getTime()) / 1000)
     })
     if(card.encrypted){
@@ -86,7 +86,7 @@ Page({
       const imageData = await getCardManager().decryptImageWithKey(image, this.shareInfo.dk)
       
       setData[`card.image[${idx}]._url`] = imageData.imagePath,
-      setData[`card.info`] = app.rebuildLabel(imageData.extraData)
+      setData[`card.info`] = app.rebuildExtraFields(imageData.extraData)
     }   
 
     this.setData(setData)

@@ -270,7 +270,7 @@ class AppManager extends Base {
     expiredTime = expiredTime || 3600
     let sk = await randomBytesHexString(3)
     let dk = await randomBytesHexString(16)
-    const extraData = card.info?.map(e=>([e.key,e.value]))
+    const extraFields = this.condenseExtraFields(card.info || [])
     const shareCard: Partial<ICard> = {
       encrypted: card.encrypted,
       image: [],
@@ -280,7 +280,7 @@ class AppManager extends Base {
       for (const image of card.image!) {
         if(!image._url || !await checkAccess(image._url)) throw Error("分享生成错误")
         const imageData = {url:'',salt:'',hash: image.hash}
-        const encrytedPic = await getCardManager().encryptImageWithKey(dk, image._url!, extraData)
+        const encrytedPic = await getCardManager().encryptImageWithKey(dk, image._url!, extraFields)
         imageData.url = await getCardManager().uploadShare(encrytedPic.imagePath)
         imageData.salt = encrytedPic.imageSecretKey
 
@@ -288,7 +288,7 @@ class AppManager extends Base {
       }
     }else{
       dk = ''
-      shareCard.info = extraData
+      shareCard.info = extraFields
       for (const image of card.image!) {
         shareCard.image!.push({
           url: image.url,
@@ -310,13 +310,20 @@ class AppManager extends Base {
     }
   }
 
-  rebuildLabel(meta?: Partial<ICardExtraField>[]){
-    meta = meta || []
-    return meta.map(item=>{
-      let label = this.Config.extraFieldsKeys.find(e=>e.key===item[0])
-      label = Object.assign({name: '未知', value: '无'},label)
-      label.value = item[1]
-      return label
+  condenseExtraFields(extraFields: ICardExtraField[]):[string,string][]{
+    return extraFields.map(e=>{
+      return [e.key == 'cu'?`cu-${e.name}`:e.key,e.value!]
+    })
+  }
+
+  rebuildExtraFields(extraFields: Partial<ICardExtraField>[]){
+    return extraFields.map(item=>{
+      const [key,cuName] = item[0].split('-')
+      let extraField = this.Config.extraFieldsKeys.find(e=>e.key===key)
+      extraField = Object.assign({name: '未知', value: '无'},extraField)
+      if(key === 'cu') extraField.name = cuName
+      extraField.value = item[1]
+      return extraField
     })
   }
 
