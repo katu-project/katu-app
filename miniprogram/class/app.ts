@@ -435,14 +435,21 @@ class AppManager extends Base {
   }
 
   async getCloudFileTempUrl(url:string){
-    const {fileList:[file]} = await wx.cloud.getTempFileURL({
-      fileList: [url]
-    })
-    if(file.status !== 0){
-      console.warn('获取云文件临时URL错误:', file.errMsg);
-      return DefaultLoadFailedImage
+    let tempUrl = DefaultLoadFailedImage
+    try {
+      const {fileList:[file]} = await wx.cloud.getTempFileURL({
+        fileList: [url]
+      })
+      if(file.status !== 0){
+        console.warn('获取云文件临时URL错误:', file.errMsg);
+      }else{
+        tempUrl = file.tempFileURL
+      }
+    } catch (error) {
+      console.warn('获取云文件临时URL错误:', error.message);
     }
-    return file.tempFileURL
+
+    return tempUrl
   }
 
   setHomeRefresh(){

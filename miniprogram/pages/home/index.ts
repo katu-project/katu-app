@@ -1,5 +1,5 @@
 import { loadData, navigateTo, showNotice } from '@/utils/index'
-import { DefaultShowLockImage, DefaultShowImage, APP_ENTRY_PATH } from '@/const'
+import { DefaultShowLockImage, DefaultShowImage, APP_ENTRY_PATH, DefaultLoadFailedImage } from '@/const'
 import api from '@/api'
 import { getAppManager } from '@/class/app'
 import { getUserManager } from '@/class/user'
@@ -156,6 +156,11 @@ Page({
       })
     }
     
+  },
+  onBindLoadError(e){
+    this.setData({
+      [`likeList[${e.currentTarget.dataset.idx}]._url`]: DefaultLoadFailedImage
+    })
   },
   onBindscrolltoupper(){
     if(this.data.curTab !== 0){
