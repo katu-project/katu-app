@@ -30,7 +30,7 @@ class CardManager {
 
       // 统一转换成本地资源
       if(pic.url.startsWith(WX_CLOUD_STORAGE_FILE_HEAD)){
-        pic.url = await this.app.downloadFile(pic)
+        pic.url = await this.downloadImage(pic)
       }
 
       imageData.hash = await this.getHash(pic.url)
@@ -63,7 +63,7 @@ class CardManager {
       const imageData = {url:'',salt:'',hash:''}
 
       if(pic.url.startsWith(WX_CLOUD_STORAGE_FILE_HEAD)){
-        pic.url = await this.app.downloadFile(pic)
+        pic.url = await this.downloadImage(pic)
       }
       
       imageData.hash = await this.getHash(pic.url)
@@ -161,7 +161,7 @@ class CardManager {
       extraData: []
     }
     
-    const imageFilePath = await this.app.downloadFile(image)
+    const imageFilePath = await this.downloadImage(image)
     const encryptedHexData = await utils.file.readFile(imageFilePath, 'hex')
     // 解密数据
     const metaData = encryptedHexData.slice(-PACKAGE_TAIL_LENGTH)
@@ -208,6 +208,14 @@ class CardManager {
     return retDataInfo
   }
 
+  async downloadImage(image:ICardImage){
+    const imageName = `${image.hash}_${image.salt||'ns'}`
+    const savePath = await this.app.getLocalFilePath(imageName, 'down')
+    return this.app.downloadFile({
+      url: image.url,
+      savePath
+    })
+  }
   async getCardCache(image: ICardImage){
     const cacheData = {
       imagePath: '',

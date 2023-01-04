@@ -260,30 +260,33 @@ class AppManager {
     return fileID
   }
 
-  async downloadFile(image: ICardImage){
-    const savePath = await this.getLocalFilePath(image.salt, 'down')
-    try {
-      await utils.file.checkAccess(savePath)
-      console.log('hit cache file, reuse it')
-      return savePath
-    } catch (error) {
-      console.log('no cache file, download it')
+  async downloadFile(options:{url:string,savePath?:string}){
+    let {url, savePath} = options
+    if(!savePath){
+      savePath = await this.getTempFilePath('down')
+    }else{
+      try {
+        await utils.file.checkAccess(savePath)
+        console.log('hit cache file, reuse it')
+        return savePath
+      } catch (error) {
+        console.log('no cache file, download it')
+      }
     }
     
-    let fileUrl = image.url
-    if(image.url.startsWith(WX_CLOUD_STORAGE_FILE_HEAD)){
+    if(url.startsWith(WX_CLOUD_STORAGE_FILE_HEAD)){
       const {fileList: [imageInfo]} = await wx.cloud.getTempFileURL({
-        fileList: [image.url]
+        fileList: [url]
       })
       if(imageInfo.status !== 0){
         console.warn('get cloud file tempUrl error:', imageInfo.errMsg)
         throw Error('下载文件错误')
       }
-      fileUrl = imageInfo.tempFileURL
+      url = imageInfo.tempFileURL
     }
 
-    console.warn('start download file:', fileUrl);
-    const downloadFile = await utils.file.download(fileUrl, savePath)
+    console.warn('start download file:', url);
+    const downloadFile = await utils.file.download(url, savePath)
     return downloadFile.filePath
   }
 
