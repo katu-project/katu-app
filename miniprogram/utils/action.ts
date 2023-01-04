@@ -95,18 +95,20 @@ async function switchTab(page, vibrate=true){
   })
 }
 type LoadDataOptions = {
+  hideLoading: boolean,
   loadingTitle: string,
   returnFailed: boolean
 }
 
 async function loadData<T>(func?: (args:any) => Promise<T>, params?: Object, options?: Partial<LoadDataOptions> | string): Promise<T> {
-  let loadingTitle = '正在处理请求', returnFailed = false
+  let loadingTitle = '正在处理请求', returnFailed = false, hideLoading = false
   if(options){
     if(typeof options === 'string'){
       loadingTitle = options
     }else{
       loadingTitle = options.loadingTitle || loadingTitle
       returnFailed = options.returnFailed || false
+      hideLoading = options.hideLoading || false
     }
   }
   let pfunc
@@ -116,20 +118,28 @@ async function loadData<T>(func?: (args:any) => Promise<T>, params?: Object, opt
     pfunc = sleep
     params = 2000
   }
-  wx.showLoading({
-    title: loadingTitle,
-    mask: true
-  })
+
+  if(hideLoading){
+    console.log("静默操作")
+  }else{
+    wx.showLoading({
+      title: loadingTitle,
+      mask: true
+    })
+  }
 
   await sleep(300)
 
   return new Promise((resolve,reject)=>{
     pfunc(params).then(res=>{
-      resolve(res)
-      wx.hideLoading()
+      wx.hideLoading({
+        complete: ()=>{
+          resolve(res)
+        }
+      })
     }).catch(error=>{
       wx.hideLoading({
-        success: () => {
+        complete: () => {
           if(returnFailed) return reject(error)
           if(!error.code || error.code === 1){
             wx.showModal({
