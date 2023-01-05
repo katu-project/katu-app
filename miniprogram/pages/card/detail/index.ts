@@ -5,7 +5,6 @@ import { getCardManager } from '@/class/card'
 import { getAppManager } from '@/class/app'
 const app = getAppManager()
 const cardManager = getCardManager()
-export {}
 
 Page({
   id: '',
@@ -31,7 +30,9 @@ Page({
           hash: ''
         }
       ]
-    } as Partial<ICard>
+    } as Partial<ICard>,
+    editable: true,
+    shareable: true
   },
   onLoad(options) {
     if(options.id){
@@ -62,7 +63,7 @@ Page({
         return pic
       })
     })
-
+    this.checkActionUsability()
     if(this.data.card.encrypted){
       if(app.user.config?.general.autoShowContent){
         const setData = {}
@@ -101,6 +102,14 @@ Page({
       })
       app.setHomeRefresh()
     })
+  },
+  checkActionUsability(){
+    if(this.data.card.image?.some(pic=>pic['checkId'] && !pic['checkPass'])){
+      this.setData({
+        editable: false,
+        shareable: false
+      })
+    }
   },
   async tapToChoosePic(e){
     this.chooseIdx = e.currentTarget.dataset.index
@@ -230,6 +239,15 @@ Page({
   hideShareDialog(){
     this.setData({
       showShareDialog: false
+    })
+  },
+  tapToShowDataCheckHelp(){
+    showChoose("关于内容安全检测","该卡片似乎存在不合适内容",{
+      cancelText: '查看详情'
+    }).then(res=>{
+      if(!res.confirm){
+        app.navToDoc('534fc1e163b68f2700197d67754d9673')
+      }
     })
   }
 })

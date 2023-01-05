@@ -20,10 +20,23 @@
       </view>
     </view>
   </view>
-  <view class="pic">
-    <block wx:for="{{card.image}}" wx:key="index">
-      <image class="pic-img card" data-index="{{index}}" binderror="onImageShowError" mode="aspectFit" bindtap="tapToChoosePic" src="{{item._url}}"></image>
-    </block>
+  <view class="image-list">
+    <view wx:for="{{card.image}}" wx:key="index" class="image-item br-10">
+      <block wx:if="{{item.checkId}}"> 
+        <image class="card {{item.checkPass?'':'check-filter'}}" data-index="{{index}}" binderror="onImageShowError" mode="aspectFit" bindtap="tapToChoosePic" src="{{item._url}}"></image>
+        <view wx:if="{{!item.checkPass}}" class="checking-layer">
+          <view wx:if="{{item.checkResult}}" bindtap="tapToShowDataCheckHelp" class="padding br-12 checking">
+            <text class="text-xl text-red">未通过内容安全检测 <text class="cuIcon-question"></text></text>
+          </view>
+          <view wx:else bindtap="tapToShowDataCheckHelp" class="padding br-12 checking">
+            <text class="text-xl text-yellow">请等待内容安全检测 <text class="cuIcon-question"></text></text>
+          </view>
+        </view>
+      </block>
+      <block wx:else>
+        <image class="card" data-index="{{index}}" binderror="onImageShowError" mode="aspectFit" bindtap="tapToChoosePic" src="{{item._url}}"></image>
+      </block>
+    </view>
   </view>
   <view hidden="{{!card.info.length}}" class="padding-sm margin-sm br-12" style="border: 1px solid rgb(167, 236, 236);">
     <view class="cu-form-group" wx:for="{{card.info}}" data-value="{{item.value}}" bindtap="tapToCopyValue" wx:key="key">
@@ -38,11 +51,11 @@
       <text class="cuIcon-delete margin-right-xs"></text>
     删除</button>
     <view style="width: 20rpx;"></view>
-    <button class="cu-btn text-green bg-cyan light gfw" bindtap="tapToEditCard">
+    <button class="cu-btn text-green bg-cyan light gfw" disabled="{{!editable}}" bindtap="tapToEditCard">
       <text class="cuIcon-edit margin-right-xs"></text>
     修改</button>
     <view style="width: 20rpx;"></view>
-    <button class="cu-btn text-green bg-olive light gfw" bindtap="tapToShowShareDialog">
+    <button class="cu-btn text-green bg-olive light gfw" disabled="{{!shareable}}"  bindtap="tapToShowShareDialog">
       <text class="cuIcon-share margin-right-xs"></text>
     分享</button>
   </view>
