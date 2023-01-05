@@ -5,6 +5,7 @@ import { APP_ENTRY_PATH, APP_TEMP_DIR, APP_DOWN_DIR, APP_IMAGE_DIR, DefaultLoadF
 import { randomBytesHexString } from '@/utils/crypto'
 import { checkAccess } from '@/utils/file'
 import { getCardManager } from './card'
+import { sleep } from '@/utils/base'
 
 class AppManager {
   static instance: AppManager
@@ -488,6 +489,19 @@ class AppManager {
     const homePage = pages.find(page=>page.route ===  `pages/${APP_ENTRY_PATH}`)
     if(!homePage) return
     homePage.backData = {refresh:true}
+  }
+
+  async imageContentCheck({imagePath}){
+    const tempFilePath = `tmp/pic-${imagePath.slice(-32)}`
+    const url = await this.uploadFile(imagePath,tempFilePath)
+    const hash = await getCardManager().getHash(imagePath)
+  
+    for(let i=0;i<10;i++){
+      const res = await api.imageContentSafetyCheck({hash, url})
+      if(res.checkEnd) return res
+      await sleep(3000)
+    }
+    throw new Error("内容检测超时，请稍后重试")
   }
 }
 

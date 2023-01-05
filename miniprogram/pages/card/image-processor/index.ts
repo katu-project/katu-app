@@ -4,8 +4,6 @@ import { getCardManager } from '@/class/card'
 import { getAppManager } from '@/class/app'
 const app = getAppManager()
 
-export {}
-
 Page({
   returnContentKey: '',
   originImagePath: '',
@@ -36,8 +34,17 @@ Page({
   goBack(){
     navigateBack()
   },
-  useAndBack() {
-    navigateBack({backData: {[this.returnContentKey]: this.data.tmpImagePath}})
+  async useAndBack() {
+    const res = await loadData(app.imageContentCheck,{imagePath:this.data.tmpImagePath},'内容安全检测中')
+    if(!res.checkPass){
+      showChoose("系统提示","图片似乎存在不适内容",{showCancel:false})
+      return
+    }
+    showChoose("系统提示","内容安全检测通过").then(res=>{
+      if(res.confirm){
+        navigateBack({backData: {[this.returnContentKey]: this.data.tmpImagePath}})
+      }
+    })
   },
   async selectMethod(e){
     return this.processImage(parseInt(e.detail.value))

@@ -66,5 +66,8 @@ export default {
 
   getHotDoc: () => request<IAnyObject[]>('doc/getDoc', {field:{title: true}, where: {type: 2, hot: true}}),
 
-  getCateDoc: (cate:string) => request<IAnyObject[]>('doc/getDoc', {field:{title: true}, where: {type: 2, cate}})
+  getCateDoc: (cate:string) => request<IAnyObject[]>('doc/getDoc', {field:{title: true}, where: {type: 2, cate}}),
+
+  // data check
+  imageContentSafetyCheck: data => request<{checkEnd:boolean,checkPass:boolean}>('card/dataCheck', data)
 }
