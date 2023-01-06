@@ -39,6 +39,10 @@ Page({
       this.id = options.id
     }
     wx.hideShareMenu()
+    app.on('cardChange',this.silentRefresh)
+  },
+  onUnload(){
+    app.off('cardChange',this.silentRefresh)
   },
   async onReady() {
     if(!this.id) {
@@ -46,9 +50,26 @@ Page({
       return
     }
 
-    const card = await loadData(api.getCard,{
-      _id: this.id
-    })
+    await this.loadData()
+
+    if(this.data.card.encrypted){
+      try {
+        app.checkMasterKey()
+      } catch (error) {
+        if(error.code[0] === '2'){
+          this.showInputKey()
+        }
+      }
+    }
+  },
+  onShow() {
+  },
+  async loadData(card){
+    if(!card){
+      card = await loadData(api.getCard,{
+        _id: this.id
+      })
+    }
 
     this.setData({
       'card._id': card._id,
@@ -77,22 +98,12 @@ Page({
         }
         if(Object.keys(setData).length){
           this.setData(setData)
-          return
-        }
-      }
-      
-      try {
-        app.checkMasterKey()
-      } catch (error) {
-        if(error.code[0] === '2'){
-          this.showInputKey()
         }
       }
     }
   },
-  onShow() {
-  },
-  onUnload(){
+  async silentRefresh(card){
+    this.loadData(card)
   },
   tapToSetLike(){
     const state = !this.data.card.setLike

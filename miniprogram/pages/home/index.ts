@@ -26,8 +26,11 @@ Page({
   },
 
   onLoad() {
+    app.on('cardChange',this.silentLoadCardData)
   },
-
+  onUnload(){
+    app.off('cardChange',this.silentLoadCardData)
+  },
   async onReady() {
     await loadData(user.init,{},'加载用户数据')
     this.loadData()
@@ -56,13 +59,39 @@ Page({
     this.setData({
       likeList
     })
-    return this.loadImage()
+    return this.renderLikeCardImage()
   },
-  async loadImage(){
+  async silentLoadCardData(card){
+    console.log('update card info:', card._id, card.title);
+    if(card.setLike) {
+      this.renderLikeCard(card)
+      this.renderLikeCardImage(card)
+    }
+  },
+  renderLikeCard(card:ICard){
     const setData = {}
+    let idx = this.data.likeList.findIndex(e=>e._id === card._id)
+    if(idx === -1){
+      idx = this.data.likeList.length
+      card.image[0]._url = card.encrypted ? DefaultShowLockImage : DefaultShowImage
+      setData[`likeList[${idx}]`] = card
+    }else{
+      const oldCard = this.data.likeList[idx]
+      if(oldCard.title !== card.title){
+        setData[`likeList[${idx}].title`] = card.title
+      }
+      if(oldCard.image[0].hash !== card.image[0].hash){
+        card.image[0]._url = card.encrypted ? DefaultShowLockImage : DefaultShowImage
+        setData[`likeList[${idx}].image`] = card.image
+      }
+    }
+    this.setData(setData)
+  },
+  async renderLikeCardImage(card?:ICard){
+    let setData = {}
 
-    for (const idx in this.data.likeList) {
-      const card = this.data.likeList[idx]
+    const renderImage = async (idx,card:ICard)=>{
+      const setData = {}
       if(card.encrypted){
         if(app.user.config?.general.autoShowContent){
           try {
@@ -81,6 +110,20 @@ Page({
             setData[`likeList[${idx}]._url`] = tempUrl + app.Config.imageMogr2
           }
         } catch (error) {}
+      }
+      return setData
+    }
+        
+    if(card){
+      let idx = this.data.likeList.findIndex(e=>e._id === card._id)
+      if(!idx){
+        idx = this.data.likeList.length
+      }
+      Object.assign(setData, await renderImage(idx, card))
+    }else{
+      for (const idx in this.data.likeList) {
+        const card = this.data.likeList[idx]
+        Object.assign(setData, await renderImage(idx, card))
       }
     }
     this.setData(setData)

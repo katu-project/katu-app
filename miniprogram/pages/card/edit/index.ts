@@ -202,7 +202,8 @@ Page({
             .catch(this.saveFailed)
             .finally(this.saveFinish)
   },
-  async saveDone(){
+  async saveDone(card){
+    app.emit('cardChange',card)
     showChoose('操作成功','卡片数据已保存',{showCancel: false}).then(()=>{
       navigateBack()
     })
@@ -211,7 +212,6 @@ Page({
     showChoose('保存卡片出错',error.message)
   },
   async saveFinish(){
-    app.setHomeRefresh()
   },
   showInputKey(){
     this.setData({

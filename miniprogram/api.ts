@@ -57,7 +57,7 @@ export default {
 
   getCardList: data => request<ICard[]>('card/fetch', data),
 
-  saveCard: data => request('card/save', data),
+  saveCard: data => request<ICard>('card/save', data),
   
   deleteCard: id => request('card/delete', id),
 
