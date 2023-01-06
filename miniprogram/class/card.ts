@@ -16,27 +16,33 @@ class CardManager extends Base{
   init(){
   }
 
-  async update(card){
+  async update(card:Partial<ICard>){
     const cardModel = this._createCardDefaultData(card)
     cardModel._id = card._id
     
-    for (const idx in card.image) {
-      const pic = card.image[idx]
+    for (const pic of card.image!) {
       const imageData = {url:'',salt:'',hash:''}
 
+      let downloadFileUrl = pic.url
       // 统一转换成本地资源
       if(pic.url.startsWith(WX_CLOUD_STORAGE_FILE_HEAD)){
-        pic.url = await this.downloadImage(pic)
+        downloadFileUrl = await this.downloadImage(pic)
       }
 
-      imageData.hash = await this.getHash(pic.url)
+      imageData.hash = await this.getHash(downloadFileUrl)
+      
       if(cardModel.encrypted){
-        const encrytedPic = await this.encryptImage(pic.url, cardModel.info)
+        const encrytedPic = await this.encryptImage(downloadFileUrl, cardModel.info)
         imageData.url = await this.upload(encrytedPic.imagePath)
         imageData.salt = encrytedPic.imageSecretKey
       }else{
+        if(pic.hash !== imageData.hash){
+          console.log('检测到图片修改，重新上传')
+          imageData.url = await this.upload(downloadFileUrl)
+        }else{
+          imageData.url = pic.url
+        }
         imageData.salt = ''
-        imageData.url = await this.upload(pic.url)
       }
       cardModel.image!.push(imageData)
     }
