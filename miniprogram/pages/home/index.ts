@@ -27,9 +27,11 @@ Page({
 
   onLoad() {
     app.on('cardChange',this.silentLoadCardData)
+    app.on('cardDelete',this.silentRemoveCardData)
   },
   onUnload(){
     app.off('cardChange',this.silentLoadCardData)
+    app.off('cardDelete',this.silentRemoveCardData)
   },
   async onReady() {
     await loadData(user.init,{},'加载用户数据')
@@ -66,6 +68,16 @@ Page({
     if(card.setLike) {
       this.renderLikeCard(card)
       this.renderLikeCardImage(card)
+    }
+  },
+  silentRemoveCardData(id){
+    const idx = this.data.likeList.findIndex(e=>e._id === id)
+    if(idx !== -1){
+      this.data.likeList.splice(idx,1)
+      this.setData({
+        likeList: this.data.likeList
+      })
+      console.log('静默移除卡片：',id)
     }
   },
   renderLikeCard(card:ICard){

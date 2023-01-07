@@ -179,8 +179,8 @@ Page({
       if(cancel) return
 
       loadData(cardManager.deleteCard, this.data.card).then(()=>{
-        app.setHomeRefresh()
-        navigateBack({backData:{ refresh: true }})
+        app.emit('cardDelete', this.id)
+        navigateBack()
       })
     })
   },
