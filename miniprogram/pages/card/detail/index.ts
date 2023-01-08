@@ -52,7 +52,7 @@ Page({
 
     await this.loadData()
 
-    if(this.data.card.encrypted){
+    if(this.data.card.encrypted && this.data.card.image?.some(e=>e._url === DefaultShowLockImage)){
       try {
         app.checkMasterKey()
       } catch (error) {
