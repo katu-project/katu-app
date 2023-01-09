@@ -40,11 +40,7 @@ Page({
       showChoose("系统提示","图片似乎存在不适内容",{showCancel:false})
       return
     }
-    showChoose("系统提示","内容安全检测通过").then(res=>{
-      if(res.confirm){
-        navigateBack({backData: {[this.returnContentKey]: this.data.tmpImagePath}})
-      }
-    })
+    navigateBack({backData: {[this.returnContentKey]: this.data.tmpImagePath}})
   },
   async selectMethod(e){
     return this.processImage(parseInt(e.detail.value))
