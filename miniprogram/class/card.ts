@@ -16,39 +16,74 @@ class CardManager extends Base{
   init(){
   }
 
+  /* 
+    1. 没变动，url 以 cloud 开头
+    2. 变动，使用本地图片，url 以 http/wxfile 开头
+    3. 变动，使用外部接口，url 以 cloud 开头
+  */
+  async _updateNotEncryptImage(card:Partial<ICard>){
+    const images:ICardImage[] = []
+    for (const pic of card.image!) {
+      const imageData = {url:'',salt:'',hash:''}
+      const originPicUrl = pic.url
+      // 统一转换成本地资源
+      if(pic.url.startsWith(WX_CLOUD_STORAGE_FILE_HEAD)){
+        pic.url = await this.downloadImage(pic)
+      }
+
+      imageData.hash = await this.getHash(pic.url)
+      
+      if(pic.hash === imageData.hash){
+        imageData.url = originPicUrl
+      }else{
+        console.log('检测到图片修改，重新上传')
+        imageData.url = await this.upload(pic.url)
+      }
+      imageData.salt = ''
+      images.push(imageData)
+    }
+    return images
+  }
+
+  /* 
+    加密模式下不存在远程图片，所有图片都是在本地
+  */
+  async _updateEncryptImage(card:Partial<ICard>){
+    const images:ICardImage[] = []
+    for (const pic of card.image!) {
+      const imageData = {url:'',salt:'',hash:''}
+      const originImageHash = pic.hash
+      const originImageExtraData = await this.getCacheLabelData(pic.url)
+
+      imageData.hash = await this.getHash(pic.url)
+      // 图片hash一致并且附加数据一致就说明图片没改变
+      if(originImageHash === imageData.hash && JSON.stringify(originImageExtraData) === JSON.stringify(card.info)){
+        console.log('未检测到图片/附加数据修改，保持原始数据不做改变')
+        if(!pic._url){
+          throw new Error("更新出错，请重试")
+        }
+        imageData.salt = pic.salt
+        imageData.url = pic._url!
+      }else{
+        console.log('检测到图片/附加数据修改，重新加密上传')
+        const encrytedPic = await this.encryptImage(pic.url, card.info)
+        imageData.url = await this.upload(encrytedPic.imagePath)
+        imageData.salt = encrytedPic.imageSecretKey
+      }
+      images.push(imageData)
+    }
+    return images
+  }
+
   async update(card:Partial<ICard>){
     const cardModel = this._createCardDefaultData(card)
     cardModel._id = card._id
     
-    for (const pic of card.image!) {
-      const imageData = {url:'',salt:'',hash:''}
-
-      let downloadFileUrl = pic.url
-      // 统一转换成本地资源
-      if(pic.url.startsWith(WX_CLOUD_STORAGE_FILE_HEAD)){
-        downloadFileUrl = await this.downloadImage(pic)
-      }
-
-      imageData.hash = await this.getHash(downloadFileUrl)
-      
-      if(cardModel.encrypted){
-        const encrytedPic = await this.encryptImage(downloadFileUrl, cardModel.info)
-        imageData.url = await this.upload(encrytedPic.imagePath)
-        imageData.salt = encrytedPic.imageSecretKey
-      }else{
-        if(pic.hash !== imageData.hash){
-          console.log('检测到图片修改，重新上传')
-          imageData.url = await this.upload(downloadFileUrl)
-        }else{
-          imageData.url = pic.url
-        }
-        imageData.salt = ''
-      }
-      cardModel.image!.push(imageData)
-    }
-
-    if(cardModel.encrypted){
+    if(card.encrypted){
+      cardModel.image =  await this._updateEncryptImage(card)
       cardModel.info = []
+    }else{
+      cardModel.image =  await this._updateNotEncryptImage(card)
     }
 
     return api.saveCard(cardModel)
@@ -253,8 +288,9 @@ class CardManager extends Base{
 
   async getHash(imagePath:string): Promise<string>{
     const imageHexData = await utils.file.readFile(imagePath, 'hex')
-    console.log('getHash: ',imagePath ,typeof imageHexData === 'string' ? imageHexData.length: 'ArrayBuffer', imageHexData.slice(0,32), imageHexData.slice(-32));
-    return utils.crypto.md5(imageHexData)
+    const imageHash = utils.crypto.md5(imageHexData)
+    console.log('getHash: ',imagePath, imageHash, 'file:',`${imageHexData.slice(0,8)}...${imageHexData.slice(-8)}`);
+    return imageHash
   }
 
   async upload(filePath){
