@@ -19,11 +19,12 @@
   scroll-y="true"
   enable-flex="true"
   refresher-enabled="true"
+  enable-passive="true"
   bindrefresherrefresh="onBindRefresh"
   refresher-triggered="{{isRefresh}}"
   show-scrollbar="false">
-  <view style="min-height: 90vh;">
-    <view class="cu-list menu margin-top-sm">
+  <view style="height: 80vh">
+    <view class="cu-list menu margin-top-sm margin-bottom-xl">
       <view class="cu-item arrow"  wx:for="{{list}}" wx:key="_id" data-key="{{item._id}}" bindtap="tapToCardDetail">
         <view class="margin-right-sm flex-col br-10" style="border: 1px solid darkcyan;">
           <image lazy-load="true" mode="{{item._mode || 'aspectFit'}}" class="image br-16" src="{{item._url}}"></image>
