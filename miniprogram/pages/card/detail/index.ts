@@ -79,9 +79,11 @@ Page({
       'card.info': card.encrypted ? [] : app.rebuildExtraFields(card.info),
       'card.setLike': card.setLike || false,
       'card.image': card.image.map(pic=>{
-        pic._url = pic.url
-        if(card.encrypted) pic._url = DefaultShowLockImage
-        return pic
+        // 不要直接修改只读数据
+        const _pic = Object.assign({},pic)
+        _pic._url = pic.url
+        if(card.encrypted) _pic._url = DefaultShowLockImage
+        return _pic
       })
     })
     this.checkActionUsability()
@@ -230,7 +232,9 @@ Page({
   inputKeyConfirm(e){
     const key = e.detail.value
     app.loadMasterKeyWithKey(key).then(()=>{
-      this.showEncryptedImage()
+      if(this.data.card.image?.some(e=>e._url === DefaultShowLockImage)){
+        this.showEncryptedImage()
+      }
     }).catch(error=>{
       showError(error.message)
       this.showInputKey()
