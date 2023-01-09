@@ -15,12 +15,16 @@ class AppManager extends Base {
 
   _masterKey: string = ''
 
+  cloudFileTempUrls: IAnyObject = {}
+
   constructor(){
     super()
   }
 
   init(){
-    return this.loadConfig()
+    this.loadConfig()
+    this.loadCacheData()
+    return
   }
 
   get version(){
@@ -55,6 +59,13 @@ class AppManager extends Base {
     }).catch(console.log)
   }
 
+  async loadCacheData(){
+    // let cacheUrls = await this.getLocalData('CloudFileTempUrlCacheKey')
+    // if(!cacheUrls){
+    //   cacheUrls = {}
+    // }
+    this.cloudFileTempUrls = {}
+  }
   // user section
   async setUserMasterKey(key: string){
     const hexCode = await this._convertToHex(key)
@@ -226,8 +237,11 @@ class AppManager extends Base {
     }
 
     console.warn('start download file:', url);
-    const downloadFile = await utils.file.download(url, savePath)
-    return downloadFile.filePath
+    const downloadRes = await utils.file.download(url, savePath)
+    if(downloadRes.statusCode !== 200 || !downloadRes.filePath){
+      throw new Error("文件下载出错")
+    }
+    return downloadRes.filePath
   }
 
   async previewImage(pics: string[], idx?:number){
@@ -435,7 +449,13 @@ class AppManager extends Base {
   }
 
   async getCloudFileTempUrl(url:string){
-    let tempUrl = DefaultLoadFailedImage
+    // check cache
+    if(this.cloudFileTempUrls[url]){
+      console.log('使用缓存的 url')
+      return this.cloudFileTempUrls[url]
+    }
+
+    let tempUrl = ''
     try {
       const {fileList:[file]} = await wx.cloud.getTempFileURL({
         fileList: [url]
@@ -444,11 +464,14 @@ class AppManager extends Base {
         console.warn('获取云文件临时URL错误:', file.errMsg);
       }else{
         tempUrl = file.tempFileURL
+        this.cloudFileTempUrls[url] = tempUrl
       }
     } catch (error) {
       console.warn('获取云文件临时URL错误:', error.message);
     }
-
+    if(!tempUrl) {
+      tempUrl = DefaultLoadFailedImage
+    }
     return tempUrl
   }
 
@@ -460,9 +483,9 @@ class AppManager extends Base {
   }
 
   async imageContentCheck({imagePath}){
-    const tempFilePath = `tmp/pic-${imagePath.slice(-32)}`
-    const url = await this.uploadFile(imagePath,tempFilePath)
     const hash = await getCardManager().getHash(imagePath)
+    const tempFilePath = `tmp/image_${hash}`
+    const url = await this.uploadFile(imagePath,tempFilePath)
   
     for(let i=0;i<10;i++){
       const res = await api.imageContentSafetyCheck({hash, url})
