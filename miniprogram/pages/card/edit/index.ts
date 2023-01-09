@@ -105,7 +105,10 @@ Page({
       edit: true,
       'card._id': card._id,
       'card.encrypted': card.encrypted,
-      'card.image': card.image,
+      'card.image': card.image.map(e=>{
+        e._url = e.url
+        return e
+      }),
       'card.tags': card.tags,
       'card.info': card.info || [],
       'card.title': card.title,
@@ -299,6 +302,11 @@ Page({
     this.hideSelectTag()
   },
 
+  tapToShowEncryptChangeNotice(){
+    if(this.id){
+      showChoose('温馨提示','更新卡片暂不支持切换加密模式',{showCancel:false})
+    }
+  },
   tapToShowSelectTag(){
     this.setData({
       showSelectTag: true
