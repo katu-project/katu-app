@@ -28,10 +28,12 @@ Page({
   onLoad() {
     app.on('cardChange',this.silentLoadCardData)
     app.on('cardDelete',this.silentRemoveCardData)
+    app.on('cardDecrypt',this.silentLoadCardData)
   },
   onUnload(){
     app.off('cardChange',this.silentLoadCardData)
     app.off('cardDelete',this.silentRemoveCardData)
+    app.off('cardDecrypt',this.silentLoadCardData)
   },
   async onReady() {
     await loadData(user.init,{},'加载用户数据')

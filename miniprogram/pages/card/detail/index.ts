@@ -105,6 +105,7 @@ Page({
     }
   },
   async silentRefresh(card){
+    console.log('detail page: update card info:', card._id, card.title)
     this.loadData(card)
   },
   tapToSetLike(){
@@ -152,6 +153,9 @@ Page({
       [`card.info`]: app.rebuildExtraFields(imageData.extraData)
     }
     this.setData(setData)
+    if(this.chooseIdx === 0){
+      app.emit('cardDecrypt',this.data.card)
+    }
   },
   async previewImage(idx=0){
     const pics = this.data.card.image!.filter(e=>e._url !== DefaultShowLockImage).map(e=>e._url!)
