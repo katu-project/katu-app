@@ -51,11 +51,7 @@ Page({
   async loadLikeList(){
     let likeList = await loadData(api.getLikeCard)
     likeList = likeList.map(card=>{
-      if(card.encrypted){
-        card._url = DefaultShowLockImage
-      }else{
-        card._url = DefaultShowImage
-      }
+      card._url = card.encrypted ? DefaultShowLockImage : DefaultShowImage
       return card
     })
     this.setData({
@@ -64,7 +60,7 @@ Page({
     return this.renderLikeCardImage()
   },
   async silentLoadCardData(card){
-    console.log('update card info:', card._id, card.title);
+    console.log('home page: update card info:', card._id, card.title);
     if(card.setLike) {
       this.renderLikeCard(card)
       this.renderLikeCardImage(card)
@@ -85,7 +81,7 @@ Page({
     let idx = this.data.likeList.findIndex(e=>e._id === card._id)
     if(idx === -1){
       idx = this.data.likeList.length
-      card.image[0]._url = card.encrypted ? DefaultShowLockImage : DefaultShowImage
+      card._url = card.encrypted ? DefaultShowLockImage : DefaultShowImage
       setData[`likeList[${idx}]`] = card
     }else{
       const oldCard = this.data.likeList[idx]
@@ -93,8 +89,8 @@ Page({
         setData[`likeList[${idx}].title`] = card.title
       }
       if(oldCard.image[0].hash !== card.image[0].hash){
-        card.image[0]._url = card.encrypted ? DefaultShowLockImage : DefaultShowImage
         setData[`likeList[${idx}].image`] = card.image
+        setData[`likeList[${idx}]._url`] = card.encrypted ? DefaultShowLockImage : DefaultShowImage
       }
     }
     this.setData(setData)
