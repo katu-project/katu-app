@@ -218,10 +218,10 @@ class AppManager extends Base {
     }else{
       try {
         await utils.file.checkAccess(savePath)
-        console.log('hit cache file, reuse it')
+        console.log('downloadFile: hit cache file, reuse it')
         return savePath
       } catch (error) {
-        console.log('no cache file, download it')
+        console.log('downloadFile: no cache file, download it')
       }
     }
     

@@ -62,8 +62,8 @@ Page({
     return this.renderLikeCardImage()
   },
   async silentLoadCardData(card){
-    console.log('home page: update card info:', card._id, card.title);
     if(card.setLike) {
+      console.log('home page: update card info:', card._id, card.title);
       this.renderLikeCard(card)
       this.renderLikeCardImage(card)
     }

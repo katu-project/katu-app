@@ -66,6 +66,8 @@ class CardManager extends Base{
         imageData.url = pic._url!
       }else{
         console.log('检测到图片/附加数据修改，重新加密上传')
+        console.log(originImageHash, imageData.hash)
+        console.log(originImageExtraData, card.info)
         const encrytedPic = await this.encryptImage(pic.url, card.info)
         imageData.url = await this.upload(encrytedPic.imagePath)
         imageData.salt = encrytedPic.imageSecretKey
