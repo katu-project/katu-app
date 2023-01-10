@@ -26,6 +26,14 @@ Page({
         tag: options.tag
       })
     }
+    app.on('cardDelete',this.cardDeleteSilentRefresh)
+    app.on('cardChange',this.silentRefresh)
+    app.on('cardDecrypt',this.silentRefresh)
+  },
+  onUnload(){
+    app.off('cardDelete',this.cardDeleteSilentRefresh)
+    app.off('cardChange',this.silentRefresh)
+    app.on('cardDecrypt',this.silentRefresh)
   },
   onReady() {
     this.loadData()
@@ -52,15 +60,49 @@ Page({
       this.loadImage()
     })
   },
-  async loadImage(){
+  cardDeleteSilentRefresh(id){
+    const idx = this.data.list.findIndex(e=>e._id === id)
+    if(idx>=0){
+      this.data.list.splice(idx,1)
+      this.setData({
+        list: this.data.list
+      })
+    }
+  },
+  silentRefresh(card){
+    const idx = this.data.list.findIndex(e=>e._id === card._id)
+    if(idx>=0){
+      console.log('list page: update card info:', card._id, card.title);
+      const setData = {}
+      const originCard = this.data.list[idx]
+      if(originCard.title !== card.title){
+        setData[`list[${idx}].title`] = card.title
+      }
+      if(originCard.tags.toString() !== card.tags.toString()){
+        setData[`list[${idx}].tags`] = card.tags
+      }
+      if(originCard.setLike !== card.setLike){
+        setData[`list[${idx}].setLike`] = card.setLike
+      }
+      if(originCard.image[0].hash !== card.image[0].hash){
+        setData[`list[${idx}].image`] = card.image
+        setData[`list[${idx}]._url`] = card.encrypted ? DefaultShowLockImage : DefaultShowImage
+      }
+      this.setData(setData)
+      this.loadImage(card)
+    }
+  },
+  async loadImage(card?:ICard){
     const setData = {}
-    for (const idx in this.data.list) {
-      const card = this.data.list[idx]
+
+    const renderImage = async (idx,card:ICard)=>{
+      const setData = {}
       if(card.encrypted){
         if(app.user.config?.general.autoShowContent){
           try {
             const picPath = await cardManager.getCardImagePathCache(card.image[0])
             setData[`list[${idx}]._url`] = picPath
+            setData[`list[${idx}]._showEncryptIcon`] = true
           } catch (error) {}
         }
       }else{
@@ -71,6 +113,21 @@ Page({
         }else{
           setData[`list[${idx}]._url`] = tempUrl + app.Config.imageMogr2
         }
+      }
+      return setData
+    }
+
+    if(card){
+      let idx = this.data.list.findIndex(e=>e._id === card._id)
+      if(idx === -1){
+        console.log('不应该进入这里,',card)
+        return
+      }
+      Object.assign(setData, await renderImage(idx, card))
+    }else{
+      for (const idx in this.data.list) {
+        const card = this.data.list[idx]
+        Object.assign(setData, await renderImage(idx, card))
       }
     }
     this.setData(setData)
