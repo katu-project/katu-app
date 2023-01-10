@@ -126,7 +126,7 @@ Page({
         
     if(card){
       let idx = this.data.likeList.findIndex(e=>e._id === card._id)
-      if(!idx){
+      if(idx === -1){
         idx = this.data.likeList.length
       }
       Object.assign(setData, await renderImage(idx, card))
