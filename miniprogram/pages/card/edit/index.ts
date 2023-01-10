@@ -37,10 +37,10 @@ Page({
       this.id = options.id
     }
   },
-  onReady(){
+  async onReady(){
     this.checkSetting()
     if(this.id){
-      this.loadCardData()
+      await loadData(this.loadCardData,{})
     }
   },
   onShow() {
@@ -100,7 +100,7 @@ Page({
     }
   },
   async loadCardData(){
-    const card = await loadData(api.getCard, {_id: this.id})
+    const card = await api.getCard({_id: this.id})
     const setData = {
       edit: true,
       'card._id': card._id,
