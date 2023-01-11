@@ -38,7 +38,7 @@
       </block>
     </view>
   </view>
-  <view hidden="{{!card.info.length}}" class="padding-sm margin-sm br-12" style="border: 1px solid rgb(167, 236, 236);">
+  <view hidden="{{!card.info.length}}" class="padding-sm br-12" style="border: 1px solid rgb(167, 236, 236);">
     <view class="cu-form-group" wx:for="{{card.info}}" data-value="{{item.value}}" bindtap="tapToCopyValue" wx:key="idx">
       <view class="title" style="width: 23vw;">{{item.name}} :</view>
       <input placeholder="{{item.value}}" disabled></input>
@@ -46,7 +46,7 @@
     </view>
   </view>
 
-  <view class="padding-sm flex justify-between align-center">
+  <view class="padding-top flex justify-between align-center">
     <button class="cu-btn text-red bg-red light gfw" bindtap="tapToDeleteCard">
       <text class="cuIcon-delete margin-right-xs"></text>
     删除</button>
@@ -59,7 +59,7 @@
       <text class="cuIcon-share margin-right-xs"></text>
     分享</button>
   </view>
-  <view class="padding"></view>
+  <view class="padding-xl"></view>
 </view>
 
 <view class="cu-modal {{ showShareDialog?'show':''}}">
