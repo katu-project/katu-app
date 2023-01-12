@@ -21,8 +21,7 @@ Page({
       updateTime: '',
       auto_show: false
     } as INotice,
-    isRefresh: false,
-    curTab: 0
+    isRefresh: false
   },
 
   onLoad() {
@@ -214,20 +213,6 @@ Page({
     this.setData({
       [`likeList[${e.currentTarget.dataset.idx}]._url`]: DefaultLoadFailedImage
     })
-  },
-  onBindscrolltoupper(){
-    if(this.data.curTab !== 0){
-      this.setData({
-        curTab: 0
-      })
-    }
-  },
-  onBindscrolltolower(){
-    if(this.data.curTab !== 1){
-      this.setData({
-        curTab: 1
-      })
-    }
   },
   setTabState(){
     this.getTabBar().setData({selected: 0})
