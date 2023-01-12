@@ -38,4 +38,11 @@
       </view>
     </navigator>
   </view>
+  <view class="cu-item arrow">
+    <navigator url="./view/index" hover-class="none">
+      <view class="content">
+        <text class="text-grey">样式</text>
+      </view>
+    </navigator>
+  </view>
 </view>

@@ -32,7 +32,8 @@
     "pages/settings/security/reset-key/index",
     "pages/settings/security/reset-key/qrcode/index",
     "pages/share/index",
-    "pages/about/contact/index"
+    "pages/about/contact/index",
+    "pages/debug/view/index"
   ],
   "window": {
     "backgroundColor": "#ffffff",

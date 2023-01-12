@@ -1,0 +1,82 @@
+<cu-custom bgColor="bg-cyan" isBack="{{true}}">
+  <view slot="backText">返回</view>
+  <view slot="content">二维码</view>
+</cu-custom>
+<!-- enhanced="true" paging-enabled="true" -->
+<scroll-view  scroll-x
+    enhanced
+    paging-enabled
+    show-scrollbar="{{false}}"
+    style="white-space: nowrap;">
+
+  <!-- <view style="width: 200vw;"> -->
+    <view style="width:100vw;display: inline-block;" class="bg-red padding">
+      <scroll-view scroll-y style="height: 50vh;">
+        <view wx:for="1234" wx:key="*this">
+          <image src="/static/weixin.png" style="width: 30vw;height: 30vw;" mode="aspectFill"/>
+        </view>
+      </scroll-view>
+    </view>
+    <view style="width:100vw;height: 20vh;display: inline-block;" class="bg-blue padding">
+      <scroll-view scroll-y style="height: 50vh;">
+        <view wx:for="1234" wx:key="*this">
+          <image src="/static/weixin.png" style="width: 30vw;height: 30vw;" mode="aspectFill"/>
+        </view>
+      </scroll-view>
+    </view>
+  <!-- </view> -->
+  
+    <!-- <view style="width:100vw;height: 20vh;display: inline-block;" class="bg-red padding">
+      <text>nowrap 123</text>
+    </view>
+    <view style="width:100vw;height: 20vh;display: inline-block;" class="bg-blue padding">
+      <text>456</text>
+    </view> -->
+</scroll-view>
+<scroll-view
+      scroll-x 
+      enhanced
+      paging-enabled
+      >
+      <view class="flex-row"
+      style="width: 200vw">
+        <view style="width:100vw;" class="bg-red padding">
+          <scroll-view scroll-y style="height: 50vh;">
+            <view wx:for="1234" wx:key="*this">
+              <image src="/static/weixin.png" style="width: 30vw;height: 30vw;" mode="aspectFill"/>
+            </view>
+          </scroll-view>
+        </view>
+        <view style="width:100vw;" class="bg-blue padding">
+          <scroll-view scroll-y style="height: 50vh;">
+            <view wx:for="1234" wx:key="*this">
+              <image src="/static/weixin.png" style="width: 30vw;height: 30vw;" mode="aspectFill"/>
+            </view>
+          </scroll-view>
+        </view>
+      </view>
+  </scroll-view>
+<view class="padding">
+  flex
+</view>
+<!-- <scroll-view scroll-x enable-flex enhanced="true" paging-enabled="true"  class="flex-row bg-cyan">
+    <view style="width:50vw;height: 20vh;" class="bg-red padding">
+      <text>flex 123</text>
+    </view>
+    <view style="width:40vw;height: 20vh;" class="bg-blue padding">
+      <text>456</text>
+    </view>
+</scroll-view> -->
+<view class="padding">
+  flex
+</view>
+<scroll-view scroll-x enhanced paging-enabled>
+  <view class="flex-row" style="width: 200vw;">
+    <view style="width:100vw;height: 20vh;" class="bg-red padding">
+      <text> flex main view 123</text>
+    </view>
+    <view style="width:100vw;height: 20vh;" class="bg-blue padding">
+      <text>456</text>
+    </view>
+  </view>
+</scroll-view>
