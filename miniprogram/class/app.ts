@@ -475,13 +475,6 @@ class AppManager extends Base {
     return tempUrl
   }
 
-  setHomeRefresh(){
-    const pages = getCurrentPages()
-    const homePage = pages.find(page=>page.route ===  `pages/${APP_ENTRY_PATH}`)
-    if(!homePage) return
-    homePage.backData = {refresh:true}
-  }
-
   async imageContentCheck({imagePath}){
     const hash = await getCardManager().getHash(imagePath)
     const tempFilePath = `tmp/image_${hash}`

@@ -25,14 +25,14 @@ Page({
   },
 
   onLoad() {
-    app.on('cardChange',this.silentLoadCardData)
-    app.on('cardDelete',this.silentRemoveCardData)
-    app.on('cardDecrypt',this.silentLoadCardData)
+    app.on('cardChange',this.onEventCardChange)
+    app.on('cardDelete',this.onEventCardDelete)
+    app.on('cardDecrypt',this.onEventCardChange)
   },
   onUnload(){
-    app.off('cardChange',this.silentLoadCardData)
-    app.off('cardDelete',this.silentRemoveCardData)
-    app.off('cardDecrypt',this.silentLoadCardData)
+    app.off('cardChange',this.onEventCardChange)
+    app.off('cardDelete',this.onEventCardDelete)
+    app.off('cardDecrypt',this.onEventCardChange)
   },
   async onReady() {
     await loadData(user.init,{},'加载用户数据')
@@ -60,20 +60,27 @@ Page({
     })
     return this.renderLikeCardImage()
   },
-  async silentLoadCardData(card){
-    if(card.setLike) {
-      console.log('home page: update card info:', card._id, card.title);
+  // 修改名称，图片，喜爱
+  async onEventCardChange(card){
+    const idx = this.data.likeList.findIndex(e=>e._id === card._id)
+    const findCard = this.data.likeList[idx]
+    console.log('home page: update card info:', card._id, card.title);
+    if(findCard){
+      if(card.setLike){
+        this.renderLikeCard(card)
+        this.renderLikeCardImage(card)
+      }else{
+        this._removeLikeListCard(idx)
+      }
+    }else{
       this.renderLikeCard(card)
       this.renderLikeCardImage(card)
     }
   },
-  silentRemoveCardData(id){
+  onEventCardDelete(id){
     const idx = this.data.likeList.findIndex(e=>e._id === id)
     if(idx !== -1){
-      this.data.likeList.splice(idx,1)
-      this.setData({
-        likeList: this.data.likeList
-      })
+      this._removeLikeListCard(idx)
       console.log('静默移除卡片：',id)
     }
   },
@@ -161,6 +168,12 @@ Page({
         this.tapToShowNotice()
       }
     }).catch(console.warn)
+  },
+  _removeLikeListCard(idx:number){
+    this.data.likeList.splice(idx,1)
+    this.setData({
+      likeList: this.data.likeList
+    })
   },
   tapToMarkRead(){
     if(!this.data.notice._id) {

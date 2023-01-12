@@ -33,7 +33,7 @@ Page({
   onUnload(){
     app.off('cardDelete',this.cardDeleteSilentRefresh)
     app.off('cardChange',this.silentRefresh)
-    app.on('cardDecrypt',this.silentRefresh)
+    app.off('cardDecrypt',this.silentRefresh)
   },
   onReady() {
     this.loadData()

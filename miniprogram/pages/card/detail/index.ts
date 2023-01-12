@@ -111,10 +111,8 @@ Page({
   tapToSetLike(){
     const state = !this.data.card.setLike
     loadData(api.setCardLike,{id:this.id,state}).then(()=>{
-      this.setData({
-        'card.setLike': state
-      })
-      app.setHomeRefresh()
+      this.data.card.setLike = state
+      app.emit('cardChange', this.data.card)
     })
   },
   checkActionUsability(){
