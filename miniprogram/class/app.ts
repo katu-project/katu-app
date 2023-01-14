@@ -487,6 +487,9 @@ class AppManager extends Base {
     }
     throw new Error("内容检测超时，请稍后重试")
   }
+  async textContentsafetyCheck(text){
+    return api.textContentSafetyCheck({text})
+  }
 }
 
 function getAppManager(){

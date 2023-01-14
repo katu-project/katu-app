@@ -1,4 +1,4 @@
-import { navigateBack, showError } from '@/utils/index'
+import { loadData, navigateBack, showChoose, showError } from '@/utils/index'
 import { getAppManager } from '@/class/app'
 const app = getAppManager()
 
@@ -70,12 +70,18 @@ Page({
 
     this.setData(setData)
   },
-  tapToSave(){
+  async tapToSave(){
     if(this.data.extraFields.some(field=>!field.value || !field.name)){
       showError('填写有误')
       return
     }
     const extraFields = JSON.stringify(app.condenseExtraFields(this.data.extraFields))
+    const checkText = this.data.extraFields.map(e=>e.key === 'cu'? `${e.name}${e.value}`: e.value).join('')
+    const {checkPass} = await loadData(app.textContentsafetyCheck,checkText)
+    if(checkPass){
+      showChoose("系统提示","数据似乎存在不适内容",{showCancel:false})
+      return
+    }
     navigateBack({backData: {[this.returnContentKey]: extraFields}})
   }
 })

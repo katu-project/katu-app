@@ -69,5 +69,6 @@ export default {
   getCateDoc: (cate:string) => request<IAnyObject[]>('doc/getDoc', {field:{title: true}, where: {type: 2, cate}}),
 
   // data check
-  imageContentSafetyCheck: data => request<{checkEnd:boolean,checkPass:boolean}>('card/dataCheck', data)
+  imageContentSafetyCheck: data => request<{checkEnd:boolean,checkPass:boolean}>('card/dataCheck', data),
+  textContentSafetyCheck: (data:{text:string}) => request<{checkPass:boolean}>('app/textContentCheck', data)
 }
