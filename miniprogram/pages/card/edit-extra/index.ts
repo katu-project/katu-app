@@ -71,7 +71,7 @@ Page({
     this.setData(setData)
   },
   tapToSave(){
-    if(this.data.extraFields.some(field=>!field.value)){
+    if(this.data.extraFields.some(field=>!field.value || !field.name)){
       showError('填写有误')
       return
     }
