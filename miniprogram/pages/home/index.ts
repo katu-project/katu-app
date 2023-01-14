@@ -73,8 +73,10 @@ Page({
         this._removeLikeListCard(idx)
       }
     }else{
-      this.renderLikeCard(card)
-      this.renderLikeCardImage(card)
+      if(card.setLike){
+        this.renderLikeCard(card)
+        this.renderLikeCardImage(card)
+      }
     }
   },
   onEventCardDelete(id){
