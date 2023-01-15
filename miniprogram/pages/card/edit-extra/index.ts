@@ -78,7 +78,7 @@ Page({
     const extraFields = JSON.stringify(app.condenseExtraFields(this.data.extraFields))
     const checkText = this.data.extraFields.map(e=>e.key === 'cu'? `${e.name}${e.value}`: e.value).join('')
     const {checkPass} = await loadData(app.textContentsafetyCheck,checkText)
-    if(checkPass){
+    if(!checkPass){
       showChoose("系统提示","数据似乎存在不适内容",{showCancel:false})
       return
     }
