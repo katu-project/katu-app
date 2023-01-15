@@ -78,15 +78,25 @@ export default class User extends Base {
     }
   }
 
-  async syncTag(tags:ICardTag[]){
-    try {
-      await api.updateTag(tags)
-      return utils.objectSetValue(this.user, 'customTag', tags)
-    } catch (error) {
-      console.warn('syncTag:',error.message)
-      await this.reloadInfo()
-      throw new Error("修改失败")
+  async getTags(){
+    return api.getUserTag()
+  }
+
+  async deleteTag(_id: string){
+    return api.deleteTag({_id})
+  }
+
+  async createTag(tag: Pick<ICardTag,'name'>){
+    const checkText = tag.name
+    const {checkPass} = await getAppManager().textContentsafetyCheck(checkText)
+    if(!checkPass){
+      throw new Error("数据似乎存在不适内容")
     }
+    return api.createTag(tag.name)
+  }
+
+  async updateTag(tag: Pick<ICardTag,'color'|'_id'>){
+    return api.updateTag(tag)
   }
 
   async uploadAvatar(filePath){

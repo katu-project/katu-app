@@ -17,11 +17,15 @@ export default {
 
   updateUserProfile: (data:any) => request('user/updateProfile', data),
   
-  deleteTag: (name:string) => request('user/tagDelete', {name}),
+  // user custom tag
+  getUserTag: () => request<ICardTag[]>('user/tags', {}),
 
-  createTag: (name:string) => request('user/tagCreate', {name}),
+  deleteTag: (data:{_id:string}) => request('user/tagDelete', data),
 
-  updateTag: (tags:any) => request('user/tagUpdate', {tags}),
+  createTag: (name:string) => request<{_id:string,name:string}>('user/tagCreate', {name}),
+
+  updateTag: (tag:Partial<ICardTag>) => request('user/tagUpdate', tag),
+  // user custom tag end
 
   getUser: () => request<IUser>('user/getUser'),
 

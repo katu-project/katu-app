@@ -61,6 +61,7 @@ interface CreateShareOptions {
 }
 
 interface ICardTag {
+  _id?: string
   name: string
   color?: string
   selected?: Boolean

@@ -21,7 +21,7 @@
   <view class="padding-top-xl text-center text-gray" wx:if="{{!list.length}}">暂无自定义标签</view>
 
   <view class="padding-tb flex flex-wrap">
-    <view class="padding-tb-sm padding-lr margin-sm light bg-{{ selectedTagIdx === index ? tempTagColor:item.color || 'blue'}} {{selectedTagIdx===index? 'selected':''}} br-14" data-idx="{{index}}" bindtap="tapToDeleteTag" bindlongpress="tapToShowSetColor" wx:for="{{list}}" wx:key="name">
+    <view class="padding-tb-sm padding-lr margin-sm light bg-{{ selectedTagIdx === index ? tempTagColor:item.color || 'blue'}} {{selectedTagIdx===index? 'selected':''}} br-14" data-idx="{{index}}" bindtap="tapToDeleteTag" bindlongpress="tapToShowSetColor" wx:for="{{list}}" wx:key="_id">
       <text class="">{{item.name}}</text>
     </view>
   </view>
