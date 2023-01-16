@@ -48,6 +48,15 @@ export async function writeFile(filePath, fileData, encoding?: string){
   return toPromise(writeFile, options)
 }
 
+export async function copyFile(srcPath, destPath){
+  const copyFile = args => wx.getFileSystemManager().copyFile(args)
+  const options = {
+    srcPath,
+    destPath
+  }
+  return toPromise(copyFile, options)
+}
+
 export async function checkAccess(path: string) {
   const checkAccess = args => wx.getFileSystemManager().access(args)
   const options = {path}
@@ -133,6 +142,7 @@ export default {
   readFile,
   deleteFile,
   writeFile,
+  copyFile,
   readDir,
   checkAccess,
   getStats,
