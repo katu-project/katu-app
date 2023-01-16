@@ -50,6 +50,7 @@ Page({
           this.setData({
             list: this.data.list
           })
+          user.loadCustomTags()
         })
       }
     })
@@ -79,6 +80,7 @@ Page({
     this.setData({
       [`list[${this.data.list.length}]`]: {name: res.name, _id: res._id}
     })
+    user.loadCustomTags()
   },
   tapToShowSetColor(e){
     const idx = parseInt(e.currentTarget.dataset.idx)
@@ -103,6 +105,7 @@ Page({
           [`list[${this.data.selectedTagIdx}].color`]: tag.color
         })
         this.hideSetColor()
+        user.loadCustomTags()
       })
     }
   },

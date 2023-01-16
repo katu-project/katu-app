@@ -43,7 +43,7 @@ export const AppConfig = {
     { name: '购物卡' },
     { name: '名片' },
     { name: '其他' }
-  ],
+  ] as ICardTag[],
   extraFieldsKeys: [
     {
       key: 'cn',

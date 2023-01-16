@@ -5,6 +5,7 @@ import { getAppManager } from "@/class/app";
 
 export default class User extends Base {
   _user: Partial<IUser> = {}
+  _customTags: ICardTag[] = []
 
   constructor(){
     super()
@@ -16,6 +17,7 @@ export default class User extends Base {
       console.log("启用记住密码: 加载主密码");
       getAppManager().loadMasterKey()
     }
+    this.loadCustomTags()
     this.loadOnAppHideConfig()
   }
 
@@ -24,7 +26,7 @@ export default class User extends Base {
   }
 
   get tags(){
-    return this.user.customTag
+    return this._customTags
   }
 
   get isActive():boolean{
@@ -65,6 +67,10 @@ export default class User extends Base {
     if(encrypted && canUseEncryptedCardCount) return
     if(!encrypted && canUseCardCount) return
     throw Error('创建卡片额度不足')
+  }
+
+  async loadCustomTags(){
+    this._customTags = await api.getUserTag()
   }
 
   async applyConfig(configItem:{key:string,value:string}){
