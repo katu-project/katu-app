@@ -276,6 +276,10 @@ class CardManager extends Base{
     return this.app.getLocalFilePath(image.salt, suffix)
   }
 
+  async getDecryptedImageLocalSavePath(image: Pick<ICardImage, 'salt'>){
+    return this._genCardImagePath(image,'dec')
+  }
+
   async _removeCardImageCache(image: ICardImage){
     const imageTypes: ('down'|'dec'|'enc')[] = ['dec', 'enc', 'down']
     for (const type of imageTypes) {

@@ -4,6 +4,7 @@ import api from '@/api'
 import { getCardManager } from '@/class/card'
 import { getAppManager } from '@/class/app'
 import { getUserManager } from '@/class/user'
+import { copyFile } from '@/utils/file'
 const app = getAppManager()
 const cardManager = getCardManager()
 const user = getUserManager()
@@ -206,6 +207,7 @@ Page({
             .finally(this.saveFinish)
   },
   async saveDone(card){
+    await this.preLoadEncrypted(card)
     app.emit('cardChange',card)
     showChoose('操作成功','卡片数据已保存',{showCancel: false}).then(()=>{
       navigateBack()
@@ -215,6 +217,21 @@ Page({
     showChoose('保存卡片出错',error.message)
   },
   async saveFinish(){
+  },
+  async preLoadEncrypted(card:ICard){
+    if(card.encrypted){
+      for (const idx in card.image) {
+        const image = card.image[idx]
+        const srcPath = this.data.card.image[idx].url
+        try {
+          await cardManager.getCardImagePathCache(image)
+        } catch (error) {
+          const destPath = await cardManager.getDecryptedImageLocalSavePath(card.image[idx])
+          await copyFile(srcPath,destPath)
+          await cardManager.cacheLabelData(destPath, this.data.card.info)
+        }
+      }
+    }
   },
   showInputKey(){
     this.setData({
