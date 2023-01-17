@@ -5,108 +5,107 @@ const app = getAppManager()
 const user = getUserManager()
 
 Page({
-  _canvasCtx: '',
+  _canvasCtx: {} as IAnyObject,
   data: {
     setRecoveryKey: false,
     recoveryKeyId: '0000',
     readyExport: false
   },
-  onLoad(options) {
+  onLoad() {
 
   },
   onReady() {
   },
-  onShow() {
+  async onShow() {
     const setData = {
       setRecoveryKey: false,
       recoveryKeyId: ''
     }
-    if(app.user.config?.security.setRecoveryKey){
-      setData.setRecoveryKey = app.user.config.security.setRecoveryKey
+    if(user.config?.security.setRecoveryKey){
+      setData.setRecoveryKey = user.config.security.setRecoveryKey
     }
-    if(app.user.recoveryKeyPack?.qrId){
-      setData.recoveryKeyId = app.user.recoveryKeyPack.qrId
+    if(user.baseInfo.recoveryKeyPack?.qrId){
+      setData.recoveryKeyId = user.baseInfo.recoveryKeyPack.qrId
     }
     this.setData(setData)
-    this.initCanvasContent()
+    await this.initCanvas()
+    this.initCanvasContent(this._canvasCtx)
   },
   async initCanvas(){
-    if(this._canvasCtx) return this._canvasCtx
+    if(this._canvasCtx?.__inited) return this._canvasCtx
     return new Promise((resolve)=>{
       wx.createSelectorQuery()
-      .select('#reqrcode') // 在 WXML 中填入的 id
+      .select('#reqrcode')
       .fields({ node: true, size: true })
       .exec((res) => {
           // Canvas 对象
           const canvas = res[0].node
-          // const renderWidth = res[0].width
-          // const renderHeight = res[0].height
+          const renderWidth = res[0].width
+          const renderHeight = res[0].height
           // Canvas 绘制上下文
           this._canvasCtx = canvas.getContext('2d')
           // 初始化画布大小
-          // const dpr = wx.getWindowInfo().pixelRatio
-          // console.log({dpr,renderWidth,renderHeight},this._canvasCtx.canvas);
-          // canvas.width = renderWidth * dpr
-          // canvas.height = renderHeight * dpr
-          // this._canvasCtx.scale(dpr, dpr)
-          canvas.width = 300
-          canvas.height = 400
+          const dpr = wx.getWindowInfo().pixelRatio
+          console.log({dpr,renderWidth,renderHeight});
+          canvas.width = renderWidth * dpr
+          canvas.height = renderHeight * dpr
+          this._canvasCtx.__width = renderWidth
+          this._canvasCtx.__height = renderHeight
+          this._canvasCtx.scale(dpr,dpr)
+          this._canvasCtx.__inited = true
           resolve(this._canvasCtx)
       })
     })
   },
-  async initCanvasContent(){
+  async initCanvasContent(ctx){
     await showLoading('检查数据',1000)
 
-    const ctx = await this.initCanvas()
-    this.setCanvasBg(ctx, '#ccefee')
-
+    this.setCanvasBg(ctx, '#ccefee', this._canvasCtx.__height, this._canvasCtx.__width)
+    const textX = this._canvasCtx.__width / 2
     if(!this.data.setRecoveryKey){
-      this.drawNotice(ctx, '还未设置主密码重置凭证','red')
-      this.drawNotice(ctx, `点击下方按钮开始设置`,'grey',175)
+      this.drawNotice(ctx, '还未设置主密码重置凭证','red', textX, 135)
+      this.drawNotice(ctx, `点击下方按钮开始设置`,'grey',textX, 175)
     }else{
-      this.drawNotice(ctx, '已设置过主密码重置凭证','green')
-      this.drawNotice(ctx, `凭证ID: ${this.data.recoveryKeyId}`,'green',175)
+      this.drawNotice(ctx, '已设置过主密码重置凭证','green', textX, 135)
+      this.drawNotice(ctx, `凭证ID: ${this.data.recoveryKeyId}`,'green', textX, 175)
     }
-
-    this.setData({
-      showCanvas: true
-    })
   },
-  async setCanvasBg(ctx, color){
+  async setCanvasBg(ctx, color, dx, dy){
     ctx.fillStyle = color || '#ccefee'
-    ctx.fillRect(0, 0, 300, 400)
+    ctx.fillRect(0, 0, dx, dy)
   },
-  async drawNotice(ctx, text, color, h?: number){
+  async drawNotice(ctx, text, color, dx, dy){
     ctx.fillStyle = color
     ctx.font = '20px serif'
-    ctx.textAlign = 'center';
-    ctx.fillText(text, 150, h || 135)
+    ctx.textAlign = 'center'
+    ctx.fillText(text, dx, dy)
   },
   async drawRecoveryKey(ctx, qrData){
+    const rx = this._canvasCtx.__width/300
+    const ry = this._canvasCtx.__height/400
     const id = qrData.i
     const time = qrData.t
     const text = JSON.stringify(qrData)
     
     ctx.fillStyle = '#ccefee';
-    ctx.fillRect(0, 0, 300, 400)
+    ctx.fillRect(0, 0, 300*rx, 400*ry)
     
     ctx.fillStyle = '#f94747'
     ctx.font = '25px serif'
     ctx.textAlign = 'center';
-    ctx.fillText('主密码重置凭证', 150, 35)
+    ctx.fillText('主密码重置凭证', 150*rx, 35*ry)
 
     ctx.fillStyle = '#ffffff';
-    ctx.fillRect(30, 60, 240, 240)
+    ctx.fillRect(30*rx, 60*ry, 240*rx, 240*ry)
 
     ctx.strokeStyle = 'green'
     ctx.lineWidth = 2
-    ctx.strokeRect(49, 79, 202, 202)
+    ctx.strokeRect(49*rx, 79*ry, 202*rx, 202*ry)
     qrcode({
-      x: 50,
-      y: 80,
-      width: 200,
-      height: 200,
+      x: 50*rx,
+      y: 80*ry,
+      width: 200*rx,
+      height: 200*ry,
       ctx: ctx,
       text: text,
       background: 'green',
@@ -120,34 +119,32 @@ Page({
       //   dHeight: 60
       // }
       callback(...e) {
-        // console.log('e: ', e)
+        console.log('qrcode: ', e)
       }
     })
 
     ctx.fillStyle = '#5d5d5d'
     ctx.font = '20px serif'
     ctx.textAlign = 'center'
-    ctx.fillText(`ID_${id} ${time}`,150, 335)
+    ctx.fillText(`ID_${id} ${time}`,150*rx, 335*ry)
 
-    const bottom = await this.getImageData('../../../../static/qrcode-bottom.png')
-    // console.log(bottom,1);
-    // ctx.fillStyle = '#ff00ff';
-    // ctx.fillRect(0, 350, 300, 10)
-    ctx.putImageData(bottom, 0, ctx.canvas.height - bottom.height,1,1,bottom.width-2,bottom.height)
+    const bottomImage = await this.getImageCanvas('../../../../static/qrcode-bottom.png')
+    ctx.drawImage(
+        bottomImage,
+        1,1,
+        bottomImage.width - 2, bottomImage.height - 2,
+        1+ (this._canvasCtx.__width - bottomImage.width)/2 ,this._canvasCtx.__height - bottomImage.height + 1,
+        bottomImage.width - 2, bottomImage.height - 2
+    )
   },
-  async getImageData(url){
-    const offscreenCanvas = wx.createOffscreenCanvas({type: '2d'})
-		const image = offscreenCanvas.createImage()
+  async getImageCanvas(url){
+		const image = wx.createOffscreenCanvas({type: '2d'}).createImage()
 		await new Promise(function (resolve, reject) {
 			image.onload = resolve
 			image.onerror = reject
 			image.src = url
     })
-		offscreenCanvas.width = image.width
-    offscreenCanvas.height = image.height
-    const ctx = offscreenCanvas.getContext('2d')
-    ctx.drawImage(image, 0, 0, image.width, image.height)
-    return ctx.getImageData(0, 0, offscreenCanvas.width, offscreenCanvas.height)
+    return image
   },
   async getCanvasImage(){
     return new Promise((resolve,reject)=>{
@@ -166,16 +163,7 @@ Page({
     })    
   },
   async genCert(){
-    try {
-      app.checkMasterKey()
-    } catch (error) {
-      if(error.code[0] === '2'){
-        this.showInputKey()
-      }else{
-        showChoose('主密码出错',error.message)
-      }
-      return
-    }
+    await showLoading('请稍等')
     const qrData = await app.generateRecoveryKeyQrcodeContent()
     const canvasCtx = await this.initCanvas()
     await this.drawRecoveryKey(canvasCtx, qrData)
@@ -191,8 +179,18 @@ Page({
   },
   async tapToGenKey(){
     if(this.data.setRecoveryKey){
-      const {cancel} = await showChoose("警告！","重新导出新凭证会使已有凭证失效",{confirmText: '仍然继续'})
-      if(cancel) return
+      const {confirm} = await showChoose("警告！","导出新凭证会使已有凭证失效",{confirmText: '仍然继续'})
+      if(!confirm) return
+    }
+    try {
+      app.checkMasterKey()
+    } catch (error) {
+      if(error.code[0] === '2'){
+        this.showInputKey()
+      }else{
+        showChoose('主密码出错',error.message)
+      }
+      return
     }
     this.genCert()
   },
@@ -206,7 +204,7 @@ Page({
         this.setData({
           readyExport: false
         })
-        this.initCanvasContent().then(()=>{
+        this.initCanvasContent(this._canvasCtx).then(()=>{
           showSuccess("保存成功")
         })
       },
