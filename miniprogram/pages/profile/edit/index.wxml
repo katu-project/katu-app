@@ -5,7 +5,7 @@
 
 <view class="flex-col justify-center align-center padding margin-top-lg">
   <view style="border: 1px solid rgb(158, 184, 184);padding: 1rpx;" class="flex-col br-16">
-    <image src="{{url}}" class="br-16" mode="aspectFit" style="height:200rpx;width:200rpx;"></image>
+    <image src="{{url||'/static/images/default-avatar.png'}}" class="br-16" mode="aspectFit" style="height:200rpx;width:200rpx;"></image>
   </view>
 
   <button class="cu-btn line-cyan margin-top" style="width: 200rpx;" open-type="chooseAvatar" bindchooseavatar="onBindChooseAvatar">编辑头像</button>

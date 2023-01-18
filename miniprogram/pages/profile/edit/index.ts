@@ -22,7 +22,7 @@ Page({
   },
   nameInput(e){
     const setData = {
-      name: e.detail.value
+      name: e.detail.value.trim()
     }
     if(setData.name !== this.originData.name){
       setData['dataChange'] = true
@@ -38,21 +38,24 @@ Page({
     })
   },
   async tapToSaveUserInfo(){
-    if(this.data.name == this.originData.name && this.data.url == this.originData.url) {
+    const nickName = this.data.name
+    if(nickName === this.originData.name && this.data.url == this.originData.url) {
       showNotice('数据无变动!')
       return
     }
-    if(this.data.name.length>8){
-      showError("昵称长度有误")
-      return 
+    const userData = {}
+
+    if(nickName !== this.originData.name){
+      if(nickName.length>8){
+        showError("昵称长度有误")
+        return 
+      }
+      userData['name'] = nickName
     }
-    const userData = {
-      name: this.data.name,
-      url: this.data.url
-    }
-    if(!this.data.url.startsWith('https') && !this.data.url.startsWith('cloud:')){
+    
+    if(this.data.url && !this.data.url.startsWith('https') && !this.data.url.startsWith('cloud:')){
       const url = await loadData(user.uploadAvatar, this.data.url, '正在上传头像')
-      userData.url = url
+      userData['url'] = url
     }
     
     loadData(api.updateUserProfile, userData, '正在保存信息').then(()=>{
