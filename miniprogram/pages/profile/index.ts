@@ -46,19 +46,10 @@ Page({
   
   async tapToActiveAccount(){
     showLoading('等待获取授权')
-    wx.getUserProfile({
-      desc: '用于完善会员资料',
-      success: ({cloudID}) => {
-        loadData(api.activeAccount, {cloudId: cloudID}).then(()=>{
-          showSuccess("激活成功")
-          this.reloadUserInfo()
-          this.hideActiveNotice()
-        })
-      },
-      fail: () => {
-        showNotice('取消授权')
-      }
-    })
+    await loadData(user.activeAccount, {}, '正在激活账号')
+    showSuccess("激活成功")
+    this.reloadUserInfo()
+    this.hideActiveNotice()
   },
 
   reloadUserInfo(){
@@ -89,7 +80,7 @@ Page({
       app.navToDoc(this.data.activeInfo.tip)
     }
   },
-
+  // 点击设置按钮
   tapToItem(e){
     const item = e.currentTarget.dataset.item
     navigateTo(item.url || item)

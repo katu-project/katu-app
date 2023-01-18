@@ -10,7 +10,7 @@
   <view class="margin-bottom padding shadow flex-col align-start br-14" style="background-color: cadetblue;">
     <view class="flex">
       <view class="bg-gray light flex br-14" style="padding:4rpx">
-        <image src="{{user.isActive? user.avatarUrl:'/static/images/user.svg'}}" bindtap="tapToEditInfo" class="br-10" style="height: 160rpx; width: 160rpx;"></image>
+        <image src="{{user.isActive? user.avatarUrl || '/static/images/default-avatar.png' :'/static/images/user.svg'}}" bindtap="tapToEditInfo" class="br-10" style="height: 160rpx; width: 160rpx;"></image>
       </view>
       <view class="margin-left flex-col justify-between padding-top-xs">
         <view wx:if="{{user.isActive}}" class="flex justify-between align-center">

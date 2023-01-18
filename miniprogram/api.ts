@@ -31,7 +31,7 @@ export default {
 
   markRead: (id: string) => request('user/markRead',{id}),
 
-  activeAccount: (data:any) => request('user/active', wx.cloud.CloudID(data.cloudId)),
+  activeAccount: (data:any) => request('user/active', data),
 
   removeAccount: () => request('user/removeAccount'),
   

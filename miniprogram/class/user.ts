@@ -137,6 +137,10 @@ export default class User extends Base {
       }
     })
   }
+
+  async activeAccount(){
+    return api.activeAccount({})
+  }
 }
 
 
