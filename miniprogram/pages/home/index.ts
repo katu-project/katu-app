@@ -106,7 +106,6 @@ Page({
     this.setData(setData)
   },
   async renderLikeCardImage(card?:ICard){
-    let setData = {}
 
     const renderImage = async (idx,card:ICard)=>{
       const setData = {}
@@ -132,19 +131,39 @@ Page({
       return setData
     }
         
+    const newSetData = (count) => {
+      let dataSets: any[] = []
+      let doIdx = 0
+      return setData => {
+        dataSets.push(setData)
+        doIdx ++
+        if(dataSets.length%4 === 0){
+          this.setData(dataSets.reduce((a,b)=>Object.assign(a,b)))
+          console.log('set part Data:',doIdx, dataSets)
+          dataSets = []
+        }else if(doIdx === count){
+          this.setData(dataSets.reduce((a,b)=>Object.assign(a,b)))
+          console.log('set end Data:',doIdx ,dataSets)
+        }
+      }
+    }
+
     if(card){
       let idx = this.data.likeList.findIndex(e=>e._id === card._id)
       if(idx === -1){
         idx = this.data.likeList.length
       }
-      Object.assign(setData, await renderImage(idx, card))
+      this.setData(await renderImage(idx, card))
     }else{
+      const _setData = newSetData(this.data.likeList.length)
       for (const idx in this.data.likeList) {
         const card = this.data.likeList[idx]
-        Object.assign(setData, await renderImage(idx, card))
+        renderImage(idx, card).then(setData=>{
+          _setData(setData)
+          // this.setData(setData)
+        })
       }
     }
-    this.setData(setData)
   },
   async loadCateList(){
     const cateList = await loadData(api.getCardSummary)
