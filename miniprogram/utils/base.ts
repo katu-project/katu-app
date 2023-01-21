@@ -32,8 +32,27 @@ export function objectSetValue(obj,path,value) {
   obj[path[i]] = value;
 }
 
+export function createAdvSetData(originSetData,dataCount:number,gap?:number){
+  let dataSets: any[] = []
+  let doIdx = 0
+  gap = gap || 4
+  return function(setData){
+    dataSets.push(setData)
+    doIdx ++
+    if(dataSets.length % gap! === 0){
+      originSetData(dataSets.reduce((a,b)=>Object.assign(a,b)))
+      console.warn('adv setData part:',dataSets.length)
+      dataSets = []
+    }else if(doIdx === dataCount){
+      originSetData(dataSets.reduce((a,b)=>Object.assign(a,b)))
+      console.warn('adv setData end:',dataSets.length,gap)
+    }
+  }
+}
+
 export default {
   sleep,
   selfish,
-  objectSetValue
+  objectSetValue,
+  createAdvSetData
 }

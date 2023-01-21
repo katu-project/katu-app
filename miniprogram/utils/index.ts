@@ -1,4 +1,4 @@
-import { selfish, objectSetValue } from './base'
+import { selfish, objectSetValue, createAdvSetData } from './base'
 import { request } from './net'
 import * as crypto from './crypto'
 import * as file from './file'
@@ -8,7 +8,7 @@ import { UPNG as upng } from './upng'
 import * as bip39 from './bip39/index'
 import { drawQrcode as qrcode } from './qrcode/index'
 
-export { selfish, objectSetValue } from './base'
+export { selfish, objectSetValue, createAdvSetData } from './base'
 export { request } from './net'
 export * as crypto from './crypto'
 export * as file from './file'
@@ -23,6 +23,7 @@ export * from './cache'
 export default {
   selfish,
   objectSetValue,
+  createAdvSetData,
   crypto,
   file,
   convert,
