@@ -1,4 +1,4 @@
-import { loadData, navigateTo, showNotice } from '@/utils/index'
+import { loadData, navigateTo, showNotice, createAdvSetData } from '@/utils/index'
 import { DefaultShowLockImage, DefaultShowImage, APP_ENTRY_PATH, DefaultLoadFailedImage } from '@/const'
 import api from '@/api'
 import { getAppManager } from '@/class/app'
@@ -135,23 +135,6 @@ Page({
       }
       return setData
     }
-        
-    const newSetData = (count) => {
-      let dataSets: any[] = []
-      let doIdx = 0
-      return setData => {
-        dataSets.push(setData)
-        doIdx ++
-        if(dataSets.length%4 === 0){
-          this.setData(dataSets.reduce((a,b)=>Object.assign(a,b)))
-          console.log('set part Data:',doIdx, dataSets)
-          dataSets = []
-        }else if(doIdx === count){
-          this.setData(dataSets.reduce((a,b)=>Object.assign(a,b)))
-          console.log('set end Data:',doIdx ,dataSets)
-        }
-      }
-    }
 
     if(card){
       let idx = this.data.likeList.findIndex(e=>e._id === card._id)
@@ -160,12 +143,11 @@ Page({
       }
       this.setData(await renderImage(idx, card))
     }else{
-      const _setData = newSetData(this.data.likeList.length)
+      const advSetData = createAdvSetData(this.setData.bind(this), this.data.likeList.length)
       for (const idx in this.data.likeList) {
         const card = this.data.likeList[idx]
         renderImage(idx, card).then(setData=>{
-          _setData(setData)
-          // this.setData(setData)
+          advSetData(setData)
         })
       }
     }
