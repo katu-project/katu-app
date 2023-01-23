@@ -22,14 +22,14 @@ Page({
         tag: options.tag
       })
     }
-    app.on('cardDelete',this.cardDeleteSilentRefresh)
-    app.on('cardChange',this.silentRefresh)
-    app.on('cardDecrypt',this.silentRefresh)
+    app.on('cardDelete',this.onEventCardDelete)
+    app.on('cardChange',this.onEventCardChange)
+    app.on('cardDecrypt',this.onEventCardChange)
   },
   onUnload(){
-    app.off('cardDelete',this.cardDeleteSilentRefresh)
-    app.off('cardChange',this.silentRefresh)
-    app.off('cardDecrypt',this.silentRefresh)
+    app.off('cardDelete',this.onEventCardDelete)
+    app.off('cardChange',this.onEventCardChange)
+    app.off('cardDecrypt',this.onEventCardChange)
   },
   onReady() {
     this.loadData()
@@ -52,7 +52,7 @@ Page({
       this.loadImage()
     })
   },
-  cardDeleteSilentRefresh(id){
+  onEventCardDelete(id){
     const idx = this.data.list.findIndex(e=>e._id === id)
     if(idx>=0){
       this.data.list.splice(idx,1)
@@ -61,7 +61,7 @@ Page({
       })
     }
   },
-  silentRefresh(card){
+  onEventCardChange(card){
     const idx = this.data.list.findIndex(e=>e._id === card._id)
     if(idx>=0){
       console.log('list page: update card info:', card._id, card.title);
@@ -138,7 +138,7 @@ Page({
   tapToCardDetail(e){
     navigateTo(`../detail/index?id=${e.currentTarget.dataset.key}`)
   },
-  tapToCloseFilter(e){
+  tapToCloseFilter(){
     this.setData({
       key: ''
     })
