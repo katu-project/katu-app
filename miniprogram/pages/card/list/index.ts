@@ -86,40 +86,17 @@ Page({
   },
   async loadImage(card?:ICard){
     const setData = {}
-
-    const renderImage = async (idx,card:ICard)=>{
-      const setData = {}
-      if(card.encrypted){
-        if(app.user.config?.general.autoShowContent){
-          try {
-            const picPath = await cardManager.getCardImagePathCache(card.image[0])
-            setData[`list[${idx}]._url`] = picPath
-            setData[`list[${idx}]._showEncryptIcon`] = true
-          } catch (error) {}
-        }
-      }else{
-        const tempUrl = await app.getCloudFileTempUrl(card.image[0].url)
-        if(tempUrl.startsWith('/')){
-          setData[`list[${idx}]._url`] = tempUrl
-          setData[`list[${idx}]._mode`] = 'scaleToFill'
-        }else{
-          setData[`list[${idx}]._url`] = tempUrl + app.Config.imageMogr2
-        }
-      }
-      return setData
-    }
-
     if(card){
       let idx = this.data.list.findIndex(e=>e._id === card._id)
       if(idx === -1){
         console.log('不应该进入这里,',card)
         return
       }
-      Object.assign(setData, await renderImage(idx, card))
+      Object.assign(setData, await cardManager.getImageRenderSetData(idx, card, 'list'))
     }else{
       for (const idx in this.data.list) {
         const card = this.data.list[idx]
-        Object.assign(setData, await renderImage(idx, card))
+        Object.assign(setData, await cardManager.getImageRenderSetData(idx, card, 'list'))
       }
     }
     this.setData(setData)
