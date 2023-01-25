@@ -1,5 +1,5 @@
 import api from '@/api'
-import { loadData, navigateTo } from '@/utils/index'
+import { createAdvSetData, loadData, navigateTo } from '@/utils/index'
 import { DefaultShowImage, DefaultShowLockImage } from '@/const'
 import { getAppManager } from '@/class/app'
 import { getCardManager } from '@/class/card'
@@ -85,21 +85,22 @@ Page({
     }
   },
   async loadImage(card?:ICard){
-    const setData = {}
     if(card){
       let idx = this.data.list.findIndex(e=>e._id === card._id)
       if(idx === -1){
         console.log('不应该进入这里,',card)
         return
       }
-      Object.assign(setData, await cardManager.getImageRenderSetData(idx, card, 'list'))
+      this.setData(await cardManager.getImageRenderSetData(idx, card, 'list'))
     }else{
+      const advSetData = createAdvSetData(this.setData.bind(this), this.data.list.length)
       for (const idx in this.data.list) {
         const card = this.data.list[idx]
-        Object.assign(setData, await cardManager.getImageRenderSetData(idx, card, 'list'))
+        cardManager.getImageRenderSetData(idx, card, 'list').then(setData=>{
+          advSetData(setData)
+        })
       }
     }
-    this.setData(setData)
   },
   onBindRefresh(){
     this.setData({
