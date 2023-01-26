@@ -49,7 +49,7 @@ Page({
           return card
         })
       })
-      this.loadImage()
+      this.loadCardImage()
     })
   },
   onEventCardDelete(id){
@@ -62,6 +62,7 @@ Page({
     }
   },
   onEventCardChange(card){
+    console.log('list page: update card info:', card._id, card.title)
     const idx = this.data.list.findIndex(e=>e._id === card._id)
     if(idx>=0){
       console.log('list page: update card info:', card._id, card.title);
@@ -81,17 +82,12 @@ Page({
         setData[`list[${idx}]._url`] = card.encrypted ? DefaultShowLockImage : DefaultShowImage
       }
       this.setData(setData)
-      this.loadImage(card)
+      this.loadCardImage(card, idx)
     }
   },
-  async loadImage(card?:ICard){
+  async loadCardImage(card?:ICard, idx?:number){
     if(card){
-      let idx = this.data.list.findIndex(e=>e._id === card._id)
-      if(idx === -1){
-        console.log('不应该进入这里,',card)
-        return
-      }
-      this.setData(await cardManager.getImageRenderSetData(idx, card, 'list'))
+      this.setData(await cardManager.getImageRenderSetData(idx!, card, 'list'))
     }else{
       const advSetData = createAdvSetData(this.setData.bind(this), this.data.list.length)
       for (const idx in this.data.list) {
