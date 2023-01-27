@@ -1,14 +1,20 @@
 .image-list{
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 20rpx;
+  padding: 20rpx 0;
   .image-item {
-    // padding: 5rpx;
+    width: 700rpx;
+    height: 440rpx;
     margin-bottom: 10rpx;
-    border: 1px solid skyblue;
+    border: 1rpx solid skyblue;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     position: relative;
+    .card{
+      width: 687rpx;
+      height: 432rpx;
+    }
     .check-filter{
       filter: blur(10px) opacity(0.6) brightness(0.5);
     }

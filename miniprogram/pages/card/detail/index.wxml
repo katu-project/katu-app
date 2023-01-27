@@ -3,20 +3,20 @@
 </cu-custom>
 
 <view class="page">
-  <view class="padding-tb padding-left-xs">
+  <view class="padding-tb">
     <view class="flex justify-between align-center">
       <view class="text-cyan text-xl flex align-center">
-        <text class="cuIcon-titles padding-right-sm"></text>
-        <text class="text-xl">{{card.title}}</text>
+        <text class="cuIcon-vipcard padding-right-sm"></text>
+        <text class="text-xl text-black">{{card.title}}</text>
       </view>
       <view class="padding-lr text-xl text-{{card.setLike?'red':'gray'}}" bindtap="tapToSetLike"> 
         <text class="cuIcon-{{card.setLike?'favorfill':'favor'}} padding-right-sm"></text>
       </view>
     </view>
     <view class="text-cyan text-xl padding-top-sm flex align-center">
-      <text class="cuIcon-tag padding-right-xs padding-left-xs"></text>
+      <text class="cuIcon-tag padding-right-sm"></text>
       <view style="width: 80vw; overflow-x: scroll;" class="flex">
-        <text class="cu-tag margin-right-sm radius line-orange text-orange" wx:for="{{card.tags}}" wx:key="index">{{item}}</text>
+        <text class="cu-tag margin-right-sm radius line-grey" wx:for="{{card.tags}}" wx:key="index">{{item}}</text>
       </view>
     </view>
   </view>
