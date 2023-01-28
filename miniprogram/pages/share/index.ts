@@ -1,7 +1,7 @@
 import api from "@/api";
 import { getAppManager } from "@/class/app";
 import { getCardManager } from "@/class/card";
-import { DefaultShowLockImage } from "@/const";
+import { DefaultShowLockImage, DefaultShowImage } from "@/const";
 import { loadData, showChoose, showError } from "@/utils/index";
 
 const app = getAppManager()
@@ -14,7 +14,13 @@ Page({
   },
   chooseIdx: 0,
   data: {
-    card: {} as Partial<ICard>,
+    card: {
+      image: [
+        {
+          _url: DefaultShowImage
+        }
+      ]
+    } as Partial<ICard>,
     endTime: 0,
     endTimeText: '**:**'
   },
@@ -37,7 +43,7 @@ Page({
 
   },
   async loadData(){
-    const {card,endTime} = await loadData(api.getShareItem, {sid: this.shareInfo.sid, sk: this.shareInfo.sk})
+    const {card,endTime} = await loadData(api.getShareItem, {sid: this.shareInfo.sid, sk: this.shareInfo.sk},'读取分享数据')
 
     this.setData({
       'card.encrypted': card.encrypted,
@@ -76,7 +82,7 @@ Page({
       })
       return
     }
-    return loadData(this.decryptImage)
+    return loadData(this.decryptImage,{},'读取加密数据')
   },
   async decryptImage(){
     const setData = {}
