@@ -5,12 +5,8 @@ import { getAppManager } from '@/class/app'
 import { getCardManager } from '@/class/card'
 const app = getAppManager()
 const cardManager = getCardManager()
-export {}
 
 Page({
-  backData: {
-    refresh: false
-  },
   where: {},
   originList: [] as ICard[],
   data: {
@@ -39,10 +35,6 @@ Page({
     this.loadData()
   },
   onShow() {
-    if(this.backData?.refresh){
-      this.loadData()
-      this.backData.refresh = false
-    }
   },
   loadData(){
     return loadData(api.getCardList, {where: this.where}).then(list=>{

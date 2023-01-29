@@ -9,9 +9,6 @@ const cardManager = getCardManager()
 const user = getUserManager()
 
 Page({
-  backData: {
-    refresh: false
-  },
   data: {
     cateList: [] as ICardSummary[],
     likeList: [] as ICard[],
@@ -41,7 +38,6 @@ Page({
 
   onShow() {
     this.setTabState()
-    this.checkDataRefresh()
     setTimeout(()=>this.loadNotice(),2000)
   },
   async loadData(){
@@ -157,13 +153,6 @@ Page({
     this.setData({
       cateList
     })
-  },
-  checkDataRefresh(){
-    if(this.backData?.refresh){
-      this.loadData()
-      this.backData.refresh = false
-      console.log("刷新数据");
-    }
   },
   async loadNotice(){
     return api.getNotice().then(notice=>{
