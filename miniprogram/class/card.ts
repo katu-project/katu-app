@@ -1,9 +1,10 @@
-import { getAppManager } from '@/class/app'
 import utils,{cv, convert, getCache, setCache} from '@/utils/index'
 import { CARD_LABEL_CACHE_KEY, DECRYPTED_IMAGE_CACHE_SUFFIX, DOWNLOAD_IMAGE_CACHE_SUFFIX, ENCRYPTED_IMAGE_CACHE_SUFFIX, KATU_MARK, PACKAGE_TAIL_LENGTH, WX_CLOUD_STORAGE_FILE_HEAD } from '@/const'
 import api from '@/api'
 import { deleteFile } from '@/utils/file'
-import Base from './base'
+import Base from '@/class/base'
+import { getAppManager } from '@/class/app'
+import { getUserManager } from '@/class/user'
 
 class CardManager extends Base{
   app = getAppManager()
@@ -497,6 +498,36 @@ class CardManager extends Base{
       }
     }
     return api.deleteCard({_id: card._id})
+  }
+
+  // 获取图片渲染数据
+  async getImageRenderSetData(idx:number|string,card:ICard,keyName:string){
+    const setData = {}
+    if(card.encrypted){
+      if(getUserManager().config?.general.autoShowContent){
+        try {
+          const picPath = await this.getCardImagePathCache(card.image[0])
+          setData[`${keyName}[${idx}]._url`] = picPath
+          setData[`${keyName}[${idx}]._showEncryptIcon`] = true
+        } catch (error) {}
+      }
+    }else{
+      try {
+        let tempUrl:string
+        if(card['firstImageTempUrl']){
+          tempUrl = card['firstImageTempUrl']
+        }else{
+          tempUrl = await getAppManager().getCloudFileTempUrl(card.image[0].url)
+        }
+        if(tempUrl.startsWith('/')){// 获取云文件链接出错，使用本地占位图片替代      
+          setData[`${keyName}[${idx}]._url`] = tempUrl
+          setData[`${keyName}[${idx}]._mode`] = 'scaleToFill'
+        }else{
+          setData[`${keyName}[${idx}]._url`] = tempUrl + getAppManager().Config.imageMogr2
+        }
+      } catch (error) {}
+    }
+    return setData
   }
 }
 

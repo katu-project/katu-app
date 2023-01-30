@@ -102,47 +102,17 @@ Page({
     this.setData(setData)
   },
   async renderLikeCardImage(card?:ICard){
-
-    const renderImage = async (idx,card:ICard)=>{
-      const setData = {}
-      if(card.encrypted){
-        if(app.user.config?.general.autoShowContent){
-          try {
-            const picPath = await cardManager.getCardImagePathCache(card.image[0])
-            setData[`likeList[${idx}]._url`] = picPath
-            setData[`likeList[${idx}]._showEncryptIcon`] = true
-          } catch (error) {}
-        }
-      }else{
-        try {
-          let tempUrl
-          if(card['firstImageTempUrl']){
-            tempUrl = card['firstImageTempUrl']
-          }else{
-            tempUrl = await app.getCloudFileTempUrl(card.image[0].url)
-          }
-          if(tempUrl.startsWith('/')){// 获取云文件链接出错，使用本地占位图片替代      
-            setData[`likeList[${idx}]._url`] = tempUrl
-            setData[`likeList[${idx}]._mode`] = 'scaleToFill'
-          }else{
-            setData[`likeList[${idx}]._url`] = tempUrl + app.Config.imageMogr2
-          }
-        } catch (error) {}
-      }
-      return setData
-    }
-
     if(card){
       let idx = this.data.likeList.findIndex(e=>e._id === card._id)
       if(idx === -1){
         idx = this.data.likeList.length
       }
-      this.setData(await renderImage(idx, card))
+      this.setData(await cardManager.getImageRenderSetData(idx, card, 'likeList'))
     }else{
       const advSetData = createAdvSetData(this.setData.bind(this), this.data.likeList.length)
       for (const idx in this.data.likeList) {
         const card = this.data.likeList[idx]
-        renderImage(idx, card).then(setData=>{
+        cardManager.getImageRenderSetData(idx, card, 'likeList').then(setData=>{
           advSetData(setData)
         })
       }
