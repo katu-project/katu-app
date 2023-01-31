@@ -1,5 +1,5 @@
 import utils,{cv, convert, getCache, setCache} from '@/utils/index'
-import { CARD_LABEL_CACHE_KEY, DECRYPTED_IMAGE_CACHE_SUFFIX, DOWNLOAD_IMAGE_CACHE_SUFFIX, ENCRYPTED_IMAGE_CACHE_SUFFIX, KATU_MARK, PACKAGE_TAIL_LENGTH, WX_CLOUD_STORAGE_FILE_HEAD } from '@/const'
+import { CARD_EXTRADATA_CACHE_KEY, DECRYPTED_IMAGE_CACHE_SUFFIX, DOWNLOAD_IMAGE_CACHE_SUFFIX, ENCRYPTED_IMAGE_CACHE_SUFFIX, KATU_MARK, PACKAGE_TAIL_LENGTH, WX_CLOUD_STORAGE_FILE_HEAD } from '@/const'
 import api from '@/api'
 import { deleteFile } from '@/utils/file'
 import Base from '@/class/base'
@@ -54,7 +54,7 @@ class CardManager extends Base{
     for (const pic of card.image!) {
       const imageData = {url:'',salt:'',hash:''}
       const originImageHash = pic.hash
-      const originImageExtraData = await this.getCacheLabelData(pic.url)
+      const originImageExtraData = await this.getExtraDataCache(pic)
 
       imageData.hash = await this.getHash(pic.url)
       // 图片hash一致并且附加数据一致就说明图片没改变
@@ -210,7 +210,7 @@ class CardManager extends Base{
     const {data:extraData, dataLength: extraDataLength} = this._unpackExtraData(decryptedData, metaData)
     if(extraDataLength){
       decryptImage.extraData = extraData
-      await this.cacheLabelData(decryptImage.imagePath, extraData)
+      await this.cacheExtraData(image, extraData)
     }
     const imageData = extraDataLength?decryptedData.slice(0, -extraDataLength): decryptedData
 
@@ -233,7 +233,7 @@ class CardManager extends Base{
   }
 
   _unpackExtraData(mixHexData, metaData){
-    const retDataInfo = {
+    const retDataInfo:{dataLength:number, data:any[]} = {
       dataLength: 0,
       data: []
     }
@@ -259,7 +259,7 @@ class CardManager extends Base{
       extraData: []
     }
     cacheData.imagePath = await this.getCardImagePathCache(image)
-    cacheData.extraData = await this.getCacheLabelData(cacheData.imagePath)
+    cacheData.extraData = await this.getExtraDataCache(image)
     console.log('命中缓存数据: 已经存在相同解密数据')
     return cacheData
   }
@@ -328,25 +328,31 @@ class CardManager extends Base{
     return fileUrl
   }
 
-  async cacheLabelData(id, data){
+  async cacheExtraData(image:ICardImage, data:any[]){
+    const keyName = this._getExtraDataCacheKey(image)
     let cacheData = {}
     try {
-      cacheData = await getCache(CARD_LABEL_CACHE_KEY)
+      cacheData = await getCache(CARD_EXTRADATA_CACHE_KEY)
     } catch (error) {
       cacheData = {}
     }
 
-    cacheData[id] = data
-    return setCache(CARD_LABEL_CACHE_KEY, cacheData)
+    cacheData[keyName] = data
+    return setCache(CARD_EXTRADATA_CACHE_KEY, cacheData)
   }
 
-  async getCacheLabelData(id){
+  async getExtraDataCache(image:ICardImage){
+    const keyName = this._getExtraDataCacheKey(image)
     try {
-      const cacheData = await getCache(CARD_LABEL_CACHE_KEY)
-      return cacheData[id] || []
+      const cacheData = await getCache(CARD_EXTRADATA_CACHE_KEY)
+      return cacheData[keyName] || []
     } catch (error) {
       return []
     }
+  }
+
+  _getExtraDataCacheKey(image:ICardImage){
+    return `${image.hash}_${image.salt}`
   }
 
   async checkImageType(picPath){

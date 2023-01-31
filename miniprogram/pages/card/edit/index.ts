@@ -228,7 +228,7 @@ Page({
         } catch (error) {
           const destPath = await cardManager.getDecryptedImageLocalSavePath(card.image[idx])
           await copyFile(srcPath,destPath)
-          await cardManager.cacheLabelData(destPath, this.data.card.info)
+          await cardManager.cacheExtraData(image, this.data.card.info)
         }
       }
     }
