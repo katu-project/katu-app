@@ -9,6 +9,7 @@ const cardManager = getCardManager()
 Page({
   id: '',
   chooseIdx: 0,
+  chooseAction: '',
   shareData: {
     sid: '',
     sk: '',
@@ -160,6 +161,10 @@ Page({
     app.previewImage(pics, idx)
   },
   tapToEditCard(){
+    this.chooseAction = 'edit'
+    return this._tapToEditCard()
+  },
+  _tapToEditCard(){
     if(this.data.card.encrypted){
       try {
         app.checkMasterKey()
@@ -234,7 +239,12 @@ Page({
   inputKeyConfirm(e){
     const key = e.detail.value
     app.loadMasterKeyWithKey(key).then(()=>{
-      if(this.data.card.image?.some(e=>e._url === DefaultShowLockImage)){
+      if(this.chooseAction){
+        if(this.chooseAction === 'edit'){
+          this._tapToEditCard()
+        }
+        this.chooseAction = ''
+      }else if(this.data.card.image?.some(e=>e._url === DefaultShowLockImage)){
         this.showEncryptedImage()
       }
     }).catch(error=>{
