@@ -1,6 +1,6 @@
 <cu-custom bgColor="nav-head" isBack="{{true}}">
   <view slot="backText">返回</view>
-  <view slot="content">{{edit?'更新':'添加'}}卡片</view>
+  <view slot="content">{{edit?'修改卡片内容':'添加卡片'}}</view>
 </cu-custom>
 <view class="page">
   <swiper class="card-swiper square-dot"
@@ -28,7 +28,7 @@
     </view>
   </view>
 
-  <view class="cu-list menu sm-border margin-tb br-12" style="border: 1px solid cornflowerblue;">
+  <view class="cu-list menu sm-border margin-tb br-10" style="border: 1px solid cornflowerblue;">
     <view class="cu-item arrow" bindtap="tapToEditTitle">
       <view class="content">
         <text class="cuIcon-wenzi text-cyan"></text>
@@ -70,9 +70,9 @@
     </view>
   </view>
 
-  <button class="cu-btn line-cyan lg margin-tb-lg" bindtap="tapToSaveCard">
+  <button class="cu-btn line-cyan lg margin-bottom-lg" bindtap="tapToSaveCard" style="width: 100%;">
     <view class="text-xl gfw text-cyan">
-      保存卡片
+      {{edit?'保存数据':'添加卡片'}}
     </view>
   </button>
 </view>
