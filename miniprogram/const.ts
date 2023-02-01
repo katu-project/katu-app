@@ -110,6 +110,12 @@ const PAGES_MENU = {
       url: '../card/edit-tag/index'
     },
     {
+      icon: 'choiceness',
+      name: '配额管理',
+      url: '../quota/index',
+      dev: true
+    },
+    {
       icon: 'question',
       name: '使用帮助 ( Q&A )',
       url: '../qa/index'

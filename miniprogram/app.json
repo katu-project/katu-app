@@ -33,7 +33,8 @@
     "pages/settings/security/reset-key/qrcode/index",
     "pages/share/index",
     "pages/about/contact/index",
-    "pages/debug/view/index"
+    "pages/debug/view/index",
+    "pages/quota/index"
   ],
   "window": {
     "backgroundColor": "#ffffff",
