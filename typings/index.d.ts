@@ -1,5 +1,7 @@
 /// <reference path="./base.d.ts" />
 /// <reference path="./crypto.d.ts" />
+/// <reference path="./user.d.ts" />
+/// <reference path="./card.d.ts" />
 /// <reference path="./types/index.d.ts" />
 
 interface IAppOption {
@@ -7,30 +9,6 @@ interface IAppOption {
     userInfo?: WechatMiniprogram.UserInfo,
   }
   userInfoReadyCallback?: WechatMiniprogram.GetUserInfoSuccessCallback,
-}
-
-interface IAnyObject {
-  [key:string]: any
-}
-
-interface ICardImage {
-  hash: string
-  url: string
-  salt: string
-
-  _url?: string
-}
-
-interface ICard {
-  _id: string
-  title: string
-  encrypted: boolean
-  image: ICardImage[]
-  tags: string[]
-  info: any[]
-  setLike: boolean
-
-  _url?: string
 }
 
 interface ICardSummary {
@@ -60,21 +38,6 @@ interface CreateShareOptions {
   expiredTime?: number
 }
 
-interface ICardTag {
-  _id?: string
-  name: string
-  color?: string
-  selected?: Boolean
-}
-
-interface ICardExtraField {
-  key: string
-  name: string
-  xid: number
-  cid?: number
-  value?: string
-}
-
 interface IMasterKeyPack {
   keyPack: string
   keyId: string
@@ -93,39 +56,6 @@ interface IUsageStatistic {
   canUseEncryptedCardCount: number
   usedCardCount: number
   usedEncryptedCardCount: number
-}
-
-interface IUser {
-  _id: string
-  openid: string
-  nickName: string
-  avatarUrl: string
-  isActive: boolean
-  status: number
-  setMasterKey: boolean
-  masterKeyPack: IMasterKeyPack
-  recoveryKeyPack: IRecoveryKeyPack
-  quota: {
-    cardCount: number
-    encryptedCardCount: number
-  }
-  customTag: ICardTag[]
-  noticeReadLog: string[]
-  config: {
-    general: {
-      defaultUseEncrytion: boolean
-      useDefaultTag: boolean
-      autoShowContent: boolean
-    },
-    account: {
-
-    },
-    security: {
-      lockOnExit: boolean
-      rememberPassword: boolean
-      setRecoveryKey: boolean
-    }
-  }
 }
 
 interface IDoc {

@@ -8,3 +8,7 @@ declare namespace WechatMiniprogram {
     timeEnd: (title:string)=>unknown
   }
 }
+
+interface IAnyObject {
+  [key:string]: any
+}
