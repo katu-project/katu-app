@@ -16,6 +16,12 @@ export default {
   updateUserConfig: (configItem:any) => request('user/updateConfig', configItem),
 
   updateUserProfile: (data:any) => request('user/updateProfile', data),
+
+  getUserQuotaLog: (data) => request<IQuotaLog[]>('user/quotaLog', data),
+
+  getUserQuotaLogDetail: (data) => request<IQuotaLog>('user/quotaLogDetail', data),
+
+  quotaExchange: (data) => request<IQuotaLog>('user/quotaExchange', data),
   
   // user custom tag
   getUserTag: () => request<ICardTag[]>('user/tags', {}),
