@@ -34,7 +34,8 @@
     "pages/share/index",
     "pages/about/contact/index",
     "pages/debug/view/index",
-    "pages/quota/index"
+    "pages/quota/index",
+    "pages/quota/detail/index"
   ],
   "window": {
     "backgroundColor": "#ffffff",

@@ -1,0 +1,48 @@
+<cu-custom class="skeleton-remove" bgColor="bg-cyan" isBack="{{true}}">
+  <view slot="backText">返回</view>
+  <view slot="content">记录详情</view>
+</cu-custom>
+
+<form hidden="{{loading}}">
+  <view class="cu-form-group">
+    <view class="title">记录类型:</view>
+    <input value="{{detail.typeName}}" disabled=""></input>
+  </view>
+  <view class="cu-form-group">
+    <view class="title">{{detail.timeName}}:</view>
+    <input value="{{detail.time}}" disabled=""></input>
+  </view>
+  <block wx:if="{{detail.type==='coupon-exchange'}}">
+    <view class="cu-form-group">
+      <view class="title">兑换密码:</view>
+      <input value="{{detail.coupon.code}}" disabled=""></input>
+    </view>
+    <view class="cu-form-group">
+      <view class="title">增加兔币:</view>
+      <input 	placeholder-style="color:green" placeholder="{{detail.useQuota}}" disabled=""></input>
+    </view>
+    <view class="cu-form-group">
+      <view class="title">增加后可用兔币:</view>
+      <input value="{{detail.remainQuota}}" disabled=""></input>
+    </view>
+  </block>
+  <block wx:if="{{detail.type==='card-cost'}}">
+    <view class="cu-form-group">
+      <view class="title">加密卡面:</view>
+      <input value="{{detail.encryptedImageCount}}" disabled=""></input>
+    </view>
+    <view class="cu-form-group">
+      <view class="title">普通卡面:</view>
+      <input value="{{detail.unencryptedImageCount}}" disabled=""></input>
+    </view>
+    <view class="cu-form-group">
+      <view class="title">消耗兔币:</view>
+      <input 	placeholder-style="color:green" placeholder="{{detail.useQuota}}" disabled=""></input>
+    </view>
+    <view class="cu-form-group">
+      <view class="title">扣除后可用兔币:</view>
+      <input value="{{detail.remainQuota}}" disabled=""></input>
+    </view>
+  </block>
+
+</form>
