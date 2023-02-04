@@ -34,9 +34,13 @@ interface IUser {
 
 interface IQuotaLog {
   _id: string
+  type: string
   createTime: Date
-  encryptedImageCount: number
-  unencryptedImageCount: number
   remainQuota: number
   useQuota: number
+
+  encryptedImageCount: number
+  unencryptedImageCount: number
+
+  couponId: string
 }

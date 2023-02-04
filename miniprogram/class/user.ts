@@ -69,6 +69,18 @@ export default class User extends Base {
     throw Error('创建卡片额度不足')
   }
 
+  async getQuotaLog(params){
+    return api.getUserQuotaLog(params)
+  }
+
+  async getQuotaLogDetail(params){
+    return api.getUserQuotaLogDetail(params)
+  }
+
+  async quotaExchange(data){
+    return api.quotaExchange(data)
+  }
+
   async loadCustomTags(){
     this._customTags = await api.getUserTag()
   }
