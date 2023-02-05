@@ -1,4 +1,4 @@
-import { loadData, navigateTo, showSuccess, showNotice, showLoading } from '@/utils/index'
+import { loadData, navigateTo, showSuccess, showLoading } from '@/utils/index'
 import { PAGES_MENU } from '@/const'
 import api from '@/api'
 

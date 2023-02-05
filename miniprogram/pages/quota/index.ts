@@ -1,4 +1,4 @@
-import { loadData, navigateTo, showNotice, showSuccess } from '@/utils/index'
+import { loadData, navigateTo, showSuccess } from '@/utils/index'
 import { getUserManager } from '@/class/user'
 const user = getUserManager()
 
