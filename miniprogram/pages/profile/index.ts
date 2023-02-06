@@ -11,30 +11,18 @@ Page({
   data: {
     user: {} as Partial<IUser>,
     activeInfo: {} as Partial<IAppConfig['active']>,
-    usedCardCount: 0,
-    usedEncryptedCardCount: 0,
     menus: PAGES_MENU.profile
   },
   onLoad() {
-  },
-  onReady() {
     this.setData({
       user: user.baseInfo
     })
   },
+  onReady() {
+  },
   onShow() {
     this.getTabBar().setData({selected: 2})
     this.checkRefreshUserData()
-    this.loadCardUsageStatistic()
-  },
-
-  loadCardUsageStatistic(){
-    api.usageStatistic().then(stats=>{
-      this.setData({
-        usedCardCount: stats.usedCardCount ||  0,
-        usedEncryptedCardCount: stats.usedEncryptedCardCount || 0
-      })
-    })
   },
 
   tapUser(){

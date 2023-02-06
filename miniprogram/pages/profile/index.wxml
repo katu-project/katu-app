@@ -1,53 +1,29 @@
-<cu-custom>
-  <view slot="customLeft" class="margin-left setting" data-item="../settings/index"  bindtap="tapToItem">
-    <image style="height: 5vw;width: 5vw;" mode="aspectFit" src="/static/images/setting.svg"></image>
-  </view>
-</cu-custom>
+<cu-custom></cu-custom>
 <view class="home-bg"></view>
 
 <view class="page flex-col">
-  <view class="padding-top-sm"></view>
-  <view class="margin-bottom padding shadow flex-col align-start br-14" style="background-color: cadetblue;">
-    <view class="flex">
-      <view class="bg-gray light flex br-14" style="padding:4rpx">
-        <image src="{{user.isActive? user.avatarUrl || '/static/images/default-avatar.png' :'/static/images/user.svg'}}" bindtap="tapToEditInfo" class="br-10" style="height: 160rpx; width: 160rpx;"></image>
+  <view class="margin-bottom shadow flex-col align-center">
+    <view class="flex-col">
+      <view class="bg-gray light flex br-14 justify-center user-avatar">
+        <image src="{{user.isActive? user.avatarUrl || '/static/images/default-avatar.png' :'/static/images/user.svg'}}" mode="aspectFit" bindtap="tapToEditInfo" class="br-10" style="height: 160rpx; width: 160rpx;"></image>
       </view>
-      <view class="margin-left flex-col justify-between padding-top-xs">
-        <view wx:if="{{user.isActive}}" class="flex justify-between align-center">
-          <text class="text-xxl nickname" bindtap="tapUser">{{user.nickName}}</text>
-          <text class="text-black">ID: {{user.identifyCode}}</text>
+      <view class="flex-col justify-between padding-top-xs">
+        <view wx:if="{{user.isActive}}" class="flex-col justify-center align-center">
+          <text class="text-xxl nickname" style="color: rgb(53, 63, 63);" bindtap="tapUser">{{user.nickName}}</text>
+          <text class="text-white">ID: {{user.identifyCode}}</text>
         </view>
-        <view wx:else>
-          <text class="text-xl" style="text-decoration-line: underline;text-underline-offset: 4rpx;" bindtap="tapUser">激活账户</text>
-          <text class="cuIcon-info padding-left-sm padding text-yellow light" bindtap="tapToShowActiveTip"></text>
-        </view>
-        <view class="flex">
-          <view class="cu-capsule radius margin-right">
-            <view class="cu-tag lg bg-red">
-              <text class="cuIcon-unlock"></text>
-            </view>
-            <view class="cu-tag lg line-gray bg-gray" style="min-width: 15vw;">
-              <text space="ensp" class="text-black">{{usedCardCount || 0}} / {{user.quota.cardCount}}</text>
-            </view>
-          </view>
-          <view class="cu-capsule radius padding-left">
-            <view class="cu-tag lg bg-green">
-              <text class="cuIcon-lock"></text>
-            </view>
-            <view class="cu-tag lg line-gray bg-gray" style="min-width: 15vw;">
-              <text space="ensp" class="text-black">{{usedEncryptedCardCount || 0}} / {{user.quota.encryptedCardCount}}</text>
-            </view>
-          </view>
+        <view wx:else style="position: relative;" class="text-center">
+          <text class="text-xxl" style="text-decoration-line: underline;text-underline-offset: 4rpx;" bindtap="tapUser">激活账户</text>
         </view>
       </view>
     </view>
   </view>
 
-  <view class="cu-list menu margin-top">
-    <view class="cu-item arrow item" wx:for="{{menus}}" wx:key="index" data-item="{{item}}" bindtap="tapToItem">
+  <view class="cu-list menu sm-border margin-top">
+    <view class="cu-item arrow" wx:for="{{menus}}" wx:key="index" data-item="{{item}}" bindtap="tapToItem">
       <view class="content">
-        <text class="cuIcon-{{item.icon}} text-grey"></text>
-        <text class="">{{item.name}}</text>
+        <text class="cuIcon-{{item.icon}} text-grey icon"></text>
+        <text class="text-xl padding-left-xs text">{{item.name}}</text>
       </view>
     </view>
   </view>

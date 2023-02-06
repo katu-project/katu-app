@@ -105,15 +105,20 @@ const ColorList = [
 const PAGES_MENU = {
   profile: [
     {
+      icon: 'choiceness',
+      name: '兔币明细',
+      url: '../quota/index',
+      dev: true
+    },
+    {
       icon: 'tag',
-      name: '标签管理',
+      name: '卡片标签',
       url: '../card/edit-tag/index'
     },
     {
-      icon: 'choiceness',
-      name: '配额管理',
-      url: '../quota/index',
-      dev: true
+      icon: 'settings',
+      name: '软件设置',
+      url: '../settings/index'
     },
     {
       icon: 'question',
