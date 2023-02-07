@@ -1,4 +1,4 @@
-import { loadData, navigateTo, showSuccess, showLoading } from '@/utils/index'
+import { loadData, navigateTo, showSuccess } from '@/utils/index'
 import { PAGES_MENU } from '@/const'
 import api from '@/api'
 
@@ -14,15 +14,13 @@ Page({
     menus: PAGES_MENU.profile
   },
   onLoad() {
-    this.setData({
-      user: user.baseInfo
-    })
+    app.on('userChange',this.onEventUserChange)
   },
   onReady() {
+    this.loadUserInfo()
   },
   onShow() {
     this.getTabBar().setData({selected: 2})
-    this.checkRefreshUserData()
   },
 
   tapUser(){
@@ -33,18 +31,27 @@ Page({
   },
   
   async tapToActiveAccount(){
-    showLoading('等待获取授权')
     await loadData(user.activeAccount, {}, '正在激活账号')
     showSuccess("激活成功")
     this.reloadUserInfo()
     this.hideActiveNotice()
   },
 
+  loadUserInfo(){
+    const { nickName, avatarUrl, isActive, identifyCode } = user.baseInfo 
+    this.setData({
+      user: {
+        nickName,
+        avatarUrl,
+        isActive,
+        identifyCode
+      }
+    })
+  },
+
   reloadUserInfo(){
     user.reloadInfo().then(()=>{
-      this.setData({
-        user: user.baseInfo
-      })
+      this.loadUserInfo()
     })
   },
 
@@ -53,22 +60,11 @@ Page({
     navigateTo('./edit/index')
   },
 
-  checkRefreshUserData(){
-    if(this.data.user.nickName !== user.baseInfo.nickName || this.data.user.avatarUrl !== user.baseInfo.avatarUrl){
-      this.setData({
-        'user.avatarUrl': user.baseInfo.avatarUrl,
-        'user.nickName': user.baseInfo.nickName,
-      })
-    }
+  onEventUserChange(){
+    console.log('onEventUserChange')
+    this.reloadUserInfo()
   },
 
-  async tapToShowActiveTip(){
-    await this.loadActiveData()
-    if(this.data.activeInfo.tip){
-      app.navToDoc(this.data.activeInfo.tip)
-    }
-  },
-  // 点击设置按钮
   tapToItem(e){
     const item = e.currentTarget.dataset.item
     navigateTo(item.url || item)

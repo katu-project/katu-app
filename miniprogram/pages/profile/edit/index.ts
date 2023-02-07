@@ -59,12 +59,11 @@ Page({
     }
     
     loadData(api.updateUserProfile, userData, '正在保存信息').then(()=>{
-      user.reloadInfo().then(()=>{
-        showSuccess('修改成功').then(()=>{
-          setTimeout(()=>{
-            navigateBack()
-          },500)
-        })
+      user.emit('userChange')
+      showSuccess('修改成功').then(()=>{
+        setTimeout(()=>{
+          navigateBack()
+        },500)
       })
     })
   }

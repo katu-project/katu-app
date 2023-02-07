@@ -4,6 +4,7 @@ interface IUser {
   nickName: string
   avatarUrl: string
   isActive: boolean
+  identifyCode: string
   status: number
   setMasterKey: boolean
   masterKeyPack: IMasterKeyPack
