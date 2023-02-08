@@ -17,7 +17,11 @@ export default class User extends Base {
       console.log("启用记住密码: 加载主密码");
       getAppManager().loadMasterKey()
     }
-    this.loadCustomTags()
+    wx.nextTick(()=>{
+      setTimeout(() => {
+        this.loadCustomTags()
+      }, 3000);
+    })
     this.loadOnAppHideConfig()
   }
 

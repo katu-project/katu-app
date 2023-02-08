@@ -49,7 +49,9 @@ class AppManager extends Base {
 
   rewriteConfig(){
     wx.nextTick(()=>{
-      this.loadDefaultTag()
+      setTimeout(()=>{
+        this.loadDefaultTag()
+      },3000)
     })
   }
 
