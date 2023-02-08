@@ -32,8 +32,8 @@ Page({
     app.off('cardDecrypt',this.onEventCardChange)
   },
   async onReady() {
-    await loadData(user.init,{},'加载用户数据')
-    this.loadData()
+    await this.loadData()
+    user.init()
   },
 
   onShow() {
@@ -41,20 +41,25 @@ Page({
     setTimeout(()=>this.loadNotice(),2000)
   },
   async loadData(){
-    await this.loadLikeList()
-    await this.loadCateList()
-    return
-  },
-  async loadLikeList(){
-    let likeList = await loadData(api.getLikeCard)
-    likeList = likeList.map(card=>{
-      card._url = card.encrypted ? DefaultShowLockImage : DefaultShowImage
-      return card
-    })
-    this.setData({
-      likeList
-    })
-    return this.renderLikeCardImage()
+    let { likeList, cateList } = await loadData(api.getHomeData,{},'加载数据中')
+    const setData = {}
+
+    if(cateList.length){
+      setData['cateList'] = cateList
+    }
+
+    if(likeList.length){
+      setData['likeList'] = likeList.map(card=>{
+        card._url = card.encrypted ? DefaultShowLockImage : DefaultShowImage
+        return card
+      })
+    }
+
+    this.setData(setData)
+    
+    if(likeList.length){
+      this.renderLikeCardImage()
+    }
   },
   // 修改名称，图片，喜爱
   async onEventCardChange(card){
@@ -118,12 +123,6 @@ Page({
       }
     }
   },
-  async loadCateList(){
-    const cateList = await loadData(api.getCardSummary)
-    this.setData({
-      cateList
-    })
-  },
   async loadNotice(){
     return api.getNotice().then(notice=>{
       if(!notice._id) return 
@@ -172,22 +171,12 @@ Page({
   tapToCardDetail(e){
     navigateTo(`/pages/card/detail/index?id=${e.currentTarget.dataset.item._id}`)
   },
-  onBindRefresh(e){
-    const key = e.currentTarget.dataset.view
-    if(key === 'Like'){
-      this.loadLikeList().then(()=>{
-        this.setData({
-          isRefresh: false
-        })
+  onBindRefresh(){
+    this.loadData().then(()=>{
+      this.setData({
+        isRefresh: false
       })
-    }else{
-      this.loadData().then(()=>{
-        this.setData({
-          isRefresh: false
-        })
-      })
-    }
-    
+    })
   },
   onBindLoadError(e){
     this.setData({

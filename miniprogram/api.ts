@@ -11,8 +11,8 @@ export default {
   getShareItem: (data?:any) => request<IShareItem>('app/share', data),
 
   setShareItem: (data?:any) => request<IAnyObject>('app/setShare', data),
-  // user
 
+  // user
   updateUserConfig: (configItem:any) => request('user/updateConfig', configItem),
 
   updateUserProfile: (data:any) => request('user/updateProfile', data),
@@ -54,7 +54,10 @@ export default {
     })
     return fileID
   },
+
   // card
+  getHomeData: () => request<IHomeData>('card/all'),
+
   getCardSummary: () => request<ICardSummary[]>('card/summary'),
 
   getLikeCard: () => request<ICard[]>('card/like'),

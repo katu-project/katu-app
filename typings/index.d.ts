@@ -11,12 +11,6 @@ interface IAppOption {
   userInfoReadyCallback?: WechatMiniprogram.GetUserInfoSuccessCallback,
 }
 
-interface ICardSummary {
-  name: string
-  count: number
-  color: string
-}
-
 interface INotice {
   _id: string
   updateTime: string

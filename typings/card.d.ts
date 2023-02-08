@@ -32,3 +32,14 @@ interface ICardExtraField {
   cid?: number
   value?: string
 }
+
+interface ICardSummary {
+  name: string
+  count: number
+  color: string
+}
+
+interface IHomeData {
+  likeList: ICard[]
+  cateList: ICardSummary[]
+}
