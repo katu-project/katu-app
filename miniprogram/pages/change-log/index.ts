@@ -20,7 +20,7 @@ Page({
     loadData(api.getChangeLog).then(list=>{
       this.setData({
         list: list.map(e=>{
-          e.time = e.createTime.slice(0,10)
+          e.time = e.updateTime.slice(0,10)
           return e
         }).sort((a,b)=> -a.version.localeCompare(b.version))
       })
