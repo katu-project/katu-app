@@ -27,9 +27,9 @@ export const AppConfig = {
     name: '安全',
     value: 'safe'
   }, {
-    icon: 'vipcard',
+    icon: 'recharge',
     color: 'olive',
-    name: '额度',
+    name: '费用',
     value: 'quota'
   }, {
     icon: 'more',
