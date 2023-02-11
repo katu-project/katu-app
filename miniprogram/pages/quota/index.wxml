@@ -15,9 +15,12 @@
 </view>
 <view class="padding solid-bottom text-lg">
   <text class="cuIcon-sort text-cyan"></text>
-  <text class="padding-left-xs">变动记录</text>
+  <text class="padding-left-xs">最近记录</text>
 </view>
 <view class="cu-list menu sm-border">
+  <view wx:if="{{!list.length}}" class="text-center padding">
+    <text>暂无数据</text>
+  </view>
   <view class="cu-item arrow" wx:for="{{list}}" wx:key="_id" data-key="{{item._id}}" bindtap="tapToDetail">
     <view class="content">
       <text class="cuIcon-time text-grey"></text>
