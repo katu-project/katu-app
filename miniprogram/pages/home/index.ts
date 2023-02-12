@@ -1,4 +1,4 @@
-import { loadData, navigateTo, showNotice, createAdvSetData } from '@/utils/index'
+import { loadData, navigateTo, showNotice, createAdvSetData, showChoose, switchTab } from '@/utils/index'
 import { DefaultShowLockImage, DefaultShowImage, APP_ENTRY_PATH, DefaultLoadFailedImage } from '@/const'
 import api from '@/api'
 import { getAppManager } from '@/class/app'
@@ -33,12 +33,17 @@ Page({
   },
   async onReady() {
     await this.loadData()
-    user.init()
+    await loadData(user.init,{},'加载用户信息')
+    if(!user.isActive){
+      this.showActiveNotice()
+    }
   },
 
   onShow() {
     this.setTabState()
-    setTimeout(()=>this.loadNotice(),2000)
+    if(user.isActive){
+      setTimeout(()=>this.loadNotice(),2000)
+    }
   },
   async loadData(){
     let { likeList, cateList } = await loadData(api.getHomeData,{},'加载数据中')
@@ -196,6 +201,15 @@ Page({
   hideModal(name){
     this.setData({
       [name]: false
+    })
+  },
+  showActiveNotice(){
+    showChoose('温馨提示','现在激活账户可领取免费兔币',{
+      confirmText: '去激活'
+    }).then(res=>{
+      if(res.confirm){
+        switchTab('/pages/profile/index',false)
+      }
     })
   }
 })
