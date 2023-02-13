@@ -1,4 +1,4 @@
-import { loadData, navigateTo, showNotice, createAdvSetData, showChoose, switchTab } from '@/utils/index'
+import { loadData, navigateTo, showNotice, createAdvSetData, showChoose } from '@/utils/index'
 import { DefaultShowLockImage, DefaultShowImage, APP_ENTRY_PATH, DefaultLoadFailedImage } from '@/const'
 import api from '@/api'
 import { getAppManager } from '@/class/app'
@@ -205,10 +205,11 @@ Page({
   },
   showActiveNotice(){
     showChoose('温馨提示','现在激活账户可领取免费兔币',{
-      confirmText: '去激活'
+      confirmText: '去激活',
+      showCancel: false,
     }).then(res=>{
       if(res.confirm){
-        switchTab('/pages/profile/index',false)
+        app.goToUserUserProfilePage()
       }
     })
   }

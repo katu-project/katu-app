@@ -2,7 +2,7 @@ import Base from './base'
 import { AppConfig } from '@/config'
 import { randomBytesHexString } from '@/utils/crypto'
 import { checkAccess } from '@/utils/file'
-import utils,{ navigateTo, getCache, setCache, delCache, showChoose, chooseLocalImage } from '@/utils/index'
+import utils,{ navigateTo, getCache, setCache, delCache, showChoose, chooseLocalImage, switchTab } from '@/utils/index'
 import { sleep } from '@/utils/base'
 import { APP_TEMP_DIR, APP_DOWN_DIR, APP_IMAGE_DIR, DefaultLoadFailedImage, MASTER_KEY_NAME, WX_CLOUD_STORAGE_FILE_HEAD, LocalCacheKeyMap } from '@/const'
 import api from '@/api'
@@ -491,6 +491,10 @@ class AppManager extends Base {
   }
   async textContentsafetyCheck(text){
     return api.textContentSafetyCheck({text})
+  }
+
+  async goToUserUserProfilePage(){
+    return switchTab('/pages/profile/index',false)
   }
 }
 
