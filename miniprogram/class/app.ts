@@ -493,6 +493,14 @@ class AppManager extends Base {
     return api.textContentSafetyCheck({text})
   }
 
+  async showActiveNotice(){
+    await showChoose("温馨提示","账户未激活，无法进行该操作。", {
+      confirmText:'去激活'
+    }).then(({confirm})=>{
+      if(confirm) this.goToUserUserProfilePage()
+    })
+  }
+
   async goToUserUserProfilePage(){
     return switchTab('/pages/profile/index',false)
   }

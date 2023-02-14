@@ -1,7 +1,10 @@
-import { showChoose, loadData, showError, switchTab } from '@/utils/index'
-import { getUserManager } from '@/class/user'
+import { showChoose, loadData, showError } from '@/utils/index'
 import { ColorList } from '@/const'
+
+import { getAppManager } from '@/class/app'
+import { getUserManager } from '@/class/user'
 const user = getUserManager()
+const app = getAppManager()
 
 Page({
   data: {
@@ -62,11 +65,7 @@ Page({
     }
 
     if(!user.isActive){
-      await showChoose("警告","账户未激活，不可使用此功能。", {confirmText:'去激活'}).then(({cancel})=>{
-        if(cancel) return
-        switchTab('../../profile/index')
-      })
-      return
+      return app.showActiveNotice()
     }
 
     if(this.data.list.find(tag=>tag.name === this.data.tempTagName)){
