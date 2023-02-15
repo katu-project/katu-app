@@ -66,8 +66,12 @@ Page({
   },
 
   tapToItem(e){
+    const needActiveItemList = ['兔币明细','卡片标签','软件设置']
     const item = e.currentTarget.dataset.item
-    navigateTo(item.url || item)
+    if(needActiveItemList.includes(item.name)){
+      return app.showActiveNotice()
+    }
+    return navigateTo(item.url || item)
   },
 
   tapToReadDoc(e){
