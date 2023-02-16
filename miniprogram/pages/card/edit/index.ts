@@ -150,7 +150,7 @@ Page({
     const card = Object.assign({},this.data.card)
     // 卡片数据有效性检查
     if(card.image.filter(e=>e.url === DefaultAddImage).length > 0) {
-      showNotice('卡面数据不完整')
+      showNotice('请先添加卡片')
       return
     }
     // 检查卡面数量
@@ -196,7 +196,7 @@ Page({
       try {
         await user.checkQuota(card.encrypted)
       } catch (error) {
-        showChoose('保存卡片出错',error.message,{showCancel: false})
+        showChoose('无法创建卡片',error.message,{showCancel: false})
         return
       }
     }
@@ -239,6 +239,10 @@ Page({
     })
   },
   async tapToChoosePic(e){
+    if(!user.isActive){
+      app.showActiveNotice()
+      return
+    }
     const index = e.currentTarget.dataset.index
     try {
       const picPath = await app.chooseLocalImage()
