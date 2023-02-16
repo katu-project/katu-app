@@ -35,7 +35,7 @@ Page({
     await this.loadData()
     await loadData(user.init,{},'加载用户信息')
     if(!user.isActive){
-      this.showActiveNotice()
+      app.showActiveNotice('现在激活账户可领取免费兔币')
     }
   },
 
@@ -201,16 +201,6 @@ Page({
   hideModal(name){
     this.setData({
       [name]: false
-    })
-  },
-  showActiveNotice(){
-    showChoose('温馨提示','现在激活账户可领取免费兔币',{
-      confirmText: '去激活',
-      showCancel: false,
-    }).then(res=>{
-      if(res.confirm){
-        app.goToUserUserProfilePage()
-      }
     })
   }
 })

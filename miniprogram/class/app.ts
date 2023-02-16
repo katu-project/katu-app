@@ -493,9 +493,9 @@ class AppManager extends Base {
     return api.textContentSafetyCheck({text})
   }
 
-  async showActiveNotice(){
-    await showChoose("温馨提示","账户未激活，无法进行该操作。", {
-      confirmText:'去激活'
+  async showActiveNotice(title?:string){
+    await showChoose("温馨提示", title || "账户未激活，无法进行该操作。", {
+      confirmText:'去激活',
     }).then(({confirm})=>{
       if(confirm) this.goToUserUserProfilePage()
     })
