@@ -11,8 +11,6 @@ interface IUser {
   recoveryKeyPack: IRecoveryKeyPack
   quota: {
     remain: number
-    cardCount: number
-    encryptedCardCount: number
   }
   customTag: ICardTag[]
   noticeReadLog: string[]

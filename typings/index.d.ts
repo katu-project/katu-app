@@ -45,9 +45,7 @@ interface IRecoveryKeyPack {
   qrId: string
 }
 
-interface IUsageStatistic { 
-  canUseCardCount: number 
-  canUseEncryptedCardCount: number
+interface IUsageStatistic {
   usedCardCount: number
   usedEncryptedCardCount: number
 }

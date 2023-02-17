@@ -29,6 +29,10 @@ export default class User extends Base {
     return this.user.config
   }
 
+  get quota(){
+    return this.user.quota?.remain || 0
+  }
+
   get tags(){
     return this._customTags
   }
@@ -67,10 +71,9 @@ export default class User extends Base {
   }
 
   async checkQuota(encrypted: boolean){
-    const { canUseCardCount, canUseEncryptedCardCount } = await api.usageStatistic()
-    if(encrypted && canUseEncryptedCardCount) return
-    if(!encrypted && canUseCardCount) return
-    throw Error('创建卡片额度不足')
+    if(this.quota < 0){
+      throw Error('兔币余额不足')
+    }
   }
 
   async getQuotaLog(params){
