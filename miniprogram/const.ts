@@ -123,12 +123,14 @@ const PAGES_MENU = {
     {
       icon: 'question',
       name: '使用帮助 ( Q&A )',
-      url: '../qa/index'
+      url: '../qa/index',
+      pass: true
     },
     {
       icon: 'info',
       name: '关于卡兔',
-      url: '../about/index'
+      url: '../about/index',
+      pass: true
     }
   ]
 }

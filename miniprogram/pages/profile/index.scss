@@ -1,6 +1,9 @@
 .cu-list {
   &>.cu-item {
     background-color: unset !important;
+    &.arrow:first-child:before{
+      color: rgb(151, 147, 147) !important;
+    }
     .content{
       display: flex;
       .icon{
@@ -11,6 +14,9 @@
       .text{
         color: rgb(82, 72, 72);
         font-weight: 300;
+      }
+      .no-active{
+        color: rgb(121, 118, 118);
       }
     }
   }

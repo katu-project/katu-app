@@ -22,8 +22,8 @@
   <view class="cu-list menu sm-border margin-top">
     <view class="cu-item arrow" wx:for="{{menus}}" wx:key="index" data-item="{{item}}" bindtap="tapToItem">
       <view class="content">
-        <text class="cuIcon-{{item.icon}} text-grey icon"></text>
-        <text class="text-xl padding-left-xs text">{{item.name}}</text>
+        <text class="cuIcon-{{item.icon}} text-grey icon {{!item.pass && (user.isActive?'':'no-active')}}"></text>
+        <text class="text-xl padding-left-xs text {{!item.pass && (user.isActive?'':'no-active')}}">{{item.name}}</text>
       </view>
     </view>
   </view>
