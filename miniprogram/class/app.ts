@@ -4,7 +4,7 @@ import { randomBytesHexString } from '@/utils/crypto'
 import { checkAccess } from '@/utils/file'
 import utils,{ navigateTo, getCache, setCache, delCache, showChoose, chooseLocalImage, switchTab } from '@/utils/index'
 import { sleep } from '@/utils/base'
-import { APP_TEMP_DIR, APP_DOWN_DIR, APP_IMAGE_DIR, DefaultLoadFailedImage, MASTER_KEY_NAME, WX_CLOUD_STORAGE_FILE_HEAD, LocalCacheKeyMap } from '@/const'
+import { APP_TEMP_DIR, APP_DOWN_DIR, APP_IMAGE_DIR, DefaultLoadFailedImage, MASTER_KEY_NAME, WX_CLOUD_STORAGE_FILE_HEAD, LocalCacheKeyMap, APP_ENTRY_PATH } from '@/const'
 import api from '@/api'
 import { getCardManager } from './card'
 import { getUserManager } from './user'
@@ -501,8 +501,25 @@ class AppManager extends Base {
     })
   }
 
+  async deleteAccount(){
+    await api.removeAccount()
+    getUserManager().clearInfo()
+    this.clearMasterKey()
+  }
+
+  // 导航
+  async reLaunch(path?:string){
+    return wx.reLaunch({
+      url: path || `/pages/${APP_ENTRY_PATH}`,
+    })
+  }
+
   async goToUserUserProfilePage(){
     return switchTab('/pages/profile/index',false)
+  }
+
+  async goToHomePage(){
+    return switchTab('/pages/home/index',false)
   }
 }
 
