@@ -91,8 +91,8 @@
     <view style="height: 68vh;">
       <view class="margin-bottom-sm padding-lr flex flex-wrap justify-between" style="align-content: flex-start;">
         <block wx:for="{{cateList}}" wx:key="name">
-          <view wx:if="{{item}}" class="margin-bottom-sm item shadow bg-black flex-row justify-around align-center" data-tag="{{item.name}}" bindtap="tapToCardList">
-            <view style="height: 15vw;width: 15vw;border-radius: 50%; opacity: 0.9;" class="bg-{{item.color || 'cyan'}} light flex justify-center align-center">
+          <view wx:if="{{item}}" class="item margin-bottom-sm shadow bg-black flex-row justify-around align-center" data-tag="{{item.name}}" bindtap="tapToCardList">
+            <view class="cate-name bg-{{item.color || 'cyan'}} light flex justify-center align-center">
               <text class="{{item.name.length>3?'text-sm':'text-lg'}}">{{item.name}}</text>
             </view>
             <text class="text-white text-xxl">{{item.count}}</text>
