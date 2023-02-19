@@ -188,7 +188,7 @@ Page({
       if(cancel) return
 
       loadData(cardManager.deleteCard, this.data.card).then(()=>{
-        app.emit('cardDelete', this.id)
+        app.emit('cardDelete', this.data.card)
         navigateBack()
       })
     })

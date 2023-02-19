@@ -52,8 +52,8 @@ Page({
       this.loadCardImage()
     })
   },
-  onEventCardDelete(id){
-    const idx = this.data.list.findIndex(e=>e._id === id)
+  onEventCardDelete(card){
+    const idx = this.data.list.findIndex(e=>e._id === card._id)
     if(idx>=0){
       this.data.list.splice(idx,1)
       this.setData({
@@ -65,7 +65,6 @@ Page({
     console.log('list page: update card info:', card._id, card.title)
     const idx = this.data.list.findIndex(e=>e._id === card._id)
     if(idx>=0){
-      console.log('list page: update card info:', card._id, card.title);
       const setData = {}
       const originCard = this.data.list[idx]
       if(originCard.title !== card.title){

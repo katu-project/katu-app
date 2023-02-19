@@ -1,4 +1,4 @@
-import { loadData, navigateTo, showNotice, createAdvSetData, showChoose } from '@/utils/index'
+import { loadData, navigateTo, showNotice, createAdvSetData } from '@/utils/index'
 import { DefaultShowLockImage, DefaultShowImage, APP_ENTRY_PATH, DefaultLoadFailedImage } from '@/const'
 import api from '@/api'
 import { getAppManager } from '@/class/app'
@@ -51,6 +51,8 @@ Page({
 
     if(cateList.length){
       setData['cateList'] = cateList
+    }else{
+      setData['cateList'] = []
     }
 
     if(likeList.length){
@@ -67,6 +69,7 @@ Page({
     }
   },
   // 修改名称，图片，喜爱
+  // 新增卡片
   async onEventCardChange(card){
     const idx = this.data.likeList.findIndex(e=>e._id === card._id)
     const findCard = this.data.likeList[idx]
@@ -79,18 +82,21 @@ Page({
         this._removeLikeListCard(idx)
       }
     }else{
-      if(card.setLike){
+      if(card.setLike){ // 新增like状态卡片
         this.renderLikeCard(card)
         this.renderLikeCardImage(card)
       }
     }
+    this.renderCateList(card)
   },
-  onEventCardDelete(id){
-    const idx = this.data.likeList.findIndex(e=>e._id === id)
+  onEventCardDelete(card){
+    const idx = this.data.likeList.findIndex(e=>e._id === card._id)
     if(idx !== -1){
       this._removeLikeListCard(idx)
-      console.log('静默移除卡片：',id)
+      console.log('静默移除卡片：',card._id)
     }
+    // 更新cataList数据
+    this.renderCateList(card, true)
   },
   renderLikeCard(card:ICard){
     const setData = {}
@@ -126,6 +132,34 @@ Page({
           advSetData(setData)
         })
       }
+    }
+  },
+  async renderCateList(card?:ICard, remove?:boolean){
+    console.log('renderCateList card tags:',card?.tags)
+    const setData = {}
+    if(remove){
+      card?.tags.map(tag=>{
+        const idx = this.data.cateList.findIndex(e=> e && e.name === tag)
+        const count = this.data.cateList[idx].count - 1
+        if(count === 0){
+          if(this.data.cateList.length === 1){ // 特殊情况：最后一个分类且没有卡片时，直接对cateList置空
+            setData[`cateList`] = []
+          }else{
+            setData[`cateList[${idx}]`] = null
+          }
+        }else{
+          setData[`cateList[${idx}].count`] = count
+        }
+      })
+    }else{ // 卡片新增，内容更新，无法判断tag变化，直接请求对应接口获取数据
+      try {
+        setData['cateList'] = await api.getCardSummary()
+      } catch (error) {}
+    }
+    
+    if(Object.keys(setData).length){
+      console.log('renderCateList setData:',setData)
+      this.setData(setData)
     }
   },
   async loadNotice(){
