@@ -60,7 +60,7 @@ Page({
   async initCanvasContent(ctx){
     await showLoading('检查数据',1000)
 
-    this.setCanvasBg(ctx, '#ccefee', this._canvasCtx.__height, this._canvasCtx.__width)
+    this.setCanvasBg(ctx, '#ccefee', this._canvasCtx.__width, this._canvasCtx.__height)
     const textX = this._canvasCtx.__width / 2
     if(!this.data.setRecoveryKey){
       this.drawNotice(ctx, '还未设置主密码重置凭证','red', textX, 135)
