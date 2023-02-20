@@ -1,0 +1,24 @@
+<cu-custom bgColor="bg-cyan" isBack="{{true}}">
+  <view slot="backText">返回</view>
+  <view slot="content">通知</view>
+</cu-custom>
+<view class="padding-top"></view>
+<view wx:for="{{sysList}}" wx:key="_id">
+  <view class="flex-row justify-center">
+    <text class="text-gray">{{item.createTime}}</text>
+  </view>
+  <view class="cu-card dynamic">
+    <view class="cu-item shadow" style="background-color: ghostwhite;">
+      <view class="padding flex-row align-center">
+        <text class="cu-avatar round cuIcon-notification bg-cyan light"></text>
+        <text class="padding-left text-lg">{{item.title}}</text>
+      </view>
+      <view class="flex-row justify-center">
+        <view style="width: 85vw;height: 1rpx;background-color: rgb(160, 156, 156);"></view>
+      </view>
+      <view class="padding" style="color: darkslategray;">
+        <rich-text nodes="{{item.content}}"/>
+      </view>
+    </view>
+  </view>
+</view>

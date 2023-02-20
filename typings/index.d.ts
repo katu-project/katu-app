@@ -13,7 +13,10 @@ interface IAppOption {
 
 interface INotice {
   _id: string
+  type: string
+  createTime: string
   updateTime: string
+  title: string
   content: string
   auto_show: boolean
 }

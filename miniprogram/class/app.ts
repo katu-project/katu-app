@@ -507,6 +507,11 @@ class AppManager extends Base {
     this.clearMasterKey()
   }
 
+  // simple api proxy
+  async getNotices(){
+    return api.getNotices()
+  }
+
   // 导航
   async reLaunch(path?:string){
     return wx.reLaunch({

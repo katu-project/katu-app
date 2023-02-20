@@ -6,7 +6,9 @@ export default {
   getDefaultTag: () => request<ICardTag[]>('app/tags'),
   getChangeLog: () => request<IChangeLog[]>('app/changeLog'),
 
-  getNotice: (data?:any) => request<INotice>('app/notice', data), 
+  getNotice: (data?:any) => request<INotice>('app/notice', data),
+
+  getNotices: (data?:any) => request<{sys:INotice[],user:INotice[]}>('app/notices', data),
 
   getShareItem: (data?:any) => request<IShareItem>('app/share', data),
 
