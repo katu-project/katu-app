@@ -1,4 +1,4 @@
-import { loadData, navigateTo, showNotice, createAdvSetData } from '@/utils/index'
+import { loadData, navigateTo, createAdvSetData } from '@/utils/index'
 import { DefaultShowLockImage, DefaultShowImage, APP_ENTRY_PATH, DefaultLoadFailedImage } from '@/const'
 import api from '@/api'
 import { getAppManager } from '@/class/app'
@@ -21,30 +21,34 @@ Page({
     isRefresh: false
   },
 
-  onLoad() {
+  async onLoad() {
     app.on('cardChange',this.onEventCardChange)
     app.on('cardDelete',this.onEventCardDelete)
     app.on('cardDecrypt',this.onEventCardChange)
+    await this.loadData()
+    await loadData(user.init,{},'加载用户信息')
+    if(!user.isActive){
+      app.showActiveNotice('现在激活账户可领取免费兔币')
+    }else{
+      this.loadNotice()
+    }
   },
   onUnload(){
     app.off('cardChange',this.onEventCardChange)
     app.off('cardDelete',this.onEventCardDelete)
     app.off('cardDecrypt',this.onEventCardChange)
   },
-  async onReady() {
-    await this.loadData()
-    await loadData(user.init,{},'加载用户信息')
-    if(!user.isActive){
-      app.showActiveNotice('现在激活账户可领取免费兔币')
-    }
+
+  async onShow() {
+    this.setTabState()
+    setTimeout(()=>{
+      this.loadNotice()
+    },2000)
   },
 
-  onShow() {
-    this.setTabState()
-    if(user.isActive){
-      setTimeout(()=>this.loadNotice(),2000)
-    }
+  async onReady() {
   },
+
   async loadData(){
     let { likeList, cateList } = await loadData(api.getHomeData,{},'加载数据中')
     const setData = {}
@@ -163,9 +167,10 @@ Page({
     }
   },
   async loadNotice(){
+    if(!user.isActive || this.data.notice._id) return
     return api.getNotice().then(notice=>{
       if(!notice._id) return 
-      notice.updateTime = new Date(notice.updateTime).toLocaleDateString()
+      notice.updateTime = notice.updateTime.slice(0,10)
       this.setData({
         notice
       })
@@ -180,15 +185,13 @@ Page({
       likeList: this.data.likeList
     })
   },
-  tapToMarkRead(){
-    if(!this.data.notice._id) {
-      return this.hideModal('showNotice')
-    }
-    api.markRead(this.data.notice._id)
+  async tapToMarkRead({currentTarget:{dataset:{key}}}){
+    await api.markRead(key)
     this.setData({
       'notice._id': ''
     })
     this.hideModal('showNotice')
+    this.loadNotice()
   },
   tapToHideModal(e){
     this.hideModal(e.currentTarget.dataset.name)
@@ -201,7 +204,7 @@ Page({
       const data = {showNotice: true}
       this.setData(data)
     }else{
-      showNotice('暂无新通知')
+      navigateTo('../notice/index')
     }
   },
   tapToCardList(e){

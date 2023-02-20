@@ -63,14 +63,14 @@
         <text class="cuIcon-close text-red"></text>
       </view>
     </view>
-    <view class="padding-tb-sm padding-lr margin-lr text-left solids-top solids">
-      <view style="height: 40vh;overflow-y: scroll;" class="flex-col">
+    <view class="padding-tb-sm padding-lr-sm margin-lr text-left solids-top solids">
+      <view style="max-height: 40vh;overflow-y: scroll;" class="flex-col">
         <rich-text style="flex:1" nodes="{{notice.content}}"></rich-text>
-        <text class="text-right padding-top">{{notice.time}}</text>
+        <text class="text-right padding-top">{{notice.updateTime}}</text>
       </view>
     </view>
     <view class="action flex justify-center">
-      <view class="padding-sm margin-sm bg-cyan light br-10" bindtap="tapToMarkRead" style="width:50vw">
+      <view class="padding-sm margin-sm bg-cyan light br-10" data-key="{{notice._id}}" bindtap="tapToMarkRead" style="width:50vw">
         <text class="text-cyan">我知道了</text>
       </view>
     </view>
