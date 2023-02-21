@@ -93,11 +93,13 @@ Page({
     }
   },
   checkSetting(){
-    if(app.user.config?.general.defaultUseEncrytion){
-      this.setData({
-        'card.encrypted': true
-      })
-      this.checkShowSetMasterKey()
+    if(user.isActive){
+      if(user.config?.general.defaultUseEncrytion){
+        this.setData({
+          'card.encrypted': true
+        })
+        this.checkShowSetMasterKey()
+      }
     }
   },
   async loadCardData(){
@@ -277,6 +279,10 @@ Page({
       'card.encrypted': e.detail.value
     })
     if(e.detail.value){
+      if(!user.isActive){
+        app.showActiveNotice()
+        return
+      }
       this.checkShowSetMasterKey()
     }
   },
@@ -288,7 +294,7 @@ Page({
   },
 
   checkShowSetMasterKey(){
-    if(!app.user.setMasterKey){
+    if(!user.baseInfo.setMasterKey){
       showChoose("警告","未设置主密码",{confirmText:'去设置'}).then(({cancel})=>{
         if(cancel) {
           this.changeEncrypt({detail:{value: false}})
