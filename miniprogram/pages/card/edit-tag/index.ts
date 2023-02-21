@@ -1,4 +1,4 @@
-import { showChoose, loadData, showError } from '@/utils/index'
+import { showChoose, loadData, showError, showSuccess } from '@/utils/index'
 import { ColorList } from '@/const'
 
 import { getAppManager } from '@/class/app'
@@ -53,6 +53,7 @@ Page({
           this.setData({
             list: this.data.list
           })
+          showSuccess('删除成功')
           user.loadCustomTags()
         })
       }
@@ -68,17 +69,24 @@ Page({
       return app.showActiveNotice()
     }
 
-    if(this.data.list.find(tag=>tag.name === this.data.tempTagName)){
+    const tagName = this.data.tempTagName
+
+    if(this.data.list.find(tag=>tag.name === tagName)){
       showError("标签已经存在")
       return
     }
-    const tagName = this.data.tempTagName
+
+    if(user.config?.general.useDefaultTag && app.Config.tags.find(tag=>tag.name === tagName)){
+      showError("内置标签已存在")
+      return
+    }
 
     const res = await loadData(user.createTag, {name:tagName})
     this.hideModal({currentTarget:{dataset:{key:'showCreateTag'}}})
     this.setData({
       [`list[${this.data.list.length}]`]: {name: res.name, _id: res._id}
     })
+    showSuccess('创建成功')
     user.loadCustomTags()
   },
   tapToShowSetColor(e){

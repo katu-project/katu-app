@@ -35,10 +35,10 @@
     </view>
     <view class="padding-xl bg-white flex-col justify-center">
       <view class="solids-bottom" style="width: 300rpx;align-self: center;">
-        <input type="text" style="height: 40px;" class="text-center" focus="{{showCreateTag}}" model:value="{{tempTagName}}" bindinput="checkInputTag" placeholder=""/>
+        <input type="text" style="height: 80rpx;" class="text-center" model:value="{{tempTagName}}" bindinput="checkInputTag"/>
       </view>
       <view class="padding-top">
-        <text class="text-sm text-grey">建议4个字以内</text>
+        <text class="text-sm text-grey">标签名称长度不超过4个字符</text>
       </view>
     </view>
     <view class="cu-bar bg-white justify-end">
