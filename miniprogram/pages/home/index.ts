@@ -25,8 +25,9 @@ Page({
     app.on('cardChange',this.onEventCardChange)
     app.on('cardDelete',this.onEventCardDelete)
     app.on('cardDecrypt',this.onEventCardChange)
-    await this.loadData()
+    // 加载用户信息需要在一开始，加载图片判断自动显示需要检查用户配置
     await loadData(user.init,{},'加载用户信息')
+    await this.loadData()
     if(!user.isActive){
       app.showActiveNotice('现在激活账户可领取免费兔币')
     }else{
@@ -132,9 +133,7 @@ Page({
       const advSetData = createAdvSetData(this.setData.bind(this), this.data.likeList.length)
       for (const idx in this.data.likeList) {
         const card = this.data.likeList[idx]
-        cardManager.getImageRenderSetData(idx, card, 'likeList').then(setData=>{
-          advSetData(setData)
-        })
+        cardManager.getImageRenderSetData(idx, card, 'likeList').then(advSetData)
       }
     }
   },

@@ -39,14 +39,20 @@ export function createAdvSetData(originSetData,dataCount:number,gap?:number){
   return function(setData){
     dataSets.push(setData)
     doIdx ++
-    if(dataSets.length % gap! === 0){
-      originSetData(dataSets.reduce((a,b)=>Object.assign(a,b)))
-      console.warn('adv setData part:',dataSets.length)
-      dataSets = []
-    }else if(doIdx === dataCount){
-      originSetData(dataSets.reduce((a,b)=>Object.assign(a,b)))
-      console.warn('adv setData end:',dataSets.length,gap)
+    if(dataSets.length % gap! !== 0 && doIdx !== dataCount){
+      return
     }
+    const _setData = dataSets.reduce((a,b)=>Object.assign(a,b))
+    const _setDataLength = Object.keys(_setData).length
+    if(_setDataLength){
+      originSetData(_setData)
+    }
+    if(doIdx === dataCount){
+      console.warn('adv setData  end:',`${dataSets.length}/${dataCount}`)
+    }else if(dataSets.length % gap! === 0){
+      console.warn('adv setData part:',`${dataSets.length}/${dataCount}`)
+      dataSets = []
+    } 
   }
 }
 
