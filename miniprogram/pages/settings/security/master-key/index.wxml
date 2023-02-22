@@ -13,7 +13,7 @@
     </view>
     <text class="padding-top text-red text-center">主密码用于加/解密用户数据</text>
     <text class="text-red text-center">遗忘主密码将导致加密数据丢失，请务必牢记！</text>
-    <text class="text-green text-center">密码格式应为字母、数字的组合，不少于6位</text>
+    <text class="text-green text-center">密码应为字母、数字的组合，不少于6位</text>
     <view class="margin-top"></view>
     <view class="padding flex-col justify-center align-center">
       <text class="padding-bottom-sm">输入{{setMasterKey?'当前':''}}主密码</text>
@@ -46,8 +46,9 @@
 
     <button class="cu-btn block line-cyan lg margin-top-lg gfw" bindtap="tapToSetMasterKey">{{setMasterKey?'更新':'设置'}}主密码</button>
 
-    <view class="padding-top-lg solids-bottom margin" bindtap="tapToResetKey">
+    <view class="padding-top-lg solids-bottom margin" wx:if="{{setMasterKey}}" bindtap="tapToResetKey">
       <text class="text-orange">重置主密码</text>
     </view>
+    <view wx:else class="padding"></view>
   </view>
 </view>

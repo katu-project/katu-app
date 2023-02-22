@@ -99,7 +99,7 @@ Page({
     app.clearMasterKey()
     user.reloadInfo()
     this.resetContent()
-    showChoose(`${this.data.setMasterKey?'更新':'设置'}成功`,"",{showCancel:false}).then(()=>{
+    showChoose('操作提示',`${this.data.setMasterKey?'更新':'设置'}成功`,{showCancel:false}).then(()=>{
       navigateBack()
     })
   },
