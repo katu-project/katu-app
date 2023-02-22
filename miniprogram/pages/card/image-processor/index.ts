@@ -47,27 +47,29 @@ Page({
   },
   async processImage(idx){
     const imageUrl = this.originImagePath
-    
     switch (idx) {
-      case 0:
-        break;
       case 1:
-        this.useInternalApi()
+        this.useInternalApi(imageUrl)
         break
       case 2:
-        this.useRemoteApi()
+        this.useRemoteApi(imageUrl)
         break
+      case 3:
+        this.useWxEditor(imageUrl)
+        break
+      case 0:
       default:
-        break;
+        this.useOriginImage(imageUrl)
     }
-
+  },
+  async useOriginImage(src){
     this.setData({
-      'tmpImagePath': imageUrl
+      'tmpImagePath': src
     })
   },
-  async useInternalApi(){
+  async useInternalApi(src){
     const cardManager = getCardManager()
-    const imageUrl = await loadData(cardManager.parseCardImageByInternalApi, this.data.tmpImagePath,{returnFailed: true}).catch(error=>{
+    const imageUrl = await loadData(cardManager.parseCardImageByInternalApi, src, {returnFailed: true}).catch(error=>{
       this.findCardFailed(error)
     })
     if(imageUrl) {
@@ -76,7 +78,7 @@ Page({
       })
     }
   },
-  async useRemoteApi(){
+  async useRemoteApi(src){
     const cardManager = getCardManager()
     if(!this.useRemoteApiConfirm) {
       this.setData({
@@ -86,7 +88,7 @@ Page({
       this.showTip2('确认')
       return
     }
-    const imageUrl = await loadData(cardManager.parseCardImageByRemoteApi, this.data.tmpImagePath,{returnFailed: true}).catch(error=>{
+    const imageUrl = await loadData(cardManager.parseCardImageByRemoteApi, src ,{returnFailed: true}).catch(error=>{
       this.findCardFailed(error)
     })
     if(imageUrl){
@@ -95,24 +97,35 @@ Page({
       })
     }
   },
+  async useWxEditor(src){
+    wx.editImage({
+      src,
+      success: ({tempFilePath})=>{
+        this.setData({
+          'tmpImagePath': tempFilePath
+        })
+      },
+      fail: () => this.findCardFailed('')
+    })
+  },
   findCardFailed(error){
-    showError(error.message)
+    if(error) {
+      showError(error.message)
+    }
     this.setData({
       selectedMethod: 0
     })
   },
   showTip1(){
     showChoose("温馨提示","未识别出卡片？\n查看这些小技巧也许能提高卡片识别率！",{confirmText:'去查看'})
-    .then(({cancel})=>{
-      if(cancel) return
-      app.navToDoc(app.Config.doc.imageProcessorTip_1)
+    .then(({confirm})=>{
+      if(confirm) app.navToDoc(app.Config.doc.imageProcessorTip_1)
     })
   },
   showTip2(cancelText?:string){
     showChoose("警告","外部接口服务由第三方提供!\n更多信息请查看帮助文档。",{confirmText:'去查看',cancelText: cancelText||'取消'})
-    .then(({cancel})=>{
-      if(cancel) return
-      app.navToDoc(app.Config.doc.imageProcessorTip_2)
+    .then(({confirm})=>{
+      if(confirm) app.navToDoc(app.Config.doc.imageProcessorTip_2)
     })
   },
   tapToShowWarn(){
