@@ -6,7 +6,8 @@ import api from '@/api'
 Page({
   data: {
     qaCate: [] as IAnyObject[],
-    list: [] as IAnyObject[]
+    list: [] as IAnyObject[],
+    isLoading: true
   },
   onLoad() {
     this.setData({
@@ -21,7 +22,10 @@ Page({
   },
   loadData(){
     loadData(api.getHotDoc).then(list=>{
-      this.setData({list})
+      this.setData({
+        list,
+        isLoading: false
+      })
     })
   },
   tapToDetail(e){
