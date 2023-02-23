@@ -34,9 +34,7 @@ Page({
       if(configItem.key === 'config_security_rememberPassword' && configItem.value === false){
         app.clearMasterKey()
       }
-      this.setData({
-        [configItem.key]: configItem.value
-      })
+      user.reloadInfo().then(this.loadData)
     }).catch(err=>{
       this.loadData()
       showError(err.message)
@@ -45,7 +43,7 @@ Page({
   tapToPage({currentTarget:{dataset:{page}}}){
     navigateTo(page)
   },
-  tapToReadDoc(e){
+  tapToReadDoc(){
     app.navToDoc(app.Config.doc.rememberKeyNotice)
   }
 })

@@ -14,7 +14,7 @@
         <text class="text-red text-sm" wx:else>未设置</text>
       </view>
     </view>
-    <view class="padding bg-white text-grey text-sm">加/解密数据使用的唯一密码</view>
+    <view class="padding bg-white text-grey text-sm">访问加密数据的唯一密钥</view>
 
     <view class="cu-item arrow" bindtap="tapToPage" data-page="./recovery-key/index">
       <view class="content">
@@ -25,26 +25,26 @@
         <text class="text-red text-sm" wx:else>未设置</text>
       </view>
     </view>
-    <view class="padding bg-white text-grey text-sm">当遗忘主密码后，可以使用备份密码恢复主密码</view>
+    <view class="padding bg-white text-grey text-sm">用于重置主密码</view>
 
     <view class="cu-item">
       <view class="content">
-      <text class="">记住主密码</text>
+      <text>记住主密码</text>
       </view>
       <view class="action">
         <switch class="sm" bindchange="tapToConfig" data-key="config_security_rememberPassword" checked="{{config_security_rememberPassword}}"></switch>
       </view>
     </view>
-    <view class="padding bg-white text-grey text-sm">在验证过一次主密码后，后续使用过程中无需再次验证主密码 <text class="cuIcon-warn text-yellow" bindtap="tapToReadDoc"></text></view>
+    <view class="padding bg-white text-grey text-sm">记住主密码后，后续使用不再要求验证主密码 <text class="cuIcon-warn text-yellow" bindtap="tapToReadDoc"></text></view>
 
     <view class="cu-item">
       <view class="content">
-      <text class="">离开应用后清除主密码</text>
+      <text class="">退出小程序后清除主密码</text>
       </view>
       <view class="action">
         <switch class="sm" disabled="{{config_security_rememberPassword}}" bindchange="tapToConfig" data-key="config_security_lockOnExit" checked="{{config_security_lockOnExit}}"></switch>
       </view>
     </view>
-    <view class="padding bg-white text-grey text-sm">在离开应用后清除主密码记录，再次进入应用后相关操作需重新验证主密码</view>
+    <view class="padding bg-white text-grey text-sm">退出小程序，再次进入后相关操作需重新验证主密码</view>
   </view>
 </view>
