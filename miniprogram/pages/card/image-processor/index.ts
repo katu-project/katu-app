@@ -5,7 +5,6 @@ import { getAppManager } from '@/class/app'
 const app = getAppManager()
 
 Page({
-  returnContentKey: '',
   originImagePath: '',
   useRemoteApiConfirm: false,
   data: {
@@ -13,7 +12,6 @@ Page({
     tmpImagePath: ''
   },
   onLoad(options) {
-    this.returnContentKey = options.returnContentKey || 'tempData'
     this.setData({
       tmpImagePath: DefaultShowImage
     })
@@ -37,10 +35,11 @@ Page({
   async useAndBack() {
     const res = await loadData(app.imageContentCheck,{imagePath:this.data.tmpImagePath},'内容安全检测中')
     if(!res.checkPass){
-      showChoose("系统提示","图片似乎存在不适内容",{showCancel:false})
+      showChoose("系统提示","图片存在不适内容?",{showCancel:false})
       return
     }
-    navigateBack({backData: {[this.returnContentKey]: this.data.tmpImagePath}})
+    app.emit('setCardImage',this.data.tmpImagePath)
+    navigateBack()
   },
   async selectMethod(e){
     return this.processImage(parseInt(e.detail.value))

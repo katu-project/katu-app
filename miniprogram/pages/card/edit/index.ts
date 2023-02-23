@@ -11,11 +11,6 @@ const user = getUserManager()
 
 Page({
   id: '',
-  backData: {
-    resolveCardExtraData: '',
-    resolveImagePath: '',
-    resolveCardTitle: ''
-  },
   resolveImageIdx: -1,
   data: {
     edit: false,
@@ -37,6 +32,14 @@ Page({
     if(options.id){
       this.id = options.id
     }
+    app.on('setCardImage',this.onEventSetCardImage)
+    app.on('setCardTitle',this.onEventSetCardTitle)
+    app.on('setCardExtraData',this.onEventSetCardExtraData)
+  },
+  onUnload(){
+    app.off('onEventSelectImage',this.onEventSetCardImage)
+    app.off('setCardTitle',this.onEventSetCardTitle)
+    app.off('setCardExtraData',this.onEventSetCardExtraData)
   },
   async onReady(){
     this.checkSetting()
@@ -45,12 +48,7 @@ Page({
     }
   },
   onShow() {
-    this.receiveChoosePic()
-    this.receiveCardTitle()
-    this.receiveExtraData()
     this.loadRenderData()
-  },
-  onUnload(){
   },
   loadRenderData(){
     this.loadTagData()
@@ -62,35 +60,25 @@ Page({
       tags
     })
   },
-  receiveChoosePic(){
-    if(this.backData?.resolveImagePath){
-      const key = `card.image[${this.resolveImageIdx}].url`
-      this.setData({
-        [key]: this.backData.resolveImagePath
-      })
-      this.backData.resolveImagePath = ''
-      this.resolveImageIdx = 0
-    }
+  onEventSetCardImage(path){
+    const key = `card.image[${this.resolveImageIdx}].url`
+    this.setData({
+      [key]: path
+    })
+    this.resolveImageIdx = 0
   },
-  receiveCardTitle(){
-    if(this.backData?.resolveCardTitle){
-      const key = `card.title`
-      this.setData({
-        [key]: this.backData.resolveCardTitle
-      })
-      this.backData.resolveCardTitle = ''
-    }
+  onEventSetCardTitle(title){
+    const key = `card.title`
+    this.setData({
+      [key]: title
+    })
   },
-  receiveExtraData(){
-    if(this.backData?.resolveCardExtraData){
-      console.log('处理额外数据:',this.backData.resolveCardExtraData);
-      const key = `card.info`
-      const data = JSON.parse(this.backData.resolveCardExtraData)
-      this.setData({
-        [key]: data
-      })
-      this.backData.resolveCardExtraData = ''
-    }
+  onEventSetCardExtraData(extraData){
+    console.log('处理额外数据:',extraData);
+    const key = `card.info`
+    this.setData({
+      [key]: extraData
+    })
   },
   checkSetting(){
     if(user.isActive){
@@ -252,9 +240,8 @@ Page({
 
       this.resolveImageIdx = index
 
-      const rk = 'resolveImagePath'
       const c = picPath
-      await navigateTo(`../image-processor/index?returnContentKey=${rk}&value=${c}`)
+      await navigateTo(`../image-processor/index?value=${c}`)
     } catch (error) {
       showError(error.message)
     }
@@ -316,9 +303,8 @@ Page({
 
   // 卡片名称
   tapToEditTitle(){
-    const rk = 'resolveCardTitle'
     const c = this.data.card.title
-    navigateTo(`../edit-content/index?returnContentKey=${rk}&value=${c}`)
+    navigateTo(`../edit-content/index?value=${c}`)
   },
   // 标签部分
   tapToSetTag(){
@@ -352,9 +338,8 @@ Page({
   },
 
   tapToEditExtraData(){
-    const rk = 'resolveCardExtraData'
     const c = JSON.stringify(this.data.card.info)
-    navigateTo(`../edit-extra/index?returnContentKey=${rk}&value=${c}`)
+    navigateTo(`../edit-extra/index?value=${c}`)
   },
 
   hideSelectTag(){

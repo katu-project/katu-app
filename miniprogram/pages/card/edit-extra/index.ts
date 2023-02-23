@@ -3,14 +3,12 @@ import { getAppManager } from '@/class/app'
 const app = getAppManager()
 
 Page({
-  returnContentKey: '',
   data: {
     extraFieldsKeys: app.Config.extraFieldsKeys,
     extraFields: [] as ICardExtraField[],
     dataChange: false
   },
   onLoad(options) {
-    this.returnContentKey = options.returnContentKey || 'tempData'
     if(options.value){
       let extraFieldsKeys = this.data.extraFieldsKeys
       const extraFields = app.rebuildExtraFields(JSON.parse(options.value))
@@ -75,13 +73,14 @@ Page({
       showError('填写有误')
       return
     }
-    const extraFields = JSON.stringify(app.condenseExtraFields(this.data.extraFields))
+    const extraFields = app.condenseExtraFields(this.data.extraFields)
     const checkText = this.data.extraFields.map(e=>e.key === 'cu'? `${e.name}${e.value}`: e.value).join('')
     const {checkPass} = await loadData(app.textContentsafetyCheck,checkText)
     if(!checkPass){
-      showChoose("系统提示","数据似乎存在不适内容",{showCancel:false})
+      showChoose("系统提示","数据存在不适内容?",{showCancel:false})
       return
     }
-    navigateBack({backData: {[this.returnContentKey]: extraFields}})
+    app.emit('setCardExtraData', extraFields)
+    navigateBack()
   }
 })

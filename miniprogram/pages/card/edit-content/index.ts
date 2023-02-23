@@ -1,14 +1,12 @@
+import { getAppManager } from '@/class/app'
 import { navigateBack } from '@/utils/index'
-
-export {}
+const app = getAppManager()
 
 Page({
-  returnContentKey: '',
   data: {
     content: ''
   },
   onLoad(options) {
-    this.returnContentKey = options.returnContentKey || 'tempData'
     if(options.value){
       this.setData({
         content: options.value
@@ -19,6 +17,7 @@ Page({
 
   },
   tapToSetContent(){
-    navigateBack({backData:{[this.returnContentKey]: this.data.content}})
+    app.emit('setCardTitle',this.data.content.trim())
+    navigateBack()
   }
 })
