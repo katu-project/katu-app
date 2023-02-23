@@ -60,7 +60,7 @@ Page({
     this.data.extraFields.splice(idx,1)
     const setData = {
       extraFields: this.data.extraFields,
-      dataChange: this.data.extraFields.length > 0
+      dataChange: true
     }
     if(selectedField.key !== 'cu'){
       setData[`extraFieldsKeys`] = this.data.extraFieldsKeys.concat(app.Config.extraFieldsKeys.find(e=>e.key === selectedField.key)!).sort((a,b)=> a.xid-b.xid)
@@ -69,18 +69,22 @@ Page({
     this.setData(setData)
   },
   async tapToSave(){
-    if(this.data.extraFields.some(field=>!field.value || !field.name)){
-      showError('填写有误')
-      return
+    if(this.data.extraFields.length){
+      if(this.data.extraFields.some(field=>!field.value || !field.name)){
+        showError('填写有误')
+        return
+      }
+      const extraFields = app.condenseExtraFields(this.data.extraFields)
+      const checkText = this.data.extraFields.map(e=>e.key === 'cu'? `${e.name}${e.value}`: e.value).join('')
+      const {checkPass} = await loadData(app.textContentsafetyCheck,checkText)
+      if(!checkPass){
+        showChoose("系统提示","数据存在不适内容?",{showCancel:false})
+        return
+      }
+      app.emit('setCardExtraData', extraFields)
+    }else{
+      app.emit('setCardExtraData', [])
     }
-    const extraFields = app.condenseExtraFields(this.data.extraFields)
-    const checkText = this.data.extraFields.map(e=>e.key === 'cu'? `${e.name}${e.value}`: e.value).join('')
-    const {checkPass} = await loadData(app.textContentsafetyCheck,checkText)
-    if(!checkPass){
-      showChoose("系统提示","数据存在不适内容?",{showCancel:false})
-      return
-    }
-    app.emit('setCardExtraData', extraFields)
     navigateBack()
   }
 })
