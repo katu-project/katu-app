@@ -32,6 +32,7 @@ Page({
         }
       ]
     } as Partial<ICard>,
+    extraData: [] as IAnyObject[],
     editable: true,
     shareable: true
   },
@@ -40,10 +41,14 @@ Page({
       this.id = options.id
     }
     wx.hideShareMenu()
-    app.on('cardChange',this.silentRefresh)
+    this.removeAllEvent()
+    app.on('cardChange',this.onEventCardChange)
   },
   onUnload(){
-    app.off('cardChange',this.silentRefresh)
+    this.removeAllEvent()
+  },
+  removeAllEvent(){
+    app.off('cardChange',this.onEventCardChange)
   },
   async onReady() {
     if(!this.id) {
@@ -63,8 +68,6 @@ Page({
       }
     }
   },
-  onShow() {
-  },
   async loadData(card){
     if(!card){
       card = await loadData(api.getCard,{
@@ -77,7 +80,8 @@ Page({
       'card.encrypted': card.encrypted,
       'card.title': card.title,
       'card.tags': card.tags,
-      'card.info': card.encrypted ? [] : app.rebuildExtraFields(card.info),
+      'card.info': card.encrypted ? [] : card.info,
+      'extraData': card.encrypted ? [] : app.rebuildExtraFields(card.info),
       'card.setLike': card.setLike || false,
       'card.image': card.image.map(pic=>{
         // 不要直接修改只读数据
@@ -96,7 +100,8 @@ Page({
           try {
             const imageData = await cardManager.getCardCache(image)
             setData[`card.image[${idx}]._url`] = imageData.imagePath 
-            setData[`card.info`] = app.rebuildExtraFields(imageData.extraData)
+            setData[`card.info`] = imageData.extraData
+            setData['extraData'] = app.rebuildExtraFields(imageData.extraData)
           } catch (error) {}
         }
         if(Object.keys(setData).length){
@@ -105,7 +110,7 @@ Page({
       }
     }
   },
-  async silentRefresh(card){
+  async onEventCardChange(card){
     console.log('detail page: update card info:', card._id, card.title)
     this.loadData(card)
   },
@@ -149,7 +154,8 @@ Page({
     
     const setData = {
       [`card.image[${this.chooseIdx}]._url`]: imageData.imagePath,
-      [`card.info`]: app.rebuildExtraFields(imageData.extraData)
+      [`card.info`]: imageData.extraData,
+      ['extraData']: app.rebuildExtraFields(imageData.extraData)
     }
     this.setData(setData)
     if(this.chooseIdx === 0){
