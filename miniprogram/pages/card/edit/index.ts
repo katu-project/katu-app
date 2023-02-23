@@ -11,7 +11,7 @@ const user = getUserManager()
 
 Page({
   id: '',
-  resolveImageIdx: -1,
+  originData: {} as ICard,
   data: {
     edit: false,
     card: {
@@ -26,20 +26,25 @@ Page({
     },
     curShowPicIdx: 0,
     showInputKey: false,
+    dataChange: false,
     tags: [] as ICardTag[]
   },
   onLoad(options){
     if(options.id){
       this.id = options.id
     }
+    this.removeAllEvent()
     app.on('setCardImage',this.onEventSetCardImage)
     app.on('setCardTitle',this.onEventSetCardTitle)
     app.on('setCardExtraData',this.onEventSetCardExtraData)
   },
   onUnload(){
-    app.off('onEventSelectImage',this.onEventSetCardImage)
-    app.off('setCardTitle',this.onEventSetCardTitle)
-    app.off('setCardExtraData',this.onEventSetCardExtraData)
+    this.removeAllEvent()
+  },
+  removeAllEvent(){
+    app.off('onEventSelectImage')
+    app.off('setCardTitle')
+    app.off('setCardExtraData')
   },
   async onReady(){
     this.checkSetting()
@@ -61,24 +66,25 @@ Page({
     })
   },
   onEventSetCardImage(path){
-    const key = `card.image[${this.resolveImageIdx}].url`
+    const key = `card.image[${this.data.curShowPicIdx}].url`
     this.setData({
       [key]: path
     })
-    this.resolveImageIdx = 0
+    this.checkDataChange()
   },
   onEventSetCardTitle(title){
-    const key = `card.title`
+    console.log('edit title:', title)
     this.setData({
-      [key]: title
+      [`card.title`]: title
     })
+    this.checkDataChange()
   },
   onEventSetCardExtraData(extraData){
-    console.log('处理额外数据:',extraData);
-    const key = `card.info`
+    console.log('edit extraData:', JSON.stringify(extraData))
     this.setData({
-      [key]: extraData
+      [`card.info`]: extraData
     })
+    this.checkDataChange()
   },
   checkSetting(){
     if(user.isActive){
@@ -120,6 +126,7 @@ Page({
       }
     }
     this.setData(setData)
+    this.originData = JSON.parse(JSON.stringify(this.data.card))
     // 处理标签
     this.renderTagState()
   },
@@ -228,20 +235,17 @@ Page({
       showInputKey: true
     })
   },
-  async tapToChoosePic(e){
+  async tapToChoosePic(){
     if(!user.isActive){
       app.showActiveNotice()
       return
     }
-    const index = e.currentTarget.dataset.index
+
     try {
       const picPath = await app.chooseLocalImage()
       if(!picPath) return
 
-      this.resolveImageIdx = index
-
-      const c = picPath
-      await navigateTo(`../image-processor/index?value=${c}`)
+      await navigateTo(`../image-processor/index?value=${picPath}`)
     } catch (error) {
       showError(error.message)
     }
@@ -259,6 +263,7 @@ Page({
         'card.image': this.data.card.image.slice(0,-1)
       })
     }
+    this.checkDataChange()
   },
 
   changeEncrypt(e){
@@ -278,6 +283,7 @@ Page({
     this.setData({
       'card.setLike': e.detail.value
     })
+    this.checkDataChange()
   },
 
   checkShowSetMasterKey(){
@@ -313,6 +319,7 @@ Page({
       'card.tags': tags
     })
     this.hideSelectTag()
+    this.checkDataChange()
   },
 
   tapToShowEncryptChangeNotice(){
@@ -320,6 +327,7 @@ Page({
       showChoose('温馨提示','更新卡片暂不支持切换加密模式',{showCancel:false})
     }
   },
+
   tapToShowSelectTag(){
     this.setData({
       showSelectTag: true
@@ -361,4 +369,35 @@ Page({
       })
     }
   },
+
+  checkDataChange(){
+    const originCard = this.originData
+    const editCard = this.data.card
+    let dataChange = false
+    // 名字
+    if(originCard.title !== editCard.title){
+      dataChange = true
+    }else
+    // 标签
+    if(originCard.tags.join('') !== editCard.tags.join('')){
+      dataChange = true
+    }else
+    // 设置常用
+    if(originCard.setLike !== editCard.setLike){
+      dataChange = true
+    }else
+    // 附件数据
+    if(originCard.info.join() !== editCard.info.join()){
+      dataChange = true
+    }else
+    // 图片
+    if(originCard.image.length !== editCard.image.length || 
+       originCard.image.map(e=>e.url).join('') !== editCard.image.map(e=>e.url).join('')){
+      dataChange = true
+    }
+
+    this.setData({
+      dataChange
+    })
+  }
 })

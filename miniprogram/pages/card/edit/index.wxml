@@ -11,7 +11,7 @@
           indicator-color="#8799a3" 
           indicator-active-color="#0081ff">
     <swiper-item wx:for="{{card.image}}" wx:key="index" class="{{curShowPicIdx==index?'cur':''}}">
-      <view class="swiper-item" bindtap="tapToChoosePic" data-index="{{index}}">
+      <view class="swiper-item" bindtap="tapToChoosePic">
         <image class="pic-img card" mode="aspectFit" src="{{item.url}}"></image>
       </view>
     </swiper-item>
@@ -70,7 +70,7 @@
     </view>
   </view>
 
-  <button class="cu-btn line-cyan lg margin-bottom-lg" bindtap="tapToSaveCard" style="width: 100%;">
+  <button class="cu-btn line-cyan lg margin-bottom-lg" disabled="{{edit && !dataChange}}" bindtap="tapToSaveCard" style="width: 100%;">
     <view class="text-xl gfw text-cyan">
       {{edit?'保存数据':'添加卡片'}}
     </view>
