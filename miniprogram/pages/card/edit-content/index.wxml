@@ -5,9 +5,9 @@
 
 <view class="page">
   <view class="margin padding-left br-10" style="height: 50px;border: 2rpx solid darkcyan;">
-    <input type="text" focus="true" model:value="{{content}}" bindinput="checkContent" style="height: 50px;" placeholder="输入名称"/>
+    <input type="text" focus="true" value="{{content}}" bindinput="onBindInput" style="height: 50px;" placeholder="输入名称"/>
   </view>
   <view class="padding flex-row">
-    <button class="bg-cyan gfw" bindtap="tapToSetContent">确认</button>
+    <button class="bg-cyan gfw" disabled="{{!dataChange}}" bindtap="tapToSetContent">确认</button>
   </view>
 </view>
