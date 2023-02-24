@@ -5,7 +5,7 @@ import { randomBytesHexString } from '@/utils/crypto'
 import { checkAccess } from '@/utils/file'
 import utils,{ navigateTo, getCache, setCache, delCache, showChoose, chooseLocalImage, switchTab } from '@/utils/index'
 import { sleep } from '@/utils/base'
-import { APP_TEMP_DIR, APP_DOWN_DIR, APP_IMAGE_DIR, DefaultLoadFailedImage, MASTER_KEY_NAME, WX_CLOUD_STORAGE_FILE_HEAD, LocalCacheKeyMap, APP_ENTRY_PATH } from '@/const'
+import { APP_TEMP_DIR, APP_DOWN_DIR, APP_IMAGE_DIR, DefaultLoadFailedImage, MASTER_KEY_NAME, WX_CLOUD_STORAGE_FILE_HEAD, LocalCacheKeyMap, APP_ENTRY_PATH, HOME_DATA_CACHE_KEY } from '@/const'
 import api from '@/api'
 import { getCardManager } from './card'
 import { getUserManager } from './user'
@@ -274,12 +274,14 @@ class AppManager extends Base {
     return this._setReadNotice(LocalCacheKeyMap.knowEncryptSave,true)
   }
 
-  async getLocalData(key){
+  async getLocalData<T>(key:string){
     try {
-      return await getCache(key)
+      const res: T = await getCache(key)
+      return res
     } catch (error) {
+      console.warn('getLocalData:', error)
     }
-    return null
+    return
   }
 
   async createShareItem({card, scope, expiredTime}:CreateShareOptions){
@@ -363,6 +365,26 @@ class AppManager extends Base {
 
   openDataShareDoc(){
     return this.navToDoc(this.Config.doc.dataShareNotice)
+  }
+
+  async getHomeCacheData(){
+    const homeDataCache = await this.getLocalData<IHomeDataCache>(HOME_DATA_CACHE_KEY)
+    if(homeDataCache){
+      const nowTime = new Date().getTime()
+      if(homeDataCache.cacheTime + (this.isDev ? this.Config.devHomeDataCacheTime : this.Config.homeDataCacheTime) > nowTime){
+        console.debug('使用首页缓存数据')
+        return homeDataCache.data
+      }
+    }
+    return
+  }
+
+  async setHomeCacheData(homeData:IHomeData){
+    const cacheData = {
+      cacheTime: new Date().getTime(),
+      data: homeData
+    }
+    return this.setLocalData(HOME_DATA_CACHE_KEY, cacheData)
   }
 
   //数据备份

@@ -6,6 +6,8 @@ export const AppConfig = {
   uploadShareCardNamePrefix: 'share',
   allowUploadImageType: ['jpeg','png','jpg'],
   cardImageMaxNum: 2,
+  devHomeDataCacheTime: 3600000,
+  homeDataCacheTime: 86400000,
   qaDocType: [{
     icon: 'apps',
     color: 'green',

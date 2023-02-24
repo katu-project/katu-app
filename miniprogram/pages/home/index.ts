@@ -50,18 +50,32 @@ Page({
   async onReady() {
   },
 
-  async loadData(){
-    let { likeList, cateList } = await loadData(api.getHomeData,{},'加载数据中')
+  async loadData(forceUpdate?:boolean){
+    let homeData:IHomeData|undefined
+
+    if(forceUpdate){
+      homeData = await loadData(api.getHomeData,{},'加载数据中')
+      app.setHomeCacheData(homeData)
+    }else{
+      homeData = await app.getHomeCacheData()
+      if(!homeData){
+        wx.nextTick(()=>{
+          this.loadData(true)
+        })
+        return
+      }
+    }
+    
     const setData = {}
 
-    if(cateList.length){
-      setData['cateList'] = cateList
+    if(homeData.cateList.length){
+      setData['cateList'] = homeData.cateList
     }else{
       setData['cateList'] = []
     }
 
-    if(likeList.length){
-      setData['likeList'] = likeList.map(card=>{
+    if(homeData.likeList.length){
+      setData['likeList'] = homeData.likeList.map(card=>{
         card._url = card.encrypted ? DefaultShowLockImage : DefaultShowImage
         return card
       })
@@ -69,7 +83,7 @@ Page({
 
     this.setData(setData)
     
-    if(likeList.length){
+    if(homeData.likeList.length){
       this.renderLikeCardImage()
     }
   },
@@ -213,7 +227,7 @@ Page({
     navigateTo(`/pages/card/detail/index?id=${e.currentTarget.dataset.item._id}`)
   },
   onBindRefresh(){
-    this.loadData().then(()=>{
+    this.loadData(true).then(()=>{
       this.setData({
         isRefresh: false
       })

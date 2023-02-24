@@ -43,3 +43,8 @@ interface IHomeData {
   likeList: ICard[]
   cateList: ICardSummary[]
 }
+
+interface IHomeDataCache {
+  cacheTime: number
+  data: IHomeData
+}
