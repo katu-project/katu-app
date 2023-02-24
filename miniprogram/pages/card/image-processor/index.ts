@@ -26,11 +26,17 @@ Page({
       tmpImagePath: this.originImagePath
     })
   },
-  onShow() {
-
-  },
-  goBack(){
-    navigateBack()
+  async tapToSelectImage(){
+    try {
+      const picPath = await app.chooseLocalImage()
+      if(!picPath) return
+      this.setData({
+        tmpImagePath: picPath
+      })
+      this.originImagePath = picPath
+    } catch (error) {
+      showError(error.message)
+    }
   },
   async useAndBack() {
     const res = await loadData(app.imageContentCheck,{imagePath:this.data.tmpImagePath},'内容安全检测中')

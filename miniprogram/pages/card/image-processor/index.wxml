@@ -34,7 +34,7 @@
     </view>
   </radio-group>
   <view class="margin-top padding flex">
-    <button class="cu-btn lg margin-tb btn bg-red light" bindtap="goBack">
+    <button class="cu-btn lg margin-tb btn light" bindtap="tapToSelectImage">
       <text class="gfw">重新选择</text>
     </button>
     <view class="padding-lr"></view>
