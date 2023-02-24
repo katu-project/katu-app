@@ -3,7 +3,7 @@ export const toPromise = <T>(func, options={}, returnKey?:string): Promise<T> =>
     func({
       ...options,
       success: res=>{
-        if(['checkAccess','getStats'].includes(func.name)){
+        if(func.noLog){
 
         }else{
           if(res.data && res.data.length > 200){
@@ -59,6 +59,7 @@ export async function copyFile(srcPath, destPath){
 
 export async function checkAccess(path: string) {
   const checkAccess = args => wx.getFileSystemManager().access(args)
+  checkAccess.noLog = true
   const options = {path}
   return toPromise(checkAccess, options)
 }
@@ -84,6 +85,7 @@ export async function getSavedFileList(){
 
 export async function getStats<T = any>(path, recursive=false){
   const getStats = args => wx.getFileSystemManager().stat(args)
+  getStats.noLog = true
   return toPromise<T>(getStats, {
     path,
     recursive
