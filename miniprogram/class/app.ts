@@ -1,3 +1,4 @@
+import '@/utils/override'
 import Base from './base'
 import { AppConfig } from '@/config'
 import { randomBytesHexString } from '@/utils/crypto'
