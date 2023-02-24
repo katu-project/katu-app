@@ -1,5 +1,5 @@
 import utils,{cv, convert, getCache, setCache} from '@/utils/index'
-import { CARD_EXTRADATA_CACHE_KEY, DECRYPTED_IMAGE_CACHE_SUFFIX, DOWNLOAD_IMAGE_CACHE_SUFFIX, ENCRYPTED_IMAGE_CACHE_SUFFIX, KATU_MARK, PACKAGE_TAIL_LENGTH, WX_CLOUD_STORAGE_FILE_HEAD } from '@/const'
+import { DECRYPTED_IMAGE_CACHE_SUFFIX, DOWNLOAD_IMAGE_CACHE_SUFFIX, ENCRYPTED_IMAGE_CACHE_SUFFIX, KATU_MARK, LocalCacheKeyMap, PACKAGE_TAIL_LENGTH, WX_CLOUD_STORAGE_FILE_HEAD } from '@/const'
 import api from '@/api'
 import { deleteFile } from '@/utils/file'
 import Base from '@/class/base'
@@ -332,19 +332,19 @@ class CardManager extends Base{
     const keyName = this._getExtraDataCacheKey(image)
     let cacheData = {}
     try {
-      cacheData = await getCache(CARD_EXTRADATA_CACHE_KEY)
+      cacheData = await getCache(LocalCacheKeyMap.CARD_EXTRADATA_CACHE_KEY)
     } catch (error) {
       cacheData = {}
     }
 
     cacheData[keyName] = data
-    return setCache(CARD_EXTRADATA_CACHE_KEY, cacheData)
+    return setCache(LocalCacheKeyMap.CARD_EXTRADATA_CACHE_KEY, cacheData)
   }
 
   async getExtraDataCache(image:ICardImage){
     const keyName = this._getExtraDataCacheKey(image)
     try {
-      const cacheData = await getCache(CARD_EXTRADATA_CACHE_KEY)
+      const cacheData = await getCache(LocalCacheKeyMap.CARD_EXTRADATA_CACHE_KEY)
       return cacheData[keyName] || []
     } catch (error) {
       return []

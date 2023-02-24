@@ -5,7 +5,7 @@ import { randomBytesHexString } from '@/utils/crypto'
 import { checkAccess } from '@/utils/file'
 import utils,{ navigateTo, getCache, setCache, delCache, showChoose, chooseLocalImage, switchTab } from '@/utils/index'
 import { sleep } from '@/utils/base'
-import { APP_TEMP_DIR, APP_DOWN_DIR, APP_IMAGE_DIR, DefaultLoadFailedImage, MASTER_KEY_NAME, WX_CLOUD_STORAGE_FILE_HEAD, LocalCacheKeyMap, APP_ENTRY_PATH, HOME_DATA_CACHE_KEY } from '@/const'
+import { APP_TEMP_DIR, APP_DOWN_DIR, APP_IMAGE_DIR, DefaultLoadFailedImage, WX_CLOUD_STORAGE_FILE_HEAD, LocalCacheKeyMap, APP_ENTRY_PATH } from '@/const'
 import api from '@/api'
 import { getCardManager } from './card'
 import { getUserManager } from './user'
@@ -98,7 +98,7 @@ class AppManager extends Base {
 
   async _readLocalMasterKeyCache(){
     try {
-      const {data} = await getCache(MASTER_KEY_NAME)
+      const {data} = await getCache(LocalCacheKeyMap.MASTER_KEY_CACHE_KEY)
       return data
     } catch (error) {
       console.log("读取主密码缓存失败");
@@ -125,11 +125,11 @@ class AppManager extends Base {
 
   async cacheMasterKey(){
     if(!this.masterKey) return
-    return setCache(MASTER_KEY_NAME, this.masterKey)
+    return setCache(LocalCacheKeyMap.MASTER_KEY_CACHE_KEY, this.masterKey)
   }
 
   async _removeMasterKeyCache(){
-    return delCache(MASTER_KEY_NAME)
+    return delCache(LocalCacheKeyMap.MASTER_KEY_CACHE_KEY)
   }
 
   // 使用前检测主密码状态
@@ -368,7 +368,7 @@ class AppManager extends Base {
   }
 
   async getHomeCacheData(){
-    const homeDataCache = await this.getLocalData<IHomeDataCache>(HOME_DATA_CACHE_KEY)
+    const homeDataCache = await this.getLocalData<IHomeDataCache>(LocalCacheKeyMap.HOME_DATA_CACHE_KEY)
     if(homeDataCache){
       const nowTime = new Date().getTime()
       if(homeDataCache.cacheTime + (this.isDev ? this.Config.devHomeDataCacheTime : this.Config.homeDataCacheTime) > nowTime){
@@ -384,7 +384,7 @@ class AppManager extends Base {
       cacheTime: new Date().getTime(),
       data: homeData
     }
-    return this.setLocalData(HOME_DATA_CACHE_KEY, cacheData)
+    return this.setLocalData(LocalCacheKeyMap.HOME_DATA_CACHE_KEY, cacheData)
   }
 
   //数据备份

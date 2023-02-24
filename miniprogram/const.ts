@@ -10,9 +10,6 @@ const APP_TEMP_DIR = `${APP_ROOT_DIR}/temp`
 const APP_DOWN_DIR = `${APP_ROOT_DIR}/down`
 const APP_IMAGE_DIR = `${APP_ROOT_DIR}/image`
 
-const MASTER_KEY_NAME = 'KATU_MASTER_KEY'
-const HOME_DATA_CACHE_KEY = 'HOME_DATA_CACHE_KEY'
-const CARD_EXTRADATA_CACHE_KEY = 'CARD_EXTRA_DATA_CACHE_KEY'
 const KATU_MARK = '0000952700004396'
 const PACKAGE_TAIL_LENGTH = 48
 
@@ -137,6 +134,9 @@ const PAGES_MENU = {
 }
 
 const LocalCacheKeyMap = {
+  MASTER_KEY_CACHE_KEY: 'KEY_MASTER_KEY',
+  HOME_DATA_CACHE_KEY: 'KEY_HOME_DATA',
+  CARD_EXTRADATA_CACHE_KEY: 'KEY_CARD_EXTRA_DATA',
   knowShareNotice: 'knowShareNotice',
   knowEncryptSave: 'knowEncryptSave'
 }
@@ -149,7 +149,6 @@ export {
   DefaultAddImage,
   DefaultLoadFailedImage,
   DefaultShareImage,
-  MASTER_KEY_NAME,
   APP_ROOT_DIR,
   APP_TEMP_DIR,
   APP_DOWN_DIR,
@@ -160,8 +159,6 @@ export {
   PAGES_MENU,
   ColorList,
   APP_ENTRY_PATH,
-  CARD_EXTRADATA_CACHE_KEY,
-  HOME_DATA_CACHE_KEY,
   WX_CLOUD_STORAGE_FILE_HEAD,
   ENCRYPTED_IMAGE_CACHE_SUFFIX,
   DECRYPTED_IMAGE_CACHE_SUFFIX,
