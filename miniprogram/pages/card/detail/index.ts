@@ -98,7 +98,7 @@ Page({
         for (const idx in this.data.card.image) {
           const image = this.data.card.image[idx]
           try {
-            const imageData = await cardManager.getCardCache(image)
+            const imageData = await cardManager.getCardImageCache(image)
             setData[`card.image[${idx}]._url`] = imageData.imagePath 
             setData[`card.info`] = imageData.extraData
             setData['extraData'] = app.rebuildExtraFields(imageData.extraData)
@@ -120,6 +120,15 @@ Page({
       this.data.card.setLike = state
       app.emit('cardChange', this.data.card)
     })
+  },
+  async tapToReloadCard(){
+    if(this.data.card.encrypted){
+      await cardManager.deleteCardImageCache(this.data.card)
+    }
+    await this.loadData()
+    if(this.data.card.encrypted){
+      this.showEncryptedImage()
+    }
   },
   checkActionUsability(){
     if(this.data.card.image?.some(pic=>pic['checkId'] && !pic['checkPass'])){
@@ -150,7 +159,7 @@ Page({
     }
 
     const image = this.data.card.image![this.chooseIdx]
-    const imageData = await loadData(cardManager.getCard, image, '解码中')
+    const imageData = await loadData(cardManager.getCardImage, image, '解码中')
     
     const setData = {
       [`card.image[${this.chooseIdx}]._url`]: imageData.imagePath,

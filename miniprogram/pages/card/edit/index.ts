@@ -114,7 +114,7 @@ Page({
     if(card.encrypted){
       setData['card.image'] = []
       for (const pic of card.image) {
-        const {imagePath, extraData} = await cardManager.getCard(pic)
+        const {imagePath, extraData} = await cardManager.getCardImageWithoutCache(pic)
         pic.url = imagePath
         console.warn({imagePath, extraData});
         

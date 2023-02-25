@@ -132,13 +132,24 @@ class CardManager extends Base{
     return cardModel
   }
 
-  async getCard(card){
+  async getCardImage(card){
     if(card.salt){
       try {
-        return await this.getCardCache(card)
+        return await this.getCardImageCache(card)
       } catch (error) {
         console.log('未发现缓存数据，开始解密数据')
       }
+      return this.decryptImage(card)
+    }else{
+      return {
+        imagePath: card.url,
+        extraData: []
+      }
+    }
+  }
+
+  async getCardImageWithoutCache(card){
+    if(card.salt){
       return this.decryptImage(card)
     }else{
       return {
@@ -253,7 +264,8 @@ class CardManager extends Base{
       savePath
     })
   }
-  async getCardCache(image: ICardImage){
+
+  async getCardImageCache(image: ICardImage){
     const cacheData = {
       imagePath: '',
       extraData: []
@@ -497,13 +509,17 @@ class CardManager extends Base{
 
   async deleteCard(card: Partial<ICard>){
     // check local cache and remove
+    await this.deleteCardImageCache(card)
+    return api.deleteCard({_id: card._id})
+  }
+
+  async deleteCardImageCache(card: Partial<ICard>){
     for (const image of card.image!) {
       try {
         await this._removeCardImageCache(image)
       } catch (error) {
       }
     }
-    return api.deleteCard({_id: card._id})
   }
 
   // 获取图片渲染数据

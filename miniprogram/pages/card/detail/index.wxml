@@ -9,8 +9,12 @@
         <text class="cuIcon-vipcard padding-right-sm"></text>
         <text class="text-xl text-black">{{card.title}}</text>
       </view>
-      <view class="padding-lr text-xl text-{{card.setLike?'red':'gray'}}" bindtap="tapToSetLike"> 
-        <text class="cuIcon-{{card.setLike?'favorfill':'favor'}} padding-right-sm"></text>
+      <view style="flex:1"></view>
+      <view class="padding-lr-sm text-xl text-{{card.setLike?'red':'gray'}}" bindtap="tapToSetLike"> 
+        <text class="cuIcon-{{card.setLike?'favorfill':'favor'}}"></text>
+      </view>
+      <view class="padding-lr-xs text-xl text-gray" bindtap="tapToReloadCard"> 
+        <text class="cuIcon-refresh"></text>
       </view>
     </view>
     <view class="text-cyan text-xl padding-top-sm flex align-center">
