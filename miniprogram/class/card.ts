@@ -67,8 +67,6 @@ class CardManager extends Base{
         imageData.url = pic._url!
       }else{
         console.log('检测到图片/附加数据修改，重新加密上传')
-        console.log(originImageHash, imageData.hash)
-        console.log(originImageExtraData, card.info)
         const encrytedPic = await this.encryptImage(pic.url, card.info)
         imageData.url = await this.upload(encrytedPic.imagePath)
         imageData.salt = encrytedPic.imageSecretKey
@@ -137,7 +135,7 @@ class CardManager extends Base{
       try {
         return await this.getCardImageCache(card)
       } catch (error) {
-        console.log('未发现缓存数据，开始解密数据')
+        console.debug('未发现缓存数据，开始解密数据')
       }
       return this.decryptImage(card)
     }else{
@@ -184,7 +182,7 @@ class CardManager extends Base{
                                         .concat(flag).concat(extraDataInfo.lengthData)
                                         .concat(KATU_MARK)
 
-    console.log('encryptPackage:',encryptedData.length, encryptPackage.slice(-PACKAGE_TAIL_LENGTH), salt, imageKey)
+    console.debug('encryptPackage:',encryptedData.length, encryptPackage.slice(-PACKAGE_TAIL_LENGTH), salt, imageKey)
     await utils.file.writeFile(savePath, encryptPackage, 'hex')
     return {
       imageSecretKey: salt,
@@ -304,7 +302,7 @@ class CardManager extends Base{
       try {
         await deleteFile(path)
       } catch (error) {
-        console.log(error)
+        console.error(error)
       }
     }
   }
@@ -312,7 +310,7 @@ class CardManager extends Base{
   async getHash(imagePath:string): Promise<string>{
     const imageHexData = await utils.file.readFile(imagePath, 'hex')
     const imageHash = utils.crypto.md5(imageHexData)
-    console.log('getHash: ',imagePath, imageHash, 'file:',`${imageHexData.slice(0,8)}...${imageHexData.slice(-8)}`);
+    console.debug('getHash: ',imagePath, imageHash, 'file:',`${imageHexData.slice(0,8)}...${imageHexData.slice(-8)}`);
     return imageHash
   }
 
