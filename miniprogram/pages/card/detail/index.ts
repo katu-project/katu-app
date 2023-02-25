@@ -1,4 +1,4 @@
-import { DefaultShowLockImage, DefaultShowImage, DefaultShareImage, DefaultLoadFailedImage, LocalCacheKeyMap } from '@/const'
+import { DefaultShowLockImage, DefaultShowImage, DefaultShareImage, DefaultLoadFailedImage } from '@/const'
 import { showChoose, showError, loadData, navigateBack, setClipboardData, navigateTo, showNotice } from '@/utils/index'
 import api from '@/api'
 import { getCardManager } from '@/class/card'
@@ -217,7 +217,7 @@ Page({
       }
     }
 
-    const noticeReadCheck = await app.getLocalData(LocalCacheKeyMap.knowShareNotice)
+    const noticeReadCheck = await app.getKnowShareDataNotice()
     if(!noticeReadCheck){
       const res = await showChoose('温馨提示','更多分享帮助点击【了解详情】',{
         cancelText: '了解详情',
@@ -228,7 +228,7 @@ Page({
         return 
       }
       if(res.confirm){
-        app.setLocalData(LocalCacheKeyMap.knowShareNotice,true)
+        app.setKnowShareDataNotice()
       }
     }
 

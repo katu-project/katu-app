@@ -332,19 +332,19 @@ class CardManager extends Base{
     const keyName = this._getExtraDataCacheKey(image)
     let cacheData = {}
     try {
-      cacheData = await getCache(LocalCacheKeyMap.CARD_EXTRADATA_CACHE_KEY)
+      cacheData = await getCache(LocalCacheKeyMap.CARD_EXTRA_DATA_CACHE_KEY)
     } catch (error) {
       cacheData = {}
     }
 
     cacheData[keyName] = data
-    return setCache(LocalCacheKeyMap.CARD_EXTRADATA_CACHE_KEY, cacheData)
+    return setCache(LocalCacheKeyMap.CARD_EXTRA_DATA_CACHE_KEY, cacheData)
   }
 
   async getExtraDataCache(image:ICardImage){
     const keyName = this._getExtraDataCacheKey(image)
     try {
-      const cacheData = await getCache(LocalCacheKeyMap.CARD_EXTRADATA_CACHE_KEY)
+      const cacheData = await getCache(LocalCacheKeyMap.CARD_EXTRA_DATA_CACHE_KEY)
       return cacheData[keyName] || []
     } catch (error) {
       return []

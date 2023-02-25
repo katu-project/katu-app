@@ -264,14 +264,22 @@ class AppManager extends Base {
   }
 
   async _getReadNotice(key){
-    return this.getLocalData(key)
+    const value = await this.getLocalData<boolean>(key)
+    return value === undefined ? false : value
   }
 
   async getKnowEncryptSaveNotice(){
-    return this._getReadNotice(LocalCacheKeyMap.knowEncryptSave)
+    return this._getReadNotice(LocalCacheKeyMap.NOTICE_KNOW_ENCRYPT_SAVE_CACHE_KEY)
   }
   async setKnowEncryptSaveNotice(){
-    return this._setReadNotice(LocalCacheKeyMap.knowEncryptSave,true)
+    return this._setReadNotice(LocalCacheKeyMap.NOTICE_KNOW_ENCRYPT_SAVE_CACHE_KEY,true)
+  }
+
+  async getKnowShareDataNotice(){
+    return this._getReadNotice(LocalCacheKeyMap.NOTICE_KNOW_SHARE_DATA_CACHE_KEY)
+  }
+  async setKnowShareDataNotice(){
+    return this._setReadNotice(LocalCacheKeyMap.NOTICE_KNOW_SHARE_DATA_CACHE_KEY,true)
   }
 
   async getLocalData<T>(key:string){
@@ -279,7 +287,7 @@ class AppManager extends Base {
       const res: T = await getCache(key)
       return res
     } catch (error) {
-      console.warn('getLocalData:', error)
+      console.warn('getLocalData:', key, error)
     }
     return
   }
