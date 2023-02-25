@@ -282,11 +282,15 @@ class CardManager extends Base{
     return imagePath
   }
 
-  async _genCardImagePath(image: Pick<ICardImage, 'salt'>, type: 'down'|'dec'|'enc'){
+  async _genCardImagePath(image: {salt:string, hash?:string}, type: 'down'|'dec'|'enc'){
     const suffix = type === 'down' ? DOWNLOAD_IMAGE_CACHE_SUFFIX
                   : type === 'enc' ? ENCRYPTED_IMAGE_CACHE_SUFFIX
                   : DECRYPTED_IMAGE_CACHE_SUFFIX
-    return this.app.getLocalFilePath(image.salt, suffix)
+    let name = image.salt
+    if(type === 'down'){
+      name = `${image.hash}_${image.salt||'ns'}`
+    }
+    return this.app.getLocalFilePath(name, suffix)
   }
 
   async getDecryptedImageLocalSavePath(image: Pick<ICardImage, 'salt'>){
