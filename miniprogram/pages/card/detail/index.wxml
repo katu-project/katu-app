@@ -3,11 +3,11 @@
 </cu-custom>
 
 <view class="page">
-  <view class="padding-tb">
-    <view class="flex justify-between align-center">
+  <view class="padding-top">
+    <view class="head flex justify-between align-center">
       <view class="text-cyan text-xl flex align-center">
         <text class="cuIcon-vipcard padding-right-sm"></text>
-        <text class="text-xl text-black">{{card.title}}</text>
+        <text class="text-xl text-black">{{card.title||'加载中...'}}</text>
       </view>
       <view style="flex:1"></view>
       <view class="padding-lr-sm text-xl text-{{card.setLike?'red':'gray'}}" bindtap="tapToSetLike"> 
@@ -17,10 +17,11 @@
         <text class="cuIcon-refresh"></text>
       </view>
     </view>
-    <view class="text-cyan text-xl padding-top-sm flex align-center">
+    <view class="padding-top-sm"></view>
+    <view class="tag-list text-cyan text-xl flex align-center">
       <text class="cuIcon-tag padding-right-sm"></text>
-      <view style="width: 80vw; overflow-x: scroll;" class="flex">
-        <text class="cu-tag margin-right-sm radius line-grey" wx:for="{{card.tags}}" wx:key="index">{{item}}</text>
+      <view class="flex tag-list-content">
+        <text class="cu-tag margin-right-xs radius line-grey" wx:for="{{card.tags}}" wx:key="index">{{item}}</text>
       </view>
     </view>
   </view>
@@ -42,9 +43,9 @@
       </block>
     </view>
   </view>
-  <view hidden="{{!extraData.length}}" class="padding-sm br-12" style="border: 1px solid rgb(167, 236, 236);">
-    <view class="cu-form-group" wx:for="{{extraData}}" data-value="{{item.value}}" bindtap="tapToCopyValue" wx:key="idx">
-      <view class="title" style="width: 23vw;">{{item.name}} :</view>
+  <view hidden="{{!extraData.length}}" class="padding-sm br-12 extra-data-list">
+    <view class="cu-form-group item" wx:for="{{extraData}}" data-value="{{item.value}}" bindtap="tapToCopyValue" wx:key="idx">
+      <view class="title">{{item.name}} :</view>
       <input placeholder="{{item.value}}" disabled></input>
       <text class="cuIcon-copy text-gray"></text>
     </view>

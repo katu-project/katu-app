@@ -1,3 +1,16 @@
+.head{
+  min-height: 50rpx;
+} 
+
+
+.tag-list{
+  min-height: 50rpx;
+  .tag-list-content{
+    width: 80vw; 
+    overflow-x: scroll;
+  }
+}
+
 .image-list{
   display: flex;
   flex-direction: column;
@@ -33,6 +46,15 @@
       .not-pass{
         border: 1px solid orangered;
       }
+    }
+  }
+}
+
+.extra-data-list{
+  border: 1px solid rgb(167, 236, 236);
+  .item{
+    .title{
+      width: 23vw;
     }
   }
 }
