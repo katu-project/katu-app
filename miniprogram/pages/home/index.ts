@@ -34,7 +34,12 @@ Page({
       this.loadNotice()
     }
   },
+
   onUnload(){
+    this.removeAllEvent()
+  },
+
+  removeAllEvent(){
     app.off('cardChange',this.onEventCardChange)
     app.off('cardDelete',this.onEventCardDelete)
     app.off('cardDecrypt',this.onEventCardChange)
