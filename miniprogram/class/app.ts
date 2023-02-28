@@ -538,6 +538,10 @@ class AppManager extends Base {
     this.clearMasterKey()
   }
 
+  async sendVerifyCode(data: {tel:string}){
+    return api.sendVerifyCode(data)
+  }
+
   // simple api proxy
   async getNotices(){
     return api.getNotices()

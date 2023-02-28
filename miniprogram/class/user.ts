@@ -49,6 +49,18 @@ export default class User extends Base {
     return this.user
   }
 
+  get id(){
+    return this.user.identifyCode
+  }
+
+  get tel(){
+    return this.user.contact?.tel
+  }
+
+  get email(){
+    return this.user.contact?.email
+  }
+
   get user(){
     return {
       ...this._user,
@@ -101,6 +113,10 @@ export default class User extends Base {
       await this.reloadInfo()
       throw new Error("修改失败")
     }
+  }
+
+  async bindTelNumber(code){
+    return api.bindTelNumber(code)
   }
 
   async getTags(){

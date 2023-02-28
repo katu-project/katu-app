@@ -36,7 +36,8 @@
     "pages/debug/view/index",
     "pages/quota/index",
     "pages/quota/detail/index",
-    "pages/notice/index"
+    "pages/notice/index",
+    "pages/settings/account/bind-tel/index"
   ],
   "window": {
     "backgroundColor": "#ffffff",

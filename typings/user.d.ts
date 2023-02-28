@@ -12,6 +12,10 @@ interface IUser {
   quota: {
     remain: number
   }
+  contact: {
+    tel: string
+    email: string
+  }
   customTag: ICardTag[]
   noticeReadLog: string[]
   config: {

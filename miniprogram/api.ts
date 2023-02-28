@@ -14,6 +14,8 @@ export default {
 
   setShareItem: (data?:any) => request<IAnyObject>('app/setShare', data),
 
+  sendVerifyCode: (data?:any) => request('app/sendVerifyCode', data),
+
   // user
   updateUserConfig: (configItem:any) => request('user/updateConfig', configItem),
 
@@ -44,6 +46,8 @@ export default {
   removeAccount: () => request('user/removeAccount'),
   
   usageStatistic: () => request<IUsageStatistic>('user/usage'),
+
+  bindTelNumber: code => request('user/bindTel', {code}),
 
   setMasterKeyInfo: keyPack => request('user/setMasterKeyInfo',{keyPack}),
 

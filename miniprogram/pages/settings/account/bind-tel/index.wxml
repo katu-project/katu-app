@@ -1,0 +1,26 @@
+<cu-custom bgColor="bg-cyan" isBack="{{true}}">
+  <view slot="backText">返回</view>
+  <view slot="content">账户设置</view>
+</cu-custom>
+
+<view class="padding text-center margin-tb-xl">
+  <text class="text-xl text-cyan">绑定手机号</text>
+</view>
+
+<view class="padding">
+  <form>
+    <view class="cu-form-group">
+      <view class="title">手机号</view>
+      <input type="number" model:value="{{tel}}" bindinput="onBindInput" disabled="{{sendCode}}" focus></input>
+      <button class="cu-btn gfw" style="width: {{sendCode?'30':'26'}}vw;padding-left: 10rpx;padding-right: 10rpx;margin-left: 10rpx;margin-right: 10rpx" disabled="{{sendCode}}" bindtap="tapToSendCode">发送验证码{{waitTime? '('+waitTime+')':''}}</button>
+    </view>
+    <view class="cu-form-group">
+      <view class="title">验证码</view>
+      <input type="number" focus="{{sendCode}}" model:value="{{code}}" bindinput="onBindInput"></input>
+    </view>
+  </form>
+</view>
+
+<view class="padding margin-top-lg flex-col">
+  <button class="cu-btn bg-green lg gfw {{sendCode?'':'light'}}" bindtap="tapToBindTel">确认</button>
+</view>
