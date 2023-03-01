@@ -115,8 +115,12 @@ export default class User extends Base {
     }
   }
 
-  async bindTelNumber(code){
-    return api.bindTelNumber(code)
+  async bindTelNumber(data){
+    return api.bindTelNumber(data)
+  }
+
+  async removeBindTelNumber(data){
+    return api.removeBindTelNumber(data)
   }
 
   async getTags(){

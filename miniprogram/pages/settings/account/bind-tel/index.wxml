@@ -3,24 +3,41 @@
   <view slot="content">账户设置</view>
 </cu-custom>
 
-<view class="padding text-center margin-tb-xl">
-  <text class="text-xl text-cyan">绑定手机号</text>
+<view class="padding margin-tb-xl" wx:if="{{showTel}}">
+  <view class="padding margin-tb-xl flex-col align-center">
+    <text class="text-grey padding-bottom">已绑定手机号</text>
+    <text class="text-xl text-cyan">{{showTel}}</text>
+  </view>
+  <form wx:if="{{sendResetTelCode}}">
+    <view class="cu-form-group margin solid-bottom">
+      <view class="title">验证码：</view>
+      <input type="number" model:value="{{code}}" bindinput="onBindInput" focus></input>
+      <button class="cu-btn gfw" style="width: {{sendCode?'30':'26'}}vw;padding-left: 10rpx;padding-right: 10rpx;margin-left: 10rpx;margin-right: 10rpx" disabled="{{sendCode}}" bindtap="tapToSendCode">发送验证码{{waitTime? '('+waitTime+')':''}}</button>
+    </view>
+  </form>
+  <view style="height: 10vh;"></view>
+  <view class="padding margin-top-lg flex-col">
+    <button class="cu-btn bg-green lg gfw" bindtap="tapToChangeTel">{{sendResetTelCode?'确认解绑':'更换号码'}}</button>
+  </view>
 </view>
 
-<view class="padding">
+<view class="padding margin-tb-xl" wx:else>
+  <view class="padding text-center margin-tb-xl">
+    <text class="text-xl text-cyan">绑定手机号</text>
+  </view>
   <form>
-    <view class="cu-form-group">
+    <view class="cu-form-group margin">
       <view class="title">手机号</view>
       <input type="number" model:value="{{tel}}" bindinput="onBindInput" disabled="{{sendCode}}" focus></input>
       <button class="cu-btn gfw" style="width: {{sendCode?'30':'26'}}vw;padding-left: 10rpx;padding-right: 10rpx;margin-left: 10rpx;margin-right: 10rpx" disabled="{{sendCode}}" bindtap="tapToSendCode">发送验证码{{waitTime? '('+waitTime+')':''}}</button>
     </view>
-    <view class="cu-form-group">
+    <view class="cu-form-group margin">
       <view class="title">验证码</view>
       <input type="number" focus="{{sendCode}}" model:value="{{code}}" bindinput="onBindInput"></input>
     </view>
   </form>
-</view>
-
-<view class="padding margin-top-lg flex-col">
-  <button class="cu-btn bg-green lg gfw {{sendCode?'':'light'}}" bindtap="tapToBindTel">确认</button>
+  <view style="height: 5vh;"></view>
+  <view class="padding margin-top-lg flex-col">
+    <button class="cu-btn bg-green lg gfw {{sendCode?'':'light'}}" bindtap="tapToBindTel">确认</button>
+  </view>
 </view>
