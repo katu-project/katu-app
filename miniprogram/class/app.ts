@@ -98,8 +98,7 @@ class AppManager extends Base {
 
   async _readLocalMasterKeyCache(){
     try {
-      const {data} = await getCache(LocalCacheKeyMap.MASTER_KEY_CACHE_KEY)
-      return data
+      return await this.getLocalData<string>(LocalCacheKeyMap.MASTER_KEY_CACHE_KEY)
     } catch (error) {
       console.log("读取主密码缓存失败");
     }
@@ -125,7 +124,7 @@ class AppManager extends Base {
 
   async cacheMasterKey(){
     if(!this.masterKey) return
-    return setCache(LocalCacheKeyMap.MASTER_KEY_CACHE_KEY, this.masterKey)
+    return this.setLocalData(LocalCacheKeyMap.MASTER_KEY_CACHE_KEY, this.masterKey)
   }
 
   async _removeMasterKeyCache(){
