@@ -42,11 +42,19 @@ export default class User extends Base {
   }
 
   get isSetMasterKey():boolean{
-    return this.user.setMasterKey!
+    return this.user.setMasterKey || false
   }
-  
-  get baseInfo(){
-    return this.user
+
+  get recoveryKeyPack(){
+    return this.user.recoveryKeyPack
+  }
+
+  get nickName(){
+    return this.user.nickName
+  }
+
+  get avatar(){
+    return this.user.avatarUrl
   }
 
   get id(){

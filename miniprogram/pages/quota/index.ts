@@ -17,7 +17,7 @@ Page({
   },
   loadData(){
     this.setData({
-      'quota.remain': user.baseInfo.quota?.remain || 0
+      'quota.remain': user.quota
     })
     loadData(user.getQuotaLog).then(logs=>{
       const setData = {}

@@ -287,7 +287,7 @@ Page({
   },
 
   checkShowSetMasterKey(){
-    if(!user.baseInfo.setMasterKey){
+    if(!user.isSetMasterKey){
       showChoose("警告","未设置主密码",{confirmText:'去设置'}).then(({cancel})=>{
         if(cancel) {
           this.changeEncrypt({detail:{value: false}})

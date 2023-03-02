@@ -13,8 +13,8 @@ Page({
   },
   onReady() {
     this.setData({
-      url: user.baseInfo.avatarUrl,
-      name: user.baseInfo.nickName
+      url: user.avatar,
+      name: user.nickName
     })
     this.originData = Object.assign({},this.data)
   },

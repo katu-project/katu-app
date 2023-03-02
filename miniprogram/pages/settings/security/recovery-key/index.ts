@@ -24,8 +24,8 @@ Page({
     if(user.config?.security.setRecoveryKey){
       setData.setRecoveryKey = user.config.security.setRecoveryKey
     }
-    if(user.baseInfo.recoveryKeyPack?.qrId){
-      setData.recoveryKeyId = user.baseInfo.recoveryKeyPack.qrId
+    if(user.recoveryKeyPack?.qrId){
+      setData.recoveryKeyId = user.recoveryKeyPack.qrId
     }
     this.setData(setData)
     await this.initCanvas()

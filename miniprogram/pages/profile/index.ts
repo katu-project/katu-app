@@ -38,13 +38,12 @@ Page({
   },
 
   loadUserInfo(){
-    const { nickName, avatarUrl, isActive, identifyCode } = user.baseInfo 
     this.setData({
       user: {
-        nickName,
-        avatarUrl,
-        isActive,
-        identifyCode
+        nickName: user.nickName,
+        avatarUrl: user.avatar,
+        isActive: user.isActive,
+        identifyCode: user.id
       }
     })
   },
