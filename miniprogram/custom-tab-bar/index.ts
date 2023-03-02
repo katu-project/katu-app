@@ -29,6 +29,12 @@ Component({
         })
         switchTab(url)
       }
+    },
+    onEventLongPress(){
+      wx.setStorage({
+        key: 'KATU_DEBUG',
+        data: true
+      })
     }
   }
 })
