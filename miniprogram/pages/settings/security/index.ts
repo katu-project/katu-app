@@ -18,7 +18,7 @@ Page({
   loadData(){
     const {config} = user
     this.setData({
-      setMasterKey: app.user.setMasterKey,
+      setMasterKey: user.isSetMasterKey,
       config_security_rememberPassword: config?.security.rememberPassword,
       config_security_lockOnExit: config?.security.lockOnExit,
       config_security_setRecoveryKey: config?.security.setRecoveryKey,

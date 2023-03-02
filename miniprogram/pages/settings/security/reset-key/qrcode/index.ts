@@ -10,15 +10,6 @@ Page({
     masterKeyRepeat: '',
     recoveryKey: ''
   },
-  onLoad() {
-
-  },
-  onReady() {
-
-  },
-  onShow() {
-    // console.log(utils,globalData.app);
-  },
   async tapToSelectQrcode(){
     try {
       const scan_res = await wx.scanCode({
@@ -28,7 +19,7 @@ Page({
       const recoveryKeyInfo = await app.extractRecoveryKeyFromQrcode(scan_res)
       console.log(recoveryKeyInfo);
       
-      if(recoveryKeyInfo.i !== app.user.recoveryKeyPack?.qrId){
+      if(recoveryKeyInfo.i !== user.recoveryKeyPack?.qrId){
         await showChoose("警告","重置凭证ID不匹配！",{showCancel: false})
       }else{
         const {cancel} = await showChoose("温馨提示","重置凭证数据读取成功，去设置新密码？")
@@ -40,7 +31,8 @@ Page({
       }
     } catch (error) {
       if(error && error.errMsg.includes('cancel')){
-        return showError('取消选择')
+        showError('取消选择')
+        return
       }
       showError(error.message || '未知错误')
     }

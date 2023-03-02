@@ -37,7 +37,7 @@ class AppManager extends Base {
   }
 
   get user(){
-    return getUserManager().user
+    return getUserManager()
   }
 
   get masterKey(){
@@ -137,7 +137,7 @@ class AppManager extends Base {
       code: '',
       message: ''
     }
-    if(!this.user.setMasterKey){
+    if(!this.user.isSetMasterKey){
       error.code = '10'
       error.message = '还未设置主密码'
       throw error
@@ -533,7 +533,7 @@ class AppManager extends Base {
 
   async deleteAccount(){
     await api.removeAccount()
-    getUserManager().clearInfo()
+    this.user.clearInfo()
     this.clearMasterKey()
   }
 

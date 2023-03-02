@@ -1,8 +1,8 @@
 import { navigateTo } from "@/utils/index"
 import { getAppManager } from '@/class/app'
+import { getUserManager } from "@/class/user"
 const app = getAppManager()
-
-export {}
+const user = getUserManager()
 
 Page({
   data: {
@@ -13,8 +13,8 @@ Page({
     const setData = {
       setRecoveryKey: false
     }
-    if(app.user.config?.security.setRecoveryKey){
-      setData.setRecoveryKey = app.user.config.security.setRecoveryKey
+    if(user.config?.security.setRecoveryKey){
+      setData.setRecoveryKey = user.config.security.setRecoveryKey
     }
     this.setData(setData)
   },

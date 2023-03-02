@@ -541,13 +541,13 @@ class CardManager extends Base{
         if(card['firstImageTempUrl']){
           tempUrl = card['firstImageTempUrl']
         }else{
-          tempUrl = await getAppManager().getCloudFileTempUrl(card.image[0].url)
+          tempUrl = await this.app.getCloudFileTempUrl(card.image[0].url)
         }
         if(tempUrl.startsWith('/')){// 获取云文件链接出错，使用本地占位图片替代      
           setData[`${keyName}[${idx}]._url`] = tempUrl
           setData[`${keyName}[${idx}]._mode`] = 'scaleToFill'
         }else{
-          setData[`${keyName}[${idx}]._url`] = tempUrl + getAppManager().Config.imageMogr2
+          setData[`${keyName}[${idx}]._url`] = tempUrl + this.app.Config.imageMogr2
         }
       } catch (error) {}
     }

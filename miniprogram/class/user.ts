@@ -45,6 +45,10 @@ export default class User extends Base {
     return this.user.setMasterKey || false
   }
 
+  get masterKeyPack(){
+    return this.masterKeyPack
+  }
+
   get recoveryKeyPack(){
     return this.user.recoveryKeyPack
   }
@@ -55,6 +59,10 @@ export default class User extends Base {
 
   get avatar(){
     return this.user.avatarUrl
+  }
+
+  get openid(){
+    return this.user.openid
   }
 
   get id(){
@@ -70,12 +78,7 @@ export default class User extends Base {
   }
 
   get user(){
-    return {
-      ...this._user,
-      get isDeactivated():boolean{
-        return this.status === 0
-      }
-    }
+    return this._user
   }
 
   async loadInfo(){
@@ -154,7 +157,7 @@ export default class User extends Base {
 
   async uploadAvatar(filePath){
     const s = new Date().getTime()
-    return api.uploadAvatar(filePath, `user/${this.user.openid}/avatar/${s}`)
+    return api.uploadAvatar(filePath, `user/${this.openid}/avatar/${s}`)
   }
 
   loadOnAppHideConfig(){
@@ -173,11 +176,11 @@ export default class User extends Base {
         return
       }
 
-      if(this.user.config?.security.rememberPassword){
+      if(this.config?.security.rememberPassword){
         console.log('缓存主密码');
         getAppManager().cacheMasterKey()
       }else{
-        if(this.user.config?.security.lockOnExit){
+        if(this.config?.security.lockOnExit){
           console.log('退出并清除主密码');
           getAppManager().clearMasterKey()
         }
