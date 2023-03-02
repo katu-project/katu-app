@@ -7,6 +7,26 @@
   <view class="cu-list menu sm-border card-menu margin-top">
     <view class="cu-item">
       <view class="content">
+        <text class="text-black">账号 ID</text>
+      </view>
+      <view class="action">
+        <text class="text-green text-lg padding-right-sm">{{userId}}</text>
+      </view>
+    </view>
+    <view class="padding bg-white text-grey text-sm">卡兔 APP 为每个用户分配的唯一识别码</view>
+
+    <view class="cu-item arrow" style="padding-right: 70rpx;" bindtap="tapToPage" data-page="bind-tel">
+      <view class="content">
+        <text class="text-black">手机号码</text>
+      </view>
+      <view class="action">
+        <text class="text-{{userTel?'green':'orange'}}">{{userTel||'未绑定'}}</text>
+      </view>
+    </view>
+    <view class="padding bg-white text-grey text-sm">用于接收消息通知，用户验证等</view>
+
+    <view class="cu-item">
+      <view class="content">
         <text class="text-black">删除账户</text>
       </view>
       <view class="action">
@@ -14,6 +34,6 @@
           <text class="cuIcon-delete"></text> 删除</button>
       </view>
     </view>
-    <view class="padding bg-white text-grey text-sm">清空用户数据并且删除账号</view>
+    <view class="padding bg-white text-grey text-sm">清空用户数据并删除账号</view>
   </view>
 </view>

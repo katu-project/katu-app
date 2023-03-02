@@ -10,10 +10,15 @@ Page({
     userTel: '',
   },
   onShow(){
-    this.setData({
-      userId: user.id,
-      userTel: user.tel
-    })
+    this.loadData()
+  },
+  loadData(){
+    const setData = {}
+    if(user.id){
+      setData['userId'] = user.id
+    }
+    setData['userTel'] = user.tel ? user.tel.replace(/^(\d{3}).*(\d{4})$/,'$1****$2') : ''
+    this.setData(setData)
   },
   tapToPage({currentTarget:{dataset:{page}}}){
     navigateTo(`./${page}/index`)

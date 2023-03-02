@@ -35,16 +35,16 @@
         <switch class="sm" bindchange="tapToConfig" data-key="config_security_rememberPassword" checked="{{config_security_rememberPassword}}"></switch>
       </view>
     </view>
-    <view class="padding bg-white text-grey text-sm">记住主密码后，后续使用不再要求验证主密码 <text class="cuIcon-warn text-yellow" bindtap="tapToReadDoc"></text></view>
+    <view class="padding bg-white text-grey text-sm">访问数据不再要求主密码 <text class="cuIcon-warn text-yellow" bindtap="tapToReadDoc"></text></view>
 
     <view class="cu-item">
       <view class="content">
-      <text class="">退出小程序后清除主密码</text>
+      <text class="{{config_security_rememberPassword?'text-gray':''}}">退出小程序后清除主密码</text>
       </view>
       <view class="action">
         <switch class="sm" disabled="{{config_security_rememberPassword}}" bindchange="tapToConfig" data-key="config_security_lockOnExit" checked="{{config_security_lockOnExit}}"></switch>
       </view>
     </view>
-    <view class="padding bg-white text-grey text-sm">退出小程序，再次进入后相关操作需重新验证主密码</view>
+    <view class="padding bg-white text-grey text-sm">下次进入小程序后相关操作需验证主密码</view>
   </view>
 </view>
