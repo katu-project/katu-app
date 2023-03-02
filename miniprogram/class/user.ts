@@ -82,7 +82,7 @@ export default class User extends Base {
     return this.reloadInfo() // 获取默认用户数据
   }
 
-  async checkQuota(encrypted: boolean){
+  async checkQuota(){
     if(this.quota < 0){
       throw Error('兔币余额不足')
     }

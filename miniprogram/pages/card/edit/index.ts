@@ -191,7 +191,7 @@ Page({
     // 提前检查可用额度，避免因为可用额度不足而导致处理卡片数据产生无效的消耗
     if(!this.data.edit){
       try {
-        await user.checkQuota(card.encrypted)
+        await user.checkQuota()
       } catch (error) {
         showChoose('无法创建卡片',error.message,{showCancel: false})
         return
