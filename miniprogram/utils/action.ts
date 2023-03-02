@@ -173,7 +173,9 @@ async function loadData<T>(func?: (args:any) => Promise<T>, params?: Object, opt
             }
             // 500以上是应用程序出错
             if(error.code.toString().startsWith('5')){
-              showModalOption.title = '应用报错'
+              showModalOption.title = '服务异常'
+              showModalOption.content = '很抱歉，服务暂时不可用'
+              showModalOption.showCancel = true
             }
 
             if(!showModalOption.success){
