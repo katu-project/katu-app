@@ -59,7 +59,7 @@ class AppManager extends Base {
   loadDefaultTag(){
     api.getDefaultTag().then(tags=>{
       this.Config.tags = tags
-    }).catch(console.log)
+    }).catch(console.warn)
   }
 
   async loadCacheData(){
@@ -220,10 +220,10 @@ class AppManager extends Base {
     }else{
       try {
         await utils.file.checkAccess(savePath)
-        console.log('downloadFile: hit cache file, reuse it')
+        console.debug('downloadFile: hit cache file, reuse it')
         return savePath
       } catch (error) {
-        console.log('downloadFile: no cache file, download it')
+        console.debug('downloadFile: no cache file, download it')
       }
     }
     
@@ -232,16 +232,16 @@ class AppManager extends Base {
         fileList: [url]
       })
       if(imageInfo.status !== 0){
-        console.warn('get cloud file tempUrl error:', imageInfo.errMsg)
-        throw Error('下载文件错误')
+        console.error('get cloud file tempUrl error:', imageInfo.errMsg)
+        throw Error('文件下载失败')
       }
       url = imageInfo.tempFileURL
     }
 
-    console.warn('start download file:', url);
+    console.debug('start download file:', url);
     const downloadRes = await utils.file.download(url, savePath)
     if(downloadRes.statusCode !== 200 || !downloadRes.filePath){
-      throw new Error("文件下载出错")
+      throw Error("文件下载出错")
     }
     return downloadRes.filePath
   }
@@ -483,7 +483,7 @@ class AppManager extends Base {
   async getCloudFileTempUrl(url:string){
     // check cache
     if(this.cloudFileTempUrls[url]){
-      console.log('使用缓存的 url')
+      console.debug('使用缓存的 url')
       return this.cloudFileTempUrls[url]
     }
 
@@ -493,13 +493,13 @@ class AppManager extends Base {
         fileList: [url]
       })
       if(file.status !== 0){
-        console.warn('获取云文件临时URL错误:', file.errMsg);
+        console.error('获取云文件临时URL错误:', file.errMsg);
       }else{
         tempUrl = file.tempFileURL
         this.cloudFileTempUrls[url] = tempUrl
       }
     } catch (error) {
-      console.warn('获取云文件临时URL错误:', error.message);
+      console.error('获取云文件临时URL错误:', error.message);
     }
     if(!tempUrl) {
       tempUrl = DefaultLoadFailedImage
