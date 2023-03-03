@@ -127,8 +127,16 @@ Page({
     let idx = this.data.likeList.findIndex(e=>e._id === card._id)
     if(idx === -1){
       idx = this.data.likeList.length
-      card._url = card.encrypted ? DefaultShowLockImage : DefaultShowImage
-      setData[`likeList[${idx}]`] = card
+      for (const i in this.data.likeList) {
+        setData[`likeList[${+i+1}]`] = this.data.likeList[i]
+      }
+      setData[`likeList[0]`] = {
+        encrypted: card.encrypted,
+        image: card.image[0],
+        title: card.title,
+        _id: card._id,
+        _url: card.encrypted ? DefaultShowLockImage : DefaultShowImage
+      }
     }else{
       const oldCard = this.data.likeList[idx]
       if(oldCard.title !== card.title){
