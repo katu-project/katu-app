@@ -38,13 +38,11 @@
         >
         <view style="height: 68vh;">
           <view class="margin-bottom-sm padding-lr flex flex-wrap justify-between" style="align-content: flex-start;">
-            <block wx:for="{{likeList}}" wx:key="index">
-              <view style="position: relative;" class="margin-bottom-sm item shadow bg-black flex-col justify-around align-center" data-item="{{item}}" bindtap="tapToCardDetail">
-                  <image class="img" lazy-load="true" binderror="onBindLoadError" mode="{{item._mode || 'aspectFit'}}" data-idx="{{index}}" src="{{item._url}}"></image>
-                  <text hidden="{{!item._showEncryptIcon}}" class="encrypt-icon cuIcon-unlock text-grey"></text>
-                  <text style="color:ghostwhite">{{item.title}}</text>
-              </view>
-            </block>
+            <view wx:for="{{likeList}}" wx:key="index" style="position: relative;" class="margin-bottom-sm item shadow bg-black flex-col justify-around align-center" data-item="{{item}}" bindtap="tapToCardDetail">
+              <image class="img" lazy-load="true" binderror="onBindLoadError" mode="{{item._mode || 'aspectFit'}}" data-idx="{{index}}" src="{{item._url}}"></image>
+              <text hidden="{{!item._showEncryptIcon}}" class="encrypt-icon cuIcon-unlock text-grey"></text>
+              <text style="color:ghostwhite">{{item.title}}</text>
+            </view>
           </view>
         </view>
       </scroll-view>
@@ -89,13 +87,13 @@
   refresher-triggered="{{isRefresh}}"
   >
     <view style="height: 68vh;">
-      <view class="margin-bottom-sm padding-lr flex flex-wrap justify-between" style="align-content: flex-start;">
+      <view class="margin-bottom-sm padding-lr flex flex-wrap justify-between">
         <block wx:for="{{cateList}}" wx:key="name">
-          <view wx:if="{{item}}" class="item margin-bottom-sm shadow bg-black flex-row justify-around align-center" data-tag="{{item.name}}" bindtap="tapToCardList">
-            <view class="cate-name bg-{{item.color || 'cyan'}} light flex justify-center align-center">
-              <text class="{{item.name.length>3?'text-sm':'text-lg'}}">{{item.name}}</text>
+          <view wx:if="{{item}}" class="item margin-bottom-sm shadow-blur flex-row align-center" data-tag="{{item.name}}" bindtap="tapToCardList">
+            <view class="cate-count margin-left-sm bg-{{item.color || 'cyan'}} light flex-col align-center justify-center">
+              <text class="text-xl">{{item.count}}</text>
             </view>
-            <text class="text-white text-xxl">{{item.count}}</text>
+            <text class="text-white text-lg padding-left margin-right-sm" style="flex:1">{{item.name}}</text>
           </view>
         </block>
         <view class="flex-col justify-center align-center" style="width: 100%;height: 50vh;" wx:if="{{!cateList.length}}">

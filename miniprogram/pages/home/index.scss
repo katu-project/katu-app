@@ -46,14 +46,14 @@
 
 .cate-list {
   .item {
-    background: rgba(152, 180, 185, 0.6);
+    background: rgba(60, 90, 95, 0.6);
     padding: 20rpx;
-    height: 25vw;
-    width: 40vw; 
+    width: 40vw;
     border-radius: 10rpx;
-    .cate-name{
-      height: 15vw;
-      width: 15vw;
+    .cate-count{
+      padding: 20rpx;
+      height: 10vw;
+      width: 10vw;
       border-radius: 50%; 
       opacity: 0.9;
     }
