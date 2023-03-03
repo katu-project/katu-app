@@ -46,7 +46,7 @@ export default class User extends Base {
   }
 
   get masterKeyPack(){
-    return this.masterKeyPack
+    return this.user.masterKeyPack
   }
 
   get recoveryKeyPack(){

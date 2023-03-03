@@ -42,7 +42,7 @@ Page({
     this.removeAllEvent()
   },
   removeAllEvent(){
-    app.off('onEventSelectImage')
+    app.off('setCardImage')
     app.off('setCardTitle')
     app.off('setCardExtraData')
   },
