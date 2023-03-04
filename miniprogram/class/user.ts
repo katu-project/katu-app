@@ -5,6 +5,7 @@ import { getAppManager } from "@/class/app";
 
 export default class User extends Base {
   _user: Partial<IUser> = {}
+  _userAvatar: string = ''
   _customTags: ICardTag[] = []
 
   constructor(){
@@ -58,7 +59,7 @@ export default class User extends Base {
   }
 
   get avatar(){
-    return this.user.avatarUrl
+    return this._userAvatar || this.user.avatarUrl
   }
 
   get openid(){
@@ -83,6 +84,7 @@ export default class User extends Base {
 
   async loadInfo(){
     this._user = await api.getUser()
+    this.cacheAvatar()
   }
 
   async reloadInfo(){
@@ -91,6 +93,22 @@ export default class User extends Base {
 
   async clearInfo(){
     return this.reloadInfo() // 获取默认用户数据
+  }
+
+  async cacheAvatar(){
+    // 缓存avatar
+    const userCache = await this.getLocalData<{avatar:string, avatarUrl:string}>('USER_DATA')
+    if(!userCache || userCache.avatar !== this._user.avatarUrl){
+      try {
+        const savePath = await getAppManager().getLocalFilePath('avatar','home')
+        this._userAvatar = await getAppManager().downloadFile({url: this._user.avatarUrl!, savePath })
+        this.setLocalData('USER_DATA',{avatar:this._user.avatarUrl, avatarUrl:this._userAvatar})
+      } catch (error) {
+        console.error(error)
+      }
+    }else{
+      this._userAvatar = userCache.avatarUrl
+    }
   }
 
   async checkQuota(){
