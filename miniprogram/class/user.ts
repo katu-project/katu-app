@@ -3,6 +3,7 @@ import utils from "@/utils/index"
 import Base from "./base"
 import { getAppManager } from "@/class/app";
 import { checkAccess } from "@/utils/file";
+import { LocalCacheKeyMap } from "@/const";
 
 export default class User extends Base {
   _user: Partial<IUser> = {}
@@ -17,7 +18,7 @@ export default class User extends Base {
     await this.loadInfo()
     if(this.isSetMasterKey && this.config?.security.rememberPassword){
       console.log("启用记住密码: 加载主密码");
-      getAppManager().loadMasterKey()
+      this.app.loadMasterKey()
     }
     wx.nextTick(()=>{
       setTimeout(() => {
@@ -25,6 +26,10 @@ export default class User extends Base {
       }, 3000);
     })
     this.loadOnAppHideConfig()
+  }
+
+  get app(){
+    return getAppManager()
   }
 
   get config(){
@@ -98,13 +103,12 @@ export default class User extends Base {
 
   async cacheAvatar(){
     // 缓存avatar
-    const userCache = await this.getLocalData<{avatar:string, avatarUrl:string}>('USER_DATA')
+    const userCache = await this.getLocalData<{avatar:string, avatarUrl:string}>(LocalCacheKeyMap.USER_INFO_CACHE_KEY)
     if(!userCache || userCache.avatar !== this._user.avatarUrl){
       try {
-        const savePath = await getAppManager().getHomeFilePath('avatar')
-
-        this._userAvatar = await getAppManager().downloadFile({url: this._user.avatarUrl!, savePath })
-        this.setLocalData('USER_DATA',{avatar:this._user.avatarUrl, avatarUrl:this._userAvatar})
+        const savePath = await this.app.getHomeFilePath('avatar')
+        this._userAvatar = await this.app.downloadFile({url: this._user.avatarUrl!, savePath })
+        this.setLocalData(LocalCacheKeyMap.USER_INFO_CACHE_KEY,{avatar:this._user.avatarUrl, avatarUrl:this._userAvatar})
       } catch (error) {
         console.error(error)
       }
@@ -113,7 +117,7 @@ export default class User extends Base {
         await checkAccess(userCache.avatarUrl)
         this._userAvatar = userCache.avatarUrl
       } catch (error) {
-        this.deleteLocalData('USER_DATA')
+        this.deleteLocalData(LocalCacheKeyMap.USER_INFO_CACHE_KEY)
       }
     }
   }
@@ -169,7 +173,7 @@ export default class User extends Base {
 
   async createTag(tag: Pick<ICardTag,'name'>){
     const checkText = tag.name
-    const {checkPass} = await getAppManager().textContentsafetyCheck(checkText)
+    const {checkPass} = await this.app.textContentsafetyCheck(checkText)
     if(!checkPass){
       throw new Error("数据似乎存在不适内容")
     }
@@ -203,11 +207,11 @@ export default class User extends Base {
 
       if(this.config?.security.rememberPassword){
         console.log('缓存主密码');
-        getAppManager().cacheMasterKey()
+        this.app.cacheMasterKey()
       }else{
         if(this.config?.security.lockOnExit){
           console.log('退出并清除主密码');
-          getAppManager().clearMasterKey()
+          this.app.clearMasterKey()
         }
       }
     })
