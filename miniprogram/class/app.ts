@@ -446,26 +446,25 @@ class AppManager extends Base {
   navToDoc(id){
     navigateTo(`/pages/qa/detail/index?id=${id}`)
   }
-  
-  async getTempFilePath(name:string, suffix?:string){
+
+  async getLocalFilePath(fileName:string, dirType?:string){
+    const dir = dirType === 'home' ? APP_ROOT_DIR : 
+                dirType === 'down' ? APP_DOWN_DIR : 
+                dirType === 'dec' ? APP_IMAGE_DIR : 
+                APP_TEMP_DIR
+
     return utils.file.getFilePath({
-      dir: APP_TEMP_DIR,
-      name,
-      suffix
+      dir,
+      name: fileName
     })
   }
 
-  async getLocalFilePath(name:string, suffix?:string){
-    const dir = suffix === 'down' ? APP_DOWN_DIR
-                : suffix === 'dec' ? APP_IMAGE_DIR
-                : suffix === 'enc' ? APP_TEMP_DIR
-                : suffix === 'home' ? APP_ROOT_DIR
-                : APP_TEMP_DIR
-    return utils.file.getFilePath({
-      dir,
-      name,
-      suffix
-    })
+  async getTempFilePath(fileName:string){
+    return this.getLocalFilePath(fileName)
+  }
+
+  async getHomeFilePath(fileName:string){
+    return this.getLocalFilePath(fileName, 'home')
   }
 
   async getCloudFileTempUrl(url:string){

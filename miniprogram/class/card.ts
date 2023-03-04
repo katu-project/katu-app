@@ -1,5 +1,5 @@
 import utils,{cv, convert, getCache, setCache} from '@/utils/index'
-import { DECRYPTED_IMAGE_CACHE_SUFFIX, DOWNLOAD_IMAGE_CACHE_SUFFIX, ENCRYPTED_IMAGE_CACHE_SUFFIX, KATU_MARK, LocalCacheKeyMap, PACKAGE_TAIL_LENGTH, WX_CLOUD_STORAGE_FILE_HEAD } from '@/const'
+import { KATU_MARK, LocalCacheKeyMap, PACKAGE_TAIL_LENGTH, WX_CLOUD_STORAGE_FILE_HEAD } from '@/const'
 import api from '@/api'
 import { deleteFile } from '@/utils/file'
 import Base from '@/class/base'
@@ -281,14 +281,11 @@ class CardManager extends Base{
   }
 
   async _genCardImagePath(image: {salt:string, hash?:string}, type: 'down'|'dec'|'enc'){
-    const suffix = type === 'down' ? DOWNLOAD_IMAGE_CACHE_SUFFIX
-                  : type === 'enc' ? ENCRYPTED_IMAGE_CACHE_SUFFIX
-                  : DECRYPTED_IMAGE_CACHE_SUFFIX
     let name = image.salt
     if(type === 'down'){
       name = `${image.hash}_${image.salt||'ns'}`
     }
-    return this.app.getLocalFilePath(name, suffix)
+    return this.app.getLocalFilePath(name, type)
   }
 
   async getDecryptedImageLocalSavePath(image: Pick<ICardImage, 'salt'>){
