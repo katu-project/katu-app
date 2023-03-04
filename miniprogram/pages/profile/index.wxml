@@ -7,7 +7,7 @@
       <view class="bg-gray light flex br-14 justify-center user-avatar">
         <image src="{{user.isActive? user.avatarUrl || '/static/images/default-avatar.png' :'/static/images/user.svg'}}" mode="aspectFit" bindtap="tapToEditInfo" class="br-10" style="height: 160rpx; width: 160rpx;"></image>
       </view>
-      <view class="flex-col justify-between padding-top-xs">
+      <view class="flex-col justify-between padding-top-xs" style="min-height: 100rpx;">
         <view wx:if="{{user.isActive}}" class="flex-col justify-center align-center">
           <text class="text-xxl nickname" style="color: rgb(53, 63, 63);" bindtap="tapUser">{{user.nickName}}</text>
           <text class="text-white">ID: {{user.identifyCode}}</text>
