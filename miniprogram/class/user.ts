@@ -2,6 +2,7 @@ import api from "@/api"
 import utils from "@/utils/index"
 import Base from "./base"
 import { getAppManager } from "@/class/app";
+import { checkAccess } from "@/utils/file";
 
 export default class User extends Base {
   _user: Partial<IUser> = {}
@@ -100,14 +101,20 @@ export default class User extends Base {
     const userCache = await this.getLocalData<{avatar:string, avatarUrl:string}>('USER_DATA')
     if(!userCache || userCache.avatar !== this._user.avatarUrl){
       try {
-        const savePath = await getAppManager().getLocalFilePath('avatar','home')
+        const savePath = await getAppManager().getHomeFilePath('avatar')
+
         this._userAvatar = await getAppManager().downloadFile({url: this._user.avatarUrl!, savePath })
         this.setLocalData('USER_DATA',{avatar:this._user.avatarUrl, avatarUrl:this._userAvatar})
       } catch (error) {
         console.error(error)
       }
     }else{
-      this._userAvatar = userCache.avatarUrl
+      try {
+        await checkAccess(userCache.avatarUrl)
+        this._userAvatar = userCache.avatarUrl
+      } catch (error) {
+        this.deleteLocalData('USER_DATA')
+      }
     }
   }
 
