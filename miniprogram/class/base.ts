@@ -1,4 +1,4 @@
-import { selfish } from "@/utils/index"
+import { getCache, selfish, setCache, delCache } from "@/utils/index"
 import mitt from 'mitt'
 const emitter = mitt()
 
@@ -27,4 +27,28 @@ export default class Base {
   getEeventList(){
     return this.emitter.all
   }
+  // event end
+
+  async getLocalData<T>(key:string){
+    try {
+      const res: T = await getCache(key)
+      return res
+    } catch (error) {
+      console.warn('getLocalData:', key, error)
+    }
+    return
+  }
+  
+  async setLocalData(key, data){
+    return setCache(key, data)
+  }
+
+  async deleteLocalData(key:string){
+    try {
+      await delCache(key)
+    } catch (error) {
+      console.error(error)
+    }
+  }
+  
 }

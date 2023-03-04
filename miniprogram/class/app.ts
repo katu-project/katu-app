@@ -3,9 +3,9 @@ import Base from './base'
 import { AppConfig } from '@/config'
 import { randomBytesHexString } from '@/utils/crypto'
 import { checkAccess } from '@/utils/file'
-import utils,{ navigateTo, getCache, setCache, delCache, showChoose, chooseLocalImage, switchTab } from '@/utils/index'
+import utils,{ navigateTo, showChoose, chooseLocalImage, switchTab } from '@/utils/index'
 import { sleep } from '@/utils/base'
-import { APP_TEMP_DIR, APP_DOWN_DIR, APP_IMAGE_DIR, DefaultLoadFailedImage, WX_CLOUD_STORAGE_FILE_HEAD, LocalCacheKeyMap, APP_ENTRY_PATH } from '@/const'
+import { APP_TEMP_DIR, APP_DOWN_DIR, APP_IMAGE_DIR, DefaultLoadFailedImage, WX_CLOUD_STORAGE_FILE_HEAD, LocalCacheKeyMap, APP_ENTRY_PATH, APP_ROOT_DIR } from '@/const'
 import api from '@/api'
 import { getCardManager } from './card'
 import { getUserManager } from './user'
@@ -128,7 +128,7 @@ class AppManager extends Base {
   }
 
   async _removeMasterKeyCache(){
-    return delCache(LocalCacheKeyMap.MASTER_KEY_CACHE_KEY)
+    return this.deleteLocalData(LocalCacheKeyMap.MASTER_KEY_CACHE_KEY)
   }
 
   // 使用前检测主密码状态
@@ -254,10 +254,6 @@ class AppManager extends Base {
     })
   }
 
-  async setLocalData(key, data){
-    return setCache(key, data)
-  }
-
   async _setReadNotice(key, value){
     return this.setLocalData(key, value)
   }
@@ -279,16 +275,6 @@ class AppManager extends Base {
   }
   async setKnowShareDataNotice(){
     return this._setReadNotice(LocalCacheKeyMap.NOTICE_KNOW_SHARE_DATA_CACHE_KEY,true)
-  }
-
-  async getLocalData<T>(key:string){
-    try {
-      const res: T = await getCache(key)
-      return res
-    } catch (error) {
-      console.warn('getLocalData:', key, error)
-    }
-    return
   }
 
   async createShareItem({card, scope, expiredTime}:CreateShareOptions){
@@ -472,6 +458,8 @@ class AppManager extends Base {
   async getLocalFilePath(name:string, suffix?:string){
     const dir = suffix === 'down' ? APP_DOWN_DIR
                 : suffix === 'dec' ? APP_IMAGE_DIR
+                : suffix === 'enc' ? APP_TEMP_DIR
+                : suffix === 'home' ? APP_ROOT_DIR
                 : APP_TEMP_DIR
     return utils.file.getFilePath({
       dir,
