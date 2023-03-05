@@ -14,6 +14,10 @@ declare namespace WechatMiniprogram {
   }
 }
 
+declare namespace require {
+  function async(path:string) : any
+}
+
 interface IAnyObject {
   [key:string]: any
 }

@@ -39,6 +39,23 @@
     "pages/notice/index",
     "pages/settings/account/bind-tel/index"
   ],
+  "subPackages": [
+    {
+      "root": "packages/opencv",
+      "name": "opencv",
+      "pages": [
+        "pages/index"
+      ]
+    }
+  ],
+  "preloadRule": {
+    "pages/home/index": {
+      "network": "all",
+      "packages": [
+        "opencv"
+      ]
+    }
+  },
   "window": {
     "backgroundColor": "#ffffff",
     "backgroundTextStyle": "light",

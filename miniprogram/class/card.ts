@@ -1,10 +1,11 @@
-import utils,{cv, convert, getCache, setCache} from '@/utils/index'
+import utils,{convert, getCache, setCache} from '@/utils/index'
 import { KATU_MARK, LocalCacheKeyMap, PACKAGE_TAIL_LENGTH, WX_CLOUD_STORAGE_FILE_HEAD } from '@/const'
 import api from '@/api'
 import { deleteFile } from '@/utils/file'
 import Base from '@/class/base'
 import { getAppManager } from '@/class/app'
 import { getUserManager } from '@/class/user'
+import { sleep } from '@/utils/base'
 
 class CardManager extends Base{
   app = getAppManager()
@@ -372,9 +373,14 @@ class CardManager extends Base{
   }
 
   async parseCardImageByInternalApi(url){
+    const {default:cv} = await require.async('../packages/opencv/index')
+    // todo: 现在cv模块加载是异步的，没办法确认完成时间，后续要优化一下，手动实例化
+    while (!cv.Mat) {
+      await sleep(500)
+    }
     const imageData = await this.getImageData(url)
     const src = cv.imread(imageData)
-    const cardUrl = await this.detectCardByContour(src)
+    const cardUrl = await this.detectCardByContour(src,cv)
     return cardUrl
   }
   // 返回图片 ImageData
@@ -393,7 +399,7 @@ class CardManager extends Base{
     return ctx.getImageData(0, 0, image.width, image.height)
   }
   // 识别卡片返回临时路径
-  async detectCardByContour(src){
+  async detectCardByContour(src, cv){
     function getSize(contour){
         let corner1 = new cv.Point(contour.data32S[0], contour.data32S[1]);
         let corner2 = new cv.Point(contour.data32S[2], contour.data32S[3]);

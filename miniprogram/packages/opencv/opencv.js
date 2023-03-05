@@ -1,4 +1,4 @@
-global.wasm_url = '/static/opencv3.4.16.wasm.br'
+global.wasm_url = '/packages/opencv/opencv3.4.16.wasm.br'
 
 var _scriptDir = typeof document !== 'undefined' && document.currentScript ? document.currentScript.src : undefined;
 
