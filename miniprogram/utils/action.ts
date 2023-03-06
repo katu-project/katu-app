@@ -74,21 +74,15 @@ async function setClipboardData(data, vibrate=true){
   })
 }
 
-async function navigateBack(options?:{backData?:IAnyObject,delta?: number}){
-  const backData = options?.backData
+async function navigateBack(options?:{delta?: number}){
   const delta = options?.delta || 1
-
-  if(backData){
-    const pages = getCurrentPages()
-    const prevPage = pages[pages.length - delta - 1]
-    prevPage.backData = backData
-  }
   wx.navigateBack({delta})
 }
 
 async function switchTab(page, vibrate=true){
   vibrate && wx.vibrateShort({
     type: 'light',
+    fail: console.warn
   })
   wx.switchTab({
     url: page,
