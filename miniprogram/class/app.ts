@@ -13,7 +13,7 @@ import { getUserManager } from './user'
 class AppManager extends Base {
   Config = AppConfig
   AppInfo = wx.getAccountInfoSync()
-
+  DeviceInfo: Partial<WechatMiniprogram.SystemInfo> = {}
   _masterKey: string = ''
 
   cloudFileTempUrls: IAnyObject = {}
@@ -23,6 +23,7 @@ class AppManager extends Base {
   }
 
   init(){
+    this.loadBaseInfo()
     this.loadConfig()
     this.loadCacheData()
     return
@@ -36,12 +37,25 @@ class AppManager extends Base {
     return this.AppInfo.miniProgram.envVersion !== 'release'
   }
 
+  get platform(){
+    return this.DeviceInfo.platform
+  }
+
   get user(){
     return getUserManager()
   }
 
   get masterKey(){
     return this._masterKey
+  }
+
+  loadBaseInfo(){
+    wx.getSystemInfoAsync({
+      success: info => {
+        this.DeviceInfo = info
+        console.debug(info)
+      }
+    })
   }
 
   loadConfig(){
@@ -340,6 +354,9 @@ class AppManager extends Base {
   }
 
   async chooseLocalImage(){
+    if(this.platform === 'mac'){
+      throw Error('该客户端不支持选择图片功能')
+    }
     getApp().globalData.state.inChooseLocalImage = true
     return chooseLocalImage()
   }
