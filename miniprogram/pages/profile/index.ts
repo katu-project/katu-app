@@ -15,9 +15,10 @@ Page({
   },
   onLoad() {
     app.on('userChange',this.onEventUserChange)
+    this.loadUserInfo()
   },
   onReady() {
-    this.loadUserInfo()
+    
   },
   onShow() {
     this.getTabBar().setData({selected: 2})
