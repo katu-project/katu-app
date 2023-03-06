@@ -1,4 +1,4 @@
-import { showNotice, showChoose, navigateTo, showError, loadData, navigateBack } from '@/utils/index'
+import { showNotice, showChoose, navigateTo, loadData, navigateBack } from '@/utils/index'
 import { DefaultAddImage } from '@/const'
 import api from '@/api'
 import { getCardManager } from '@/class/card'
@@ -247,7 +247,8 @@ Page({
 
       await navigateTo(`../image-processor/index?value=${picPath}`)
     } catch (error) {
-      showError(error.message)
+      console.error(error)
+      showChoose('选取图片失败',error.message||'未知错误',{showCancel:false})
     }
   },
 

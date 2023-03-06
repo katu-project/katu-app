@@ -1,4 +1,4 @@
-import { loadData, showChoose, showError, navigateBack } from '@/utils/index'
+import { loadData, showChoose, showError, navigateBack, showNotice } from '@/utils/index'
 import { DefaultShowImage } from '@/const'
 import { getCardManager } from '@/class/card'
 import { getAppManager } from '@/class/app'
@@ -110,7 +110,10 @@ Page({
           'tmpImagePath': tempFilePath
         })
       },
-      fail: () => this.findCardFailed('')
+      fail: () => {
+        showNotice('暂不支持')
+        this.findCardFailed('')
+      }
     })
   },
   findCardFailed(error){
