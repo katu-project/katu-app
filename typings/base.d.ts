@@ -7,6 +7,7 @@ declare namespace WechatMiniprogram {
     time: (title:string)=>unknown
     timeEnd: (title:string)=>unknown
 
+    trace: () => any
     _log: (...args) => void
     _warn: (...args) => void
     _debug: (...args) => void

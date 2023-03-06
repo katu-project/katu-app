@@ -49,7 +49,7 @@
     }
   ],
   "preloadRule": {
-    "pages/home/index": {
+    "pages/card/edit/index": {
       "network": "all",
       "packages": [
         "opencv"

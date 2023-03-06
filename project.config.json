@@ -45,7 +45,7 @@
     "ignoreUploadUnusedFiles": true
   },
   "appid": "",
-  "projectname": "",
+  "projectname": "卡兔APP",
   "libVersion": "2.14.1",
   "cloudfunctionTemplateRoot": "cloudfunctionTemplate/",
   "condition": {},
@@ -59,38 +59,5 @@
     "tabIndent": "insertSpaces",
     "tabSize": 2
   },
-  "skeletonConfig": {
-    "global": {
-      "text": {
-        "color": "#e7ebed"
-      },
-      "image": {
-        "shape": "rect",
-        "color": "#e7ebed",
-        "shapeOpposite": []
-      },
-      "button": {
-        "color": "#e7ebed",
-        "excludes": []
-      },
-      "pseudo": {
-        "color": "#e7ebed",
-        "shape": "circle",
-        "shapeOpposite": []
-      },
-      "excludes": [
-        ".skeleton-pass"
-      ],
-      "remove": [
-        ".skeleton-remove"
-      ],
-      "empty": [
-        ".skeleton-empty"
-      ],
-      "grayBlock": [
-        ".skeleton-gray-block"
-      ]
-    }
-  },
-  "description": "项目配置文件，详见文档：https://developers.weixin.qq.com/miniprogram/dev/devtools/projectconfig.html"
+  "description": "卡兔APP小程序源码"
 }
