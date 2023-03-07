@@ -183,7 +183,8 @@ class CardManager extends Base{
 
     console.debug('encryptPackage:',encryptedData.length, encryptPackage.slice(-PACKAGE_TAIL_LENGTH), salt, imageKey)
 
-    const savePath = await this.app.getTempFilePath(keyPair.salt)
+    const hash = await this.getHash(imagePath)
+    const savePath = await this.app.getTempFilePath(hash)
 
     await utils.file.writeFile(savePath, encryptPackage, 'hex')
     return {
@@ -302,6 +303,12 @@ class CardManager extends Base{
         console.warn(error.errMsg || error)
       }
     }
+    // try delete temp file : 
+    try {
+      const path = await this.app.getTempFilePath(image.hash)
+      await deleteFile(path)
+      console.debug('delete temp file:', path)
+    } catch (_) {}
   }
 
   async getHash(imagePath:string): Promise<string>{
