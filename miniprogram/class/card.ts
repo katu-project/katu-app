@@ -160,17 +160,15 @@ class CardManager extends Base{
 
   async encryptImage(imagePath: string, extraData?: any[]){
     const keyPair = await this.generateKeypairWithMasterKey()
-    const savePath = await this._genCardImagePath(keyPair, 'enc')
-    return this._encryptImage({keyPair, imagePath, savePath, extraData})
+    return this._encryptImage({keyPair, imagePath, extraData})
   }
 
   async encryptImageWithKey(key:string, imagePath: string, extraData?: any[]){
     const keyPair = await this._generateKeypairByKey(key)
-    const savePath = await this._genCardImagePath(keyPair, 'enc')
-    return this._encryptImage({keyPair, imagePath, savePath, extraData})
+    return this._encryptImage({keyPair, imagePath, extraData})
   }
 
-  async _encryptImage({keyPair, imagePath, savePath, extraData}: {keyPair: KeyPair, imagePath: string, savePath: string, extraData?: any[]}){
+  async _encryptImage({keyPair, imagePath, extraData}: {keyPair: KeyPair, imagePath: string, extraData?: any[]}){
     const imageHexData = await utils.file.readFile(imagePath, 'hex')
     const {key:imageKey, salt} = keyPair
     const flag = '00000000'
@@ -184,6 +182,9 @@ class CardManager extends Base{
                                         .concat(KATU_MARK)
 
     console.debug('encryptPackage:',encryptedData.length, encryptPackage.slice(-PACKAGE_TAIL_LENGTH), salt, imageKey)
+
+    const savePath = await this.app.getTempFilePath(keyPair.salt)
+
     await utils.file.writeFile(savePath, encryptPackage, 'hex')
     return {
       imageSecretKey: salt,
@@ -204,7 +205,7 @@ class CardManager extends Base{
 
   async _decryptImage(image:ICardImage, key:string){
     const decryptImage:{imagePath: string, extraData: any[]} = {
-      imagePath: await this._genCardImagePath(image, 'dec'),
+      imagePath: await this.getDecryptedImageLocalSavePath(image),
       extraData: []
     }
     
@@ -276,31 +277,29 @@ class CardManager extends Base{
   }
   // 检测并返回图片缓存的路径
   async getCardImagePathCache(image: ICardImage){
-    const imagePath = await this._genCardImagePath(image, 'dec')
+    const imagePath = await this.getDecryptedImageLocalSavePath(image)
     await utils.file.checkAccess(imagePath)
     return imagePath
   }
 
-  async _genCardImagePath(image: {salt:string, hash?:string}, type: 'down'|'dec'|'enc'){
-    let name = image.salt
-    if(type === 'down'){
-      name = `${image.hash}_${image.salt||'ns'}`
-    }
+  async _genCardImagePath(image: {hash:string, salt?:string}, type){
+    const name = `${image.hash}_${image.salt || 'ns' }`
     return this.app.getLocalFilePath(name, type)
   }
 
-  async getDecryptedImageLocalSavePath(image: Pick<ICardImage, 'salt'>){
+  async getDecryptedImageLocalSavePath(image: ICardImage){
     return this._genCardImagePath(image,'dec')
   }
 
   async _removeCardImageCache(image: ICardImage){
-    const imageTypes: ('down'|'dec'|'enc')[] = ['dec', 'enc', 'down']
+    const imageTypes = ['dec', 'down']
     for (const type of imageTypes) {
       const path = await this._genCardImagePath(image, type)
       try {
         await deleteFile(path)
+        console.debug('delete file:', path)
       } catch (error) {
-        console.error(error)
+        console.warn(error.errMsg || error)
       }
     }
   }
