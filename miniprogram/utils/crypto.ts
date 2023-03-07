@@ -91,7 +91,7 @@ export function sha512(string){
  * salt no limit, use random value: 16bytes
  */
 type Pbkdf2Options = {salt:string, size:number, iterations:number}
-export async function pbkdf2(masterKey: string, options?: Partial<Pbkdf2Options>){
+export async function pbkdf2(masterKey: string, options?: Partial<Pbkdf2Options>) : Promise<{key:string, salt: string}>{
   const salt = CryptoJS.enc.Hex.parse(options?.salt || await randomBytesHexString(8))
   const iterations = options?.iterations || 1
   const key = CryptoJS.PBKDF2(masterKey,salt,{

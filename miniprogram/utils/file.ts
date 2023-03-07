@@ -26,6 +26,7 @@ export const toPromise = <T>(func, options={}, returnKey?:string): Promise<T> =>
 
 export async function deleteFile(filePath){
   const deleteFile = args => wx.getFileSystemManager().unlink(args)
+  deleteFile.noLog = true
   const options = {filePath}
   return toPromise<void>(deleteFile, options)
 }
