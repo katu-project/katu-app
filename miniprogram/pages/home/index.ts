@@ -30,8 +30,6 @@ Page({
     await this.loadData()
     if(!user.isActive){
       app.showActiveNotice('现在激活账户可领取免费兔币')
-    }else{
-      this.loadNotice()
     }
   },
 
@@ -56,31 +54,18 @@ Page({
   },
 
   async loadData(forceUpdate?:boolean){
-    let homeData:IHomeData|undefined
-
-    if(forceUpdate){
-      homeData = await loadData(api.getHomeData,{},'加载数据中')
-      app.setHomeCacheData(homeData)
-    }else{
-      homeData = await app.getHomeCacheData()
-      if(!homeData){
-        wx.nextTick(()=>{
-          this.loadData(true)
-        })
-        return
-      }
-    }
+    const {likeList, cateList} = await loadData(app.getHomeData,forceUpdate,'加载数据中')
     
     const setData = {}
 
-    if(homeData.cateList.length){
-      setData['cateList'] = homeData.cateList
+    if(cateList.length){
+      setData['cateList'] = cateList
     }else{
       setData['cateList'] = []
     }
 
-    if(homeData.likeList.length){
-      setData['likeList'] = homeData.likeList.map(card=>{
+    if(likeList.length){
+      setData['likeList'] = likeList.map(card=>{
         card._url = card.encrypted ? DefaultShowLockImage : DefaultShowImage
         return card
       })
@@ -88,7 +73,7 @@ Page({
 
     this.setData(setData)
     
-    if(homeData.likeList.length){
+    if(likeList.length){
       this.renderLikeCardImage()
     }
   },
@@ -112,6 +97,7 @@ Page({
       }
     }
     this.renderCateList(card)
+    app.deleteHomeCacheData()
   },
   onEventCardDelete(card){
     const idx = this.data.likeList.findIndex(e=>e._id === card._id)
@@ -121,6 +107,7 @@ Page({
     }
     // 更新cataList数据
     this.renderCateList(card, true)
+    app.deleteHomeCacheData()
   },
   renderLikeCard(card:ICard){
     const setData = {}
@@ -193,6 +180,7 @@ Page({
     }
   },
   async loadNotice(){
+    // 未激活和有未读消息两种情况跳过
     if(!user.isActive || this.data.notice._id) return
     return api.getNotice().then(notice=>{
       if(!notice._id) return 

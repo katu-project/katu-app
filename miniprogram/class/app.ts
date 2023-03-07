@@ -377,7 +377,7 @@ class AppManager extends Base {
     return this.navToDoc(this.Config.doc.dataShareNotice)
   }
 
-  async getHomeCacheData(){
+  async _getHomeCacheData(){
     const homeDataCache = await this.getLocalData<IHomeDataCache>(LocalCacheKeyMap.HOME_DATA_CACHE_KEY)
     if(homeDataCache){
       const nowTime = new Date().getTime()
@@ -389,12 +389,25 @@ class AppManager extends Base {
     return
   }
 
-  async setHomeCacheData(homeData:IHomeData){
+  async _setHomeCacheData(homeData:IHomeData){
     const cacheData = {
       cacheTime: new Date().getTime(),
       data: homeData
     }
     return this.setLocalData(LocalCacheKeyMap.HOME_DATA_CACHE_KEY, cacheData)
+  }
+
+  async deleteHomeCacheData(){
+    this.deleteLocalData(LocalCacheKeyMap.HOME_DATA_CACHE_KEY)
+  }
+
+  async getHomeData(forceUpdate?:boolean){
+    let homeData = await this._getHomeCacheData()
+    if(forceUpdate || !homeData){
+      homeData = await api.getHomeData()
+      await this._setHomeCacheData(homeData)
+    }
+    return homeData
   }
 
   //数据备份
