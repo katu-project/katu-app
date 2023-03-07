@@ -119,7 +119,7 @@ Page({
       }
       setData[`likeList[0]`] = {
         encrypted: card.encrypted,
-        image: card.image[0],
+        image: [card.image[0]],
         title: card.title,
         _id: card._id,
         _url: card.encrypted ? DefaultShowLockImage : DefaultShowImage
