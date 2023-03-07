@@ -258,8 +258,7 @@ class CardManager extends Base{
   }
 
   async downloadImage(image:ICardImage){
-    const imageName = `${image.hash}_${image.salt||'ns'}`
-    const savePath = await this.app.getLocalFilePath(imageName, 'down')
+    const savePath = await this.getDownloadImageLocalSavePath(image)
     return this.app.downloadFile({
       url: image.url,
       savePath
@@ -283,26 +282,33 @@ class CardManager extends Base{
     return imagePath
   }
 
-  async _genCardImagePath(image: {hash:string, salt?:string}, type){
-    const name = `${image.hash}_${image.salt || 'ns' }`
-    return this.app.getLocalFilePath(name, type)
+  async _genCardImagePathName(image: {hash:string, salt?:string}){
+    return `${image.hash}_${image.salt || 'ns' }`
   }
 
   async getDecryptedImageLocalSavePath(image: ICardImage){
-    return this._genCardImagePath(image,'dec')
+    const name = await this._genCardImagePathName(image)
+    return this.app.getLocalFilePath(name, 'dec')
+  }
+
+  async getDownloadImageLocalSavePath(image: ICardImage){
+    const name = await this._genCardImagePathName(image)
+    return this.app.getLocalFilePath(name, 'down')
   }
 
   async _removeCardImageCache(image: ICardImage){
-    const imageTypes = ['dec', 'down']
-    for (const type of imageTypes) {
-      const path = await this._genCardImagePath(image, type)
-      try {
-        await deleteFile(path)
-        console.debug('delete file:', path)
-      } catch (error) {
-        console.warn(error.errMsg || error)
-      }
-    }
+    try {
+      const path = await this.getDecryptedImageLocalSavePath(image)
+      await deleteFile(path)
+      console.debug('delete temp file:', path)
+    } catch (_) {}
+
+    try {
+      const path = await this.getDownloadImageLocalSavePath(image)
+      await deleteFile(path)
+      console.debug('delete temp file:', path)
+    } catch (_) {}
+
     // try delete temp file : 
     try {
       const path = await this.app.getTempFilePath(image.hash)
