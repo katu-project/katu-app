@@ -5,7 +5,7 @@
   <view class="margin-bottom shadow flex-col align-center">
     <view class="flex-col">
       <view class="bg-gray light flex br-14 justify-center user-avatar">
-        <image src="{{user.isActive? user.avatarUrl || '/static/images/default-avatar.png' :'/static/images/user.svg'}}" mode="aspectFit" bindtap="tapToEditInfo" class="br-10" style="height: 160rpx; width: 160rpx;"></image>
+        <image src="{{user.isActive? user.avatarUrl || DefaultUserAvatar :'/static/images/user.svg'}}" mode="aspectFit" bindtap="tapToEditInfo" class="br-10" style="height: 160rpx; width: 160rpx;"></image>
       </view>
       <view class="flex-col justify-between padding-top-xs" style="min-height: 100rpx;">
         <view wx:if="{{user.isActive}}" class="flex-col justify-center align-center">

@@ -1,21 +1,26 @@
 import { loadData, showError, showSuccess, showNotice, navigateBack } from '@/utils/index'
 import { getUserManager } from '@/class/user'
+import { DefaultUserAvatar } from '@/const'
 import api from '@/api'
 const user = getUserManager()
 
 Page({
   originData: {} as {name:string, url:string},
   data: {
-    url: '/static/images/user.svg',
+    url: DefaultUserAvatar,
     name: ''
   },
   onLoad() {
   },
   onReady() {
-    this.setData({
-      url: user.avatar,
+    const setData = {
       name: user.nickName
-    })
+    }
+    if(user.avatar){
+      setData['url'] = user.avatar
+    }
+    this.setData(setData)
+
     this.originData = Object.assign({},this.data)
   },
   onShow(){
@@ -39,7 +44,7 @@ Page({
   },
   async tapToSaveUserInfo(){
     const nickName = this.data.name
-    if(nickName === this.originData.name && this.data.url == this.originData.url) {
+    if(nickName === this.originData.name && this.data.url === this.originData.url) {
       showNotice('数据无变动!')
       return
     }
@@ -52,8 +57,7 @@ Page({
       }
       userData['name'] = nickName
     }
-    
-    if(this.data.url && !this.data.url.startsWith('https') && !this.data.url.startsWith('cloud:')){
+    if(this.data.url !== this.originData.url){
       const url = await loadData(user.uploadAvatar, this.data.url, '正在上传头像')
       userData['url'] = url
     }

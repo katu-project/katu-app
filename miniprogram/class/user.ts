@@ -90,7 +90,7 @@ export default class User extends Base {
 
   async loadInfo(){
     this._user = await api.getUser()
-    this.cacheAvatar()
+    await this.cacheAvatar()
   }
 
   async reloadInfo(){
@@ -103,11 +103,13 @@ export default class User extends Base {
 
   async cacheAvatar(){
     // 缓存avatar
+    if(!this._user.avatarUrl) return
     const userCache = await this.getLocalData<{avatar:string, avatarUrl:string}>(LocalCacheKeyMap.USER_INFO_CACHE_KEY)
     if(!userCache || userCache.avatar !== this._user.avatarUrl){
+      console.log('cache user avatar')
       try {
-        const savePath = await this.app.getHomeFilePath('avatar')
-        this._userAvatar = await this.app.downloadFile({url: this._user.avatarUrl!, savePath })
+        const savePath = await this.app.getHomeFilePath(`avatar`)
+        this._userAvatar = await this.app.downloadFile({url: this._user.avatarUrl!, savePath, ignoreCache:true })
         this.setLocalData(LocalCacheKeyMap.USER_INFO_CACHE_KEY,{avatar:this._user.avatarUrl, avatarUrl:this._userAvatar})
       } catch (error) {
         console.error(error)
@@ -116,6 +118,7 @@ export default class User extends Base {
       try {
         await checkAccess(userCache.avatarUrl)
         this._userAvatar = userCache.avatarUrl
+        console.log('use avatar cache')
       } catch (error) {
         this.deleteLocalData(LocalCacheKeyMap.USER_INFO_CACHE_KEY)
       }
@@ -185,8 +188,7 @@ export default class User extends Base {
   }
 
   async uploadAvatar(filePath){
-    const s = new Date().getTime()
-    return api.uploadAvatar(filePath, `user/${this.openid}/avatar/${s}`)
+    return api.uploadAvatar(filePath, `user/${this.openid}/avatar`)
   }
 
   loadOnAppHideConfig(){

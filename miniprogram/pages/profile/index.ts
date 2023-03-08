@@ -1,5 +1,5 @@
 import { loadData, navigateTo, showSuccess } from '@/utils/index'
-import { PAGES_MENU } from '@/const'
+import { DefaultUserAvatar, PAGES_MENU } from '@/const'
 import api from '@/api'
 
 import { getAppManager } from '@/class/app'
@@ -11,7 +11,8 @@ Page({
   data: {
     user: {} as Partial<IUser>,
     activeInfo: {} as Partial<IAppConfig['active']>,
-    menus: PAGES_MENU.profile
+    menus: PAGES_MENU.profile,
+    DefaultUserAvatar
   },
   onLoad() {
     app.on('userChange',this.onEventUserChange)
@@ -62,6 +63,9 @@ Page({
 
   onEventUserChange(){
     console.log('onEventUserChange')
+    this.setData({
+      'user.avatarUrl': DefaultUserAvatar
+    })
     this.reloadUserInfo()
   },
 
