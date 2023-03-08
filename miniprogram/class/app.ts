@@ -227,17 +227,19 @@ class AppManager extends Base {
     return fileID
   }
 
-  async downloadFile(options:{url:string,savePath?:string}){
+  async downloadFile(options:{url:string,savePath?:string,ignoreCache?:boolean}){
     let {url, savePath} = options
     if(!savePath){
       savePath = await this.getTempFilePath('down')
     }else{
-      try {
-        await utils.file.checkAccess(savePath)
-        console.debug('downloadFile: hit cache file, reuse it')
-        return savePath
-      } catch (error) {
-        console.debug('downloadFile: no cache file, download it')
+      if(!options.ignoreCache){
+        try {
+          await utils.file.checkAccess(savePath)
+          console.debug('downloadFile: hit cache file, reuse it')
+          return savePath
+        } catch (error) {
+          console.debug('downloadFile: no cache file, download it')
+        }
       }
     }
     
