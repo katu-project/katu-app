@@ -5,9 +5,9 @@ import api from '@/api'
 const user = getUserManager()
 
 Page({
-  originData: {} as {name:string, url:string},
+  originData: {} as {name:string, avatar:string},
   data: {
-    url: DefaultUserAvatar,
+    avatar: DefaultUserAvatar,
     name: ''
   },
   onLoad() {
@@ -17,7 +17,7 @@ Page({
       name: user.nickName
     }
     if(user.avatar){
-      setData['url'] = user.avatar
+      setData['avatar'] = user.avatar
     }
     this.setData(setData)
 
@@ -38,13 +38,13 @@ Page({
   },
   onBindChooseAvatar(e){
     this.setData({
-      url: e.detail.avatarUrl,
+      avatar: e.detail.avatarUrl,
       dataChange: true
     })
   },
   async tapToSaveUserInfo(){
     const nickName = this.data.name
-    if(nickName === this.originData.name && this.data.url === this.originData.url) {
+    if(nickName === this.originData.name && this.data.avatar === this.originData.avatar) {
       showNotice('数据无变动!')
       return
     }
@@ -57,9 +57,8 @@ Page({
       }
       userData['name'] = nickName
     }
-    if(this.data.url !== this.originData.url){
-      const url = await loadData(user.uploadAvatar, this.data.url, '正在上传头像')
-      userData['url'] = url
+    if(this.data.avatar !== this.originData.avatar){
+      userData['avatar'] = await loadData(user.uploadAvatar, this.data.avatar, '正在上传头像')
     }
     
     loadData(api.updateUserProfile, userData, '正在保存信息').then(()=>{

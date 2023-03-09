@@ -106,7 +106,7 @@ export default class User extends Base {
     if(!this._user.avatarUrl) return
     const userCache = await this.getLocalData<{avatar:string, avatarUrl:string}>(LocalCacheKeyMap.USER_INFO_CACHE_KEY)
     if(!userCache || userCache.avatar !== this._user.avatarUrl){
-      console.log('cache user avatar')
+      console.log('缓存用户头像')
       try {
         const savePath = await this.app.getHomeFilePath(`avatar`)
         this._userAvatar = await this.app.downloadFile({url: this._user.avatarUrl!, savePath, ignoreCache:true })
@@ -118,7 +118,7 @@ export default class User extends Base {
       try {
         await checkAccess(userCache.avatarUrl)
         this._userAvatar = userCache.avatarUrl
-        console.log('use avatar cache')
+        console.log('使用缓存头像数据')
       } catch (error) {
         this.deleteLocalData(LocalCacheKeyMap.USER_INFO_CACHE_KEY)
       }
@@ -188,7 +188,8 @@ export default class User extends Base {
   }
 
   async uploadAvatar(filePath){
-    return api.uploadAvatar(filePath, `user/${this.openid}/avatar`)
+    const time = new Date().getTime()
+    return api.uploadAvatar(filePath, `user/${this.openid}/avatar/${time}`)
   }
 
   loadOnAppHideConfig(){
