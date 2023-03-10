@@ -83,6 +83,8 @@ export const AppConfig = {
     imageProcessorTip_2: '058dfefe62b9720f0ad5eca959e4f456',
     forgetKeyNotice: 'f6e08a64628b55a704a899564e10cf2e',
     dataShareNotice: 'ab3f0baf6385c56b01345fff7aab1830',
-    dataSaveSecurityNotice: '6d85a2b9628b54c1063d7b093f152106'
-  }
+    dataSaveSecurityNotice: '6d85a2b9628b54c1063d7b093f152106',
+    dataCheckNotice: '534fc1e163b68f2700197d67754d9673'
+  },
+  SmsGapTime: 60
 }

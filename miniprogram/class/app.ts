@@ -293,6 +293,13 @@ class AppManager extends Base {
     return this._setReadNotice(LocalCacheKeyMap.NOTICE_KNOW_SHARE_DATA_CACHE_KEY,true)
   }
 
+  async getKnowDataCheckNotice(){
+    return this._getReadNotice(LocalCacheKeyMap.NOTICE_KNOW_DATA_CHECK_CACHE_KEY)
+  }
+  async setKnowDataCheckNotice(){
+    return this._setReadNotice(LocalCacheKeyMap.NOTICE_KNOW_DATA_CHECK_CACHE_KEY,true)
+  }
+
   async createShareItem({card, scope, expiredTime}:CreateShareOptions){
     scope = scope?.length ? scope : []
     expiredTime = expiredTime || 3600
@@ -377,6 +384,11 @@ class AppManager extends Base {
 
   openDataShareDoc(){
     return this.navToDoc(this.Config.doc.dataShareNotice)
+  }
+
+  openDataCheckDoc(){
+    console.log(this.Config.doc.dataCheckNotice)
+    return this.navToDoc(this.Config.doc.dataCheckNotice)
   }
 
   async _getHomeCacheData(){

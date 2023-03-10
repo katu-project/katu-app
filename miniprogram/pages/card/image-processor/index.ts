@@ -3,6 +3,7 @@ import { DefaultShowImage } from '@/const'
 import { getCardManager } from '@/class/card'
 import { getAppManager } from '@/class/app'
 const app = getAppManager()
+const cardManager = getCardManager()
 
 Page({
   originImagePath: '',
@@ -39,6 +40,20 @@ Page({
     }
   },
   async useAndBack() {
+    const isKnowDataCheck = await app.getKnowDataCheckNotice()
+    if(!isKnowDataCheck){
+      const res = await showChoose('温馨提示','即将进行数据安全检测\n此过程会需要5-10秒',{
+        cancelText: '了解详情',
+        confirmText: '不再提示'
+      })
+      if(res.cancel){
+        app.openDataCheckDoc()
+        return 
+      }
+      if(res.confirm){
+        app.setKnowDataCheckNotice()
+      }
+    }
     const res = await loadData(app.imageContentCheck,{imagePath:this.data.tmpImagePath},'内容安全检测中')
     if(!res.checkPass){
       showChoose("系统提示","图片存在不适内容?",{showCancel:false})
@@ -73,7 +88,6 @@ Page({
     })
   },
   async useInternalApi(src){
-    const cardManager = getCardManager()
     const imageUrl = await loadData(cardManager.parseCardImageByInternalApi, src, {returnFailed: true}).catch(error=>{
       this.findCardFailed(error)
     })
@@ -84,7 +98,6 @@ Page({
     }
   },
   async useRemoteApi(src){
-    const cardManager = getCardManager()
     if(!this.useRemoteApiConfirm) {
       this.setData({
         selectedMethod: 0
