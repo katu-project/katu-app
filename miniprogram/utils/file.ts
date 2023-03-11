@@ -100,6 +100,14 @@ export async function readdir(dirPath){
   }, 'files')
 }
 
+export async function rmdir(dirPath, recursive=false){
+  const rmdir = args => wx.getFileSystemManager().rmdir(args)
+  return toPromise(rmdir, {
+    dirPath,
+    recursive
+  })
+}
+
 export async function download(url, filePath){
   const download = args => wx.downloadFile(args)
   return toPromise<WechatMiniprogram.DownloadFileSuccessCallbackResult>(download, {
@@ -150,6 +158,7 @@ export default {
   checkAccess,
   getStats,
   readdir,
+  rmdir,
   advReaddir,
   download,
   getSavedFileList,

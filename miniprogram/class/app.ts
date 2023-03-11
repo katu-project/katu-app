@@ -2,7 +2,7 @@ import '@/utils/override'
 import Base from './base'
 import { AppConfig } from '@/config'
 import { randomBytesHexString } from '@/utils/crypto'
-import { checkAccess } from '@/utils/file'
+import { checkAccess, rmdir } from '@/utils/file'
 import utils,{ navigateTo, showChoose, chooseLocalImage, switchTab } from '@/utils/index'
 import { sleep } from '@/utils/base'
 import { APP_TEMP_DIR, APP_DOWN_DIR, APP_IMAGE_DIR, DefaultLoadFailedImage, WX_CLOUD_STORAGE_FILE_HEAD, LocalCacheKeyMap, APP_ENTRY_PATH, APP_ROOT_DIR } from '@/const'
@@ -424,11 +424,21 @@ class AppManager extends Base {
     return homeData
   }
 
+  //数据
+  //清除缓存
+  async clearCacheData(){
+    await rmdir(APP_ROOT_DIR, true)
+    await this.deleteLocalData(LocalCacheKeyMap.CARD_EXTRA_DATA_CACHE_KEY)
+    await this.deleteLocalData(LocalCacheKeyMap.USER_INFO_CACHE_KEY)
+    await this.deleteLocalData(LocalCacheKeyMap.MASTER_KEY_CACHE_KEY)
+    await this.deleteLocalData(LocalCacheKeyMap.HOME_DATA_CACHE_KEY)
+    return 
+  }
+
   //数据备份
   exportCardData(){
     showChoose('温馨提示','由于小程序平台限制，导出数据功能需要前往卡兔web端操作。')
   }
-  //数据备份结束
 
   //主密码备份/重置
   _generateRecoveryKeyWords(){

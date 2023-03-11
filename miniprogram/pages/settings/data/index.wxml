@@ -4,6 +4,18 @@
 </cu-custom>
 
 <view class="cu-list menu sm-border card-menu margin-top">
+
+  <view class="cu-item">
+    <view class="content">
+    <text class="">删除缓存数据</text>
+    </view>
+    <view class="action">
+      <button class="cu-btn line-red light gfw" bindtap="tapToClearCacheData" style="width: 150rpx">
+        清除</button>
+    </view>
+  </view>
+  <view class="padding bg-white text-grey">通过删除缓存数据可以修复一些使用异常</view>
+
   <view class="cu-item">
     <view class="content">
     <text class="">导出卡片数据</text>
