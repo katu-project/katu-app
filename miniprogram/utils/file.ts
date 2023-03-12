@@ -72,13 +72,6 @@ export async function mkdir(dirPath, recursive?:boolean) {
   return toPromise(mkdir, options)
 }
 
-export async function readDir(dirPath){
-  const readDir = args => wx.getFileSystemManager().readdir(args)
-  return toPromise(readDir, {
-    dirPath
-  }, 'files')
-}
-
 export async function getSavedFileList(){
   const getSavedFileList = (...args) => wx.getFileSystemManager().getSavedFileList(...args)
   return toPromise(getSavedFileList, {}, 'fileList')
@@ -154,7 +147,6 @@ export default {
   deleteFile,
   writeFile,
   copyFile,
-  readDir,
   checkAccess,
   getStats,
   readdir,

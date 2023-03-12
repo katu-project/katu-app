@@ -138,7 +138,7 @@ async function loadData<T>(func?: (args:any) => Promise<T>, params?: Object, opt
           if(!error.code || error.code === 1){
             wx.showModal({
               title: '操作错误',
-              content: error.message,
+              content: error.message || error.errMsg || '未知错误',
               showCancel: false,
             })
           }else{

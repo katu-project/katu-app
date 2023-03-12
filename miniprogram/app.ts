@@ -40,7 +40,7 @@ App({
     })
   },
   onUnhandledRejection(e){
-    console.log(e);
+    console.log('app onUnhandledRejection: ',e);
   },
   globalData: {
     StatusBar: 0,
