@@ -1,6 +1,6 @@
 export const AppConfig = {
   contacts:{
-    email: 'katu@aong.cn'
+    email: 'info@katucloud.com'
   },
   uploadCardNamePrefix: 'card',
   uploadShareCardNamePrefix: 'share',
