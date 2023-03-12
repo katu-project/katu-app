@@ -379,6 +379,43 @@ class CardManager extends Base{
     return `${image.hash}_${image.salt}`
   }
 
+  // 渲染层业务接口
+  async _getCardCache(){
+    const cacheData = await this.getLocalData<{[id:string]:ICard}>(LocalCacheKeyMap.CARD_DATA_CACHE_KEY)
+    return cacheData || {}
+  }
+
+  async _getCardItemCache(id:string){
+    const cards = await this._getCardCache()
+    if(cards[id]) return cards[id]
+    return undefined
+  }
+
+  async _setCacheData(card:ICard){
+    const cards = await this._getCardCache()
+    cards[card._id] = card
+    return this.setLocalData(LocalCacheKeyMap.CARD_DATA_CACHE_KEY,cards)
+  }
+  
+  async fetch({id,forceUpdate}){
+    let card = await this._getCardItemCache(id)
+    if(forceUpdate || !card){
+      card = await api.getCard({_id:id})
+      await this._setCacheData(card)
+    }
+    return card
+  }
+
+  async clearCardItemCache(id:string){
+    const cards = await this._getCardCache()
+    delete cards[id]
+    return this.setLocalData(LocalCacheKeyMap.CARD_DATA_CACHE_KEY,cards)
+  }
+
+  async setLike(params){
+    return api.setCardLike(params)
+  }
+
   async checkImageType(picPath){
     const type = await utils.file.getImageType(picPath)
     if(!this.app.Config.allowUploadImageType.includes(type)) throw Error("图片类型不支持")

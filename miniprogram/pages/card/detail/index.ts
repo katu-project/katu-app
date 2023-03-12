@@ -1,6 +1,5 @@
 import { DefaultShowLockImage, DefaultShowImage, DefaultShareImage, DefaultLoadFailedImage } from '@/const'
 import { showChoose, showError, loadData, navigateBack, setClipboardData, navigateTo, showNotice } from '@/utils/index'
-import api from '@/api'
 import { getCardManager } from '@/class/card'
 import { getAppManager } from '@/class/app'
 const app = getAppManager()
@@ -68,13 +67,11 @@ Page({
       }
     }
   },
-  async loadData(card){
-    if(!card){
-      card = await loadData(api.getCard,{
-        _id: this.id
-      })
-    }
-
+  async loadData(forceUpdate){
+    const card = await loadData(cardManager.fetch,{ id: this.id, forceUpdate})
+    await this.renderData(card)
+  },
+  async renderData(card){
     this.setData({
       'card._id': card._id,
       'card.encrypted': card.encrypted,
@@ -112,11 +109,12 @@ Page({
   },
   async onEventCardChange(card){
     console.log('detail page: update card info:', card._id, card.title)
-    this.loadData(card)
+    cardManager.clearCardItemCache(card._id)
+    this.renderData(card)
   },
   tapToSetLike(){
     const state = !this.data.card.setLike
-    loadData(api.setCardLike,{id:this.id,state}).then(()=>{
+    loadData(cardManager.setLike,{id:this.id,state}).then(()=>{
       this.data.card.setLike = state
       app.emit('cardChange', this.data.card)
     })
@@ -125,7 +123,7 @@ Page({
     if(this.data.card.encrypted){
       await cardManager.deleteCardImageCache(this.data.card)
     }
-    await this.loadData()
+    await this.loadData(true)
     if(this.data.card.encrypted){
       this.showEncryptedImage()
     }
