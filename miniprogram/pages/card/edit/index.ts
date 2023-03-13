@@ -1,10 +1,8 @@
 import { showNotice, showChoose, navigateTo, loadData, navigateBack } from '@/utils/index'
 import { DefaultAddImage } from '@/const'
-import api from '@/api'
 import { getCardManager } from '@/class/card'
 import { getAppManager } from '@/class/app'
 import { getUserManager } from '@/class/user'
-import { copyFile } from '@/utils/file'
 const app = getAppManager()
 const cardManager = getCardManager()
 const user = getUserManager()
@@ -29,6 +27,7 @@ Page({
     dataChange: false,
     tags: [] as ICardTag[]
   },
+
   onLoad(options){
     if(options.id){
       this.id = options.id
@@ -38,26 +37,30 @@ Page({
     app.on('setCardTitle',this.onEventSetCardTitle)
     app.on('setCardExtraData',this.onEventSetCardExtraData)
   },
+
   onUnload(){
     this.removeAllEvent()
   },
+
   removeAllEvent(){
     app.off('setCardImage')
     app.off('setCardTitle')
     app.off('setCardExtraData')
   },
+
   async onReady(){
     this.checkSetting()
-    if(this.id){
-      await loadData(this.loadCardData,{})
-    }
+    this.loadData()
   },
+
   onShow() {
     this.loadRenderData()
   },
+
   loadRenderData(){
     this.loadTagData()
   },
+
   loadTagData(){
     const useDefaultTag = user.config?.general.useDefaultTag
     const tags = (useDefaultTag ? app.Config.tags: []).concat(user.tags!)
@@ -65,6 +68,7 @@ Page({
       tags
     })
   },
+
   onEventSetCardImage(path){
     const key = `card.image[${this.data.curShowPicIdx}].url`
     this.setData({
@@ -72,6 +76,7 @@ Page({
     })
     this.checkDataChange()
   },
+
   onEventSetCardTitle(title){
     console.log('edit title:', title)
     this.setData({
@@ -79,6 +84,7 @@ Page({
     })
     this.checkDataChange()
   },
+
   onEventSetCardExtraData(extraData){
     console.log('edit extraData:', JSON.stringify(extraData))
     this.setData({
@@ -86,6 +92,7 @@ Page({
     })
     this.checkDataChange()
   },
+
   checkSetting(){
     if(user.isActive){
       if(user.config?.general.defaultUseEncrytion){
@@ -96,8 +103,9 @@ Page({
       }
     }
   },
-  async loadCardData(){
-    const card = await api.getCard({_id: this.id})
+
+  async loadData(){
+    const card = await loadData(cardManager.fetch, {id: this.id})
     const setData = {
       edit: true,
       'card._id': card._id,
@@ -113,16 +121,16 @@ Page({
     }
     if(card.encrypted){
       setData['card.image'] = []
-      for (const pic of card.image) {
-        const {imagePath, extraData} = await cardManager.getCardImageWithoutCache(pic)
-        pic.url = imagePath
-        console.warn({imagePath, extraData});
+      for (const image of card.image) {
+        const {imagePath, extraData} = await cardManager.getCardImage(image)
+        image.url = imagePath
+        console.debug({imagePath, extraData});
         
         // 每个图片都包含了附加数据，因此下面操作只需要执行一次就好
         if(extraData.length){
           setData['card.info'] = extraData as ICardExtraField[]
         }
-        setData['card.image'].push(pic)
+        setData['card.image'].push(image)
       }
     }
     this.setData(setData)
@@ -204,7 +212,7 @@ Page({
             .finally(this.saveFinish)
   },
   async saveDone(card){
-    await this.preLoadEncrypted(card)
+    await this.preCacheCreateImage(card)
     app.emit('cardChange',card)
     showChoose('操作成功','卡片数据已保存',{showCancel: false}).then(()=>{
       navigateBack()
@@ -215,16 +223,16 @@ Page({
   },
   async saveFinish(){
   },
-  async preLoadEncrypted(card:ICard){
+  async preCacheCreateImage(card:ICard){
     if(card.encrypted){
       for (const idx in card.image) {
         const image = card.image[idx]
-        const srcPath = this.data.card.image[idx].url
         try {
           await cardManager.getCardImagePathCache(image)
         } catch (error) {
-          const destPath = await cardManager.getDecryptedImageLocalSavePath(card.image[idx])
-          await copyFile(srcPath,destPath)
+          const srcPath = this.data.card.image[idx].url
+          console.debug('提前缓存加密图片', srcPath)
+          await cardManager.cacheImage(card.image[idx], srcPath)
           await cardManager.cacheExtraData(image, this.data.card.info)
         }
       }
@@ -235,6 +243,7 @@ Page({
       showInputKey: true
     })
   },
+
   async tapToChoosePic(){
     if(!user.isActive){
       app.showActiveNotice()

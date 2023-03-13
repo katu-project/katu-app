@@ -1,7 +1,7 @@
 import utils,{convert, getCache, setCache} from '@/utils/index'
 import { KATU_MARK, LocalCacheKeyMap, PACKAGE_TAIL_LENGTH, WX_CLOUD_STORAGE_FILE_HEAD } from '@/const'
 import api from '@/api'
-import { deleteFile } from '@/utils/file'
+import { copyFile, deleteFile } from '@/utils/file'
 import Base from '@/class/base'
 import { getAppManager } from '@/class/app'
 import { getUserManager } from '@/class/user'
@@ -147,12 +147,12 @@ class CardManager extends Base{
     }
   }
 
-  async getCardImageWithoutCache(card){
-    if(card.salt){
-      return this.decryptImage(card)
+  async getCardImageWithoutCache(image: ICardImage){
+    if(image.salt){
+      return this.decryptImage(image)
     }else{
       return {
-        imagePath: card.url,
+        imagePath: image.url,
         extraData: []
       }
     }
@@ -352,19 +352,6 @@ class CardManager extends Base{
     return fileUrl
   }
 
-  async cacheExtraData(image:ICardImage, data:any[]){
-    const keyName = this._getExtraDataCacheKey(image)
-    let cacheData = {}
-    try {
-      cacheData = await getCache(LocalCacheKeyMap.CARD_EXTRA_DATA_CACHE_KEY)
-    } catch (error) {
-      cacheData = {}
-    }
-
-    cacheData[keyName] = data
-    return setCache(LocalCacheKeyMap.CARD_EXTRA_DATA_CACHE_KEY, cacheData)
-  }
-
   async getExtraDataCache(image:ICardImage){
     const keyName = this._getExtraDataCacheKey(image)
     try {
@@ -414,6 +401,28 @@ class CardManager extends Base{
 
   async setLike(params){
     return api.setCardLike(params)
+  }
+
+  async cacheImage(image: ICardImage, useLocalFile: string){
+    try {
+      const destPath = await this.getDecryptedImageLocalSavePath(image)
+      await copyFile(useLocalFile, destPath)
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  async cacheExtraData(image:ICardImage, data:any[]){
+    const keyName = this._getExtraDataCacheKey(image)
+    let cacheData = {}
+    try {
+      cacheData = await getCache(LocalCacheKeyMap.CARD_EXTRA_DATA_CACHE_KEY)
+    } catch (error) {
+      cacheData = {}
+    }
+
+    cacheData[keyName] = data
+    return setCache(LocalCacheKeyMap.CARD_EXTRA_DATA_CACHE_KEY, cacheData)
   }
 
   async checkImageType(picPath){
