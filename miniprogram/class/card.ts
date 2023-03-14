@@ -1,14 +1,13 @@
+import Base from '@/class/base'
 import utils,{convert, getCache, setCache} from '@/utils/index'
 import { KATU_MARK, LocalCacheKeyMap, PACKAGE_TAIL_LENGTH, WX_CLOUD_STORAGE_FILE_HEAD } from '@/const'
 import api from '@/api'
 import { copyFile, deleteFile } from '@/utils/file'
-import Base from '@/class/base'
 import { getAppManager } from '@/class/app'
 import { getUserManager } from '@/class/user'
 import { sleep } from '@/utils/base'
 
 class CardManager extends Base{
-  app = getAppManager()
 
   constructor(){
     super()
@@ -18,6 +17,13 @@ class CardManager extends Base{
   init(){
   }
 
+  get app(){
+    return getAppManager()
+  }
+
+  get user(){
+    return getUserManager()
+  }
   /* 
     1. 没变动，url 以 cloud 开头
     2. 变动，使用本地图片，url 以 http/wxfile 开头
@@ -589,7 +595,7 @@ class CardManager extends Base{
   async getImageRenderSetData(idx:number|string,card:ICard,keyName:string){
     const setData = {}
     if(card.encrypted){
-      if(getUserManager().config?.general.autoShowContent){
+      if(this.user.config?.general.autoShowContent){
         try {
           const picPath = await this.getCardImagePathCache(card.image[0])
           setData[`${keyName}[${idx}]._url`] = picPath
