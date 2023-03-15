@@ -14,7 +14,7 @@
         <text class="cuIcon-{{card.setLike?'favorfill':'favor'}}"></text>
       </view>
       <view class="padding-lr-xs text-xl text-gray" bindtap="tapToReloadCard"> 
-        <text class="cuIcon-refresh"></text>
+        <text class="cuIcon-refresh {{syncCheck?'iconfont-spin':''}}"></text>
       </view>
     </view>
     <view class="padding-top-sm"></view>

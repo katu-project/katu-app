@@ -33,7 +33,8 @@ Page({
     } as Partial<ICard>,
     extraData: [] as IAnyObject[],
     editable: true,
-    shareable: true
+    shareable: true,
+    syncCheck: true
   },
   onLoad(options) {
     if(options.id){
@@ -56,7 +57,7 @@ Page({
     }
 
     await this.loadData()
-
+    this.dataSyncCheck()
     if(this.data.card.encrypted && this.data.card.image?.some(e=>e._url === DefaultShowLockImage)){
       try {
         app.checkMasterKey()
@@ -204,6 +205,20 @@ Page({
         app.emit('cardDelete', this.data.card)
         navigateBack()
       })
+    })
+  },
+  async dataSyncCheck(){
+    if(!await cardManager.syncCheck(this.id)){
+      console.log('远程数据有变动，同步最新数据')
+      // 考虑有无删除缓存数据的必要
+      // await cardManager.deleteCardCache(this.data.card)
+      await this.loadData()
+      if(this.data.card.encrypted){
+        this.showEncryptedImage()
+      }
+    }
+    this.setData({
+      syncCheck: false
     })
   },
   onShareAppMessage(){

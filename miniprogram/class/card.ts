@@ -409,6 +409,12 @@ class CardManager extends Base{
     return api.setCardLike(params)
   }
 
+  async syncCheck(id){
+    const cacheCard = await this._getCardItemCache(id)
+    const remoteCard = await this.fetch({id,forceUpdate: true})
+    return JSON.stringify(cacheCard) === JSON.stringify(remoteCard)
+  }
+
   async cacheImage(image: ICardImage, useLocalFile: string){
     try {
       const destPath = await this.getDecryptedImageLocalSavePath(image)
@@ -578,8 +584,15 @@ class CardManager extends Base{
 
   async deleteCard(card: Partial<ICard>){
     // check local cache and remove
-    await this.deleteCardImageCache(card)
+    await this.deleteCardCache(card)
     return api.deleteCard({_id: card._id})
+  }
+
+  async deleteCardCache(card: Partial<ICard>){
+    // localStorage 附件字段和自身
+    await this.clearCardItemCache(card._id!)
+    // 图片
+    return this.deleteCardImageCache(card)
   }
 
   async deleteCardImageCache(card: Partial<ICard>){
