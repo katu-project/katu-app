@@ -50,7 +50,9 @@ Page({
 
   async onReady(){
     this.checkSetting()
-    this.loadData()
+    if(this.id){
+      this.loadData()
+    }
   },
 
   onShow() {
