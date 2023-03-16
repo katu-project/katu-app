@@ -16,6 +16,7 @@ class AppManager extends Base {
   DeviceInfo: Partial<WechatMiniprogram.SystemInfo> = {}
   _masterKey: string = ''
 
+  lastNoticeFetchTime: number = 0
   cloudFileTempUrls: IAnyObject = {}
 
   constructor(){
@@ -422,6 +423,18 @@ class AppManager extends Base {
       await this._setHomeCacheData(homeData)
     }
     return homeData
+  }
+
+  async fetchNotice(forceFetch?:boolean){
+    if(!forceFetch){
+      const nowTime = new Date().getTime()
+      if(nowTime - this.lastNoticeFetchTime < 60000){
+        return
+      }
+    }
+    const notice = await api.getNotice()
+    this.lastNoticeFetchTime = new Date().getTime()
+    return notice
   }
 
   //数据
