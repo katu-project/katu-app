@@ -131,6 +131,7 @@ Page({
   },
   findCardFailed(error){
     if(error) {
+      console.error(error)
       showError(error.message)
     }
     this.setData({
