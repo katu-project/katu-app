@@ -1,9 +1,0 @@
-<cu-custom class="skeleton-pass" bgColor="bg-cyan" isBack="{{true}}">
-  <view slot="backText">返回</view>
-</cu-custom>
-<view class="page">
-  <view class="padding">
-    <input class="solids" type="text" model:value="{{key}}" bindinput="GoEncode"/>
-    <view class="solids margin-top padding-sm" style="min-height: 50rpx;">{{encode}}</view>
-  </view>
-</view>
