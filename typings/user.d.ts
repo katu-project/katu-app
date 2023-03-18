@@ -16,7 +16,6 @@ interface IUser {
     tel: string
     email: string
   }
-  customTag: ICardTag[]
   noticeReadLog: string[]
   config: {
     general: {

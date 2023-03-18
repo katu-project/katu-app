@@ -7,8 +7,8 @@ import { LocalCacheKeyMap } from "@/const";
 
 export default class User extends Base {
   _user: Partial<IUser> = {}
-  _userAvatar: string = ''
-  _customTags: ICardTag[] = []
+  _avatar: string = ''
+  _tags: ICardTag[] = []
 
   constructor(){
     super()
@@ -41,7 +41,7 @@ export default class User extends Base {
   }
 
   get tags(){
-    return this._customTags
+    return this._tags
   }
 
   get isActive():boolean{
@@ -65,7 +65,7 @@ export default class User extends Base {
   }
 
   get avatar(){
-    return this._userAvatar || this.user.avatarUrl
+    return this._avatar || this.user.avatarUrl
   }
 
   get openid(){
@@ -109,15 +109,15 @@ export default class User extends Base {
       console.log('缓存用户头像')
       try {
         const savePath = await this.app.getHomeFilePath(`avatar`)
-        this._userAvatar = await this.app.downloadFile({url: this._user.avatarUrl!, savePath, ignoreCache:true })
-        this.setLocalData(LocalCacheKeyMap.USER_INFO_CACHE_KEY,{avatar:this._user.avatarUrl, avatarUrl:this._userAvatar})
+        this._avatar = await this.app.downloadFile({url: this._user.avatarUrl!, savePath, ignoreCache:true })
+        this.setLocalData(LocalCacheKeyMap.USER_INFO_CACHE_KEY,{avatar:this._user.avatarUrl, avatarUrl:this._avatar})
       } catch (error) {
         console.error(error)
       }
     }else{
       try {
         await checkAccess(userCache.avatarUrl)
-        this._userAvatar = userCache.avatarUrl
+        this._avatar = userCache.avatarUrl
         console.log('使用缓存头像数据')
       } catch (error) {
         this.deleteLocalData(LocalCacheKeyMap.USER_INFO_CACHE_KEY)
@@ -144,7 +144,7 @@ export default class User extends Base {
   }
 
   async loadCustomTags(){
-    this._customTags = await api.getUserTag()
+    this._tags = await api.getUserTag()
   }
 
   async applyConfig(configItem:{key:string,value:string}){
