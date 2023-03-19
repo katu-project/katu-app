@@ -30,7 +30,7 @@ Page({
       {
         icon: 'repair',
         title: '调试',
-        url: '../debug',
+        url: '../../packages/debug/pages/index',
         hide: true
       }
     ]
@@ -48,6 +48,6 @@ Page({
   },
   tapToPage(e){
     const page = e.currentTarget.dataset.page
-    navigateTo(`./${page}/index`)
+    navigateTo(page.startsWith('.') ? page : `./${page}/index`)
   }
 })

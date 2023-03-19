@@ -4,4 +4,4 @@ miniprogram_npm
 package-lock.json
 /minitest
 /miniprogram/components/we-cropper
-/miniprogram/pages/debug/
+/miniprogram/packages/debug

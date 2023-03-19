@@ -2,12 +2,6 @@
   "entryPagePath": "pages/home/index",
   "pages": [
     "pages/home/index",
-    "pages/debug/index",
-    "pages/debug/storage/index",
-    "pages/debug/opencv/opencv",
-    "pages/debug/image/image",
-    "pages/debug/crypto/index",
-    "pages/debug/qrcode/index",
     "pages/card/edit/index",
     "pages/card/detail/index",
     "pages/card/image-processor/index",
@@ -33,7 +27,6 @@
     "pages/settings/security/reset-key/qrcode/index",
     "pages/share/index",
     "pages/about/contact/index",
-    "pages/debug/view/index",
     "pages/quota/index",
     "pages/quota/detail/index",
     "pages/notice/index",
@@ -45,6 +38,19 @@
       "name": "opencv",
       "pages": [
         "pages/index"
+      ]
+    },
+    {
+      "root": "packages/debug",
+      "name": "debug",
+      "pages": [
+        "pages/index",
+        "pages/storage/index",
+        "pages/opencv/opencv",
+        "pages/image/image",
+        "pages/crypto/index",
+        "pages/qrcode/index",
+        "pages/view/index"
       ]
     }
   ],
