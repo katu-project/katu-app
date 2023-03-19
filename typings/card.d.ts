@@ -21,8 +21,7 @@ interface ICardImage {
 interface ICardTag {
   _id?: string
   name: string
-  color?: string
-  selected?: Boolean
+  color: string
 }
 
 interface ICardExtraField {

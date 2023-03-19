@@ -142,9 +142,9 @@ Page({
   },
   renderTagState(){
     const tags = this.data.tags.map(tag=>{
-      tag.selected = false
+      tag['selected'] = false
       if(this.data.card.tags.includes(tag.name)){
-        tag.selected = true
+        tag['selected'] = true
       }
       return tag
     })
@@ -326,7 +326,7 @@ Page({
   },
   // 标签部分
   tapToSetTag(){
-    const tags = this.data.tags.filter(tag=>tag.selected).map(e=>e.name)
+    const tags = this.data.tags.filter(tag=>tag['selected']).map(e=>e.name)
     this.setData({
       'card.tags': tags
     })
@@ -349,7 +349,7 @@ Page({
   tapToSelectTag(e){
     const index = this.data.tags.findIndex(tag=>tag.name === e.currentTarget.dataset.value)
     this.setData({
-      [`tags[${index}].selected`]: !this.data.tags[index].selected
+      [`tags[${index}].selected`]: !this.data.tags[index]['selected']
     })
   },
 

@@ -83,15 +83,12 @@
       <view class="action" data-hide="1" bindtap="tapToHideSelectTag">取消</view>
       <view class="action text-green" style="margin-right: 30rpx;" bindtap="tapToSetTag">确定</view>
     </view>
-    <view class="padding-sm flex flex-wrap">
-      <view wx:for="{{tags}}" class="padding-xs" wx:key="index">
-        <button bindtap="tapToSelectTag" style="width: fit-content;" class="cu-btn orange lg block {{item.selected?'bg-cyan':'line-orange'}} light gfw" data-value="{{item.name}}"> {{item.name}}
-        </button>
+    <view class="padding-tb flex flex-wrap">
+      <view class="padding-tb-sm padding-lr-sm margin-sm light bg-{{ item.selected ? item.color||'cyan' : 'gray'}} br-14" data-value="{{item.name}}" bindtap="tapToSelectTag" wx:for="{{tags}}" wx:key="index">
+        <text class="">{{item.name}}</text>
       </view>
-      <view class="padding-xs">
-        <button bindtap="tapToCustomTag" style="width: 220rpx;" class="cu-btn orange lg block line-yellow">
-          <text class="cuIcon-add"></text>自定义
-        </button>
+      <view class="padding-tb-sm padding-lr-sm margin-sm light bg-orange br-14" bindtap="tapToCustomTag">
+        <text class="cuIcon-add">自定义</text>
       </view>
     </view>
     <view class="padding-lg"></view>
