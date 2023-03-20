@@ -46,6 +46,10 @@ class AppManager extends Base {
     return getUserManager()
   }
 
+  get cardManager(){
+    return getCardManager()
+  }
+
   get masterKey(){
     return this._masterKey
   }
@@ -315,8 +319,8 @@ class AppManager extends Base {
       for (const image of card.image!) {
         if(!image._url || !await checkAccess(image._url)) throw Error("分享生成错误")
         const imageData = {url:'',salt:'',hash: image.hash}
-        const encrytedPic = await getCardManager().encryptImageWithKey(dk, image._url!, card.info)
-        imageData.url = await getCardManager().uploadShare(encrytedPic.imagePath)
+        const encrytedPic = await this.cardManager.encryptImageWithKey(dk, image._url!, card.info)
+        imageData.url = await this.cardManager.uploadShare(encrytedPic.imagePath)
         imageData.salt = encrytedPic.imageSecretKey
 
         shareCard.image!.push(imageData)
@@ -388,7 +392,6 @@ class AppManager extends Base {
   }
 
   openDataCheckDoc(){
-    console.log(this.Config.doc.dataCheckNotice)
     return this.navToDoc(this.Config.doc.dataCheckNotice)
   }
 
@@ -562,7 +565,7 @@ class AppManager extends Base {
   }
 
   async imageContentCheck({imagePath}){
-    const hash = await getCardManager().getHash(imagePath)
+    const hash = await this.cardManager.getHash(imagePath)
     const tempFilePath = `tmp/image_${hash}`
     const url = await this.uploadFile(imagePath,tempFilePath)
   
