@@ -40,7 +40,7 @@ Page({
     }
   },
   async useAndBack() {
-    const isKnowDataCheck = await app.getKnowDataCheckNotice()
+    const isKnowDataCheck = await app.notice.getKnowDataCheck()
     if(!isKnowDataCheck){
       const res = await showChoose('温馨提示','即将进行数据安全检测\n此过程会需要5-10秒',{
         cancelText: '了解详情',
@@ -51,7 +51,7 @@ Page({
         return 
       }
       if(res.confirm){
-        app.setKnowDataCheckNotice()
+        app.notice.setKnowDataCheck()
       }
     }
     const res = await loadData(app.imageContentCheck,{imagePath:this.data.tmpImagePath},'内容安全检测中')

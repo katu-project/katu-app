@@ -9,6 +9,7 @@ import { APP_TEMP_DIR, APP_DOWN_DIR, APP_IMAGE_DIR, DefaultLoadFailedImage, WX_C
 import api from '@/api'
 import { getCardManager } from './card'
 import { getUserManager } from './user'
+import { getNoticeModule } from '@/module/notice'
 
 class AppManager extends Base {
   Config = AppConfig
@@ -52,6 +53,10 @@ class AppManager extends Base {
 
   get masterKey(){
     return this._masterKey
+  }
+
+  get notice(){
+    return getNoticeModule()
   }
 
   loadBaseInfo(){
@@ -273,36 +278,6 @@ class AppManager extends Base {
       urls: pics,
       current: pics[idx || 0]
     })
-  }
-
-  async _setReadNotice(key, value){
-    return this.setLocalData(key, value)
-  }
-
-  async _getReadNotice(key){
-    const value = await this.getLocalData<boolean>(key)
-    return value === undefined ? false : value
-  }
-
-  async getKnowEncryptSaveNotice(){
-    return this._getReadNotice(LocalCacheKeyMap.NOTICE_KNOW_ENCRYPT_SAVE_CACHE_KEY)
-  }
-  async setKnowEncryptSaveNotice(){
-    return this._setReadNotice(LocalCacheKeyMap.NOTICE_KNOW_ENCRYPT_SAVE_CACHE_KEY,true)
-  }
-
-  async getKnowShareDataNotice(){
-    return this._getReadNotice(LocalCacheKeyMap.NOTICE_KNOW_SHARE_DATA_CACHE_KEY)
-  }
-  async setKnowShareDataNotice(){
-    return this._setReadNotice(LocalCacheKeyMap.NOTICE_KNOW_SHARE_DATA_CACHE_KEY,true)
-  }
-
-  async getKnowDataCheckNotice(){
-    return this._getReadNotice(LocalCacheKeyMap.NOTICE_KNOW_DATA_CHECK_CACHE_KEY)
-  }
-  async setKnowDataCheckNotice(){
-    return this._setReadNotice(LocalCacheKeyMap.NOTICE_KNOW_DATA_CHECK_CACHE_KEY,true)
   }
 
   async createShareItem({card, scope, expiredTime}:CreateShareOptions){
