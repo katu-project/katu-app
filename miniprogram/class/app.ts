@@ -306,7 +306,6 @@ class AppManager extends Base {
     expiredTime = expiredTime || 3600
     let sk = await randomBytesHexString(3)
     let dk = await randomBytesHexString(16)
-    const extraFields = this.condenseExtraFields(card.info || [])
     const shareCard: Partial<ICard> = {
       encrypted: card.encrypted,
       image: [],
@@ -316,7 +315,7 @@ class AppManager extends Base {
       for (const image of card.image!) {
         if(!image._url || !await checkAccess(image._url)) throw Error("分享生成错误")
         const imageData = {url:'',salt:'',hash: image.hash}
-        const encrytedPic = await getCardManager().encryptImageWithKey(dk, image._url!, extraFields)
+        const encrytedPic = await getCardManager().encryptImageWithKey(dk, image._url!, card.info)
         imageData.url = await getCardManager().uploadShare(encrytedPic.imagePath)
         imageData.salt = encrytedPic.imageSecretKey
 
@@ -324,7 +323,7 @@ class AppManager extends Base {
       }
     }else{
       dk = ''
-      shareCard.info = extraFields
+      shareCard.info = this.rebuildExtraFields(card.info!)
       for (const image of card.image!) {
         shareCard.image!.push({
           url: image.url,
@@ -348,6 +347,7 @@ class AppManager extends Base {
 
   condenseExtraFields(extraFields: ICardExtraField[]):[string,string][]{
     return extraFields.map(e=>{
+      if(!(e.key && e.name && e.value)) throw Error('附加数据格式错误')
       return [e.key == 'cu'?`cu-${e.name}`:e.key,e.value!]
     })
   }
