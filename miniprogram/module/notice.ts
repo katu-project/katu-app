@@ -1,5 +1,5 @@
 import Base from "@/class/base"
-import { LocalCacheKeyMap } from "@/const"
+import { LocalCacheKeyMap, ONCE_NOTICE_KEYS } from "@/const"
 
 class Notice extends Base {
   constructor(){
@@ -9,34 +9,41 @@ class Notice extends Base {
   async init(){
   }
 
-  async _setRead(key, value){
-    return this.setLocalData(key, value)
+  async _getOnceNoticeLog(){
+    const sets = await this.getLocalData<{[key:string]:boolean}>(LocalCacheKeyMap.ONCE_NOTICE_CACHE_KEY)
+    return sets || {}
   }
 
-  async _getRead(key){
-    const value = await this.getLocalData<boolean>(key)
-    return value === undefined ? false : value
+  async _setOnceNoticeLog(key, value){
+    const sets = await this._getOnceNoticeLog()    
+    sets[key] = value
+    return this.setLocalData(LocalCacheKeyMap.ONCE_NOTICE_CACHE_KEY, sets)
+  }
+
+  async _getOnceNotice(key){
+    const sets = await this._getOnceNoticeLog()
+    return sets[key] === undefined ? false : sets[key]
   }
 
   async getKnowEncryptSave(){
-    return this._getRead(LocalCacheKeyMap.NOTICE_KNOW_ENCRYPT_SAVE_CACHE_KEY)
+    return this._getOnceNotice(ONCE_NOTICE_KEYS.ENCRYPT_SAVE)
   }
   async setKnowEncryptSave(){
-    return this._setRead(LocalCacheKeyMap.NOTICE_KNOW_ENCRYPT_SAVE_CACHE_KEY,true)
+    return this._setOnceNoticeLog(ONCE_NOTICE_KEYS.ENCRYPT_SAVE,true)
   }
 
   async getKnowShareData(){
-    return this._getRead(LocalCacheKeyMap.NOTICE_KNOW_SHARE_DATA_CACHE_KEY)
+    return this._getOnceNotice(ONCE_NOTICE_KEYS.SHARE_DATA)
   }
   async setKnowShareData(){
-    return this._setRead(LocalCacheKeyMap.NOTICE_KNOW_SHARE_DATA_CACHE_KEY,true)
+    return this._setOnceNoticeLog(ONCE_NOTICE_KEYS.SHARE_DATA,true)
   }
 
   async getKnowDataCheck(){
-    return this._getRead(LocalCacheKeyMap.NOTICE_KNOW_DATA_CHECK_CACHE_KEY)
+    return this._getOnceNotice(ONCE_NOTICE_KEYS.DATA_CHECK)
   }
   async setKnowDataCheck(){
-    return this._setRead(LocalCacheKeyMap.NOTICE_KNOW_DATA_CHECK_CACHE_KEY,true)
+    return this._setOnceNoticeLog(ONCE_NOTICE_KEYS.DATA_CHECK,true)
   }
 }
 
