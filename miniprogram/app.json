@@ -39,19 +39,6 @@
       "pages": [
         "pages/index"
       ]
-    },
-    {
-      "root": "packages/debug",
-      "name": "debug",
-      "pages": [
-        "pages/index",
-        "pages/storage/index",
-        "pages/opencv/opencv",
-        "pages/image/image",
-        "pages/crypto/index",
-        "pages/qrcode/index",
-        "pages/view/index"
-      ]
     }
   ],
   "preloadRule": {
