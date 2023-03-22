@@ -1,3 +1,10 @@
+// 支持单独引入lodash/debounce方法
+Object.assign(global, {
+  Date: Date,
+  Object: Object,
+  Function: Function
+})
+
 const time = () => {
   const time = new Date()
   return `${time.toLocaleTimeString().slice(0,8)}${time.getMilliseconds().toString().padStart(3,'0')}`
@@ -23,7 +30,7 @@ const advLog = (level, ...args) => {
   let logText:String[] = []
   try {
     throw Error('')
-  } catch (error) {
+  } catch (error:any) {
     const callStack:string[] = error.stack.split('\n').slice(1)
     for (const idx in callStack) {
       if(!callStack[idx].includes('advLog') && callStack[idx].includes('override.js')){

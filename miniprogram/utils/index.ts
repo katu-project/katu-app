@@ -1,4 +1,5 @@
 import { selfish, objectSetValue, createAdvSetData } from './base'
+import debounce from 'lodash.debounce'
 import { request } from './net'
 import * as crypto from './crypto'
 import * as file from './file'
@@ -7,7 +8,7 @@ import { UPNG as upng } from './upng'
 import * as bip39 from './bip39/index'
 import { drawQrcode as qrcode } from './qrcode/index'
 
-export { selfish, objectSetValue, createAdvSetData } from './base'
+export { selfish, objectSetValue, createAdvSetData, mergeDeep, sleep } from './base'
 export { request } from './net'
 export * as crypto from './crypto'
 export * as file from './file'
@@ -22,6 +23,7 @@ export default {
   selfish,
   objectSetValue,
   createAdvSetData,
+  debounce,
   crypto,
   file,
   convert,
@@ -29,4 +31,8 @@ export default {
   bip39,
   qrcode,
   request
+}
+
+export {
+  debounce
 }
