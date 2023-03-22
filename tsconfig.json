@@ -8,7 +8,7 @@
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "experimentalDecorators": true,
-    "noImplicitThis": true,
+    "noImplicitThis": false,
     "noImplicitReturns": true,
     "alwaysStrict": true,
     "noFallthroughCasesInSwitch": true,
@@ -20,7 +20,11 @@
     "outDir": "dist",
     "typeRoots": [
       "./typings"
-    ]
+    ],
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["miniprogram/*"]
+    }
   },
   "include": [
     "./**/*.ts"

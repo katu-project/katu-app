@@ -1,4 +1,4 @@
-import { loadData, navigateTo, createAdvSetData } from '@/utils/index'
+import { loadData, navigateTo, createAdvSetData, debounce } from '@/utils/index'
 import { DefaultShowLockImage, DefaultShowImage, APP_ENTRY_PATH, DefaultLoadFailedImage } from '@/const'
 import api from '@/api'
 import { getAppManager } from '@/class/app'
@@ -199,14 +199,16 @@ Page({
       likeList: this.data.likeList
     })
   },
-  async tapToMarkRead({currentTarget:{dataset:{key}}}){
+
+  tapToMarkRead: debounce(async function({currentTarget:{dataset:{key}}}){
     await api.markRead(key)
     this.setData({
       'notice._id': ''
     })
     this.hideModal('showNotice')
     this.loadNotice(true)
-  },
+  },1000,{leading: true, trailing: false}),
+ 
   tapToHideModal(e){
     this.hideModal(e.currentTarget.dataset.name)
   },
