@@ -86,5 +86,15 @@ export const AppConfig = {
     dataSaveSecurityNotice: '6d85a2b9628b54c1063d7b093f152106',
     dataCheckNotice: '534fc1e163b68f2700197d67754d9673'
   },
-  SmsGapTime: 60
+  smsGapTime: 60,
+  cryptoConfig: {
+    masterKeyLength: 16,
+    calculateKeyId: {
+      method: 'SHA1',
+      length: 20
+    },
+    userKeyConvert: {
+      method: 'SHA1'
+    }
+  }
 }

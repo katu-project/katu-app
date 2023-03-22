@@ -70,7 +70,7 @@ export function md5(string){
   return CryptoJS.MD5(string).toString()
 }
 
-export function sha1(string){
+export function SHA1(string){
   return CryptoJS.SHA1(string).toString()
 }
 
@@ -155,7 +155,7 @@ export default {
   random,
   randomBytesHexString,
   md5,
-  sha1,
+  SHA1,
   sha256,
   sha512,
   pbkdf2,

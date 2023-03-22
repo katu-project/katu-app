@@ -3,13 +3,13 @@ import Base from './base'
 import { AppConfig } from '@/config'
 import { randomBytesHexString } from '@/utils/crypto'
 import { checkAccess, rmdir } from '@/utils/file'
-import utils,{ navigateTo, showChoose, chooseLocalImage, switchTab } from '@/utils/index'
-import { sleep } from '@/utils/base'
+import { crypto, navigateTo, showChoose, chooseLocalImage, switchTab, mergeDeep, sleep, file, bip39 } from '@/utils/index'
 import { APP_TEMP_DIR, APP_DOWN_DIR, APP_IMAGE_DIR, DefaultLoadFailedImage, WX_CLOUD_STORAGE_FILE_HEAD, LocalCacheKeyMap, APP_ENTRY_PATH, APP_ROOT_DIR } from '@/const'
 import api from '@/api'
 import { getCardManager } from './card'
 import { getUserManager } from './user'
 import { getNoticeModule } from '@/module/notice'
+import { getCryptoModule } from '@/module/crypto'
 
 class AppManager extends Base {
   Config = AppConfig
@@ -28,6 +28,7 @@ class AppManager extends Base {
     this.loadBaseInfo()
     this.loadConfig()
     this.loadCacheData()
+    this.loadModules()
     return
   }
 
@@ -55,9 +56,16 @@ class AppManager extends Base {
     return this._masterKey
   }
 
+  // modules
   get notice(){
     return getNoticeModule()
   }
+
+  get crypto(){
+    return getCryptoModule()
+  }
+
+  // modules end
 
   loadBaseInfo(){
     wx.getSystemInfoAsync({
@@ -93,18 +101,26 @@ class AppManager extends Base {
     // }
     this.cloudFileTempUrls = {}
   }
+
+  loadModules(){
+    if(!this.user.config?.crypto) {
+      setTimeout(this.loadModules.bind(this), 1000)
+      return
+    }
+    getCryptoModule().init(mergeDeep(this.Config.cryptoConfig, this.user.config.crypto))
+  }
   // user section
   async setUserMasterKey(key: string){
-    const hexCode = await this._convertToHex(key)
+    const hexCode = this.crypto.convertToHexString(key)
     const masterKeyPack = await this._createMasterKeyPack(hexCode)
     return api.setMasterKeyInfo(masterKeyPack)
   }
 
   async updateUserMasterKey({key, newKey}){
-    const hexCode = await this._convertToHex(key)
-    const newHexCode = await this._convertToHex(newKey)
+    const hexCode = this.crypto.convertToHexString(key)
+    const newHexCode = this.crypto.convertToHexString(newKey)
     // 获取主密码
-    const masterKey = await this._fetchMasterKeyFromKeyPack(this.user.masterKeyPack?.keyPack, hexCode)
+    const masterKey = await this._fetchMasterKeyFromKeyPack(this.user.masterKeyPack?.keyPack!, hexCode)
     // 重新生成新的主密码包
     const masterKeyPack = await this._createMasterKeyPack(newHexCode, masterKey)
     // 更新主密码包
@@ -141,8 +157,8 @@ class AppManager extends Base {
   // 用户主密码导出原始主密码
   async loadMasterKeyWithKey(key){
     this.checkMasterKeyFormat(key)
-    const hexCode = await this._convertToHex(key)
-    const masterKey = await this._fetchMasterKeyFromKeyPack(this.user.masterKeyPack?.keyPack, hexCode)
+    const hexCode = this.crypto.convertToHexString(key)
+    const masterKey = await this._fetchMasterKeyFromKeyPack(this.user.masterKeyPack?.keyPack!, hexCode)
     this.setMasterKey(masterKey)
   }
 
@@ -180,7 +196,7 @@ class AppManager extends Base {
     }
 
     try {
-      this._verifyKey(this.masterKey, this.user.masterKeyPack?.keyId)
+      this.crypto.verifyKeyId(this.masterKey, this.user.masterKeyPack?.keyId!)
     } catch (err) {
       error.code = '22'
       error.message = '主密码不匹配'
@@ -193,38 +209,22 @@ class AppManager extends Base {
     if(!key || key.length < 6) throw Error("格式错误")
   }
 
-  async _convertToHex(key){
-    const hexCode = utils.crypto.sha1(key)
-    if(!hexCode) throw Error("主密码生成出错，请联系客服")
-    return hexCode
-  }
-
   // 生成主密码 256 bit
   async _createMasterKeyPack(hexKey: string, masterKey ?: string){
     if(!masterKey){
-      masterKey = await utils.crypto.random(16)
+      masterKey = await this.crypto.randomKey()
     }
     const keyPack: Partial<IMasterKeyPack> = {}
-    keyPack.keyPack = utils.crypto.encryptString(masterKey, hexKey)
-    keyPack.hexKeyId = this._calculateKeyId(hexKey)
-    keyPack.keyId = this._calculateKeyId(masterKey)
+    keyPack.keyPack = this.crypto.encryptString(masterKey, hexKey)
+    keyPack.hexKeyId = this.crypto.calculateKeyId(hexKey)
+    keyPack.keyId = this.crypto.calculateKeyId(masterKey)
     return keyPack
   }
 
-  async _fetchMasterKeyFromKeyPack(masterPack, hexCode){
-    const masterKey = utils.crypto.decryptString(masterPack, hexCode)
+  async _fetchMasterKeyFromKeyPack(masterPack:string, hexCode:string){
+    const masterKey = this.crypto.decryptString(masterPack, hexCode)
     if(!masterKey) throw Error("主密码有误")
     return masterKey
-  }
-
-  _verifyKey(key, keyId){
-    if(this._calculateKeyId(key) !== keyId){
-      throw Error("密码错误")
-    }
-  }
-
-  _calculateKeyId(key){
-    return utils.crypto.sha1(key)
   }
 
   // master key section end
@@ -244,7 +244,7 @@ class AppManager extends Base {
     }else{
       if(!options.ignoreCache){
         try {
-          await utils.file.checkAccess(savePath)
+          await file.checkAccess(savePath)
           console.debug('downloadFile: hit cache file, reuse it')
           return savePath
         } catch (error) {
@@ -265,7 +265,7 @@ class AppManager extends Base {
     }
 
     console.debug('start download file:', url);
-    const downloadRes = await utils.file.download(url, savePath)
+    const downloadRes = await file.download(url, savePath)
     if(downloadRes.statusCode !== 200 || !downloadRes.filePath){
       throw Error("文件下载出错")
     }
@@ -433,18 +433,18 @@ class AppManager extends Base {
 
   //主密码备份/重置
   _generateRecoveryKeyWords(){
-    return utils.bip39.generateMnemonic()
+    return bip39.generateMnemonic()
   }
 
   _generateRecoveryKey(){
     const words = this._generateRecoveryKeyWords()
-    return utils.bip39.mnemonicToEntropy(words)
+    return bip39.mnemonicToEntropy(words)
   }
 
   async generateRecoveryKeyQrcodeContent(){
     const rk = this._generateRecoveryKey()
     const qrContent = {
-      i: (await utils.crypto.random(4)).toUpperCase(),
+      i: (await crypto.random(2)).toUpperCase(),
       t: new Date().toLocaleDateString(),
       rk
     }
@@ -456,14 +456,14 @@ class AppManager extends Base {
     const keyPack: Partial<IRecoveryKeyPack> = {}
     keyPack.qrId = qrCodeData.i
     keyPack.createTime = qrCodeData.t
-    keyPack.keyId = this._calculateKeyId(qrCodeData.rk)
-    keyPack.pack = utils.crypto.encryptString(this.masterKey, qrCodeData.rk)
+    keyPack.keyId = this.crypto.calculateKeyId(qrCodeData.rk)
+    keyPack.pack = this.crypto.encryptString(this.masterKey, qrCodeData.rk)
     return api.setRecoveryKey(keyPack)
   }
 
   _extractMasterKeyFromRecoveryKeyPack(recoveryKey){
     if(!this.user.recoveryKeyPack) throw Error("没有设置备份主密码")
-    const masterKey = utils.crypto.decryptString(this.user.recoveryKeyPack.pack, recoveryKey)
+    const masterKey = this.crypto.decryptString(this.user.recoveryKeyPack.pack, recoveryKey)
     if(!masterKey) throw Error("密码有误")
     return masterKey
   }
@@ -480,7 +480,7 @@ class AppManager extends Base {
   async resetMasterKeyWithRecoveryKey({rk:recoveryKey, key}){
     this.checkMasterKeyFormat(key)
     const masterKey = this._extractMasterKeyFromRecoveryKeyPack(recoveryKey)
-    const newHexCode = await this._convertToHex(key)
+    const newHexCode = this.crypto.convertToHexString(key)
     // 重新生成新的主密码包
     const masterKeyPack = await this._createMasterKeyPack(newHexCode, masterKey)
     // 更新主密码包
@@ -498,7 +498,7 @@ class AppManager extends Base {
                 dirType === 'dec' ? APP_IMAGE_DIR : 
                 APP_TEMP_DIR
 
-    return utils.file.getFilePath({
+    return file.getFilePath({
       dir,
       name: fileName
     })
@@ -530,7 +530,7 @@ class AppManager extends Base {
         tempUrl = file.tempFileURL
         this.cloudFileTempUrls[url] = tempUrl
       }
-    } catch (error) {
+    } catch (error:any) {
       console.error('获取云文件临时URL错误:', error.message);
     }
     if(!tempUrl) {
