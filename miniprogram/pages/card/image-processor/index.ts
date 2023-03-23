@@ -35,7 +35,7 @@ Page({
         tmpImagePath: picPath
       })
       this.originImagePath = picPath
-    } catch (error) {
+    } catch (error:any) {
       showError(error.message)
     }
   },
@@ -144,10 +144,10 @@ Page({
       if(confirm) app.navToDoc(app.Config.doc.imageProcessorTip_1)
     })
   },
-  showTip2(cancelText?:string){
-    showChoose("警告","外部接口服务由第三方提供!\n更多信息请查看帮助文档。",{confirmText:'去查看',cancelText: cancelText||'取消'})
+  showTip2(confirmText?:string){
+    showChoose("警告","外部接口服务由第三方提供!\n更多信息请查看帮助文档。",{confirmText: confirmText ||'取消',cancelText: '去查看'})
     .then(({confirm})=>{
-      if(confirm) app.navToDoc(app.Config.doc.imageProcessorTip_2)
+      if(!confirm) app.navToDoc(app.Config.doc.imageProcessorTip_2)
     })
   },
   tapToShowWarn(){
