@@ -1,4 +1,4 @@
-export const AppConfig = {
+const AppConfig = {
   contacts:{
     email: 'info@katucloud.com'
   },
@@ -98,3 +98,5 @@ export const AppConfig = {
     }
   }
 }
+
+export default AppConfig

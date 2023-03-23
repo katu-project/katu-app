@@ -1,11 +1,9 @@
 import '@/utils/override'
 import Base from './base'
-import { AppConfig } from '@/config'
-import { randomBytesHexString } from '@/utils/crypto'
-import { checkAccess, rmdir } from '@/utils/file'
+import api from '@/api'
+import AppConfig from '@/config'
 import { crypto, navigateTo, showChoose, chooseLocalImage, switchTab, mergeDeep, sleep, file, bip39, net } from '@/utils/index'
 import { APP_TEMP_DIR, APP_DOWN_DIR, APP_IMAGE_DIR, DefaultLoadFailedImage, WX_CLOUD_STORAGE_FILE_HEAD, LocalCacheKeyMap, APP_ENTRY_PATH, APP_ROOT_DIR } from '@/const'
-import api from '@/api'
 import { getCardManager } from './card'
 import { getUserManager } from './user'
 import { getNoticeModule } from '@/module/notice'
@@ -283,8 +281,10 @@ class AppManager extends Base {
   async createShareItem({card, scope, expiredTime}:CreateShareOptions){
     scope = scope?.length ? scope : []
     expiredTime = expiredTime || 3600
-    let sk = await randomBytesHexString(3)
-    let dk = await randomBytesHexString(16)
+    // sk 3 bytes share key
+    let sk = await this.crypto.randomHexString(3)
+    // dk 16 bytes data key
+    let dk = await this.crypto.randomHexString(16)
     const shareCard: Partial<ICard> = {
       encrypted: card.encrypted,
       image: [],
@@ -292,7 +292,7 @@ class AppManager extends Base {
     }
     if(card.encrypted){
       for (const image of card.image!) {
-        if(!image._url || !await checkAccess(image._url)) throw Error("分享生成错误")
+        if(!image._url || !await file.checkAccess(image._url)) throw Error("分享生成错误")
         const imageData = {url:'',salt:'',hash: image.hash}
         const encrytedPic = await this.cardManager.encryptImageWithKey(dk, image._url!, card.info)
         imageData.url = await this.cardManager.uploadShare(encrytedPic.imagePath)
@@ -418,7 +418,7 @@ class AppManager extends Base {
   //数据
   //清除缓存
   async clearCacheData(){
-    await rmdir(APP_ROOT_DIR, true)
+    await file.rmdir(APP_ROOT_DIR, true)
     await this.deleteLocalData(LocalCacheKeyMap.CARD_EXTRA_DATA_CACHE_KEY)
     await this.deleteLocalData(LocalCacheKeyMap.USER_INFO_CACHE_KEY)
     await this.deleteLocalData(LocalCacheKeyMap.MASTER_KEY_CACHE_KEY)
