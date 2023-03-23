@@ -3,7 +3,7 @@ import Base from './base'
 import { AppConfig } from '@/config'
 import { randomBytesHexString } from '@/utils/crypto'
 import { checkAccess, rmdir } from '@/utils/file'
-import { crypto, navigateTo, showChoose, chooseLocalImage, switchTab, mergeDeep, sleep, file, bip39 } from '@/utils/index'
+import { crypto, navigateTo, showChoose, chooseLocalImage, switchTab, mergeDeep, sleep, file, bip39, net } from '@/utils/index'
 import { APP_TEMP_DIR, APP_DOWN_DIR, APP_IMAGE_DIR, DefaultLoadFailedImage, WX_CLOUD_STORAGE_FILE_HEAD, LocalCacheKeyMap, APP_ENTRY_PATH, APP_ROOT_DIR } from '@/const'
 import api from '@/api'
 import { getCardManager } from './card'
@@ -265,7 +265,7 @@ class AppManager extends Base {
     }
 
     console.debug('start download file:', url);
-    const downloadRes = await file.download(url, savePath)
+    const downloadRes = await net.download(url, savePath)
     if(downloadRes.statusCode !== 200 || !downloadRes.filePath){
       throw Error("文件下载出错")
     }
@@ -551,6 +551,7 @@ class AppManager extends Base {
     }
     throw new Error("内容检测超时，请稍后重试")
   }
+
   async textContentsafetyCheck(text){
     return api.textContentSafetyCheck({text})
   }

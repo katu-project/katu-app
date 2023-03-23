@@ -1,3 +1,5 @@
+import { toPromise } from './base'
+
 export const request = <T>(action: string, data={}): Promise<T> => {
   const error = {
     code: 0,
@@ -31,6 +33,15 @@ export const request = <T>(action: string, data={}): Promise<T> => {
   })
 }
 
+export async function download(url, filePath){
+  const download = args => wx.downloadFile(args)
+  return toPromise<WechatMiniprogram.DownloadFileSuccessCallbackResult>(download, {
+    url,
+    filePath
+  })
+}
+
 export default {
+  download,
   request
 }

@@ -78,8 +78,36 @@ export function createAdvSetData(originSetData,dataCount:number,gap?:number){
   }
 }
 
+// wx method to promise
+export const toPromise = <T>(func, options={}, returnKey?:string): Promise<T> => {
+  return new Promise((resolve,reject)=>{
+    func({
+      ...options,
+      success: res=>{
+        if(func.noLog){
+
+        }else{
+          if(res.data && res.data.length > 200){
+            console.warn(`${func.name}:`, res.data.slice(-200))
+          }else{
+            console.warn(`${func.name}:`, res);
+          }
+        }
+       
+        if(returnKey && res.hasOwnProperty(returnKey)){
+          resolve(res[returnKey])
+        }else{
+          resolve(res)
+        }
+      },
+      fail: reject
+    })
+  })
+}
+
 export default {
   sleep,
+  toPromise,
   mergeDeep,
   selfish,
   objectSetValue,

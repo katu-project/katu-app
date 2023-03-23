@@ -12,6 +12,7 @@ export { selfish, objectSetValue, createAdvSetData, mergeDeep, sleep } from './b
 export { request } from './net'
 export * as crypto from './crypto'
 export * as file from './file'
+export * as net from './net'
 export * as convert from './convert'
 export * from './action'
 export { UPNG as upng } from './upng'

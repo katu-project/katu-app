@@ -1,28 +1,4 @@
-export const toPromise = <T>(func, options={}, returnKey?:string): Promise<T> => {
-  return new Promise((resolve,reject)=>{
-    func({
-      ...options,
-      success: res=>{
-        if(func.noLog){
-
-        }else{
-          if(res.data && res.data.length > 200){
-            console.warn(`${func.name}:`, res.data.slice(-200))
-          }else{
-            console.warn(`${func.name}:`, res);
-          }
-        }
-       
-        if(returnKey && res.hasOwnProperty(returnKey)){
-          resolve(res[returnKey])
-        }else{
-          resolve(res)
-        }
-      },
-      fail: reject
-    })
-  })
-}
+import { toPromise } from './base'
 
 export async function deleteFile(filePath){
   const deleteFile = args => wx.getFileSystemManager().unlink(args)
@@ -100,14 +76,6 @@ export async function rmdir(dirPath, recursive=false){
     recursive
   })
 }
-
-export async function download(url, filePath){
-  const download = args => wx.downloadFile(args)
-  return toPromise<WechatMiniprogram.DownloadFileSuccessCallbackResult>(download, {
-    url,
-    filePath
-  })
-}
 // ------- wx function end ----
 
 // ------- 扩展方法 ----
@@ -152,7 +120,6 @@ export default {
   readdir,
   rmdir,
   advReaddir,
-  download,
   getSavedFileList,
   getFilePath,
   getImageType
