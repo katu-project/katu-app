@@ -110,37 +110,40 @@ class AppManager extends Base {
   // user section
   async setUserMasterKey(key: string){
     const hexCode = this.crypto.convertToHexString(key)
-    const masterKeyPack = await this._createMasterKeyPack(hexCode)
+    const masterKeyPack = await this.crypto.createCommonKeyPack(hexCode)
     return api.setMasterKeyInfo(masterKeyPack)
   }
 
   async updateUserMasterKey({key, newKey}){
     const hexCode = this.crypto.convertToHexString(key)
     const newHexCode = this.crypto.convertToHexString(newKey)
+    if(!this.user.masterKeyPack?.keyPack) throw Error('未设置主密码')
     // 获取主密码
-    const masterKey = await this._fetchMasterKeyFromKeyPack(this.user.masterKeyPack?.keyPack!, hexCode)
+    const masterKey = await this.crypto.fetchKeyFromKeyPack(this.user.masterKeyPack.keyPack, hexCode)
     // 重新生成新的主密码包
-    const masterKeyPack = await this._createMasterKeyPack(newHexCode, masterKey)
+    const masterKeyPack = await this.crypto.createCommonKeyPack(newHexCode, masterKey)
     // 更新主密码包
     return api.setMasterKeyInfo(masterKeyPack)
   }
 
   // master key section
   async loadMasterKey(){
-    const masterKey = await this._readLocalMasterKeyCache()
+    const masterKey = await this.getLocalData<string>(LocalCacheKeyMap.MASTER_KEY_CACHE_KEY)
     if(masterKey){
-      this.setMasterKey(masterKey) 
+      this.setMasterKey(masterKey)
       console.log("本地缓存的主密码加载成功")
+    }else{
+      console.warn("读取主密码缓存失败")
     }
   }
 
-  async _readLocalMasterKeyCache(){
-    try {
-      return await this.getLocalData<string>(LocalCacheKeyMap.MASTER_KEY_CACHE_KEY)
-    } catch (error) {
-      console.log("读取主密码缓存失败");
-    }
-    return ''
+  // 用户主密码导出原始主密码
+  async loadMasterKeyWithKey(key:string){
+    this.checkMasterKeyFormat(key)
+    const hexCode = this.crypto.convertToHexString(key)
+    if(!this.user.masterKeyPack?.keyPack) throw Error('未设置主密码')
+    const masterKey = await this.crypto.fetchKeyFromKeyPack(this.user.masterKeyPack.keyPack, hexCode)
+    this.setMasterKey(masterKey)
   }
 
   setMasterKey(key:string){
@@ -149,24 +152,12 @@ class AppManager extends Base {
 
   async clearMasterKey(){
     this.setMasterKey('')
-    this._removeMasterKeyCache()
-  }
-
-  // 用户主密码导出原始主密码
-  async loadMasterKeyWithKey(key){
-    this.checkMasterKeyFormat(key)
-    const hexCode = this.crypto.convertToHexString(key)
-    const masterKey = await this._fetchMasterKeyFromKeyPack(this.user.masterKeyPack?.keyPack!, hexCode)
-    this.setMasterKey(masterKey)
+    return this.deleteLocalData(LocalCacheKeyMap.MASTER_KEY_CACHE_KEY)
   }
 
   async cacheMasterKey(){
     if(!this.masterKey) return
     return this.setLocalData(LocalCacheKeyMap.MASTER_KEY_CACHE_KEY, this.masterKey)
-  }
-
-  async _removeMasterKeyCache(){
-    return this.deleteLocalData(LocalCacheKeyMap.MASTER_KEY_CACHE_KEY)
   }
 
   // 使用前检测主密码状态
@@ -203,37 +194,11 @@ class AppManager extends Base {
 
   }
 
-  checkMasterKeyFormat(key){
-    if(!key || key.length < 6) throw Error("格式错误")
+  checkMasterKeyFormat(key:string){
+    const clearKey = key.replace(/\s/g, '')
+    if(!clearKey || clearKey.length < 6) throw Error("格式错误")
   }
-
-  // 生成主密码 256 bit
-  async _createMasterKeyPack(hexKey: string, masterKey ?: string){
-    if(!masterKey){
-      masterKey = await this.crypto.randomKey()
-    }
-    const keyPack: Partial<IMasterKeyPack> = {}
-    keyPack.keyPack = this.crypto.encryptString(masterKey, hexKey)
-    keyPack.hexKeyId = this.crypto.calculateKeyId(hexKey)
-    keyPack.keyId = this.crypto.calculateKeyId(masterKey)
-    return keyPack
-  }
-
-  async _fetchMasterKeyFromKeyPack(masterPack:string, hexCode:string){
-    const masterKey = this.crypto.decryptString(masterPack, hexCode)
-    if(!masterKey) throw Error("主密码有误")
-    return masterKey
-  }
-
   // master key section end
-
-  async uploadFile(tempFilePath, saveName){
-    const {fileID} = await wx.cloud.uploadFile({
-      cloudPath: saveName,
-      filePath: tempFilePath
-    })
-    return fileID
-  }
 
   async downloadFile(options:{url:string,savePath?:string,ignoreCache?:boolean}){
     let {url, savePath} = options
@@ -350,6 +315,7 @@ class AppManager extends Base {
     return chooseLocalImage()
   }
 
+  // open app doc
   openUserUsageProtocol(){
     return this.navToDoc(this.Config.doc.userUsageProtocol)
   }
@@ -369,6 +335,7 @@ class AppManager extends Base {
   openDataCheckDoc(){
     return this.navToDoc(this.Config.doc.dataCheckNotice)
   }
+  // open app doc end
 
   async _getHomeCacheData(){
     const homeDataCache = await this.getLocalData<IHomeDataCache>(LocalCacheKeyMap.HOME_DATA_CACHE_KEY)
@@ -428,7 +395,7 @@ class AppManager extends Base {
 
   //数据备份
   exportCardData(){
-    showChoose('温馨提示','由于小程序平台限制，导出数据功能需要前往卡兔web端操作。')
+    showChoose('温馨提示','由于小程序平台限制,导出数据功能需要前往卡兔web端操作。')
   }
 
   //主密码备份/重置
@@ -482,7 +449,7 @@ class AppManager extends Base {
     const masterKey = this._extractMasterKeyFromRecoveryKeyPack(recoveryKey)
     const newHexCode = this.crypto.convertToHexString(key)
     // 重新生成新的主密码包
-    const masterKeyPack = await this._createMasterKeyPack(newHexCode, masterKey)
+    const masterKeyPack = await this.crypto.createCommonKeyPack(newHexCode, masterKey)
     // 更新主密码包
     return api.setMasterKeyInfo(masterKeyPack)
   }
@@ -541,8 +508,8 @@ class AppManager extends Base {
 
   async imageContentCheck({imagePath}){
     const hash = await this.cardManager.getHash(imagePath)
-    const tempFilePath = `tmp/image_${hash}`
-    const url = await this.uploadFile(imagePath,tempFilePath)
+    const cloudFilePath = `tmp/image_${hash}`
+    const url = await this.uploadFile(imagePath, cloudFilePath)
   
     for(let i=0;i<10;i++){
       const res = await api.imageContentSafetyCheck({hash, url})

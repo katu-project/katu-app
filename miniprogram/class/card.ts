@@ -332,12 +332,12 @@ class CardManager extends Base{
 
   async upload(filePath){
     const uploadFileId = `${this.app.Config.uploadCardNamePrefix}/${this.app.user.openid}/${await utils.crypto.random(16)}`
-    return this.app.uploadFile(filePath, uploadFileId)
+    return this.uploadFile(filePath, uploadFileId)
   }
 
   async uploadShare(filePath){
     const uploadFileId = `${this.app.Config.uploadShareCardNamePrefix}/${this.app.user.openid}/${await utils.crypto.random(16)}`
-    return this.app.uploadFile(filePath, uploadFileId)
+    return this.uploadFile(filePath, uploadFileId)
   }
 
   generateKeypairWithMasterKey(options?){
@@ -350,10 +350,7 @@ class CardManager extends Base{
 
   async parseCardImageByRemoteApi(imagePath){
     await this.checkImageType(imagePath)
-    const {fileID} = await wx.cloud.uploadFile({
-      cloudPath: `tmp/pic-${imagePath.slice(-32)}`,
-      filePath: imagePath
-    })
+    const fileID = await this.uploadFile(imagePath,`tmp/pic-${imagePath.slice(-32)}`)
     const {fileID: fileUrl} = await api.captureCard(fileID)
     return fileUrl
   }

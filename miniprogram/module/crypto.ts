@@ -65,6 +65,24 @@ class Crypto extends Base {
   verifyKeyId(key:string, keyId:string){
     if(this.calculateKeyId(key) !== keyId) throw Error("密码ID验证失败")
   }
+
+  async createCommonKeyPack(dkey: string, key?: string){
+    if(!key){
+      key = await this.randomKey()
+    }
+    const keyPack = {
+      keyPack: this.encryptString(key, dkey),
+      hexKeyId: this.calculateKeyId(dkey),
+      keyId: this.calculateKeyId(key)
+    }
+    return keyPack
+  }
+
+  async fetchKeyFromKeyPack(keyPack:string, dkey:string){
+    const key = this.decryptString(keyPack, dkey)
+    if(!key) throw Error("密码有误")
+    return key
+  }
 }
 
 
