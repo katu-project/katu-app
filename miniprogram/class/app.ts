@@ -2,8 +2,8 @@ import '@/utils/override'
 import Base from './base'
 import api from '@/api'
 import AppConfig from '@/config'
-import { crypto, navigateTo, showChoose, chooseLocalImage, switchTab, mergeDeep, sleep, file, bip39 } from '@/utils/index'
-import { APP_TEMP_DIR, APP_DOWN_DIR, APP_IMAGE_DIR, DefaultLoadFailedImage, LocalCacheKeyMap, APP_ENTRY_PATH, APP_ROOT_DIR } from '@/const'
+import { navigateTo, showChoose, chooseLocalImage, switchTab, mergeDeep, sleep, file, bip39 } from '@/utils/index'
+import { APP_TEMP_DIR, APP_DOWN_DIR, APP_IMAGE_DIR, DefaultLoadFailedImage, APP_ENTRY_PATH, APP_ROOT_DIR } from '@/const'
 import { getCardManager } from './card'
 import { getUserManager } from './user'
 import { getNoticeModule } from '@/module/notice'
@@ -129,7 +129,7 @@ class AppManager extends Base {
 
   // master key section
   async loadMasterKey(){
-    const masterKey = await this.getLocalData<string>(LocalCacheKeyMap.MASTER_KEY_CACHE_KEY)
+    const masterKey = await this.cache.getMasterKey()
     if(masterKey){
       this.setMasterKey(masterKey)
       console.log("本地缓存的主密码加载成功")
@@ -153,12 +153,12 @@ class AppManager extends Base {
 
   async clearMasterKey(){
     this.setMasterKey('')
-    return this.deleteLocalData(LocalCacheKeyMap.MASTER_KEY_CACHE_KEY)
+    return this.cache.deleteMasterKey()
   }
 
   async cacheMasterKey(){
     if(!this.masterKey) return
-    return this.setLocalData(LocalCacheKeyMap.MASTER_KEY_CACHE_KEY, this.masterKey)
+    return this.cache.setMasterKey(this.masterKey)
   }
 
   // 使用前检测主密码状态
@@ -332,10 +332,7 @@ class AppManager extends Base {
   //清除缓存
   async clearCacheData(){
     await file.rmdir(APP_ROOT_DIR, true)
-    await this.deleteLocalData(LocalCacheKeyMap.CARD_EXTRA_DATA_CACHE_KEY)
-    await this.deleteLocalData(LocalCacheKeyMap.USER_INFO_CACHE_KEY)
-    await this.deleteLocalData(LocalCacheKeyMap.MASTER_KEY_CACHE_KEY)
-    await this.deleteLocalData(LocalCacheKeyMap.HOME_DATA_CACHE_KEY)
+    await this.cache.clearAll()
     return 
   }
 
@@ -357,7 +354,7 @@ class AppManager extends Base {
   async generateRecoveryKeyQrcodeContent(){
     const rk = this._generateRecoveryKey()
     const qrContent = {
-      i: (await crypto.random(2)).toUpperCase(),
+      i: (await this.crypto.randomHexString(2)).toUpperCase(),
       t: new Date().toLocaleDateString(),
       rk
     }

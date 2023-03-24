@@ -137,7 +137,7 @@ const _LocalCacheKeyMap = [
   "CARD_DATA_CACHE_KEY",
   "ONCE_NOTICE_CACHE_KEY",
   "USER_INFO_CACHE_KEY"
-]
+] as const
 
 const LocalCacheKeyMap = Object.fromEntries(_LocalCacheKeyMap.map(e=>[e,e])) as TupleToObject<typeof _LocalCacheKeyMap>
 
@@ -145,7 +145,7 @@ const _ONCE_NOTICE_KEYS = [
   "ENCRYPT_SAVE",
   "SHARE_DATA",
   "DATA_CHECK",
-]
+] as const
 
 const ONCE_NOTICE_KEYS = Object.fromEntries(_ONCE_NOTICE_KEYS.map(e=>[e,e])) as TupleToObject<typeof _ONCE_NOTICE_KEYS>
 
