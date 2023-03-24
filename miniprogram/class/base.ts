@@ -1,4 +1,5 @@
-import { getCache, selfish, setCache, delCache } from "@/utils/index"
+import { APP_TEMP_DIR, WX_CLOUD_STORAGE_FILE_HEAD } from "@/const"
+import { getCache, selfish, setCache, delCache, file, net } from "@/utils/index"
 import mitt from 'mitt'
 const emitter = mitt()
 
@@ -57,5 +58,47 @@ export default class Base {
       filePath
     })
     return fileID
+  }
+
+  async getTempFilePath(fileName:string){
+    return file.getFilePath({
+      dir: APP_TEMP_DIR,
+      name: fileName
+    })
+  }
+
+  async downloadFile(options:{url:string,savePath?:string,ignoreCache?:boolean}){
+    let {url, savePath} = options
+    if(!savePath){
+      savePath = await this.getTempFilePath('down')
+    }else{
+      if(!options.ignoreCache){
+        try {
+          await file.checkAccess(savePath)
+          console.debug('downloadFile: hit cache file, reuse it')
+          return savePath
+        } catch (error) {
+          console.debug('downloadFile: no cache file, download it')
+        }
+      }
+    }
+    
+    if(url.startsWith(WX_CLOUD_STORAGE_FILE_HEAD)){
+      const {fileList: [imageInfo]} = await wx.cloud.getTempFileURL({
+        fileList: [url]
+      })
+      if(imageInfo.status !== 0){
+        console.error('get cloud file tempUrl error:', imageInfo.errMsg)
+        throw Error('文件下载失败')
+      }
+      url = imageInfo.tempFileURL
+    }
+
+    console.debug('start download file:', url);
+    const downloadRes = await net.download(url, savePath)
+    if(downloadRes.statusCode !== 200 || !downloadRes.filePath){
+      throw Error("文件下载出错")
+    }
+    return downloadRes.filePath
   }
 }

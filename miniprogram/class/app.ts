@@ -2,8 +2,8 @@ import '@/utils/override'
 import Base from './base'
 import api from '@/api'
 import AppConfig from '@/config'
-import { crypto, navigateTo, showChoose, chooseLocalImage, switchTab, mergeDeep, sleep, file, bip39, net } from '@/utils/index'
-import { APP_TEMP_DIR, APP_DOWN_DIR, APP_IMAGE_DIR, DefaultLoadFailedImage, WX_CLOUD_STORAGE_FILE_HEAD, LocalCacheKeyMap, APP_ENTRY_PATH, APP_ROOT_DIR } from '@/const'
+import { crypto, navigateTo, showChoose, chooseLocalImage, switchTab, mergeDeep, sleep, file, bip39 } from '@/utils/index'
+import { APP_TEMP_DIR, APP_DOWN_DIR, APP_IMAGE_DIR, DefaultLoadFailedImage, LocalCacheKeyMap, APP_ENTRY_PATH, APP_ROOT_DIR } from '@/const'
 import { getCardManager } from './card'
 import { getUserManager } from './user'
 import { getNoticeModule } from '@/module/notice'
@@ -200,41 +200,6 @@ class AppManager extends Base {
     if(!clearKey || clearKey.length < 6) throw Error("格式错误")
   }
   // master key section end
-
-  async downloadFile(options:{url:string,savePath?:string,ignoreCache?:boolean}){
-    let {url, savePath} = options
-    if(!savePath){
-      savePath = await this.getTempFilePath('down')
-    }else{
-      if(!options.ignoreCache){
-        try {
-          await file.checkAccess(savePath)
-          console.debug('downloadFile: hit cache file, reuse it')
-          return savePath
-        } catch (error) {
-          console.debug('downloadFile: no cache file, download it')
-        }
-      }
-    }
-    
-    if(url.startsWith(WX_CLOUD_STORAGE_FILE_HEAD)){
-      const {fileList: [imageInfo]} = await wx.cloud.getTempFileURL({
-        fileList: [url]
-      })
-      if(imageInfo.status !== 0){
-        console.error('get cloud file tempUrl error:', imageInfo.errMsg)
-        throw Error('文件下载失败')
-      }
-      url = imageInfo.tempFileURL
-    }
-
-    console.debug('start download file:', url);
-    const downloadRes = await net.download(url, savePath)
-    if(downloadRes.statusCode !== 200 || !downloadRes.filePath){
-      throw Error("文件下载出错")
-    }
-    return downloadRes.filePath
-  }
 
   async previewImage(pics: string[], idx?:number){
     getApp().globalData.state.inPreviewPic = true
@@ -450,10 +415,6 @@ class AppManager extends Base {
       dir,
       name: fileName
     })
-  }
-
-  async getTempFilePath(fileName:string){
-    return this.getLocalFilePath(fileName)
   }
 
   async getHomeFilePath(fileName:string){

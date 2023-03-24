@@ -190,7 +190,7 @@ class CardManager extends Base{
     console.debug('encryptPackage:',encryptedData.length, encryptPackage.slice(-PACKAGE_TAIL_LENGTH), salt, imageKey)
 
     const hash = await this.getHash(imagePath)
-    const savePath = await this.app.getTempFilePath(hash)
+    const savePath = await this.getTempFilePath(hash)
 
     await utils.file.writeFile(savePath, encryptPackage, 'hex')
     return {
@@ -265,7 +265,7 @@ class CardManager extends Base{
 
   async downloadImage(image:ICardImage){
     const savePath = await this.getDownloadImageLocalSavePath(image)
-    return this.app.downloadFile({
+    return this.downloadFile({
       url: image.url,
       savePath
     })
@@ -317,7 +317,7 @@ class CardManager extends Base{
 
     // try delete temp file : 
     try {
-      const path = await this.app.getTempFilePath(image.hash)
+      const path = await this.getTempFilePath(image.hash)
       await deleteFile(path)
       console.debug('delete temp file:', path)
     } catch (_) {}
@@ -447,7 +447,7 @@ class CardManager extends Base{
     }
     const imageData = await this.getImageData(url)
     const src = cv.imread(imageData)
-    const tempPath = await this.app.getTempFilePath('1234')
+    const tempPath = await this.getTempFilePath('1234')
     const cardUrl = await detectCardByContour(src, tempPath)
     return cardUrl
   }
