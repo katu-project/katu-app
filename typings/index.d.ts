@@ -2,6 +2,7 @@
 /// <reference path="./crypto.d.ts" />
 /// <reference path="./user.d.ts" />
 /// <reference path="./card.d.ts" />
+/// <reference path="./cache.d.ts" />
 /// <reference path="./types/index.d.ts" />
 
 interface IAppOption {

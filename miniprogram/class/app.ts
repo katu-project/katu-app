@@ -8,6 +8,7 @@ import { getCardManager } from './card'
 import { getUserManager } from './user'
 import { getNoticeModule } from '@/module/notice'
 import { getCryptoModule } from '@/module/crypto'
+import { getCacheModule } from '@/module/cache'
 
 class AppManager extends Base {
   Config = AppConfig
@@ -16,17 +17,15 @@ class AppManager extends Base {
   _masterKey: string = ''
 
   lastNoticeFetchTime: number = 0
-  cloudFileTempUrls: IAnyObject = {}
 
   constructor(){
     super()
   }
 
-  init(){
+  async init(){
     this.loadBaseInfo()
     this.loadConfig()
-    this.loadCacheData()
-    this.loadModules()
+    await this.loadModules()
     return
   }
 
@@ -63,6 +62,10 @@ class AppManager extends Base {
     return getCryptoModule()
   }
 
+  get cache(){
+    return getCacheModule()
+  }
+
   // modules end
 
   loadBaseInfo(){
@@ -92,16 +95,14 @@ class AppManager extends Base {
     }).catch(console.warn)
   }
 
-  async loadCacheData(){
-    // let cacheUrls = await this.getLocalData('CloudFileTempUrlCacheKey')
-    // if(!cacheUrls){
-    //   cacheUrls = {}
-    // }
-    this.cloudFileTempUrls = {}
-  }
-
-  loadModules(){
-    if(!this.user.config?.crypto) {
+  async loadModules(){
+    if(!this.cache.inited){
+      await this.cache.init({
+        homeDataCacheTime: this.Config[this.isDev ? 'devHomeDataCacheTime' : 'homeDataCacheTime']
+      })
+    }
+    this.notice.init()
+    if(!this.user.config?.crypto) { 
       setTimeout(this.loadModules.bind(this), 1000)
       return
     }
@@ -337,37 +338,17 @@ class AppManager extends Base {
   }
   // open app doc end
 
-  async _getHomeCacheData(){
-    const homeDataCache = await this.getLocalData<IHomeDataCache>(LocalCacheKeyMap.HOME_DATA_CACHE_KEY)
-    if(homeDataCache){
-      const nowTime = new Date().getTime()
-      if(homeDataCache.cacheTime + (this.isDev ? this.Config.devHomeDataCacheTime : this.Config.homeDataCacheTime) > nowTime){
-        console.debug('使用首页缓存数据')
-        return homeDataCache.data
-      }
-    }
-    return
-  }
-
-  async _setHomeCacheData(homeData:IHomeData){
-    const cacheData = {
-      cacheTime: new Date().getTime(),
-      data: homeData
-    }
-    return this.setLocalData(LocalCacheKeyMap.HOME_DATA_CACHE_KEY, cacheData)
-  }
-
-  async deleteHomeCacheData(){
-    this.deleteLocalData(LocalCacheKeyMap.HOME_DATA_CACHE_KEY)
-  }
-
   async getHomeData(forceUpdate?:boolean){
-    let homeData = await this._getHomeCacheData()
+    let homeData = await this.cache.getHomeData()
     if(forceUpdate || !homeData){
       homeData = await api.getHomeData()
-      await this._setHomeCacheData(homeData)
+      await this.cache.setHomeCacheData(homeData)
     }
     return homeData
+  }
+
+  async deleteHomeDataCache(){
+    return this.cache.deleteHomeData()
   }
 
   async fetchNotice(forceFetch?:boolean){
@@ -481,9 +462,9 @@ class AppManager extends Base {
 
   async getCloudFileTempUrl(url:string){
     // check cache
-    if(this.cloudFileTempUrls[url]){
+    if(this.cache.cloudFileTempUrls[url]){
       console.debug('使用缓存的 url')
-      return this.cloudFileTempUrls[url]
+      return this.cache.cloudFileTempUrls[url]
     }
 
     let tempUrl = ''
@@ -495,7 +476,7 @@ class AppManager extends Base {
         console.error('获取云文件临时URL错误:', file.errMsg);
       }else{
         tempUrl = file.tempFileURL
-        this.cloudFileTempUrls[url] = tempUrl
+        this.cache.cloudFileTempUrls[url] = tempUrl
       }
     } catch (error:any) {
       console.error('获取云文件临时URL错误:', error.message);

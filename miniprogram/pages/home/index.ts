@@ -96,7 +96,7 @@ Page({
       }
     }
     this.renderCateList(card)
-    app.deleteHomeCacheData()
+    app.deleteHomeDataCache()
   },
   onEventCardDelete(card){
     const idx = this.data.likeList.findIndex(e=>e._id === card._id)
@@ -106,7 +106,7 @@ Page({
     }
     // 更新cataList数据
     this.renderCateList(card, true)
-    app.deleteHomeCacheData()
+    app.deleteHomeDataCache()
   },
   renderLikeCard(card:ICard){
     const setData = {}
