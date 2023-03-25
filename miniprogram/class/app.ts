@@ -342,32 +342,11 @@ class AppManager extends Base {
   }
 
   //主密码备份/重置
-  _generateRecoveryKeyWords(){
-    return bip39.generateMnemonic()
+  async generateRecoveryKey(){
+    return this.crypto.createRecoveryKey(this.masterKey)
   }
 
-  _generateRecoveryKey(){
-    const words = this._generateRecoveryKeyWords()
-    return bip39.mnemonicToEntropy(words)
-  }
-
-  async generateRecoveryKeyQrcodeContent(){
-    const rk = this._generateRecoveryKey()
-    const qrContent = {
-      i: (await this.crypto.randomHexString(2)).toUpperCase(),
-      t: new Date().toLocaleDateString(),
-      rk
-    }
-    return qrContent
-  }
-
-  createRecoveryKeyPack(qrCodeData){
-    if(!this.masterKey) throw Error("输入主密码")
-    const keyPack: Partial<IRecoveryKeyPack> = {}
-    keyPack.qrId = qrCodeData.i
-    keyPack.createTime = qrCodeData.t
-    keyPack.keyId = this.crypto.calculateKeyId(qrCodeData.rk)
-    keyPack.pack = this.crypto.encryptString(this.masterKey, qrCodeData.rk)
+  setRecoveryKey(keyPack){
     return api.setRecoveryKey(keyPack)
   }
 

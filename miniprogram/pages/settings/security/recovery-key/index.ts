@@ -164,14 +164,14 @@ Page({
   },
   async genCert(){
     await showLoading('请稍等')
-    const qrData = await app.generateRecoveryKeyQrcodeContent()
+    const { keyPack, qrPack } = await app.generateRecoveryKey()
     const canvasCtx = await this.initCanvas()
-    await this.drawRecoveryKey(canvasCtx, qrData)
-    await loadData(app.createRecoveryKeyPack, qrData)
+    await this.drawRecoveryKey(canvasCtx, qrPack)
+    await loadData(app.setRecoveryKey, keyPack)
     user.reloadInfo()
 
     this.setData({
-      recoveryKeyId: qrData.i,
+      recoveryKeyId: qrPack.i,
       setRecoveryKey: true,
       readyExport: true
     })
@@ -184,7 +184,7 @@ Page({
     }
     try {
       app.checkMasterKey()
-    } catch (error) {
+    } catch (error:any) {
       if(error.code[0] === '2'){
         this.showInputKey()
       }else{

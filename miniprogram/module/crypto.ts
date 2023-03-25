@@ -1,5 +1,5 @@
 import Base from "@/class/base"
-import { crypto } from "@/utils/index"
+import { bip39, crypto } from "@/utils/index"
 
 const ConvertUserKeyError = '密码转化出错'
 const CalculateKeyIdError = '获取密码ID出错'
@@ -82,6 +82,49 @@ class Crypto extends Base {
     const key = this.decryptString(keyPack, dkey)
     if(!key) throw Error("密码有误")
     return key
+  }
+
+  generateRecoveryKey(){
+    const words = bip39.generateMnemonic()
+    return bip39.mnemonicToEntropy(words)
+  }
+
+  async createRecoveryKeyContent(){
+    const qrId = await this.randomHexString(2)
+    return {
+      id: qrId.toUpperCase(),
+      time: new Date().toLocaleDateString(),
+      rk: this.generateRecoveryKey()
+    }
+  }
+
+  async createRecoveryKeyPack(rkContent, dkey){
+    const keyPack: IRecoveryKeyPack = {
+      qrId: rkContent.id,
+      createTime: rkContent.time,
+      keyId: this.calculateKeyId(rkContent.rk),
+      pack: this.encryptString(rkContent.rk, dkey)
+    }
+    return keyPack
+  }
+
+  async createRecoveryKeyQrCodePack(rkContent){
+    const qrPack = {
+      i: rkContent.id,
+      t: rkContent.time,
+      rk: rkContent.rk
+    }
+    return qrPack
+  }
+  
+  async createRecoveryKey(dkey:string){
+    const rkContent = await this.createRecoveryKeyContent()
+    const keyPack = await this.createRecoveryKeyPack(rkContent, dkey)
+    const qrPack = await this.createRecoveryKeyQrCodePack(rkContent)
+    return {
+      keyPack,
+      qrPack
+    }
   }
 }
 
