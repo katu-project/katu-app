@@ -2,7 +2,7 @@ import '@/utils/override'
 import Base from './base'
 import api from '@/api'
 import AppConfig from '@/config'
-import { navigateTo, showChoose, chooseLocalImage, switchTab, mergeDeep, sleep, file, bip39 } from '@/utils/index'
+import { navigateTo, showChoose, chooseLocalImage, switchTab, mergeDeep, sleep, file } from '@/utils/index'
 import { APP_TEMP_DIR, APP_DOWN_DIR, APP_IMAGE_DIR, DefaultLoadFailedImage, APP_ENTRY_PATH, APP_ROOT_DIR } from '@/const'
 import { getCardManager } from './card'
 import { getUserManager } from './user'
@@ -350,26 +350,20 @@ class AppManager extends Base {
     return api.setRecoveryKey(keyPack)
   }
 
-  _extractMasterKeyFromRecoveryKeyPack(recoveryKey){
-    if(!this.user.recoveryKeyPack) throw Error("没有设置备份主密码")
-    const masterKey = this.crypto.decryptString(this.user.recoveryKeyPack.pack, recoveryKey)
-    if(!masterKey) throw Error("密码有误")
-    return masterKey
-  }
-
-  async extractRecoveryKeyFromQrcode(qrcode){
+  async extractQrPackFromQrcode(qrcode){
     try {
-      const rk = JSON.parse(qrcode.result)
-      return rk
+      const qrPack = JSON.parse(qrcode.result)
+      return qrPack
     } catch (error) {
-      throw Error("解析凭证数据出错!")
+      throw Error("无法识别该凭证!")
     }
   }
 
-  async resetMasterKeyWithRecoveryKey({rk:recoveryKey, key}){
-    this.checkMasterKeyFormat(key)
-    const masterKey = this._extractMasterKeyFromRecoveryKeyPack(recoveryKey)
-    const newHexCode = this.crypto.convertToHexString(key)
+  async resetMasterKeyWithRecoveryKey({rk, newKey}){
+    this.checkMasterKeyFormat(newKey)
+    if(!this.user.recoveryKeyPack) throw Error("没有设置备份主密码")
+    const masterKey = this.crypto.extractKeyFromRecoveryKeyPack(this.user.recoveryKeyPack, rk)
+    const newHexCode = this.crypto.convertToHexString(newKey)
     // 重新生成新的主密码包
     const masterKeyPack = await this.crypto.createCommonKeyPack(newHexCode, masterKey)
     // 更新主密码包

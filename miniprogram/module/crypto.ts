@@ -103,7 +103,7 @@ class Crypto extends Base {
       qrId: rkContent.id,
       createTime: rkContent.time,
       keyId: this.calculateKeyId(rkContent.rk),
-      pack: this.encryptString(rkContent.rk, dkey)
+      pack: this.encryptString(dkey, rkContent.rk)
     }
     return keyPack
   }
@@ -116,15 +116,21 @@ class Crypto extends Base {
     }
     return qrPack
   }
-  
-  async createRecoveryKey(dkey:string){
+
+  async createRecoveryKey(masterKey:string){
     const rkContent = await this.createRecoveryKeyContent()
-    const keyPack = await this.createRecoveryKeyPack(rkContent, dkey)
+    const keyPack = await this.createRecoveryKeyPack(rkContent, masterKey)
     const qrPack = await this.createRecoveryKeyQrCodePack(rkContent)
     return {
       keyPack,
       qrPack
     }
+  }
+
+  extractKeyFromRecoveryKeyPack(keyPack, rk){
+    const masterKey = this.decryptString(keyPack.pack, rk)
+    if(!masterKey) throw Error("密码有误")
+    return masterKey
   }
 }
 

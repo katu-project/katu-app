@@ -16,20 +16,21 @@ Page({
         onlyFromCamera: false,
         scanType: ['qrCode']
       })
-      const recoveryKeyInfo = await app.extractRecoveryKeyFromQrcode(scan_res)
-      console.log(recoveryKeyInfo);
+      const qrPack = await app.extractQrPackFromQrcode(scan_res)
+      console.log(qrPack);
       
-      if(recoveryKeyInfo.i !== user.recoveryKeyPack?.qrId){
+      if(qrPack.i !== user.recoveryKeyPack?.qrId){
         await showChoose("警告","重置凭证ID不匹配！",{showCancel: false})
       }else{
-        const {cancel} = await showChoose("温馨提示","重置凭证数据读取成功，去设置新密码？")
-        if(cancel) return
-        this.setData({
-          showInputKey: true,
-          recoveryKey: recoveryKeyInfo.rk
-        })
+        const {confirm} = await showChoose("温馨提示","重置凭证数据读取成功\n现在设置新密码？")
+        if(confirm){
+          this.setData({
+            showInputKey: true,
+            recoveryKey: qrPack.rk
+          })
+        }
       }
-    } catch (error) {
+    } catch (error:any) {
       if(error && error.errMsg.includes('cancel')){
         showError('取消选择')
         return
@@ -50,7 +51,7 @@ Page({
     }
     try {
       this.setMasterKey()
-    } catch (error) {
+    } catch (error:any) {
       showError(error.message)
     }
   },
@@ -61,7 +62,7 @@ Page({
       if(cancel) return
       loadData(app.resetMasterKeyWithRecoveryKey,{
         rk: this.data.recoveryKey,
-        key: this.data.masterKey
+        newKey: this.data.masterKey
       }).then(()=>{
         this.finishTask()
       })
