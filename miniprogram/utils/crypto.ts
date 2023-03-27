@@ -66,7 +66,7 @@ export async function randomBytesHexString(len: number){
   return random(len)
 }
 
-export function md5(string){
+export function MD5(string){
   return CryptoJS.MD5(string).toString()
 }
 
@@ -90,7 +90,6 @@ export function sha512(string){
  * masterKey sha1 => 16 bytes
  * salt no limit, use random value: 16bytes
  */
-type Pbkdf2Options = {salt:string, size:number, iterations:number}
 export async function pbkdf2(masterKey: string, options?: Partial<Pbkdf2Options>) : Promise<{key:string, salt: string}>{
   const salt = CryptoJS.enc.Hex.parse(options?.salt || await randomBytesHexString(8))
   const iterations = options?.iterations || 1
@@ -154,7 +153,7 @@ export function decryptFile(fileHexString, code){
 export default {
   random,
   randomBytesHexString,
-  md5,
+  MD5,
   SHA1,
   sha256,
   sha512,

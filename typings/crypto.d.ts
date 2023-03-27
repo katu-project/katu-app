@@ -1,6 +1,6 @@
 type KeyPair = {key:string, salt:string}
 
-type HashType = 'SHA1' | 'SHA256'
+type HashType = 'MD5' | 'SHA1' | 'SHA256'
 
 interface IAppCryptoConfig {
   masterKeyLength: number,
@@ -12,3 +12,5 @@ interface IAppCryptoConfig {
     method: HashType
   }
 }
+
+type Pbkdf2Options = {salt:string, size:number, iterations:number}
