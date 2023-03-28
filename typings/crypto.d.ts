@@ -13,4 +13,17 @@ interface IAppCryptoConfig {
   }
 }
 
+interface IEncryptImageOptions {
+  keyPair: KeyPair 
+  imagePath: string
+  savePath: string
+  extraData: string[][]
+}
+
+interface IDecryptImageOptions {
+  imagePath: string
+  savePath: string
+  keyPair: KeyPair 
+}
+
 type Pbkdf2Options = {salt:string, size:number, iterations:number}

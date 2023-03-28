@@ -1,5 +1,6 @@
 import Base from "@/class/base"
-import { bip39, crypto } from "@/utils/index"
+import { KATU_MARK, PACKAGE_TAIL_LENGTH } from "@/const"
+import { bip39, convert, crypto, file } from "@/utils/index"
 
 const ConvertUserKeyError = '密码转化出错'
 const CalculateKeyIdError = '获取密码ID出错'
@@ -24,8 +25,98 @@ class Crypto extends Base {
   }
 
   decryptString(ciphertext,key){
-    console.log(ciphertext,key)
     return crypto.decryptString(ciphertext,key)
+  }
+
+  encryptFile(fileData,key){
+    return crypto.encryptFile(fileData,key)
+  }
+
+  decryptFile(fileData,key){
+    return crypto.decryptFile(fileData,key)
+  }
+
+  async getFileHash(filePath, hashType: HashType){
+    const fileHexData = await file.readFile(filePath, 'hex')
+    return crypto[hashType].call(null,fileHexData)
+  }
+
+  async encryptImage({keyPair:{key, salt}, imagePath, extraData, savePath}: IEncryptImageOptions){
+    const imageHexData = await file.readFile(imagePath, 'hex')
+    const extraDataPack = this.packExtraData(extraData)
+    const flag = '00000000'
+    
+    const mixHexData = (imageHexData as string).concat(extraDataPack.data)
+    const encryptedData = this.encryptFile(mixHexData, key)
+    
+    const encryptPackage = encryptedData.concat(salt)
+                                        .concat(flag).concat(extraDataPack.lengthData)
+                                        .concat(KATU_MARK)
+
+    console.debug('encryptPackage:',encryptedData.length, encryptPackage.slice(-PACKAGE_TAIL_LENGTH), salt, key)
+
+    await file.writeFile(savePath, encryptPackage, 'hex')
+    return {
+      imageSecretKey: salt,
+      imagePath: savePath
+    }
+  }
+
+  async decryptImage({imagePath, savePath, keyPair:{key}}:IDecryptImageOptions){
+    const decryptedImage:{savePath: string, extraData: any[]} = {
+      savePath,
+      extraData: []
+    }
+    const encryptedHexData = await file.readFile(imagePath, 'hex')
+    // 解密数据
+    const metaData = encryptedHexData.slice(-PACKAGE_TAIL_LENGTH)
+    const mixHexData = encryptedHexData.slice(0, -PACKAGE_TAIL_LENGTH)
+
+    const decryptedData = this.decryptFile(mixHexData, key)
+    if(!decryptedData) throw Error("解密错误")
+    // 检测并解密附加数据
+    const {data:extraData, dataLength: extraDataLength} = this.unpackExtraData(decryptedData, metaData)
+    if(extraDataLength){
+      decryptedImage.extraData = extraData
+    }
+    const imageData = extraDataLength?decryptedData.slice(0, -extraDataLength): decryptedData
+
+    await file.writeFile(decryptedImage.savePath, imageData, 'hex')
+    return decryptedImage
+  }
+
+  packExtraData(extraData){
+    const retDataInfo = {
+      data: '',
+      lengthData: '00000000'
+    }
+    extraData = JSON.stringify(extraData)
+    if(extraData !== '[]') {
+      const hexStr = convert.string2hex(extraData)
+      console.log('packData',hexStr, hexStr.length)
+      retDataInfo.data = hexStr
+      retDataInfo.lengthData = hexStr.length.toString().padStart(8,'0')
+    }
+    return retDataInfo
+  }
+
+  unpackExtraData(mixHexData, metaData){
+    const retDataInfo:{dataLength:number, data:any[]} = {
+      dataLength: 0,
+      data: []
+    }
+    const extraDataLength = parseInt(metaData.slice(-24,-16))
+    if(extraDataLength){
+      retDataInfo.dataLength = extraDataLength
+      try {
+        retDataInfo.data = JSON.parse(convert.hex2string(mixHexData.slice(-extraDataLength)))
+      } catch (error) {
+        console.log('unpackExtraData err:',error)
+        throw Error("附加数据读取出错")
+        
+      }
+    }
+    return retDataInfo
   }
 
   randomKey(){
@@ -34,6 +125,14 @@ class Crypto extends Base {
 
   randomHexString(byteLength:number){
     return crypto.random(byteLength)
+  }
+
+  createCommonKeyPair(key:string, salt?:string){
+    const options = { iterations: 5000 } as Pbkdf2Options
+    if(salt){
+      options.salt = salt
+    }
+    return crypto.pbkdf2(key,options)
   }
 
   convertToHexString(key:string){

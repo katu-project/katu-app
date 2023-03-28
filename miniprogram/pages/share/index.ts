@@ -89,7 +89,7 @@ Page({
 
     for (const idx in this.data.card.image!) {
       const image = this.data.card.image[idx]
-      const imageData = await getCardManager().decryptImageWithKey(image, this.shareInfo.dk)
+      const imageData = await getCardManager().decryptImage(image, this.shareInfo.dk)
       
       setData[`card.image[${idx}]._url`] = imageData.imagePath,
       setData[`card.info`] = app.rebuildExtraFields(imageData.extraData)

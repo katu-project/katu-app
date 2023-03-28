@@ -124,7 +124,7 @@ Page({
     if(card.encrypted){
       setData['card.image'] = []
       for (const image of card.image) {
-        const {imagePath, extraData} = await cardManager.getCardImage(image)
+        const {imagePath, extraData} = await cardManager.getCardImage({image, key:app.masterKey})
         image.url = imagePath
         console.debug({imagePath, extraData});
         
@@ -188,7 +188,7 @@ Page({
     if(card.encrypted){
       try {
         app.checkMasterKey()
-      } catch (error) {
+      } catch (error:any) {
         if(error.code[0] === '2'){
           this.showInputKey()
         }else{
@@ -202,13 +202,13 @@ Page({
     if(!this.data.edit){
       try {
         await user.checkQuota()
-      } catch (error) {
+      } catch (error:any) {
         showChoose('无法创建卡片',error.message,{showCancel: false})
         return
       }
     }
 
-    loadData(this.data.edit?cardManager.update:cardManager.add, card, {returnFailed: true})
+    loadData(this.data.edit?cardManager.update:cardManager.add, {card, key: app.masterKey}, {returnFailed: true})
             .then(this.saveDone)
             .catch(this.saveFailed)
             .finally(this.saveFinish)
@@ -257,7 +257,7 @@ Page({
       if(!picPath) return
 
       await navigateTo(`../image-processor/index?value=${picPath}`)
-    } catch (error) {
+    } catch (error:any) {
       console.error(error)
       showChoose('选取图片失败',error.message||'未知错误',{showCancel:false})
     }

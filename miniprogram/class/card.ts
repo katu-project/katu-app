@@ -1,14 +1,13 @@
 import Base from '@/class/base'
-import utils,{convert, getCache, setCache} from '@/utils/index'
-import { KATU_MARK, LocalCacheKeyMap, PACKAGE_TAIL_LENGTH, WX_CLOUD_STORAGE_FILE_HEAD } from '@/const'
+import { getCache, setCache, sleep, file} from '@/utils/index'
+import { LocalCacheKeyMap, WX_CLOUD_STORAGE_FILE_HEAD } from '@/const'
 import api from '@/api'
-import { copyFile, deleteFile } from '@/utils/file'
 import { getAppManager } from '@/class/app'
 import { getUserManager } from '@/class/user'
-import { sleep } from '@/utils/base'
+import { getCryptoModule } from '@/module/crypto'
+import { getCacheModule } from '@/module/cache'
 
 class CardManager extends Base{
-
   constructor(){
     super()
     this.init()
@@ -23,6 +22,14 @@ class CardManager extends Base{
 
   get user(){
     return getUserManager()
+  }
+
+  get cache(){
+    return getCacheModule()
+  }
+
+  get crypto(){
+    return getCryptoModule()
   }
   /* 
     1. 没变动，url 以 cloud 开头
@@ -56,9 +63,9 @@ class CardManager extends Base{
   /* 
     加密模式下不存在远程图片，所有图片都是在本地
   */
-  async _updateEncryptImage(card:Partial<ICard>){
+  async _updateEncryptImage(card:ICard, key:string){
     const images:ICardImage[] = []
-    for (const pic of card.image!) {
+    for (const pic of card.image) {
       const imageData = {url:'',salt:'',hash:''}
       const originImageHash = pic.hash
       const originImageExtraData = await this.getExtraDataCache(pic)
@@ -71,10 +78,11 @@ class CardManager extends Base{
           throw new Error("更新出错，请重试")
         }
         imageData.salt = pic.salt
-        imageData.url = pic._url!
+        imageData.url = pic._url
       }else{
         console.log('检测到图片/附加数据修改，重新加密上传')
-        const encrytedPic = await this.encryptImage(pic.url, card.info)
+        imageData.url = pic.url
+        const encrytedPic = await this.encryptImage(imageData, card.info, key)
         imageData.url = await this.upload(encrytedPic.imagePath)
         imageData.salt = encrytedPic.imageSecretKey
       }
@@ -83,12 +91,12 @@ class CardManager extends Base{
     return images
   }
 
-  async update(card:Partial<ICard>){
+  async update({card, key}:{card:ICard, key:string}){
     const cardModel = this._createCardDefaultData(card)
     cardModel._id = card._id
     
     if(card.encrypted){
-      cardModel.image =  await this._updateEncryptImage(card)
+      cardModel.image =  await this._updateEncryptImage(card, key)
       cardModel.info = []
     }else{
       cardModel.image =  await this._updateNotEncryptImage(card)
@@ -97,26 +105,20 @@ class CardManager extends Base{
     return api.saveCard(cardModel)
   }
 
-  async add(card){
+  async add({card, key}){
     const cardModel = this._createCardDefaultData(card)
-    
-    for (const idx in card.image) {
-      const pic = card.image[idx]
-      const imageData = {url:'',salt:'',hash:''}
-
-      if(pic.url.startsWith(WX_CLOUD_STORAGE_FILE_HEAD)){
-        pic.url = await this.downloadImage(pic)
-      }
-      
-      imageData.hash = await this.getHash(pic.url)
+    for (const pic of card.image) {
+      const image: ICardImage = { url: pic.url, hash: '', salt: ''}
+      await this.checkImageType(image.url)
+      image.hash = await this.getHash(image.url)
       if(cardModel.encrypted){
-        const encrytedPic = await this.encryptImage(pic.url, cardModel.info)
-        imageData.url = await this.upload(encrytedPic.imagePath)
-        imageData.salt = encrytedPic.imageSecretKey
+        const encrytedImage = await this.encryptImage(image, cardModel.info, key)
+        image.url = await this.upload(encrytedImage.imagePath)
+        image.salt = encrytedImage.imageSecretKey
       }else{
-        imageData.url = await this.upload(pic.url)
+        image.url = await this.upload(image.url)
       }
-      cardModel.image!.push(imageData)
+      cardModel.image!.push(image)
     }
 
     if(cardModel.encrypted){
@@ -137,130 +139,32 @@ class CardManager extends Base{
     return cardModel
   }
 
-  async getCardImage(card){
-    if(card.salt){
-      try {
-        return await this.getCardImageCache(card)
-      } catch (error) {
-        console.debug('未发现缓存数据，开始解密数据')
-      }
-      return this.decryptImage(card)
-    }else{
-      return {
-        imagePath: card.url,
-        extraData: []
-      }
+  async encryptImage(image:ICardImage, extraData, key){
+    if(!key) throw Error('密码不能为空')
+    const keyPair = await this.crypto.createCommonKeyPair(key)
+    const savePath = await this.getTempFilePath(image.hash)
+    const options = {
+      keyPair,
+      imagePath: image.url,
+      extraData,
+      savePath
     }
+    return this.crypto.encryptImage(options)
   }
 
-  async getCardImageWithoutCache(image: ICardImage){
-    if(image.salt){
-      return this.decryptImage(image)
-    }else{
-      return {
-        imagePath: image.url,
-        extraData: []
-      }
+  async decryptImage(image:ICardImage, key){
+    if(!key) throw Error('密码不能为空')
+    const keyPair = await this.crypto.createCommonKeyPair(key, image.salt)
+    const savePath = await this.getDecryptedImageLocalSavePath(image)
+    const imagePath = await this.downloadImage(image)
+    const decryptedImage = await this.crypto.decryptImage({imagePath, savePath, keyPair})
+    if(decryptedImage.extraData.length){
+      await this.cacheExtraData(image, decryptedImage.extraData)
     }
-  }
-
-  async encryptImage(imagePath: string, extraData?: any[]){
-    const keyPair = await this.generateKeypairWithMasterKey()
-    return this._encryptImage({keyPair, imagePath, extraData})
-  }
-
-  async encryptImageWithKey(key:string, imagePath: string, extraData?: any[]){
-    const keyPair = await this._generateKeypairByKey(key)
-    return this._encryptImage({keyPair, imagePath, extraData})
-  }
-
-  async _encryptImage({keyPair, imagePath, extraData}: {keyPair: KeyPair, imagePath: string, extraData?: any[]}){
-    const imageHexData = await utils.file.readFile(imagePath, 'hex')
-    const {key:imageKey, salt} = keyPair
-    const flag = '00000000'
-    const extraDataInfo = this._packExtraData(extraData)
-    
-    const mixHexData = (imageHexData as string).concat(extraDataInfo.data)
-    const encryptedData = utils.crypto.encryptFile(mixHexData, imageKey)
-    
-    const encryptPackage = encryptedData.concat(salt)
-                                        .concat(flag).concat(extraDataInfo.lengthData)
-                                        .concat(KATU_MARK)
-
-    console.debug('encryptPackage:',encryptedData.length, encryptPackage.slice(-PACKAGE_TAIL_LENGTH), salt, imageKey)
-
-    const hash = await this.getHash(imagePath)
-    const savePath = await this.getTempFilePath(hash)
-
-    await utils.file.writeFile(savePath, encryptPackage, 'hex')
     return {
-      imageSecretKey: salt,
-      imagePath: savePath
+      imagePath: decryptedImage.savePath,
+      extraData: decryptedImage.extraData
     }
-  }
-
-  async decryptImage(image:ICardImage){
-    const salt = image.salt
-    const {key} = await this.generateKeypairWithMasterKey({salt})
-    return this._decryptImage(image, key)
-  }
-
-  async decryptImageWithKey(image:ICardImage, key:string){
-    const {key: imageKey} = await this._generateKeypairByKey(key, {salt: image.salt})
-    return this._decryptImage(image, imageKey)
-  }
-
-  async _decryptImage(image:ICardImage, key:string){
-    const decryptImage:{imagePath: string, extraData: any[]} = {
-      imagePath: await this.getDecryptedImageLocalSavePath(image),
-      extraData: []
-    }
-    
-    const imageFilePath = await this.downloadImage(image)
-    const encryptedHexData = await utils.file.readFile(imageFilePath, 'hex')
-    // 解密数据
-    const metaData = encryptedHexData.slice(-PACKAGE_TAIL_LENGTH)
-    const mixHexData = encryptedHexData.slice(0, -PACKAGE_TAIL_LENGTH)
-
-    const decryptedData = utils.crypto.decryptFile(mixHexData, key)
-    if(!decryptedData) throw Error("主密码错误")
-    // 检测并解密附加数据
-    const {data:extraData, dataLength: extraDataLength} = this._unpackExtraData(decryptedData, metaData)
-    if(extraDataLength){
-      decryptImage.extraData = extraData
-      await this.cacheExtraData(image, extraData)
-    }
-    const imageData = extraDataLength?decryptedData.slice(0, -extraDataLength): decryptedData
-
-    await utils.file.writeFile(decryptImage.imagePath, imageData, 'hex')
-    return decryptImage
-  }
-
-  _packExtraData(extraData){
-    const retDataInfo = {
-      data: '',
-      lengthData: '00000000'
-    }
-    extraData = JSON.stringify(extraData)
-    if(extraData !== '[]') {
-      const hexStr = convert.string2hex(extraData)
-      retDataInfo.data = hexStr
-      retDataInfo.lengthData = hexStr.length.toString().padStart(8,'0')
-    }
-    return retDataInfo
-  }
-
-  _unpackExtraData(mixHexData, metaData){
-    const retDataInfo:{dataLength:number, data:any[]} = {
-      dataLength: 0,
-      data: []
-    }
-    const extraDataLength = parseInt(metaData.slice(-24,-16))
-    if(extraDataLength){
-      retDataInfo.dataLength = extraDataLength
-      retDataInfo.data = JSON.parse(convert.hex2string(mixHexData.slice(-extraDataLength)))
-    }
-    return retDataInfo
   }
 
   async downloadImage(image:ICardImage){
@@ -271,6 +175,22 @@ class CardManager extends Base{
     })
   }
 
+  async getCardImage({image, key}){
+    if(image.salt){
+      try {
+        return await this.getCardImageCache(image)
+      } catch (error) {
+        console.debug('未发现缓存数据，开始解密数据')
+      }
+      return this.decryptImage(image, key)
+    }else{
+      return {
+        imagePath: image.url,
+        extraData: []
+      }
+    }
+  }
+
   async getCardImageCache(image: ICardImage){
     const cacheData = {
       imagePath: '',
@@ -278,13 +198,13 @@ class CardManager extends Base{
     }
     cacheData.imagePath = await this.getCardImagePathCache(image)
     cacheData.extraData = await this.getExtraDataCache(image)
-    console.log('命中缓存数据: 已经存在相同解密数据')
+    console.debug('命中缓存图片数据')
     return cacheData
   }
   // 检测并返回图片缓存的路径
   async getCardImagePathCache(image: ICardImage){
     const imagePath = await this.getDecryptedImageLocalSavePath(image)
-    await utils.file.checkAccess(imagePath)
+    await file.checkAccess(imagePath)
     return imagePath
   }
 
@@ -305,47 +225,38 @@ class CardManager extends Base{
   async _removeCardImageCache(image: ICardImage){
     try {
       const path = await this.getDecryptedImageLocalSavePath(image)
-      await deleteFile(path)
+      await file.deleteFile(path)
       console.debug('delete temp file:', path)
     } catch (_) {}
 
     try {
       const path = await this.getDownloadImageLocalSavePath(image)
-      await deleteFile(path)
+      await file.deleteFile(path)
       console.debug('delete temp file:', path)
     } catch (_) {}
 
     // try delete temp file : 
     try {
       const path = await this.getTempFilePath(image.hash)
-      await deleteFile(path)
+      await file.deleteFile(path)
       console.debug('delete temp file:', path)
     } catch (_) {}
   }
 
   async getHash(imagePath:string): Promise<string>{
-    const imageHexData = await utils.file.readFile(imagePath, 'hex')
-    const imageHash = utils.crypto.md5(imageHexData)
-    console.debug('getHash: ',imagePath, imageHash, 'file:',`${imageHexData.slice(0,8)}...${imageHexData.slice(-8)}`);
+    const imageHash = await this.crypto.getFileHash(imagePath, 'MD5')
+    console.debug('getHash: ',imagePath, imageHash)
     return imageHash
   }
 
   async upload(filePath){
-    const uploadFileId = `${this.app.Config.uploadCardNamePrefix}/${this.app.user.openid}/${await utils.crypto.random(16)}`
+    const uploadFileId = `${this.app.Config.uploadCardNamePrefix}/${this.app.user.openid}/${await this.crypto.randomHexString(16)}`
     return this.uploadFile(filePath, uploadFileId)
   }
 
   async uploadShare(filePath){
-    const uploadFileId = `${this.app.Config.uploadShareCardNamePrefix}/${this.app.user.openid}/${await utils.crypto.random(16)}`
+    const uploadFileId = `${this.app.Config.uploadShareCardNamePrefix}/${this.app.user.openid}/${await this.crypto.randomHexString(16)}`
     return this.uploadFile(filePath, uploadFileId)
-  }
-
-  generateKeypairWithMasterKey(options?){
-    return this._generateKeypairByKey(this.app.masterKey, options)
-  }
-
-  _generateKeypairByKey(key:string, options?:{salt: string}){
-    return utils.crypto.pbkdf2(key, { iterations: 5000, ...options })
   }
 
   async parseCardImageByRemoteApi(imagePath){
@@ -415,7 +326,7 @@ class CardManager extends Base{
   async cacheImage(image: ICardImage, useLocalFile: string){
     try {
       const destPath = await this.getDecryptedImageLocalSavePath(image)
-      await copyFile(useLocalFile, destPath)
+      await file.copyFile(useLocalFile, destPath)
     } catch (error) {
       console.error(error)
     }
@@ -435,7 +346,7 @@ class CardManager extends Base{
   }
 
   async checkImageType(picPath){
-    const type = await utils.file.getImageType(picPath)
+    const type = await file.getImageType(picPath)
     if(!this.app.Config.allowUploadImageType.includes(type)) throw Error("图片类型不支持")
   }
 

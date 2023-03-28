@@ -222,14 +222,13 @@ class AppManager extends Base {
       info: []
     }
     if(card.encrypted){
-      for (const image of card.image!) {
-        if(!image._url || !await file.checkAccess(image._url)) throw Error("分享生成错误")
-        const imageData = {url:'',salt:'',hash: image.hash}
-        const encrytedPic = await this.cardManager.encryptImageWithKey(dk, image._url!, card.info)
-        imageData.url = await this.cardManager.uploadShare(encrytedPic.imagePath)
-        imageData.salt = encrytedPic.imageSecretKey
-
-        shareCard.image!.push(imageData)
+      for (const pic of card.image!) {
+        if(!pic._url || !await file.checkAccess(pic._url)) throw Error("分享生成错误")
+        const image = {url: pic._url, salt: '', hash: pic.hash}
+        const encrytedPic = await this.cardManager.encryptImage(image, card.info, dk)
+        image.url = await this.cardManager.uploadShare(encrytedPic.imagePath)
+        image.salt = encrytedPic.imageSecretKey
+        shareCard.image!.push(image)
       }
     }else{
       dk = ''

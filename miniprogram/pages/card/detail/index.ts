@@ -61,7 +61,7 @@ Page({
     if(this.data.card.encrypted && this.data.card.image?.some(e=>e._url === DefaultShowLockImage)){
       try {
         app.checkMasterKey()
-      } catch (error) {
+      } catch (error:any) {
         if(error.code[0] === '2'){
           this.showInputKey()
         }
@@ -148,7 +148,7 @@ Page({
   async showEncryptedImage(){       
     try {
       app.checkMasterKey()
-    } catch (error) {
+    } catch (error:any) {
       if(error.code[0] === '2'){
         this.showInputKey()
       }else{
@@ -158,7 +158,7 @@ Page({
     }
 
     const image = this.data.card.image![this.chooseIdx]
-    const imageData = await loadData(cardManager.getCardImage, image, '解码中')
+    const imageData = await loadData(cardManager.getCardImage, {image, key:app.masterKey}, '解码中')
     
     const setData = {
       [`card.image[${this.chooseIdx}]._url`]: imageData.imagePath,
@@ -182,7 +182,7 @@ Page({
     if(this.data.card.encrypted){
       try {
         app.checkMasterKey()
-      } catch (error) {
+      } catch (error:any) {
         if(error.code[0] === '2'){
           this.showInputKey()
         }else{
@@ -267,6 +267,7 @@ Page({
   inputKeyConfirm(e){
     const key = e.detail.value
     app.loadMasterKeyWithKey(key).then(()=>{
+      console.log('解密成功')
       if(this.chooseAction){
         if(this.chooseAction === 'edit'){
           this._tapToEditCard()
@@ -276,6 +277,7 @@ Page({
         this.showEncryptedImage()
       }
     }).catch(error=>{
+      console.log(error)
       showError(error.message)
       this.showInputKey()
     })
