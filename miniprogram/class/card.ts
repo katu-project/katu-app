@@ -51,6 +51,7 @@ class CardManager extends Base{
       if(pic.hash === imageData.hash){
         imageData.url = originPicUrl
       }else{
+        await this.checkImageType(pic.url)
         console.log('检测到图片修改，重新上传')
         imageData.url = await this.upload(pic.url)
       }
@@ -81,6 +82,7 @@ class CardManager extends Base{
         imageData.url = pic._url
       }else{
         console.log('检测到图片/附加数据修改，重新加密上传')
+        await this.checkImageType(pic.url)
         imageData.url = pic.url
         const encrytedPic = await this.encryptImage(imageData, card.info, key)
         imageData.url = await this.upload(encrytedPic.imagePath)
@@ -346,8 +348,13 @@ class CardManager extends Base{
   }
 
   async checkImageType(picPath){
-    const type = await file.getImageType(picPath)
-    if(!this.app.Config.allowUploadImageType.includes(type)) throw Error("图片类型不支持")
+    try {
+      const imageType = await file.getImageType(picPath)
+      if(!this.app.Config.allowUploadImageType.includes(imageType)) throw Error(` ${imageType} 图片格式不支持`)
+    } catch (error) {
+      console.error('image type check err:',error)
+      throw Error('图片格式不支持')
+    }
   }
 
   async parseCardImageByInternalApi(url){
