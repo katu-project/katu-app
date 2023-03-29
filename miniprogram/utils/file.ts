@@ -110,6 +110,21 @@ export async function getImageType(picPath){
   return ''
 }
 
+export async function getImageData(url){
+  const offscreenCanvas = wx.createOffscreenCanvas({type: '2d'})
+  const image = offscreenCanvas.createImage()
+  await new Promise(function (resolve, reject) {
+    image.onload = resolve
+    image.onerror = reject
+    image.src = url
+  })
+  offscreenCanvas.width = image.width;
+  offscreenCanvas.height = image.height;
+  const ctx = offscreenCanvas.getContext('2d')
+  ctx.drawImage(image, 0, 0, image.width, image.height)
+  return ctx.getImageData(0, 0, image.width, image.height)
+}
+
 export default {
   readFile,
   deleteFile,
@@ -122,5 +137,6 @@ export default {
   advReaddir,
   getSavedFileList,
   getFilePath,
-  getImageType
+  getImageType,
+  getImageData
 }

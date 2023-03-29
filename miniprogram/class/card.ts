@@ -313,26 +313,11 @@ class CardManager extends Base{
     while (!cv.Mat) {
       await sleep(500)
     }
-    const imageData = await this.getImageData(url)
+    const imageData = await file.getImageData(url)
     const src = cv.imread(imageData)
     const tempPath = await this.getTempFilePath('1234')
     const cardUrl = await detectCardByContour(src, tempPath)
     return cardUrl
-  }
-
-  async getImageData(url){
-    const offscreenCanvas = wx.createOffscreenCanvas({type: '2d'})
-		const image = offscreenCanvas.createImage()
-		await new Promise(function (resolve, reject) {
-			image.onload = resolve
-			image.onerror = reject
-			image.src = url
-    })
-		offscreenCanvas.width = image.width;
-		offscreenCanvas.height = image.height;
-    const ctx = offscreenCanvas.getContext('2d')
-    ctx.drawImage(image, 0, 0, image.width, image.height)
-    return ctx.getImageData(0, 0, image.width, image.height)
   }
   
   // 获取图片渲染数据
