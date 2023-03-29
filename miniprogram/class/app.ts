@@ -98,7 +98,8 @@ class AppManager extends Base {
   async loadModules(){
     if(!this.cache.inited){
       await this.cache.init({
-        homeDataCacheTime: this.Config[this.isDev ? 'devHomeDataCacheTime' : 'homeDataCacheTime']
+        homeDataCacheTime: this.Config[this.isDev ? 'devHomeDataCacheTime' : 'homeDataCacheTime'],
+        cardImageCacheDir: APP_IMAGE_DIR
       })
     }
     this.notice.init()

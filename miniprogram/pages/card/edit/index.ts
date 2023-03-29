@@ -230,7 +230,7 @@ Page({
       for (const idx in card.image) {
         const image = card.image[idx]
         try {
-          await cardManager.getCardImagePathCache(image)
+          await cardManager.getCardImageCache(image, {imagePath: true})
         } catch (error) {
           const srcPath = this.data.card.image[idx].url
           console.debug('提前缓存加密图片', srcPath)

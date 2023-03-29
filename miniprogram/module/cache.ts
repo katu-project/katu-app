@@ -1,5 +1,6 @@
 import Base from "@/class/base"
 import { LocalCacheKeyMap } from "@/const"
+import { file } from "@/utils/index"
 
 class Cache extends Base {
   cloudFileTempUrls: IAnyObject = {}
@@ -59,6 +60,87 @@ class Cache extends Base {
 
   async deleteHomeData(){
     this.deleteLocalData(LocalCacheKeyMap.HOME_DATA_CACHE_KEY)
+  }
+
+  // card data cache
+  async getCards(){
+    const cacheData = await this.getLocalData<{[id:string]:ICard}>(LocalCacheKeyMap.CARD_DATA_CACHE_KEY)
+    return cacheData || {}
+  }
+
+  async getCard(id:string){
+    const cards = await this.getCards()
+    if(cards[id]) return cards[id]
+    return undefined
+  }
+
+  async setCard(card:ICard){
+    const cards = await this.getCards()
+    cards[card._id] = card
+    return this.setLocalData(LocalCacheKeyMap.CARD_DATA_CACHE_KEY,cards)
+  }
+
+  async deleteCard(id:string){
+    const cards = await this.getCards()
+    delete cards[id]
+    return this.setLocalData(LocalCacheKeyMap.CARD_DATA_CACHE_KEY,cards)
+  }
+
+  // card image cache
+  async getCardImage(image:ICardImage, options){
+    const cacheData = {
+      imagePath: '',
+      extraData: []
+    }
+    cacheData.imagePath = await this.getCardImagePath(image)
+    await file.checkAccess(cacheData.imagePath)
+    if(!options?.imagePath){
+      cacheData.extraData = await this.getCardExtraData(image)
+      console.debug('命中完整缓存图片数据')
+    }
+    return cacheData
+  }
+
+  async getCardImagePath(image: ICardImage){
+    const name = await this.getCardImageName(image)
+    return file.getFilePath({
+      dir: this.config.cardImageCacheDir,
+      name
+    })
+  }
+
+  async getExtraData(){
+    const cacheData = await this.getLocalData(LocalCacheKeyMap.CARD_EXTRA_DATA_CACHE_KEY)
+    return cacheData || {}
+  }
+  
+  async getCardExtraData(image:ICardImage){
+    const keyName = this.getExtraDataKey(image)
+    const cacheData = await this.getExtraData()
+    return cacheData[keyName] || []
+  }
+
+  async setCardExtraData(image:ICardImage, data:any[]){
+    const keyName = this.getExtraDataKey(image)
+    const cacheData = await this.getExtraData()
+    cacheData[keyName] = data
+    return this.setLocalData(LocalCacheKeyMap.CARD_EXTRA_DATA_CACHE_KEY, cacheData)
+  }
+
+  async deleteCardExtraData(image:ICardImage){
+    const keyName = this.getExtraDataKey(image)
+    const cacheData = await this.getExtraData()
+    console.debug('删除缓存卡片附加数据', keyName, cacheData[keyName])
+    delete cacheData[keyName]
+    return this.setLocalData(LocalCacheKeyMap.CARD_EXTRA_DATA_CACHE_KEY, cacheData)
+  }
+  
+  getExtraDataKey(image:ICardImage){
+    return `${image.hash}_${image.salt}`
+  }
+
+  async getCardImageName(image: {hash:string, salt?:string}){
+    return `${image.hash}_${image.salt || 'ns' }`
   }
 
   // clear all cache

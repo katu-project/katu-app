@@ -1,6 +1,6 @@
 import Base from '@/class/base'
-import { getCache, setCache, sleep, file} from '@/utils/index'
-import { LocalCacheKeyMap, WX_CLOUD_STORAGE_FILE_HEAD } from '@/const'
+import { sleep, file} from '@/utils/index'
+import { WX_CLOUD_STORAGE_FILE_HEAD } from '@/const'
 import api from '@/api'
 import { getAppManager } from '@/class/app'
 import { getUserManager } from '@/class/user'
@@ -69,7 +69,7 @@ class CardManager extends Base{
     for (const pic of card.image) {
       const imageData = {url:'',salt:'',hash:''}
       const originImageHash = pic.hash
-      const originImageExtraData = await this.getExtraDataCache(pic)
+      const originImageExtraData = await this.cache.getCardExtraData(pic)
 
       imageData.hash = await this.getHash(pic.url)
       // 图片hash一致并且附加数据一致就说明图片没改变
@@ -177,72 +177,14 @@ class CardManager extends Base{
     })
   }
 
-  async getCardImage({image, key}){
-    if(image.salt){
-      try {
-        return await this.getCardImageCache(image)
-      } catch (error) {
-        console.debug('未发现缓存数据，开始解密数据')
-      }
-      return this.decryptImage(image, key)
-    }else{
-      return {
-        imagePath: image.url,
-        extraData: []
-      }
-    }
-  }
-
-  async getCardImageCache(image: ICardImage){
-    const cacheData = {
-      imagePath: '',
-      extraData: []
-    }
-    cacheData.imagePath = await this.getCardImagePathCache(image)
-    cacheData.extraData = await this.getExtraDataCache(image)
-    console.debug('命中缓存图片数据')
-    return cacheData
-  }
-  // 检测并返回图片缓存的路径
-  async getCardImagePathCache(image: ICardImage){
-    const imagePath = await this.getDecryptedImageLocalSavePath(image)
-    await file.checkAccess(imagePath)
-    return imagePath
-  }
-
-  async _genCardImagePathName(image: {hash:string, salt?:string}){
-    return `${image.hash}_${image.salt || 'ns' }`
-  }
-
   async getDecryptedImageLocalSavePath(image: ICardImage){
-    const name = await this._genCardImagePathName(image)
-    return this.app.getLocalFilePath(name, 'dec')
+    const name = `${image.hash}_${image.salt || 'ns' }`
+    return this.app.getLocalFilePath(name, 'dec') 
   }
 
   async getDownloadImageLocalSavePath(image: ICardImage){
-    const name = await this._genCardImagePathName(image)
+    const name = `${image.hash}_${image.salt || 'ns' }`
     return this.app.getLocalFilePath(name, 'down')
-  }
-
-  async _removeCardImageCache(image: ICardImage){
-    try {
-      const path = await this.getDecryptedImageLocalSavePath(image)
-      await file.deleteFile(path)
-      console.debug('delete temp file:', path)
-    } catch (_) {}
-
-    try {
-      const path = await this.getDownloadImageLocalSavePath(image)
-      await file.deleteFile(path)
-      console.debug('delete temp file:', path)
-    } catch (_) {}
-
-    // try delete temp file : 
-    try {
-      const path = await this.getTempFilePath(image.hash)
-      await file.deleteFile(path)
-      console.debug('delete temp file:', path)
-    } catch (_) {}
   }
 
   async getHash(imagePath:string): Promise<string>{
@@ -261,58 +203,14 @@ class CardManager extends Base{
     return this.uploadFile(filePath, uploadFileId)
   }
 
-  async parseCardImageByRemoteApi(imagePath){
-    await this.checkImageType(imagePath)
-    const fileID = await this.uploadFile(imagePath,`tmp/pic-${imagePath.slice(-32)}`)
-    const {fileID: fileUrl} = await api.captureCard(fileID)
-    return fileUrl
-  }
-
-  async getExtraDataCache(image:ICardImage){
-    const keyName = this._getExtraDataCacheKey(image)
-    try {
-      const cacheData = await getCache(LocalCacheKeyMap.CARD_EXTRA_DATA_CACHE_KEY)
-      return cacheData[keyName] || []
-    } catch (error) {
-      return []
-    }
-  }
-
-  _getExtraDataCacheKey(image:ICardImage){
-    return `${image.hash}_${image.salt}`
-  }
-
   // 渲染层业务接口
-  async _getCardCache(){
-    const cacheData = await this.getLocalData<{[id:string]:ICard}>(LocalCacheKeyMap.CARD_DATA_CACHE_KEY)
-    return cacheData || {}
-  }
-
-  async _getCardItemCache(id:string){
-    const cards = await this._getCardCache()
-    if(cards[id]) return cards[id]
-    return undefined
-  }
-
-  async _setCacheData(card:ICard){
-    const cards = await this._getCardCache()
-    cards[card._id] = card
-    return this.setLocalData(LocalCacheKeyMap.CARD_DATA_CACHE_KEY,cards)
-  }
-  
   async fetch({id,forceUpdate}){
-    let card = await this._getCardItemCache(id)
+    let card = await this.cache.getCard(id)
     if(forceUpdate || !card){
       card = await api.getCard({_id:id})
-      await this._setCacheData(card)
+      await this.cache.setCard(card)
     }
     return card
-  }
-
-  async clearCardItemCache(id:string){
-    const cards = await this._getCardCache()
-    delete cards[id]
-    return this.setLocalData(LocalCacheKeyMap.CARD_DATA_CACHE_KEY,cards)
   }
 
   async setLike(params){
@@ -320,14 +218,34 @@ class CardManager extends Base{
   }
 
   async syncCheck(id){
-    const cacheCard = await this._getCardItemCache(id)
+    const cacheCard = await this.cache.getCard(id)
     const remoteCard = await this.fetch({id,forceUpdate: true})
     return JSON.stringify(cacheCard) === JSON.stringify(remoteCard)
   }
 
+  async getCardImage({image, key}){
+    if(image.salt){
+      try {
+        return await this.getCardImageCache(image)
+      } catch (error) {
+        console.debug('未发现缓存数据，开始解密数据')
+      }
+      return this.decryptImage(image, key)
+    }else{
+      return {
+        imagePath: image.url,
+        extraData: []
+      }
+    }
+  }
+
+  async getCardImageCache(image: ICardImage, options?:{imagePath:boolean}){
+    return this.cache.getCardImage(image, options)
+  }
+
   async cacheImage(image: ICardImage, useLocalFile: string){
     try {
-      const destPath = await this.getDecryptedImageLocalSavePath(image)
+      const destPath = await this.cache.getCardImagePath(image)
       await file.copyFile(useLocalFile, destPath)
     } catch (error) {
       console.error(error)
@@ -335,16 +253,41 @@ class CardManager extends Base{
   }
 
   async cacheExtraData(image:ICardImage, data:any[]){
-    const keyName = this._getExtraDataCacheKey(image)
-    let cacheData = {}
-    try {
-      cacheData = await getCache(LocalCacheKeyMap.CARD_EXTRA_DATA_CACHE_KEY)
-    } catch (error) {
-      cacheData = {}
-    }
+    return this.cache.setCardExtraData(image, data)
+  }
 
-    cacheData[keyName] = data
-    return setCache(LocalCacheKeyMap.CARD_EXTRA_DATA_CACHE_KEY, cacheData)
+  async deleteCard(card: Partial<ICard>){
+    await this.deleteCardCache(card._id!)
+    await this.deleteCardImageCache(card)
+    return api.deleteCard({_id: card._id})
+  }
+
+  async deleteCardCache(id:string){
+    await this.cache.deleteCard(id)
+  }
+
+  async deleteCardImageCache(card: Partial<ICard>){
+    for (const image of card.image!) {
+      await this.cache.deleteCardExtraData(image)
+      try {
+        const path = await this.cache.getCardImagePath(image)
+        await file.deleteFile(path)
+        console.debug('delete temp file:', path)
+      } catch (_) {}
+  
+      try {
+        const path = await this.getDownloadImageLocalSavePath(image)
+        await file.deleteFile(path)
+        console.debug('delete temp file:', path)
+      } catch (_) {}
+  
+      // try delete temp file : 
+      try {
+        const path = await this.getTempFilePath(image.hash)
+        await file.deleteFile(path)
+        console.debug('delete temp file:', path)
+      } catch (_) {}
+    }
   }
 
   async checkImageType(picPath){
@@ -355,6 +298,13 @@ class CardManager extends Base{
       console.error('image type check err:',error)
       throw Error('图片格式不支持')
     }
+  }
+
+  async parseCardImageByRemoteApi(imagePath){
+    await this.checkImageType(imagePath)
+    const fileID = await this.uploadFile(imagePath,`tmp/pic-${imagePath.slice(-32)}`)
+    const {fileID: fileUrl} = await api.captureCard(fileID)
+    return fileUrl
   }
 
   async parseCardImageByInternalApi(url){
@@ -369,7 +319,7 @@ class CardManager extends Base{
     const cardUrl = await detectCardByContour(src, tempPath)
     return cardUrl
   }
-  // 返回图片 ImageData
+
   async getImageData(url){
     const offscreenCanvas = wx.createOffscreenCanvas({type: '2d'})
 		const image = offscreenCanvas.createImage()
@@ -385,36 +335,14 @@ class CardManager extends Base{
     return ctx.getImageData(0, 0, image.width, image.height)
   }
   
-  async deleteCard(card: Partial<ICard>){
-    // check local cache and remove
-    await this.deleteCardCache(card)
-    return api.deleteCard({_id: card._id})
-  }
-
-  async deleteCardCache(card: Partial<ICard>){
-    // localStorage 附件字段和自身
-    await this.clearCardItemCache(card._id!)
-    // 图片
-    return this.deleteCardImageCache(card)
-  }
-
-  async deleteCardImageCache(card: Partial<ICard>){
-    for (const image of card.image!) {
-      try {
-        await this._removeCardImageCache(image)
-      } catch (error) {
-      }
-    }
-  }
-
   // 获取图片渲染数据
   async getImageRenderSetData(idx:number|string,card:ICard,keyName:string){
     const setData = {}
     if(card.encrypted){
       if(this.user.config?.general.autoShowContent){
         try {
-          const picPath = await this.getCardImagePathCache(card.image[0])
-          setData[`${keyName}[${idx}]._url`] = picPath
+          const { imagePath } = await this.cache.getCardImage(card.image[0], {imagePath: true})
+          setData[`${keyName}[${idx}]._url`] = imagePath
           setData[`${keyName}[${idx}]._showEncryptIcon`] = true
         } catch (error) {}
       }

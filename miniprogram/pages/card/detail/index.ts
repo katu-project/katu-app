@@ -110,7 +110,7 @@ Page({
   },
   async onEventCardChange(card){
     console.log('detail page: update card info:', card._id, card.title)
-    cardManager.clearCardItemCache(card._id)
+    cardManager.deleteCardCache(card._id)
     this.renderData(card)
   },
   tapToSetLike(){
