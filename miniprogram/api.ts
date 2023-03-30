@@ -3,6 +3,7 @@ import { request } from '@/utils/index'
 export default {
   // sys
   getAppConfig: <T extends keyof IAppConfig>(name: T) => request<filterAppConfigItem<T>>('app/config', {name}),
+  
   getDefaultTag: () => request<ICardTag[]>('app/tags'),
 
   getChangeLog: () => request<IChangeLog[]>('app/changeLog'),
@@ -20,6 +21,8 @@ export default {
   bindTelNumber: data => request('app/bindUserTel', data),
 
   removeBindTelNumber: data => request('app/removeBindUserTel', data),
+
+  getUploadFileId: data => request<string>('app/getUploadFileId', data),
 
   // user
   updateUserConfig: (configItem:any) => request('user/updateConfig', configItem),

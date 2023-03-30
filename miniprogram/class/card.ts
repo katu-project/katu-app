@@ -183,13 +183,8 @@ class CardManager extends Base{
     return imageHash
   }
 
-  async upload(filePath){
-    const uploadFileId = `${this.app.Config.uploadCardNamePrefix}/${this.app.user.openid}/${await this.crypto.randomHexString(16)}`
-    return this.uploadFile(filePath, uploadFileId)
-  }
-
-  async uploadShare(filePath){
-    const uploadFileId = `${this.app.Config.uploadShareCardNamePrefix}/${this.app.user.openid}/${await this.crypto.randomHexString(16)}`
+  async upload(filePath, type: 'card' | 'share' = 'card'){
+    const uploadFileId = await api.getUploadFileId({type})
     return this.uploadFile(filePath, uploadFileId)
   }
 
@@ -327,7 +322,14 @@ class CardManager extends Base{
         if(card['firstImageTempUrl']){
           tempUrl = card['firstImageTempUrl']
         }else{
-          tempUrl = await this.app.getCloudFileTempUrl(card.image[0].url)
+          const imageUrl = card.image[0].url
+          if(this.cache.cloudFileTempUrls[imageUrl]){
+            console.debug('使用缓存的 url')
+            return this.cache.cloudFileTempUrls[imageUrl]
+          }else{
+            tempUrl = await this.getCloudFileTempUrl(imageUrl)
+            this.cache.cloudFileTempUrls[imageUrl] = tempUrl
+          }
         }
         if(tempUrl.startsWith('/')){// 获取云文件链接出错，使用本地占位图片替代      
           setData[`${keyName}[${idx}]._url`] = tempUrl

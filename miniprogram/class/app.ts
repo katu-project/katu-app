@@ -3,7 +3,7 @@ import Base from './base'
 import api from '@/api'
 import AppConfig from '@/config'
 import { navigateTo, showChoose, chooseLocalImage, switchTab, mergeDeep, sleep, file } from '@/utils/index'
-import { DefaultLoadFailedImage, APP_ENTRY_PATH, APP_ROOT_DIR } from '@/const'
+import { APP_ENTRY_PATH, APP_ROOT_DIR } from '@/const'
 import { getCardManager } from './card'
 import { getUserManager } from './user'
 import { getNoticeModule } from '@/module/notice'
@@ -226,7 +226,7 @@ class AppManager extends Base {
         if(!pic._url || !await file.checkAccess(pic._url)) throw Error("分享生成错误")
         const image = {url: pic._url, salt: '', hash: pic.hash}
         const encrytedPic = await this.cardManager.encryptImage(image, card.info, dk)
-        image.url = await this.cardManager.uploadShare(encrytedPic.imagePath)
+        image.url = await this.cardManager.upload(encrytedPic.imagePath, 'share')
         image.salt = encrytedPic.imageSecretKey
         shareCard.image!.push(image)
       }
@@ -372,33 +372,6 @@ class AppManager extends Base {
   //主密码备份/重置 结束
   navToDoc(id){
     navigateTo(`/pages/qa/detail/index?id=${id}`)
-  }
-
-  async getCloudFileTempUrl(url:string){
-    // check cache
-    if(this.cache.cloudFileTempUrls[url]){
-      console.debug('使用缓存的 url')
-      return this.cache.cloudFileTempUrls[url]
-    }
-
-    let tempUrl = ''
-    try {
-      const {fileList:[file]} = await wx.cloud.getTempFileURL({
-        fileList: [url]
-      })
-      if(file.status !== 0){
-        console.error('获取云文件临时URL错误:', file.errMsg);
-      }else{
-        tempUrl = file.tempFileURL
-        this.cache.cloudFileTempUrls[url] = tempUrl
-      }
-    } catch (error:any) {
-      console.error('获取云文件临时URL错误:', error.message);
-    }
-    if(!tempUrl) {
-      tempUrl = DefaultLoadFailedImage
-    }
-    return tempUrl
   }
 
   async imageContentCheck({imagePath}){

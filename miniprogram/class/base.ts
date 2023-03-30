@@ -1,4 +1,4 @@
-import { APP_DOWN_DIR, APP_IMAGE_DIR, APP_ROOT_DIR, APP_TEMP_DIR, WX_CLOUD_STORAGE_FILE_HEAD } from "@/const"
+import { APP_DOWN_DIR, APP_IMAGE_DIR, APP_ROOT_DIR, APP_TEMP_DIR, DefaultLoadFailedImage, WX_CLOUD_STORAGE_FILE_HEAD } from "@/const"
 import { getCache, selfish, setCache, delCache, file, net } from "@/utils/index"
 import mitt from 'mitt'
 const emitter = mitt()
@@ -123,5 +123,25 @@ export default class Base {
       throw Error("文件下载出错")
     }
     return downloadRes.filePath
+  }
+
+  async getCloudFileTempUrl(url:string){
+    let tempUrl = ''
+    try {
+      const {fileList:[file]} = await wx.cloud.getTempFileURL({
+        fileList: [url]
+      })
+      if(file.status !== 0){
+        console.error('获取云文件临时URL错误:', file.errMsg);
+      }else{
+        tempUrl = file.tempFileURL
+      }
+    } catch (error:any) {
+      console.error('获取云文件临时URL错误:', error.message);
+    }
+    if(!tempUrl) {
+      tempUrl = DefaultLoadFailedImage
+    }
+    return tempUrl
   }
 }
