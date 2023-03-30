@@ -1,4 +1,4 @@
-import { APP_TEMP_DIR, WX_CLOUD_STORAGE_FILE_HEAD } from "@/const"
+import { APP_DOWN_DIR, APP_IMAGE_DIR, APP_ROOT_DIR, APP_TEMP_DIR, WX_CLOUD_STORAGE_FILE_HEAD } from "@/const"
 import { getCache, selfish, setCache, delCache, file, net } from "@/utils/index"
 import mitt from 'mitt'
 const emitter = mitt()
@@ -63,6 +63,29 @@ export default class Base {
   async getTempFilePath(fileName:string){
     return file.getFilePath({
       dir: APP_TEMP_DIR,
+      name: fileName
+    })
+  }
+
+  async getDownloadFilePath(image:Partial<ICardImage>){
+    const fileName = `${image.hash}_${image.salt || 'ns' }`
+    return file.getFilePath({
+      dir: APP_DOWN_DIR,
+      name: fileName
+    })
+  }
+
+  async getImageFilePath(image:Partial<ICardImage>){
+    const fileName = `${image.hash}_${image.salt || 'ns' }`
+    return file.getFilePath({
+      dir: APP_IMAGE_DIR,
+      name: fileName
+    })
+  }
+
+  async getHomePath(fileName:string){
+    return file.getFilePath({
+      dir: APP_ROOT_DIR,
       name: fileName
     })
   }

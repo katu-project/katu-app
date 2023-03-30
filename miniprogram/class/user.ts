@@ -108,7 +108,7 @@ export default class User extends Base {
     if(!userCache || userCache.avatar !== this._user.avatarUrl){
       console.log('缓存用户头像')
       try {
-        const savePath = await this.app.getHomeFilePath(`avatar`)
+        const savePath = await this.getHomePath(`avatar`)
         this._avatar = await this.downloadFile({url: this._user.avatarUrl!, savePath, ignoreCache:true })
         this.setLocalData(LocalCacheKeyMap.USER_INFO_CACHE_KEY,{avatar:this._user.avatarUrl, avatarUrl:this._avatar})
       } catch (error) {

@@ -157,7 +157,7 @@ class CardManager extends Base{
   async decryptImage(image:ICardImage, key){
     if(!key) throw Error('密码不能为空')
     const keyPair = await this.crypto.createCommonKeyPair(key, image.salt)
-    const savePath = await this.getDecryptedImageLocalSavePath(image)
+    const savePath = await this.getImageFilePath(image)
     const imagePath = await this.downloadImage(image)
     const decryptedImage = await this.crypto.decryptImage({imagePath, savePath, keyPair})
     if(decryptedImage.extraData.length){
@@ -170,21 +170,11 @@ class CardManager extends Base{
   }
 
   async downloadImage(image:ICardImage){
-    const savePath = await this.getDownloadImageLocalSavePath(image)
+    const savePath = await this.getDownloadFilePath(image)
     return this.downloadFile({
       url: image.url,
       savePath
     })
-  }
-
-  async getDecryptedImageLocalSavePath(image: ICardImage){
-    const name = `${image.hash}_${image.salt || 'ns' }`
-    return this.app.getLocalFilePath(name, 'dec') 
-  }
-
-  async getDownloadImageLocalSavePath(image: ICardImage){
-    const name = `${image.hash}_${image.salt || 'ns' }`
-    return this.app.getLocalFilePath(name, 'down')
   }
 
   async getHash(imagePath:string): Promise<string>{
@@ -245,7 +235,7 @@ class CardManager extends Base{
 
   async cacheImage(image: ICardImage, useLocalFile: string){
     try {
-      const destPath = await this.cache.getCardImagePath(image)
+      const destPath = await this.getImageFilePath(image)
       await file.copyFile(useLocalFile, destPath)
     } catch (error) {
       console.error(error)
@@ -270,13 +260,13 @@ class CardManager extends Base{
     for (const image of card.image!) {
       await this.cache.deleteCardExtraData(image)
       try {
-        const path = await this.cache.getCardImagePath(image)
+        const path = await this.getImageFilePath(image)
         await file.deleteFile(path)
         console.debug('delete temp file:', path)
       } catch (_) {}
   
       try {
-        const path = await this.getDownloadImageLocalSavePath(image)
+        const path = await this.getDownloadFilePath(image)
         await file.deleteFile(path)
         console.debug('delete temp file:', path)
       } catch (_) {}

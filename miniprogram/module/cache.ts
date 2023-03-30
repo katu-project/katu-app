@@ -92,21 +92,13 @@ class Cache extends Base {
       imagePath: '',
       extraData: []
     }
-    cacheData.imagePath = await this.getCardImagePath(image)
+    cacheData.imagePath = await this.getImageFilePath(image)
     await file.checkAccess(cacheData.imagePath)
     if(!options?.imagePath){
       cacheData.extraData = await this.getCardExtraData(image)
       console.debug('命中完整缓存图片数据')
     }
     return cacheData
-  }
-
-  async getCardImagePath(image: ICardImage){
-    const name = await this.getCardImageName(image)
-    return file.getFilePath({
-      dir: this.config.cardImageCacheDir,
-      name
-    })
   }
 
   async getExtraData(){
@@ -137,10 +129,6 @@ class Cache extends Base {
   
   getExtraDataKey(image:ICardImage){
     return `${image.hash}_${image.salt}`
-  }
-
-  async getCardImageName(image: {hash:string, salt?:string}){
-    return `${image.hash}_${image.salt || 'ns' }`
   }
 
   // clear all cache

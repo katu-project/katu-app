@@ -3,7 +3,7 @@ import Base from './base'
 import api from '@/api'
 import AppConfig from '@/config'
 import { navigateTo, showChoose, chooseLocalImage, switchTab, mergeDeep, sleep, file } from '@/utils/index'
-import { APP_TEMP_DIR, APP_DOWN_DIR, APP_IMAGE_DIR, DefaultLoadFailedImage, APP_ENTRY_PATH, APP_ROOT_DIR } from '@/const'
+import { DefaultLoadFailedImage, APP_ENTRY_PATH, APP_ROOT_DIR } from '@/const'
 import { getCardManager } from './card'
 import { getUserManager } from './user'
 import { getNoticeModule } from '@/module/notice'
@@ -98,8 +98,7 @@ class AppManager extends Base {
   async loadModules(){
     if(!this.cache.inited){
       await this.cache.init({
-        homeDataCacheTime: this.Config[this.isDev ? 'devHomeDataCacheTime' : 'homeDataCacheTime'],
-        cardImageCacheDir: APP_IMAGE_DIR
+        homeDataCacheTime: this.Config[this.isDev ? 'devHomeDataCacheTime' : 'homeDataCacheTime']
       })
     }
     this.notice.init()
@@ -373,22 +372,6 @@ class AppManager extends Base {
   //主密码备份/重置 结束
   navToDoc(id){
     navigateTo(`/pages/qa/detail/index?id=${id}`)
-  }
-
-  async getLocalFilePath(fileName:string, dirType?:string){
-    const dir = dirType === 'home' ? APP_ROOT_DIR : 
-                dirType === 'down' ? APP_DOWN_DIR : 
-                dirType === 'dec' ? APP_IMAGE_DIR : 
-                APP_TEMP_DIR
-
-    return file.getFilePath({
-      dir,
-      name: fileName
-    })
-  }
-
-  async getHomeFilePath(fileName:string){
-    return this.getLocalFilePath(fileName, 'home')
   }
 
   async getCloudFileTempUrl(url:string){
