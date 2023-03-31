@@ -3,7 +3,6 @@ import AppConfig from '@/config'
 import api from '@/api'
 import { sleep, file} from '@/utils/index'
 import { WX_CLOUD_STORAGE_FILE_HEAD } from '@/const'
-import { getUserManager } from '@/class/user'
 import { getCryptoModule } from '@/module/crypto'
 import { getCacheModule } from '@/module/cache'
 
@@ -14,10 +13,6 @@ class CardManager extends Base{
   }
 
   init(){
-  }
-
-  get user(){
-    return getUserManager()
   }
 
   get cache(){
@@ -302,15 +297,15 @@ class CardManager extends Base{
   }
   
   // 获取图片渲染数据
-  async getImageRenderSetData(idx:number|string,card:ICard,keyName:string){
+  async getImageRenderSetData({idx,card,keyName,autoShow}:{idx:number|string, card:ICard, keyName:string, autoShow?:boolean}){
     const setData = {}
     if(card.encrypted){
-      if(this.user.config?.general.autoShowContent){
+      if(autoShow){
         try {
           const { imagePath } = await this.cache.getCardImage(card.image[0], {imagePath: true})
           setData[`${keyName}[${idx}]._url`] = imagePath
           setData[`${keyName}[${idx}]._showEncryptIcon`] = true
-        } catch (error) {}
+        } catch (_) {}
       }
     }else{
       try {

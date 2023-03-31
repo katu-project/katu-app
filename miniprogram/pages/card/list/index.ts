@@ -3,8 +3,10 @@ import { createAdvSetData, loadData, navigateTo } from '@/utils/index'
 import { DefaultShowImage, DefaultShowLockImage } from '@/const'
 import { getAppManager } from '@/class/app'
 import { getCardManager } from '@/class/card'
+import { getUserManager } from '@/class/user'
 const app = getAppManager()
 const cardManager = getCardManager()
+const user = getUserManager()
 
 Page({
   where: {},
@@ -85,15 +87,15 @@ Page({
     }
   },
   async loadCardImage(card?:ICard, idx?:number){
+    const autoShow = user.config?.general.autoShowContent || false
     if(card){
-      this.setData(await cardManager.getImageRenderSetData(idx!, card, 'list'))
+      this.setData(await cardManager.getImageRenderSetData({idx:idx!, card, keyName:'list', autoShow}))
     }else{
       const advSetData = createAdvSetData(this.setData.bind(this), this.data.list.length)
       for (const idx in this.data.list) {
         const card = this.data.list[idx]
-        cardManager.getImageRenderSetData(idx, card, 'list').then(setData=>{
-          advSetData(setData)
-        })
+        cardManager.getImageRenderSetData({idx, card, keyName:'list', autoShow})
+                   .then(advSetData)
       }
     }
   },
