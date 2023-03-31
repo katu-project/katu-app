@@ -302,12 +302,17 @@ class AppManager extends Base {
   }
   // open app doc end
 
-  async getHomeData(forceUpdate?:boolean){
-    let homeData = await this.cache.getHomeData()
-    if(forceUpdate || !homeData){
+  async getHomeData(forceUpdate?:boolean):Promise<IHomeData>{
+    let homeData
+    if(!forceUpdate){
+      homeData = await this.cache.getHomeData()
+    }
+
+    if(!homeData){
       homeData = await api.getHomeData()
       await this.cache.setHomeCacheData(homeData)
     }
+
     return homeData
   }
 
