@@ -1,8 +1,8 @@
 import Base from '@/class/base'
+import AppConfig from '@/config'
+import api from '@/api'
 import { sleep, file} from '@/utils/index'
 import { WX_CLOUD_STORAGE_FILE_HEAD } from '@/const'
-import api from '@/api'
-import { getAppManager } from '@/class/app'
 import { getUserManager } from '@/class/user'
 import { getCryptoModule } from '@/module/crypto'
 import { getCacheModule } from '@/module/cache'
@@ -14,10 +14,6 @@ class CardManager extends Base{
   }
 
   init(){
-  }
-
-  get app(){
-    return getAppManager()
   }
 
   get user(){
@@ -278,7 +274,7 @@ class CardManager extends Base{
   async checkImageType(picPath){
     try {
       const imageType = await file.getImageType(picPath)
-      if(!this.app.Config.allowUploadImageType.includes(imageType)) throw Error(` ${imageType} 图片格式不支持`)
+      if(!AppConfig.allowUploadImageType.includes(imageType)) throw Error(` ${imageType} 图片格式不支持`)
     } catch (error) {
       console.error('image type check err:',error)
       throw Error('图片格式不支持')
@@ -335,7 +331,7 @@ class CardManager extends Base{
           setData[`${keyName}[${idx}]._url`] = tempUrl
           setData[`${keyName}[${idx}]._mode`] = 'scaleToFill'
         }else{
-          setData[`${keyName}[${idx}]._url`] = tempUrl + this.app.Config.imageMogr2
+          setData[`${keyName}[${idx}]._url`] = tempUrl + AppConfig.imageMogr2
         }
       } catch (error) {}
     }
