@@ -1,7 +1,7 @@
 import Base from '@/class/base'
 import AppConfig from '@/config'
 import api from '@/api'
-import { sleep, file} from '@/utils/index'
+import { sleep, file } from '@/utils/index'
 import { WX_CLOUD_STORAGE_FILE_HEAD } from '@/const'
 import { getCryptoModule } from '@/module/crypto'
 import { getCacheModule } from '@/module/cache'
@@ -27,72 +27,82 @@ class CardManager extends Base{
     2. 变动，使用本地图片，url 以 http/wxfile 开头
     3. 变动，使用外部接口，url 以 cloud 开头
   */
-  async _updateNotEncryptImage(card:Partial<ICard>){
-    const images:ICardImage[] = []
-    for (const pic of card.image!) {
-      const imageData = {url:'',salt:'',hash:''}
-      const originPicUrl = pic.url
-      // 统一转换成本地资源
-      if(pic.url.startsWith(WX_CLOUD_STORAGE_FILE_HEAD)){
-        pic.url = await this.downloadImage(pic)
-      }
-
-      imageData.hash = await this.getHash(pic.url)
-      
-      if(pic.hash === imageData.hash){
-        imageData.url = originPicUrl
-      }else{
+  async _updateNotEncryptImage(images:ICardImage[]){
+    const newImages:ICardImage[] = []
+    for (const idx in images) {
+      const pic = images[idx]
+      const image = {url: '', salt:'', hash: ''}
+      const originPicUrl = pic._url
+      if(originPicUrl){
+        if(pic.url === originPicUrl){
+          image.url = pic.url
+          image.hash = pic.hash
+          console.log(`检测到卡面${idx}未修改，保持原始数据不做改变`)
+        }else{
+          // 第三方接口处理的图片 统一转换成本地资源
+          if(pic.url.startsWith(WX_CLOUD_STORAGE_FILE_HEAD)){
+            pic.url = await this.downloadImage(pic)
+          }
+          image.hash = await this.getHash(pic.url)
+          
+          if(pic.hash === image.hash){
+            console.log(`再次修改后的卡面${idx}与原图片hash一致，保持原始数据不做改变`)
+            image.url = originPicUrl
+          }else{
+            await this.checkImageType(pic.url)
+            console.log(`检测到卡面${idx}修改，重新上传`)
+            image.url = await this.upload(pic.url)
+          }
+        }
+      }else{  // 更新添加卡面
+        console.log(`检测到新增卡面${idx}，重新保存卡片数据`)
         await this.checkImageType(pic.url)
-        console.log('检测到图片修改，重新上传')
-        imageData.url = await this.upload(pic.url)
+        image.hash = await this.getHash(pic.url)
+        image.url = await this.upload(pic.url)
       }
-      imageData.salt = ''
-      images.push(imageData)
+      
+      newImages.push(image)
     }
-    return images
+    return newImages
   }
 
   /* 
     加密模式下不存在远程图片，所有图片都是在本地
   */
-  async _updateEncryptImage(card:ICard, key:string){
-    const images:ICardImage[] = []
-    for (const pic of card.image) {
-      const imageData = {url:'',salt:'',hash:''}
-      const originImageHash = pic.hash
-      const originImageExtraData = await this.cache.getCardExtraData(pic)
+  async _updateEncryptImage(images:ICardImage[], extraData:any[], key:string){
+    const newImages:ICardImage[] = []
+    for (const idx in images) {
+      const pic = images[idx]
+      const image = {url:'',salt:'',hash:''}
+      const originPicUrl = pic._url
+      const originImageExtraData = JSON.stringify(await this.cache.getCardExtraData(pic))
+      image.hash = await this.getHash(pic.url)
 
-      imageData.hash = await this.getHash(pic.url)
-      // 图片hash一致并且附加数据一致就说明图片没改变
-      if(originImageHash === imageData.hash && JSON.stringify(originImageExtraData) === JSON.stringify(card.info)){
-        console.log('未检测到图片/附加数据修改，保持原始数据不做改变')
-        if(!pic._url){
-          throw new Error("更新出错，请重试")
-        }
-        imageData.salt = pic.salt
-        imageData.url = pic._url
-      }else{
-        console.log('检测到图片/附加数据修改，重新加密上传')
+      if(originPicUrl && pic.hash === image.hash && originImageExtraData === JSON.stringify(extraData)){
+        console.log(`编辑卡面${idx}与原始Hash一致并且附加数据一致，保持原始数据不做改变`)
+        image.salt = pic.salt
+        image.url = originPicUrl
+      }else{ 
+        console.log(originPicUrl? `检测到卡面${idx}/附加数据修改，重新加密上传` : `检测到新增卡面${idx}，重新保存卡片数据`)
         await this.checkImageType(pic.url)
-        imageData.url = pic.url
-        const encrytedPic = await this.encryptImage(imageData, card.info, key)
-        imageData.url = await this.upload(encrytedPic.imagePath)
-        imageData.salt = encrytedPic.imageSecretKey
+        image.url = pic.url
+        const encrytedPic = await this.encryptImage(image, extraData, key)
+        image.url = await this.upload(encrytedPic.imagePath)
+        image.salt = encrytedPic.imageSecretKey
       }
-      images.push(imageData)
+      newImages.push(image)
     }
-    return images
+    return newImages
   }
 
   async update({card, key}:{card:ICard, key:string}){
     const cardModel = this._createCardDefaultData(card)
     cardModel._id = card._id
-    
     if(card.encrypted){
-      cardModel.image =  await this._updateEncryptImage(card, key)
+      cardModel.image =  await this._updateEncryptImage(card.image, card.info, key)
       cardModel.info = []
     }else{
-      cardModel.image =  await this._updateNotEncryptImage(card)
+      cardModel.image =  await this._updateNotEncryptImage(card.image)
     }
 
     return api.saveCard(cardModel)
@@ -160,12 +170,17 @@ class CardManager extends Base{
     }
   }
 
-  async downloadImage(image:ICardImage){
-    const savePath = await this.getDownloadFilePath(image)
-    return this.downloadFile({
-      url: image.url,
-      savePath
-    })
+  async downloadImage(image: Partial<ICardImage>){
+    if(image.hash) {
+      return await this.downloadFile({
+        url: image.url!,
+        savePath: await this.getDownloadFilePath(image)
+      })
+    }else{
+      return await this.downloadFile({
+        url: image.url!
+      })
+    }
   }
 
   async getHash(imagePath:string): Promise<string>{
