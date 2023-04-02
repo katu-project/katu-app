@@ -2,7 +2,6 @@ import Base from '@/class/base'
 import AppConfig from '@/config'
 import api from '@/api'
 import { sleep, file } from '@/utils/index'
-import { WX_CLOUD_STORAGE_FILE_HEAD } from '@/const'
 import { getCryptoModule } from '@/module/crypto'
 import { getCacheModule } from '@/module/cache'
 
@@ -39,12 +38,7 @@ class CardManager extends Base{
           image.hash = pic.hash
           console.log(`检测到卡面${idx}未修改，保持原始数据不做改变`)
         }else{
-          // 第三方接口处理的图片 统一转换成本地资源
-          if(pic.url.startsWith(WX_CLOUD_STORAGE_FILE_HEAD)){
-            pic.url = await this.downloadImage(pic)
-          }
           image.hash = await this.getHash(pic.url)
-          
           if(pic.hash === image.hash){
             console.log(`再次修改后的卡面${idx}与原图片hash一致，保持原始数据不做改变`)
             image.url = originPicUrl
@@ -60,7 +54,6 @@ class CardManager extends Base{
         image.hash = await this.getHash(pic.url)
         image.url = await this.upload(pic.url)
       }
-      
       newImages.push(image)
     }
     return newImages
@@ -295,7 +288,7 @@ class CardManager extends Base{
     await this.checkImageType(imagePath)
     const fileID = await this.uploadFile(imagePath,`tmp/pic-${imagePath.slice(-32)}`)
     const {fileID: fileUrl} = await api.captureCard(fileID)
-    return fileUrl
+    return this.downloadImage({url: fileUrl})
   }
 
   async parseCardImageByInternalApi(url){
