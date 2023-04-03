@@ -36,6 +36,7 @@ Page({
     shareable: true,
     syncCheck: true
   },
+  
   onLoad(options) {
     if(options.id){
       this.id = options.id
@@ -44,12 +45,15 @@ Page({
     this.removeAllEvent()
     app.on('cardChange',this.onEventCardChange)
   },
+
   onUnload(){
     this.removeAllEvent()
   },
+
   removeAllEvent(){
     app.off('cardChange',this.onEventCardChange)
   },
+
   async onReady() {
     if(!this.id) {
       showError("卡片不存在")
@@ -68,10 +72,26 @@ Page({
       }
     }
   },
+
   async loadData(forceUpdate){
-    const card = await loadData(cardManager.fetch,{ id: this.id, forceUpdate})
+    const card = await loadData(cardManager.getCard,{ id: this.id, forceUpdate})
     await this.renderData(card)
   },
+
+  async dataSyncCheck(){
+    if(!await cardManager.syncCheck(this.id)){
+      console.log('远程数据有变动，同步最新数据')
+      const card = await loadData(cardManager.getCard,{ id: this.id }, "同步最新卡片数据")
+      await this.renderData(card)
+      if(this.data.card.encrypted){
+        this.showEncryptedImage()
+      }
+    }
+    this.setData({
+      syncCheck: false
+    })
+  },
+
   async renderData(card){
     this.setData({
       'card._id': card._id,
@@ -108,11 +128,13 @@ Page({
       }
     }
   },
+
   async onEventCardChange(card){
     console.log('detail page: update card info:', card._id, card.title)
     cardManager.deleteCardCache(card._id)
     this.renderData(card)
   },
+
   tapToSetLike(){
     const state = !this.data.card.setLike
     loadData(cardManager.setLike,{id:this.id,state}).then(()=>{
@@ -120,6 +142,7 @@ Page({
       app.emit('cardChange', this.data.card)
     })
   },
+
   async tapToReloadCard(){
     if(this.data.card.encrypted){
       await cardManager.deleteCardImageCache(this.data.card)
@@ -129,6 +152,7 @@ Page({
       this.showEncryptedImage()
     }
   },
+
   checkActionUsability(){
     if(this.data.card.image?.some(pic=>pic['checkId'] && !pic['checkPass'])){
       this.setData({
@@ -137,6 +161,7 @@ Page({
       })
     }
   },
+
   async tapToChoosePic(e){
     this.chooseIdx = e.currentTarget.dataset.index
     const image = this.data.card.image![this.chooseIdx]
@@ -145,6 +170,7 @@ Page({
     }
     this.showEncryptedImage()
   },
+
   async showEncryptedImage(){       
     try {
       app.checkMasterKey()
@@ -170,14 +196,17 @@ Page({
       app.emit('cardDecrypt',this.data.card)
     }
   },
+
   async previewImage(idx=0){
     const pics = this.data.card.image!.filter(e=>e._url !== DefaultShowLockImage).map(e=>e._url!)
     app.previewImage(pics, idx)
   },
+
   tapToEditCard(){
     this.chooseAction = 'edit'
     return this._tapToEditCard()
   },
+
   _tapToEditCard(){
     if(this.data.card.encrypted){
       try {
@@ -194,9 +223,11 @@ Page({
 
     navigateTo(`../edit/index?id=${this.id}`)
   },
+
   tapToCopyValue(e){
     setClipboardData(e.currentTarget.dataset.value)
   },
+
   tapToDeleteCard(){
     showChoose("确认删除卡片","卡片删除后不可恢复！").then(({cancel})=>{
       if(cancel) return
@@ -207,20 +238,7 @@ Page({
       })
     })
   },
-  async dataSyncCheck(){
-    if(!await cardManager.syncCheck(this.id)){
-      console.log('远程数据有变动，同步最新数据')
-      // 考虑有无删除缓存数据的必要
-      // await cardManager.deleteCardCache(this.data.card)
-      await this.loadData()
-      if(this.data.card.encrypted){
-        this.showEncryptedImage()
-      }
-    }
-    this.setData({
-      syncCheck: false
-    })
-  },
+
   onShareAppMessage(){
     // 取消由于分享导致的小程序 hide 事件
     getApp().globalData.state.inShareData = true
@@ -231,6 +249,7 @@ Page({
       imageUrl: DefaultShareImage
     }
   },
+
   async tapToShowShareDialog(){
     if(this.data.card.encrypted){
       if(this.data.card.image?.some(pic => pic._url === DefaultShowLockImage )){
@@ -259,11 +278,13 @@ Page({
       this.showShareDialog()
     })
   },
+
   showInputKey(){
     this.setData({
       showInputKey: true
     })
   },
+
   inputKeyConfirm(e){
     const key = e.detail.value
     app.loadMasterKeyWithKey(key).then(()=>{
@@ -282,22 +303,26 @@ Page({
       this.showInputKey()
     })
   },
+
   onImageShowError(e){
     const setData = {}
     setData[`card.image[${e.currentTarget.dataset.index}]._url`] = DefaultLoadFailedImage
     this.setData(setData)
     showError('数据加载出错')
   },
+
   showShareDialog(){
     this.setData({
       showShareDialog: true
     })
   },
+
   hideShareDialog(){
     this.setData({
       showShareDialog: false
     })
   },
+
   tapToShowDataCheckHelp(){
     showChoose("关于内容安全检测","该卡片似乎存在不合适内容",{
       cancelText: '查看详情'

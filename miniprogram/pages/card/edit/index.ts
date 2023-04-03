@@ -107,7 +107,7 @@ Page({
   },
 
   async loadData(){
-    const card = await loadData(cardManager.fetch, {id: this.id})
+    const card = await loadData(cardManager.getCard, {id: this.id, forceUpdate: true})
     const setData = {
       edit: true,
       'card._id': card._id,

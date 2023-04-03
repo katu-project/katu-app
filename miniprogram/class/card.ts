@@ -182,12 +182,17 @@ class CardManager extends Base{
   }
 
   // 渲染层业务接口
-  async fetch({id,forceUpdate}){
-    let card = await this.cache.getCard(id)
-    if(forceUpdate || !card){
+  async getCard({id,forceUpdate}):Promise<ICard>{
+    let card
+    if(!forceUpdate){
+      card = await this.cache.getCard(id)
+    }
+
+    if(!card){
       card = await api.getCard({_id:id})
       await this.cache.setCard(card)
     }
+
     return card
   }
 
@@ -197,7 +202,7 @@ class CardManager extends Base{
 
   async syncCheck(id){
     const cacheCard = await this.cache.getCard(id)
-    const remoteCard = await this.fetch({id,forceUpdate: true})
+    const remoteCard = await this.getCard({id,forceUpdate: true})
     return JSON.stringify(cacheCard) === JSON.stringify(remoteCard)
   }
 
