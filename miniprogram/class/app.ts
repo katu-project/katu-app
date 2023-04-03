@@ -106,7 +106,8 @@ class AppManager extends Base {
       setTimeout(this.loadModules.bind(this), 1000)
       return
     }
-    getCryptoModule().init(mergeDeep(this.Config.cryptoConfig, this.user.config.crypto))
+    const cryptoOptions = mergeDeep(this.Config.cryptoConfig, this.user.config.crypto)
+    getCryptoModule().init(cryptoOptions)
   }
   // user section
   async setUserMasterKey(key: string){
@@ -380,8 +381,8 @@ class AppManager extends Base {
   }
 
   async imageContentCheck({imagePath}){
-    const hash = await this.cardManager.getHash(imagePath)
-    const cloudFilePath = `tmp/image_${hash}`
+    const hash = await this.crypto.getFileHash(imagePath, 'SHA1')
+    const cloudFilePath = `tmp/csc_image_${hash}`
     const url = await this.uploadFile(imagePath, cloudFilePath)
   
     for(let i=0;i<10;i++){

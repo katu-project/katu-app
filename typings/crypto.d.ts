@@ -10,6 +10,9 @@ interface IAppCryptoConfig {
   },
   userKeyConvert: {
     method: HashType
+  },
+  image: {
+    hash: HashType,
   }
 }
 

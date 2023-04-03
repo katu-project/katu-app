@@ -38,7 +38,7 @@ class CardManager extends Base{
           image.hash = pic.hash
           console.log(`检测到卡面${idx}未修改，保持原始数据不做改变`)
         }else{
-          image.hash = await this.getHash(pic.url)
+          image.hash = await this.crypto.getImageHash(pic.url)
           if(pic.hash === image.hash){
             console.log(`再次修改后的卡面${idx}与原图片hash一致，保持原始数据不做改变`)
             image.url = originPicUrl
@@ -51,7 +51,7 @@ class CardManager extends Base{
       }else{  // 更新添加卡面
         console.log(`检测到新增卡面${idx}，重新保存卡片数据`)
         await this.checkImageType(pic.url)
-        image.hash = await this.getHash(pic.url)
+        image.hash = await this.crypto.getImageHash(pic.url)
         image.url = await this.upload(pic.url)
       }
       newImages.push(image)
@@ -69,7 +69,7 @@ class CardManager extends Base{
       const image = {url:'',salt:'',hash:''}
       const originPicUrl = pic._url
       const originImageExtraData = JSON.stringify(await this.cache.getCardExtraData(pic))
-      image.hash = await this.getHash(pic.url)
+      image.hash = await this.crypto.getImageHash(pic.url)
 
       if(originPicUrl && pic.hash === image.hash && originImageExtraData === JSON.stringify(extraData)){
         console.log(`编辑卡面${idx}与原始Hash一致并且附加数据一致，保持原始数据不做改变`)
@@ -106,7 +106,7 @@ class CardManager extends Base{
     for (const pic of card.image) {
       const image: ICardImage = { url: pic.url, hash: '', salt: ''}
       await this.checkImageType(image.url)
-      image.hash = await this.getHash(image.url)
+      image.hash = await this.crypto.getImageHash(image.url)
       if(cardModel.encrypted){
         const encrytedImage = await this.encryptImage(image, cardModel.info, key)
         image.url = await this.upload(encrytedImage.imagePath)
@@ -174,12 +174,6 @@ class CardManager extends Base{
         url: image.url!
       })
     }
-  }
-
-  async getHash(imagePath:string): Promise<string>{
-    const imageHash = await this.crypto.getFileHash(imagePath, 'MD5')
-    console.debug('getHash: ',imagePath, imageHash)
-    return imageHash
   }
 
   async upload(filePath, type: 'card' | 'share' = 'card'){

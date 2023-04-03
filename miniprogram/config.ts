@@ -95,6 +95,9 @@ const AppConfig = {
     },
     userKeyConvert: {
       method: 'SHA1'
+    },
+    image: {
+      hash: 'MD5'
     }
   }
 }

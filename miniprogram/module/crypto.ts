@@ -11,7 +11,7 @@ class Crypto extends Base {
     super()
   }
 
-  async init(config){
+  async init(config:IAppCryptoConfig){
     console.debug('使用加密配置:',config)
     this._config = config
   }
@@ -34,6 +34,13 @@ class Crypto extends Base {
 
   decryptFile(fileData,key){
     return crypto.decryptFile(fileData,key)
+  }
+
+  async getImageHash(filePath){
+    const fileHexData = await file.readFile(filePath, 'hex')
+    const hashValue = crypto[this.config.image.hash].call(null,fileHexData)
+    console.debug('getHash: ',filePath, hashValue)
+    return hashValue
   }
 
   async getFileHash(filePath, hashType: HashType){
