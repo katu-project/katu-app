@@ -70,7 +70,10 @@ class Cache extends Base {
 
   async getCard(id:string){
     const cards = await this.getCards()
-    if(cards[id]) return cards[id]
+    if(cards[id]) {
+      console.debug('getCard 命中缓存')
+      return cards[id]
+    }
     return undefined
   }
 
@@ -93,11 +96,22 @@ class Cache extends Base {
       extraData: []
     }
     cacheData.imagePath = await this.getImageFilePath(image)
-    await file.checkAccess(cacheData.imagePath)
-    if(!options?.imagePath){
-      cacheData.extraData = await this.getCardExtraData(image)
-      console.debug('命中完整缓存图片数据')
+    try {
+      await file.checkAccess(cacheData.imagePath)
+    } catch (error:any) {
+      if(!error.message.includes('access:fail')){
+        console.error('getCardImage error:', error)
+      }
+      throw error
     }
+    
+    if(options?.imagePath){
+      
+    }else{
+      cacheData.extraData = await this.getCardExtraData(image)
+      console.debug('getCardImage 命中缓存')
+    }
+
     return cacheData
   }
 

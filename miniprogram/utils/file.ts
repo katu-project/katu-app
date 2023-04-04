@@ -38,7 +38,11 @@ export async function checkAccess(path: string) {
   const checkAccess = args => wx.getFileSystemManager().access(args)
   checkAccess.noLog = true
   const options = {path}
-  return toPromise(checkAccess, options)
+  try {
+    return await toPromise(checkAccess, options)
+  } catch (error:any) {
+    throw Error(error?.errMsg || '文件不存在')
+  }
 }
 
 export async function mkdir(dirPath, recursive?:boolean) {

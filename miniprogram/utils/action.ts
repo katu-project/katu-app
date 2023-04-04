@@ -199,7 +199,7 @@ async function chooseLocalImage(){
     if(!pics.tempFiles.length) return
     const tempFile = pics.tempFiles[0]
     return tempFile.tempFilePath
-  } catch (error) {
+  } catch (error:any) {
     if(error?.errMsg === 'chooseMedia:fail cancel'){
       wx.showToast({
         title: '取消选择',
