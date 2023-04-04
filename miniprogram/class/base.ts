@@ -67,16 +67,24 @@ export default class Base {
     })
   }
 
-  async getDownloadFilePath(image:Partial<ICardImage>){
-    const fileName = `${image.hash}_${image.salt || 'ns' }`
+  async getDownloadFilePath(image: Pick<ICardImage,'url'>){
+    const splitUrl = image.url.split('/')
+    const fileName = splitUrl[splitUrl.length - 1]
+    if(!fileName){
+      throw Error('图片文件名不能为空')
+    }
     return file.getFilePath({
       dir: APP_DOWN_DIR,
       name: fileName
     })
   }
 
-  async getImageFilePath(image:Partial<ICardImage>){
-    const fileName = `${image.hash}_${image.salt || 'ns' }`
+  async getImageFilePath(image: Pick<ICardImage,'url'>){
+    const splitUrl = image.url.split('/')
+    const fileName = splitUrl[splitUrl.length - 1]
+    if(!fileName){
+      throw Error('图片文件名不能为空')
+    }
     return file.getFilePath({
       dir: APP_IMAGE_DIR,
       name: fileName

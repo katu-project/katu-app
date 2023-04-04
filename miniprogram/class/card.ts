@@ -163,17 +163,11 @@ class CardManager extends Base{
     }
   }
 
-  async downloadImage(image: Partial<ICardImage>){
-    if(image.hash) {
-      return await this.downloadFile({
-        url: image.url!,
-        savePath: await this.getDownloadFilePath(image)
-      })
-    }else{
-      return await this.downloadFile({
-        url: image.url!
-      })
-    }
+  async downloadImage(image: Pick<ICardImage,'url'>){
+    return this.downloadFile({
+      url: image.url!,
+      savePath: await this.getDownloadFilePath(image)
+    })
   }
 
   async upload(filePath, type: 'card' | 'share' = 'card'){
