@@ -7,7 +7,6 @@ const cardManager = getCardManager()
 
 Page({
   originImagePath: '',
-  useRemoteApiConfirm: false,
   data: {
     selectedMethod: 0,
     tmpImagePath: ''
@@ -82,11 +81,13 @@ Page({
         this.useOriginImage(imageUrl)
     }
   },
+
   async useOriginImage(src){
     this.setData({
       'tmpImagePath': src
     })
   },
+
   async useInternalApi(src){
     const imageUrl = await loadData(cardManager.parseCardImageByInternalApi, src, {returnFailed: true}).catch(error=>{
       this.findCardFailed(error)
@@ -97,13 +98,10 @@ Page({
       })
     }
   },
+
   async useRemoteApi(src){
-    if(!this.useRemoteApiConfirm) {
-      this.setData({
-        selectedMethod: 0
-      })
-      this.useRemoteApiConfirm = true
-      this.showTip2('确认')
+    const confirm = await this.showRemoteApiNotice()
+    if(!confirm){
       return
     }
     const imageUrl = await loadData(cardManager.parseCardImageByRemoteApi, src ,{returnFailed: true}).catch(error=>{
@@ -115,6 +113,7 @@ Page({
       })
     }
   },
+
   async useWxEditor(src){
     wx.editImage({
       src,
@@ -129,6 +128,7 @@ Page({
       }
     })
   },
+
   findCardFailed(error){
     if(error) {
       console.error(error)
@@ -138,19 +138,26 @@ Page({
       selectedMethod: 0
     })
   },
-  showTip1(){
-    showChoose("温馨提示","未识别出卡片？\n查看这些小技巧也许能提高卡片识别率！",{confirmText:'去查看'})
+
+  tapToShowInternalApiNotice(){
+    showChoose("未识别出卡片？","这些小技巧能帮助提高卡片识别率！",{confirmText:'去查看'})
     .then(({confirm})=>{
       if(confirm) app.navToDoc(app.Config.doc.imageProcessorTip_1)
     })
   },
-  showTip2(confirmText?:string){
-    showChoose("警告","外部接口服务由第三方提供!\n更多信息请查看帮助文档。",{confirmText: confirmText ||'取消',cancelText: '去查看'})
-    .then(({confirm})=>{
-      if(!confirm) app.navToDoc(app.Config.doc.imageProcessorTip_2)
-    })
+
+  async showRemoteApiNotice(){
+    const {confirm, cancel} = await showChoose("警告","外部接口由第三方提供!\n敏感数据请谨慎使用。",{cancelText: '去查看'})
+    if(cancel) {
+      app.navToDoc(app.Config.doc.imageProcessorTip_2)
+      this.setData({
+        selectedMethod: 0
+      })
+    }
+    return confirm
   },
-  tapToShowWarn(){
-    this.showTip2()
+
+  tapToShowRemoteApiNotice(){
+    this.showRemoteApiNotice()
   }
 })

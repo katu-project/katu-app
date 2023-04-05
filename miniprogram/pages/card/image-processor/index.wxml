@@ -22,13 +22,13 @@
     </view>
     <view class="cu-form-group">
       <view class="title">使用内置库 
-        <text class="cuIcon-info lg text-green" bindtap="showTip1"></text>
+        <text class="cuIcon-info lg text-green" bindtap="tapToShowInternalApiNotice"></text>
       </view>
       <radio class="radio" value="1" checked="{{selectedMethod==1}}"></radio>
     </view>
     <view class="cu-form-group">
       <view class="title">使用外部接口 
-        <text class="cuIcon-warn lg text-yellow" bindtap="tapToShowWarn"></text>
+        <text class="cuIcon-warn lg text-yellow" bindtap="tapToShowRemoteApiNotice"></text>
       </view>
       <radio class="radio" value="2" checked="{{selectedMethod==2}}"></radio>
     </view>
