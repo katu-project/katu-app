@@ -90,6 +90,22 @@ class Cache extends Base {
   }
 
   // card image cache
+  async setCardImage(image:ICardImage, isEncrypt:boolean){
+    if(isEncrypt){
+
+    }else{
+      try {
+        const cachePath = await this.getImageFilePath(image)
+        await this.downloadFile({
+          url: image.url,
+          savePath: cachePath
+        })
+      } catch (error) {
+        console.error('缓存普通图片失败:',error)
+      }
+    }
+  }
+
   async getCardImage(image:ICardImage, options){
     const cacheData = {
       imagePath: '',

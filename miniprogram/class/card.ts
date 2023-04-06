@@ -310,26 +310,13 @@ class CardManager extends Base{
       }
     }else{
       try {
-        let tempUrl:string
-        if(card['firstImageTempUrl']){
-          tempUrl = card['firstImageTempUrl']
-        }else{
-          const imageUrl = card.image[0].url
-          if(this.cache.cloudFileTempUrls[imageUrl]){
-            console.debug('使用缓存的 url')
-            return this.cache.cloudFileTempUrls[imageUrl]
-          }else{
-            tempUrl = await this.getCloudFileTempUrl(imageUrl)
-            this.cache.cloudFileTempUrls[imageUrl] = tempUrl
-          }
-        }
-        if(tempUrl.startsWith('/')){// 获取云文件链接出错，使用本地占位图片替代      
-          setData[`${keyName}[${idx}]._url`] = tempUrl
-          setData[`${keyName}[${idx}]._mode`] = 'scaleToFill'
-        }else{
-          setData[`${keyName}[${idx}]._url`] = tempUrl + AppConfig.imageMogr2
-        }
-      } catch (error) {}
+        const { imagePath } = await this.cache.getCardImage(card.image[0], {imagePath: true})
+        setData[`${keyName}[${idx}]._url`] = imagePath
+      } catch (error) {
+        console.debug('未发现缓存图片，开始缓存', card._id)
+        setData[`${keyName}[${idx}]._url`] = card.image[0].url
+        this.cache.setCardImage(card.image[0], false)
+      }
     }
     return setData
   }
