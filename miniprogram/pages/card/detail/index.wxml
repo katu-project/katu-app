@@ -6,11 +6,21 @@
   <view class="padding-top">
     <view class="head flex justify-between align-center">
       <view class="text-cyan text-xl flex align-center">
-        <text class="cuIcon-vipcard padding-right-sm"></text>
+        <text class="cuIcon-vipcard padding-right-xs"></text>
+        <block wx:if="{{card.encrypted}}">
+          <view class="text-green">
+            <text class="cuIcon-lock padding-right-xs"></text>
+          </view>
+        </block>
         <text class="text-xl text-black">{{card.title||'加载中...'}}</text>
       </view>
       <view style="flex:1"></view>
-      <view class="padding-lr-sm text-xl text-{{card.setLike?'red':'gray'}}" bindtap="tapToSetLike"> 
+      <block wx:if="{{showHideCardData}}">
+        <view class="text-yellow text-xl" bindtap="tapToHideCardData">
+          <text class="cuIcon-attentionforbid padding-right-xs"></text>
+        </view>
+      </block>
+      <view class="padding-lr-sm text-xl text-{{card.setLike?'pink':'gray'}}" bindtap="tapToSetLike"> 
         <text class="cuIcon-{{card.setLike?'favorfill':'favor'}}"></text>
       </view>
       <view class="padding-lr-xs text-xl text-gray" bindtap="tapToReloadCard"> 

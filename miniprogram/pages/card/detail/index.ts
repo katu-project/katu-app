@@ -34,7 +34,8 @@ Page({
     extraData: [] as IAnyObject[],
     editable: true,
     shareable: true,
-    syncCheck: true
+    syncCheck: true,
+    showHideCardData: false
   },
   
   onLoad(options) {
@@ -94,6 +95,7 @@ Page({
 
   async renderData(card){
     this.setData({
+      'showHideCardData': false,
       'card._id': card._id,
       'card.encrypted': card.encrypted,
       'card.title': card.title,
@@ -120,6 +122,7 @@ Page({
             setData[`card.image[${idx}]._url`] = imageData.imagePath 
             setData[`card.info`] = imageData.extraData
             setData['extraData'] = app.rebuildExtraFields(imageData.extraData)
+            setData['showHideCardData'] = true
           } catch (error) {}
         }
         if(Object.keys(setData).length){
@@ -131,8 +134,12 @@ Page({
 
   async onEventCardChange(card){
     console.log('detail page: update card info:', card._id, card.title)
-    cardManager.deleteCardCache(card._id)
     this.renderData(card)
+  },
+
+  async tapToHideCardData(){
+    await cardManager.deleteCardImageCache(this.data.card)
+    this.loadData()
   },
 
   tapToSetLike(){
@@ -189,7 +196,8 @@ Page({
     const setData = {
       [`card.image[${this.chooseIdx}]._url`]: imageData.imagePath,
       [`card.info`]: imageData.extraData,
-      ['extraData']: app.rebuildExtraFields(imageData.extraData)
+      ['extraData']: app.rebuildExtraFields(imageData.extraData),
+      'showHideCardData': true
     }
     this.setData(setData)
     if(this.chooseIdx === 0){
@@ -243,6 +251,7 @@ Page({
     // 取消由于分享导致的小程序 hide 事件
     getApp().globalData.state.inShareData = true
     const params = `sid=${this.shareData?.sid}&sk=${this.shareData?.sk}&dk=${this.shareData?.dk}`
+    this.hideShareDialog()
     return {
       title: `来自 ${app.user.nickName} 分享的内容`,
       path: `/pages/share/index?${params}`,
@@ -272,6 +281,11 @@ Page({
         app.notice.setKnowShareData()
       }
     }
+    
+    if(this.shareData.sid){
+      this.showShareDialog()
+      return
+    }
 
     loadData(app.createShareItem,{card:this.data.card}).then(shareInfo=>{
       this.shareData = shareInfo
@@ -288,7 +302,6 @@ Page({
   inputKeyConfirm(e){
     const key = e.detail.value
     app.loadMasterKeyWithKey(key).then(()=>{
-      console.log('解密成功')
       if(this.chooseAction){
         if(this.chooseAction === 'edit'){
           this._tapToEditCard()
