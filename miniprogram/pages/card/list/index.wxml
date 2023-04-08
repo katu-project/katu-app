@@ -31,11 +31,12 @@
         </view>
         <view class="content flex-col">
           <view class="">
+            <text class="cuIcon-lock text-gray padding-right-xs" hidden="{{!item._showEncryptIcon}}"></text>
             <text class="text-cut">{{item.title}}</text>
             <text class="cuIcon-{{item.setLike?'favorfill':'favor'}} text-xl text-{{item.setLike?'red':'white'}}" style="padding-bottom:4rpx;padding-left:10rpx;"></text>
           </view>
           <view class="text-grey text-sm">
-            <text class="text-cut">{{item.tags.length<3?item.tags:item.tags[0]+ ',' +item.tags[1] +' ...'}}</text>
+            <text class="text-cut">{{item.tags.length < 4 ? item.tags : item.tags[0]+ ',' + item.tags[1] +' ...'}}</text>
           </view>
         </view>
         <view class="action">
