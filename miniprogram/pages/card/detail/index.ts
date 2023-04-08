@@ -150,7 +150,7 @@ Page({
   },
 
   async tapToHideCardData(){
-    await cardManager.deleteCardImageCache(this.data.card)
+    await cardManager.deleteCardImageCache(this.data.card.image)
     this.loadData()
   },
 
@@ -164,7 +164,7 @@ Page({
 
   async tapToReloadCard(){
     if(this.data.card.encrypted){
-      await cardManager.deleteCardImageCache(this.data.card)
+      await cardManager.deleteCardImageCache(this.data.card.image)
     }
     await this.loadData(true)
     if(this.data.card.encrypted){

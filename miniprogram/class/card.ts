@@ -186,7 +186,7 @@ class CardManager extends Base{
 
   async syncCheck(id){
     const cacheCard = await this.cache.getCard(id)
-    const remoteCard = await this.getCard({id,forceUpdate: true})
+    const remoteCard = await api.getCard({_id:id})
     return JSON.stringify(cacheCard) === JSON.stringify(remoteCard)
   }
 
@@ -250,18 +250,14 @@ class CardManager extends Base{
     // this.cache.setCardExtraData(card.image[0], card.info)
   }
 
-  async deleteCard(card: Partial<ICard>){
-    await this.deleteCardCache(card._id!)
-    await this.deleteCardImageCache(card)
+  async deleteCard(card: ICard){
+    await this.cache.deleteCard(card._id)
+    await this.deleteCardImageCache(card.image)
     return api.deleteCard({_id: card._id})
   }
 
-  async deleteCardCache(id:string){
-    await this.cache.deleteCard(id)
-  }
-
-  async deleteCardImageCache(card: Partial<ICard>){
-    for (const image of card.image!) {
+  async deleteCardImageCache(images: ICardImage[]){
+    for (const image of images) {
       await this.cache.deleteCardExtraData(image)
       try {
         const path = await this.getImageFilePath(image)
