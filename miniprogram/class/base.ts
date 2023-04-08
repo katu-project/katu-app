@@ -132,24 +132,4 @@ export default class Base {
     }
     return downloadRes.filePath
   }
-
-  async getCloudFileTempUrl(url:string){
-    let tempUrl = ''
-    try {
-      const {fileList:[file]} = await wx.cloud.getTempFileURL({
-        fileList: [url]
-      })
-      if(file.status !== 0){
-        console.error('获取云文件临时URL错误:', file.errMsg);
-      }else{
-        tempUrl = file.tempFileURL
-      }
-    } catch (error:any) {
-      console.error('获取云文件临时URL错误:', error.message);
-    }
-    if(!tempUrl) {
-      tempUrl = DefaultLoadFailedImage
-    }
-    return tempUrl
-  }
 }

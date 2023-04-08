@@ -3,7 +3,6 @@ import { LocalCacheKeyMap } from "@/const"
 import { file } from "@/utils/index"
 
 class Cache extends Base {
-  cloudFileTempUrls: IAnyObject = {}
   inited: boolean = false
   config = {} as ICacheModuleInitConfig
   constructor(){
@@ -17,11 +16,6 @@ class Cache extends Base {
   }
 
   async loadData(){
-    // let cacheUrls = await this.getLocalData('CloudFileTempUrlCacheKey')
-    // if(!cacheUrls){
-    //   cacheUrls = {}
-    // }
-    this.cloudFileTempUrls = {}
   }
 
   // master key cache
