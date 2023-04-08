@@ -78,6 +78,7 @@ class Cache extends Base {
   }
 
   async setCard(card:ICard){
+    console.debug('setCard cache:', card._id)
     const cards = await this.getCards()
     cards[card._id] = card
     return this.setLocalData(LocalCacheKeyMap.CARD_DATA_CACHE_KEY,cards)
@@ -91,11 +92,16 @@ class Cache extends Base {
 
   // card image cache
   async setCardImage(image:ICardImage, isEncrypt:boolean){
+    console.debug('setCardImage cache:', image.hash)
+    const cachePath = await this.getImageFilePath(image)
     if(isEncrypt){
-
+      try {
+        await file.copyFile(image._url, cachePath)
+      } catch (error) {
+        console.error('缓存加密图片失败:',error)
+      }
     }else{
       try {
-        const cachePath = await this.getImageFilePath(image)
         await this.downloadFile({
           url: image.url,
           savePath: cachePath
@@ -143,6 +149,7 @@ class Cache extends Base {
   }
 
   async setCardExtraData(image:ICardImage, data:any[]){
+    console.debug('setCardExtraData cache:', image.hash)
     const keyName = this.getExtraDataKey(image)
     const cacheData = await this.getExtraData()
     cacheData[keyName] = data

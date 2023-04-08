@@ -1,8 +1,10 @@
 import { DefaultShowLockImage, DefaultShowImage, DefaultShareImage, DefaultLoadFailedImage } from '@/const'
 import { showChoose, showError, loadData, navigateBack, setClipboardData, navigateTo, showNotice } from '@/utils/index'
 import { getCardManager } from '@/class/card'
+import { getUserManager } from '@/class/user'
 import { getAppManager } from '@/class/app'
 const app = getAppManager()
+const user = getUserManager()
 const cardManager = getCardManager()
 
 Page({
@@ -95,40 +97,50 @@ Page({
 
   async renderData(card){
     this.setData({
-      'showHideCardData': false,
       'card._id': card._id,
       'card.encrypted': card.encrypted,
       'card.title': card.title,
       'card.tags': card.tags,
       'card.info': card.encrypted ? [] : card.info,
-      'extraData': card.encrypted ? [] : app.rebuildExtraFields(card.info),
       'card.setLike': card.setLike || false,
       'card.image': card.image.map(pic=>{
         // 不要直接修改只读数据
         const _pic = Object.assign({},pic)
-        _pic._url = pic.url
+        _pic._url = DefaultShowImage
         if(card.encrypted) _pic._url = DefaultShowLockImage
         return _pic
-      })
+      }),
+      'showHideCardData': false,
+      'extraData': card.encrypted ? [] : app.rebuildExtraFields(card.info)
     })
-    this.checkActionUsability()
-    if(this.data.card.encrypted){
-      if(app.user.config?.general.autoShowContent){
-        const setData = {}
-        for (const idx in this.data.card.image) {
-          const image = this.data.card.image[idx]
-          try {
-            const imageData = await cardManager.getCardImageCache(image)
-            setData[`card.image[${idx}]._url`] = imageData.imagePath 
-            setData[`card.info`] = imageData.extraData
-            setData['extraData'] = app.rebuildExtraFields(imageData.extraData)
-            setData['showHideCardData'] = true
-          } catch (error) {}
+    // this.checkActionUsability()
+    const userSetAutoShow = user.config?.general.autoShowContent
+    
+    const setData = {}
+    for (const idx in card.image) {
+      const image = card.image[idx]
+      try {
+        const imageData = await cardManager.getCardImageCache(image)
+        setData[`card.image[${idx}]._url`] = imageData.imagePath
+        if(card.encrypted){
+          setData[`card.info`] = imageData.extraData
+          setData['extraData'] = app.rebuildExtraFields(imageData.extraData)
+          setData['showHideCardData'] = true
         }
-        if(Object.keys(setData).length){
-          this.setData(setData)
+      } catch (_) {
+        if(!card.encrypted){
+          setData[`card.image[${idx}]._url`] = image.url
+          cardManager.cache.setCardImage(image, false)
         }
       }
+    }
+
+    if(this.data.card.encrypted && userSetAutoShow){
+      //todo 自动解密图片
+    }
+
+    if(Object.keys(setData).length){
+      this.setData(setData)
     }
   },
 

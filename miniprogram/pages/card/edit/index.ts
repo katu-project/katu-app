@@ -214,32 +214,21 @@ Page({
             .finally(this.saveFinish)
   },
   async saveDone(card){
-    await this.preCacheCreateImage(card)
-    app.emit('cardChange',card)
-    showChoose('操作成功','卡片数据已保存',{showCancel: false}).then(()=>{
-      navigateBack()
+    console.debug(`提前缓存${this.data.edit?'修改':'新增'}卡片`)
+    cardManager.cacheCard(card, app.masterKey).then(()=>{
+      app.emit('cardChange',card)
     })
+    await showChoose('操作成功','卡片数据已保存',{showCancel: false})
+    navigateBack()
   },
+
   async saveFailed(error){
     showChoose('保存卡片出错',error.message)
   },
+
   async saveFinish(){
   },
-  async preCacheCreateImage(card:ICard){
-    if(card.encrypted){
-      for (const idx in card.image) {
-        const image = card.image[idx]
-        try {
-          await cardManager.getCardImageCache(image, {imagePath: true})
-        } catch (error) {
-          const srcPath = this.data.card.image[idx].url
-          console.debug('提前缓存加密图片', srcPath)
-          await cardManager.cacheImage(card.image[idx], srcPath)
-          await cardManager.cacheExtraData(image, this.data.card.info)
-        }
-      }
-    }
-  },
+
   showInputKey(){
     this.setData({
       showInputKey: true

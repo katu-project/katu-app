@@ -21,11 +21,7 @@ class CardManager extends Base{
   get crypto(){
     return getCryptoModule()
   }
-  /* 
-    1. 没变动，url 以 cloud 开头
-    2. 变动，使用本地图片，url 以 http/wxfile 开头
-    3. 变动，使用外部接口，url 以 cloud 开头
-  */
+
   async _updateNotEncryptImage(images:ICardImage[]){
     const newImages:ICardImage[] = []
     for (const idx in images) {
@@ -59,9 +55,6 @@ class CardManager extends Base{
     return newImages
   }
 
-  /* 
-    加密模式下不存在远程图片，所有图片都是在本地
-  */
   async _updateEncryptImage(images:ICardImage[], extraData:any[], key:string){
     const newImages:ICardImage[] = []
     for (const idx in images) {
@@ -148,15 +141,12 @@ class CardManager extends Base{
     return this.crypto.encryptImage(options)
   }
 
-  async decryptImage(image:ICardImage, key){
+  async decryptImage(image:ICardImage, key:string){
     if(!key) throw Error('密码不能为空')
     const keyPair = await this.crypto.createCommonKeyPair(key, image.salt)
     const savePath = await this.getImageFilePath(image)
     const imagePath = await this.downloadImage(image)
     const decryptedImage = await this.crypto.decryptImage({imagePath, savePath, keyPair})
-    if(decryptedImage.extraData.length){
-      await this.cacheExtraData(image, decryptedImage.extraData)
-    }
     return {
       imagePath: decryptedImage.savePath,
       extraData: decryptedImage.extraData
@@ -165,7 +155,7 @@ class CardManager extends Base{
 
   async downloadImage(image: Pick<ICardImage,'url'>){
     return this.downloadFile({
-      url: image.url!,
+      url: image.url,
       savePath: await this.getDownloadFilePath(image)
     })
   }
@@ -207,7 +197,11 @@ class CardManager extends Base{
       } catch (error) {
         console.debug('未发现缓存数据，开始解密数据')
       }
-      return this.decryptImage(image, key)
+      const decryptedImage = await this.decryptImage(image, key)
+      if(decryptedImage.extraData.length){
+        await this.cache.setCardExtraData(image, decryptedImage.extraData)
+      }
+      return decryptedImage
     }else{
       return {
         imagePath: image.url,
@@ -220,17 +214,40 @@ class CardManager extends Base{
     return this.cache.getCardImage(image, options)
   }
 
-  async cacheImage(image: ICardImage, useLocalFile: string){
-    try {
-      const destPath = await this.getImageFilePath(image)
-      await file.copyFile(useLocalFile, destPath)
-    } catch (error) {
-      console.error(error)
-    }
-  }
+  async cacheCard(card:ICard, key?:string){
+    // cache card info
+    await this.cache.setCard(card)
 
-  async cacheExtraData(image:ICardImage, data:any[]){
-    return this.cache.setCardExtraData(image, data)
+    // cache card image
+    if(card.encrypted){
+      if(!key) return
+      for (const image of card.image) {
+        try {
+          await this.cache.getCardImage(image, {imagePath: true})
+          continue
+        } catch (_) {}
+        try {
+          const decryptedImage = await this.decryptImage(image, key)
+          image._url = decryptedImage.imagePath
+          this.cache.setCardExtraData(image, decryptedImage.extraData)
+          await this.cache.setCardImage(image, true)
+        } catch (_) {}
+      }
+    }else{
+      for (const image of card.image) {
+        try {
+          await this.cache.getCardImage(image, {imagePath: true})
+          continue
+        } catch (_) {}
+        try {
+          this.cache.setCardExtraData(image, card.info)
+          await this.cache.setCardImage(image, false)
+        } catch (_) {}
+      }
+    }
+
+    // cache card extra data
+    // this.cache.setCardExtraData(card.image[0], card.info)
   }
 
   async deleteCard(card: Partial<ICard>){
