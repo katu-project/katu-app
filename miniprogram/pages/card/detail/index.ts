@@ -151,6 +151,7 @@ Page({
 
   async tapToHideCardData(){
     await cardManager.deleteCardImageCache(this.data.card.image)
+    app.emit('cardHide',this.id)
     this.loadData()
   },
 

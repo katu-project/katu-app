@@ -25,6 +25,7 @@ Page({
     app.on('cardChange',this.onEventCardChange)
     app.on('cardDelete',this.onEventCardDelete)
     app.on('cardDecrypt',this.onEventCardChange)
+    app.on('cardHide',this.onEventCardHide)
     // 加载用户信息需要在一开始，加载图片判断自动显示需要检查用户配置
     await loadData(user.init,{},'加载用户信息')
     await this.loadData()
@@ -42,6 +43,7 @@ Page({
     app.off('cardChange',this.onEventCardChange)
     app.off('cardDelete',this.onEventCardDelete)
     app.off('cardDecrypt',this.onEventCardChange)
+    app.off('cardHide',this.onEventCardHide)
   },
 
   async onShow() {
@@ -81,7 +83,7 @@ Page({
   async onEventCardChange(card){
     const idx = this.data.likeList.findIndex(e=>e._id === card._id)
     const findCard = this.data.likeList[idx]
-    console.log('home page: update card info:', card._id, card.title);
+    console.log('home page: onEventCardChange:', card._id, card.title)
     if(findCard){
       if(card.setLike){
         this.renderLikeCard(card)
@@ -98,6 +100,19 @@ Page({
     this.renderCateList(card)
     app.deleteHomeDataCache()
   },
+
+  onEventCardHide(id){
+    const idx = this.data.likeList.findIndex(e=>e._id === id)
+    const findCard = this.data.likeList[idx]
+    console.log('home page: onEventCardHide:', id, findCard.title)
+    if(findCard){
+      const setData = {}
+      setData[`likeList[${idx}]._url`] = DefaultShowLockImage
+      setData[`likeList[${idx}]._showEncryptIcon`] = false
+      this.setData(setData)
+    }
+  },
+
   onEventCardDelete(card){
     const idx = this.data.likeList.findIndex(e=>e._id === card._id)
     if(idx !== -1){
@@ -108,6 +123,7 @@ Page({
     this.renderCateList(card, true)
     app.deleteHomeDataCache()
   },
+
   renderLikeCard(card:ICard){
     const setData = {}
     let idx = this.data.likeList.findIndex(e=>e._id === card._id)
@@ -133,8 +149,9 @@ Page({
         setData[`likeList[${idx}]._url`] = card.encrypted ? DefaultShowLockImage : DefaultShowImage
       }
     }
-    this.setData(setData)
+    if(Object.keys(setData).length) this.setData(setData)
   },
+
   async renderLikeCardImage(card?:ICard){
     const autoShow = user.config?.general.autoShowContent || false
     if(card){
@@ -142,7 +159,8 @@ Page({
       if(idx === -1){
         idx = this.data.likeList.length
       }
-      this.setData(await cardManager.getImageRenderSetData({idx, card, keyName: 'likeList', autoShow}))
+      const setData = await cardManager.getImageRenderSetData({idx, card, keyName: 'likeList', autoShow})
+      if(Object.keys(setData).length) this.setData(setData)
     }else{
       const advSetData = createAdvSetData(this.setData.bind(this), this.data.likeList.length)
       for (const idx in this.data.likeList) {
@@ -152,6 +170,7 @@ Page({
       }
     }
   },
+
   async renderCateList(card?:ICard, remove?:boolean){
     console.log('renderCateList card tags:',card?.tags)
     const setData = {}
@@ -180,6 +199,7 @@ Page({
       this.setData(setData)
     }
   },
+
   async loadNotice(forceFetch?:boolean){
     // 未激活和有未读消息两种情况跳过
     if(!user.isActive || this.data.notice._id) return
@@ -195,6 +215,7 @@ Page({
       }
     }).catch(console.warn)
   },
+
   _removeLikeListCard(idx:number){
     this.data.likeList.splice(idx,1)
     this.setData({
@@ -214,9 +235,11 @@ Page({
   tapToHideModal(e){
     this.hideModal(e.currentTarget.dataset.name)
   },
+
   tapToSearch(){
     navigateTo('../card/list/index', true)
   },
+
   tapToShowNotice(){
     if(this.data.notice._id){
       const data = {showNotice: true}
@@ -225,12 +248,15 @@ Page({
       navigateTo('../notice/index')
     }
   },
+
   tapToCardList(e){
     navigateTo('../card/list/index?tag='+e.currentTarget.dataset.tag, true)
   },
+
   tapToCardDetail(e){
     navigateTo(`/pages/card/detail/index?id=${e.currentTarget.dataset.item._id}`)
   },
+
   onBindRefresh(){
     this.loadData(true).then(()=>{
       this.setData({
@@ -238,14 +264,17 @@ Page({
       })
     })
   },
+
   onBindLoadError(e){
     this.setData({
       [`likeList[${e.currentTarget.dataset.idx}]._url`]: DefaultLoadFailedImage
     })
   },
+
   setTabState(){
     this.getTabBar().setData({selected: 0})
   },
+
   onShareAppMessage(){
     return {
       title: '卡兔-安全好用的卡片管理助手',
@@ -253,6 +282,7 @@ Page({
       imageUrl: '../../static/share.png'
     }
   },
+  
   hideModal(name){
     this.setData({
       [name]: false
