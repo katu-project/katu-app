@@ -14,6 +14,11 @@ class AppManager extends Base {
   Config = AppConfig
   AppInfo = wx.getAccountInfoSync()
   DeviceInfo: Partial<WechatMiniprogram.SystemInfo> = {}
+  ShareInfo = {
+    title: '卡兔-安全好用的卡片管理助手',
+    path: `/pages/${APP_ENTRY_PATH}`,
+    imageUrl: '../../static/share.png'
+  }
   _masterKey: string = ''
 
   lastNoticeFetchTime: number = 0

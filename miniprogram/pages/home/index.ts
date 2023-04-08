@@ -1,5 +1,5 @@
 import { loadData, navigateTo, createAdvSetData, debounce } from '@/utils/index'
-import { DefaultShowLockImage, DefaultShowImage, APP_ENTRY_PATH, DefaultLoadFailedImage } from '@/const'
+import { DefaultShowLockImage, DefaultShowImage, DefaultLoadFailedImage } from '@/const'
 import api from '@/api'
 import { getAppManager } from '@/class/app'
 import { getUserManager } from '@/class/user'
@@ -276,11 +276,7 @@ Page({
   },
 
   onShareAppMessage(){
-    return {
-      title: '卡兔-安全好用的卡片管理助手',
-      path: `/pages/${APP_ENTRY_PATH}`,
-      imageUrl: '../../static/share.png'
-    }
+    return app.ShareInfo
   },
   
   hideModal(name){
