@@ -1,9 +1,8 @@
-import api from "@/api"
-import utils from "@/utils/index"
 import Base from "./base"
-import { getAppManager } from "@/class/app";
-import { checkAccess } from "@/utils/file";
-import { LocalCacheKeyMap } from "@/const";
+import api from "@/api"
+import { objectSetValue } from "@/utils/index"
+import { getAppManager } from "@/class/app"
+import { getCacheModule } from '@/module/cache'
 
 export default class User extends Base {
   _user: Partial<IUser> = {}
@@ -30,6 +29,10 @@ export default class User extends Base {
 
   get app(){
     return getAppManager()
+  }
+
+  get cache(){
+    return getCacheModule()
   }
 
   get config(){
@@ -104,25 +107,15 @@ export default class User extends Base {
   async cacheAvatar(){
     // 缓存avatar
     if(!this._user.avatarUrl) return
-    const userCache = await this.getLocalData<{avatar:string, avatarUrl:string}>(LocalCacheKeyMap.USER_INFO_CACHE_KEY)
-    if(!userCache || userCache.avatar !== this._user.avatarUrl){
-      console.log('缓存用户头像')
-      try {
-        const savePath = await this.getHomePath(`avatar`)
-        this._avatar = await this.downloadFile({url: this._user.avatarUrl!, savePath, ignoreCache:true })
-        this.setLocalData(LocalCacheKeyMap.USER_INFO_CACHE_KEY,{avatar:this._user.avatarUrl, avatarUrl:this._avatar})
-      } catch (error) {
-        console.error(error)
-      }
+
+    const cacheAvatarPath = await this.cache.getUserAvatar(this._user.avatarUrl)
+    if(cacheAvatarPath){
+      console.log('使用缓存头像数据')
     }else{
-      try {
-        await checkAccess(userCache.avatarUrl)
-        this._avatar = userCache.avatarUrl
-        console.log('使用缓存头像数据')
-      } catch (error) {
-        this.deleteLocalData(LocalCacheKeyMap.USER_INFO_CACHE_KEY)
-      }
+      await this.cache.setUserAvatar(this._user.avatarUrl)
     }
+
+    this._avatar = cacheAvatarPath
   }
 
   async checkQuota(){
@@ -150,7 +143,7 @@ export default class User extends Base {
   async applyConfig(configItem:{key:string,value:string}){
     try {
       await api.updateUserConfig(configItem)
-      return utils.objectSetValue(this.user, configItem.key, configItem.value)
+      return objectSetValue(this.user, configItem.key, configItem.value)
     } catch (error:any) {
       console.warn('applyConfig:',error.message)
       await this.reloadInfo()

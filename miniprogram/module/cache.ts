@@ -18,6 +18,32 @@ class Cache extends Base {
   async loadData(){
   }
 
+  // user cache
+  async getUserAvatar(url:string){
+    const splitUrl = url.split('/')
+    const avatarId = splitUrl[splitUrl.length - 1]
+    try {
+      const cachePath = await this.getHomePath(`avatar-${avatarId}`)
+      await file.checkAccess(cachePath)
+      return cachePath
+    } catch (_) {
+      console.error('无缓存头像数据')
+    }
+    return ''
+  }
+
+  async setUserAvatar(url:string){
+    console.debug('缓存用户头像')
+    const splitUrl = url.split('/')
+    const avatarId = splitUrl[splitUrl.length - 1]
+    try {
+      const cachePath = await this.getHomePath(`avatar-${avatarId}`)
+      await this.downloadFile({url, savePath: cachePath})
+    } catch (error) {
+      console.error('缓存头像下载错误:',error)
+    }
+  }
+
   // master key cache
   async getMasterKey(){
     return this.getLocalData<string>(LocalCacheKeyMap.MASTER_KEY_CACHE_KEY)
