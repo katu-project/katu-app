@@ -109,12 +109,9 @@ export default class User extends Base {
     if(!this._user.avatarUrl) return
 
     const cacheAvatarPath = await this.cache.getUserAvatar(this._user.avatarUrl)
-    if(cacheAvatarPath){
-      console.log('使用缓存头像数据')
-    }else{
+    if(!cacheAvatarPath){
       await this.cache.setUserAvatar(this._user.avatarUrl)
     }
-
     this._avatar = cacheAvatarPath
   }
 
