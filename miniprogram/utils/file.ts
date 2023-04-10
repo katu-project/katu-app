@@ -88,14 +88,27 @@ export async function advReaddir(dir:string){
 }
 
 export async function getFilePath({dir, name, suffix}:{dir: string, name:string, suffix?:string}){
-  let filePath = ''
-  try {
-    await checkAccess(dir)
-  } catch (error) {
-    await mkdir(dir)
+  let dirPath = dir
+  let fileName = name
+
+  if(name.includes('/')){
+    const splitName = name.split('/')
+    if(splitName.length !== 2){
+      throw Error('目录层级过深')
+    }
+
+    dirPath = `${dir}/${splitName[0]}`
+    fileName = splitName[1]
   }
 
-  filePath = `${dir}/${name}`
+
+  try {
+    await checkAccess(dirPath)
+  } catch (error) {
+    await mkdir(dirPath)
+  }
+
+  let filePath = `${dirPath}/${fileName}`
   if(suffix){
     filePath += `.${suffix}`
   }
