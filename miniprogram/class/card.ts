@@ -311,16 +311,14 @@ class CardManager extends Base{
   }
   
   // 获取图片渲染数据
-  async getImageRenderSetData({idx,card,keyName,autoShow}:{idx:number|string, card:ICard, keyName:string, autoShow?:boolean}){
+  async getImageRenderSetData({idx,card,keyName}:{idx:number|string, card:ICard, keyName:string}){
     const setData = {}
     if(card.encrypted){
-      if(autoShow){
-        try {
-          const { imagePath } = await this.cache.getCardImage(card.image[0], {imagePath: true})
-          setData[`${keyName}[${idx}]._url`] = imagePath
-          setData[`${keyName}[${idx}]._showEncryptIcon`] = true
-        } catch (_) {}
-      }
+      try {
+        const { imagePath } = await this.cache.getCardImage(card.image[0], {imagePath: true})
+        setData[`${keyName}[${idx}]._url`] = imagePath
+        setData[`${keyName}[${idx}]._showEncryptIcon`] = true
+      } catch (_) {}
     }else{
       try {
         const { imagePath } = await this.cache.getCardImage(card.image[0], {imagePath: true})

@@ -153,19 +153,18 @@ Page({
   },
 
   async renderLikeCardImage(card?:ICard){
-    const autoShow = user.config?.general.autoShowContent || false
     if(card){
       let idx = this.data.likeList.findIndex(e=>e._id === card._id)
       if(idx === -1){
         idx = this.data.likeList.length
       }
-      const setData = await cardManager.getImageRenderSetData({idx, card, keyName: 'likeList', autoShow})
+      const setData = await cardManager.getImageRenderSetData({idx, card, keyName: 'likeList'})
       if(Object.keys(setData).length) this.setData(setData)
     }else{
       const advSetData = createAdvSetData(this.setData.bind(this), this.data.likeList.length)
       for (const idx in this.data.likeList) {
         const card = this.data.likeList[idx]
-        cardManager.getImageRenderSetData({idx, card, keyName: 'likeList', autoShow})
+        cardManager.getImageRenderSetData({idx, card, keyName: 'likeList'})
                    .then(advSetData)
       }
     }
