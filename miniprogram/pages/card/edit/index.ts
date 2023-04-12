@@ -107,33 +107,23 @@ Page({
   },
 
   async loadData(){
-    const card = await loadData(cardManager.getCard, {id: this.id, forceUpdate: true})
+    const card = await loadData(
+                  cardManager.getCard, 
+                  { id: this.id, 
+                    ignoreCache: true
+                  }
+                )
+    
+    // todo: 临时处理，后续需要统_url的定义
+    card.image.map(e=> {
+      const t = e.url
+      e.url = e._url!
+      e._url = t
+    })
+
     const setData = {
       edit: true,
-      'card._id': card._id,
-      'card.encrypted': card.encrypted,
-      'card.image': card.image.map(e=>{
-        e._url = e.url
-        return e
-      }),
-      'card.tags': card.tags,
-      'card.info': card.info || [],
-      'card.title': card.title,
-      'card.setLike': card.setLike
-    }
-    if(card.encrypted){
-      setData['card.image'] = []
-      for (const image of card.image) {
-        const {imagePath, extraData} = await cardManager.getCardImage({image, key:app.masterKey})
-        image.url = imagePath
-        console.debug({imagePath, extraData});
-        
-        // 每个图片都包含了附加数据，因此下面操作只需要执行一次就好
-        if(extraData.length){
-          setData['card.info'] = extraData as ICardExtraField[]
-        }
-        setData['card.image'].push(image)
-      }
+      card
     }
     this.setData(setData)
     this.originData = JSON.parse(JSON.stringify(this.data.card))

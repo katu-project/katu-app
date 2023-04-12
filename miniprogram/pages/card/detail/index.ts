@@ -19,7 +19,6 @@ Page({
   data: {
     showInputKey: false,
     card: {
-      _id: '',
       title: '',
       tags: [],
       setLike: false,
@@ -65,88 +64,48 @@ Page({
 
     await this.loadData()
     this.dataSyncCheck()
+  },
+
+  async loadData(options){
+    const {ignoreCache, showText, hideLoading} = options || {}
+    const card = await loadData(cardManager.getCard, 
+                                { 
+                                  id: this.id,
+                                  ignoreCache
+                                }, {
+                                  loadingTitle: showText || '加载卡片数据',
+                                  hideLoading
+                                })
+    this.setData({
+      card,
+      'extraData': app.rebuildExtraFields(card.info),
+      'showHideCardData': card.encrypted && !user.config?.general.autoShowContent && card.image.some(e=>e._url !== DefaultShowLockImage)
+    })
+    // this.checkActionUsability()
+    this.autoShowContent()
+  },
+
+  autoShowContent(){
     if(this.data.card.encrypted && this.data.card.image?.some(e=>e._url === DefaultShowLockImage)){
-      try {
-        app.checkMasterKey()
-      } catch (error:any) {
-        if(error.code[0] === '2'){
-          this.showInputKey()
-        }
+      if(this.data.card.encrypted && user.config?.general.autoShowContent){
+        this.showEncryptedImage()
       }
     }
   },
 
-  async loadData(forceUpdate){
-    const card = await loadData(cardManager.getCard,{ id: this.id, forceUpdate})
-    await this.renderData(card)
-  },
-
   async dataSyncCheck(){
     if(!await cardManager.syncCheck(this.id)){
-      console.log('远程数据有变动，同步最新数据')
-      const card = await loadData(cardManager.getCard,{ id: this.id }, "同步最新卡片数据")
-      await this.renderData(card)
-      if(this.data.card.encrypted){
-        this.showEncryptedImage()
-      }
+      const { confirm } = await showChoose('警告','检查到云端数据有变动\n是否同步最新数据？')
+      if(confirm) await this.loadData({ ignore:true , showText:'同步最新卡片数据'})
     }
     this.setData({
       syncCheck: false
     })
   },
 
-  async renderData(card){
-    this.setData({
-      'card._id': card._id,
-      'card.encrypted': card.encrypted,
-      'card.title': card.title,
-      'card.tags': card.tags,
-      'card.info': card.encrypted ? [] : card.info,
-      'card.setLike': card.setLike || false,
-      'card.image': card.image.map(pic=>{
-        // 不要直接修改只读数据
-        const _pic = Object.assign({},pic)
-        _pic._url = DefaultShowImage
-        if(card.encrypted) _pic._url = DefaultShowLockImage
-        return _pic
-      }),
-      'showHideCardData': false,
-      'extraData': card.encrypted ? [] : app.rebuildExtraFields(card.info)
-    })
-    // this.checkActionUsability()
-    const userSetAutoShow = user.config?.general.autoShowContent
-    
-    const setData = {}
-    for (const idx in card.image) {
-      const image = card.image[idx]
-      try {
-        const imageData = await cardManager.getCardImageCache(image)
-        setData[`card.image[${idx}]._url`] = imageData.imagePath
-        if(card.encrypted){
-          setData[`card.info`] = imageData.extraData
-          setData['extraData'] = app.rebuildExtraFields(imageData.extraData)
-          setData['showHideCardData'] = true
-        }
-      } catch (_) {
-        if(!card.encrypted){
-          setData[`card.image[${idx}]._url`] = image.url
-          cardManager.cache.setCardImage(image, false)
-        }
-      }
-    }
-
-    if(this.data.card.encrypted && userSetAutoShow){
-      //todo 自动解密图片
-    }
-
-    if(Object.keys(setData).length){
-      this.setData(setData)
-    }
-  },
-
   async onEventCardChange(card){
     console.log('detail page: update card info:', card._id, card.title)
-    this.renderData(card)
+    this.loadData({hideLoading: true, ignoreCache: true})
   },
 
   async tapToHideCardData(){
@@ -167,10 +126,7 @@ Page({
     if(this.data.card.encrypted){
       await cardManager.deleteCardImageCache(this.data.card.image)
     }
-    await this.loadData(true)
-    if(this.data.card.encrypted){
-      this.showEncryptedImage()
-    }
+    await this.loadData({ignoreCache: 'true'})
   },
 
   checkActionUsability(){
@@ -202,20 +158,21 @@ Page({
       }
       return
     }
-
-    const image = this.data.card.image![this.chooseIdx]
-    const imageData = await loadData(cardManager.getCardImage, {image, key:app.masterKey}, '解码中')
+   
+    const card = await loadData(
+                      cardManager.getCard, 
+                      {id: this.id, key:app.masterKey}, 
+                      '读取卡面数据'
+                      )
     
     const setData = {
-      [`card.image[${this.chooseIdx}]._url`]: imageData.imagePath,
-      [`card.info`]: imageData.extraData,
-      ['extraData']: app.rebuildExtraFields(imageData.extraData),
-      'showHideCardData': true
+      [`card.image`]: card.image,
+      [`card.info`]: card.info,
+      ['extraData']: app.rebuildExtraFields(card.info),
+      'showHideCardData': !user.config?.general.autoShowContent
     }
     this.setData(setData)
-    if(this.chooseIdx === 0){
-      app.emit('cardDecrypt',this.data.card)
-    }
+    app.emit('cardDecrypt', card)
   },
 
   async previewImage(idx=0){
@@ -229,17 +186,9 @@ Page({
   },
 
   _tapToEditCard(){
-    if(this.data.card.encrypted){
-      try {
-        app.checkMasterKey()
-      } catch (error:any) {
-        if(error.code[0] === '2'){
-          this.showInputKey()
-        }else{
-          showChoose('解密卡片出错',error.message)
-        }
-        return
-      }
+    if(this.data.card.encrypted && this.data.card.image?.some(e=>e._url === DefaultShowLockImage)){
+      this.showEncryptedImage()
+      return
     }
 
     navigateTo(`../edit/index?id=${this.id}`)

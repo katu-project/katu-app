@@ -2,6 +2,7 @@ import Base from '@/class/base'
 import AppConfig from '@/config'
 import api from '@/api'
 import { sleep, file } from '@/utils/index'
+import { DefaultShowLockImage } from '@/const'
 import { getCryptoModule } from '@/module/crypto'
 import { getCacheModule } from '@/module/cache'
 
@@ -166,9 +167,9 @@ class CardManager extends Base{
   }
 
   // 渲染层业务接口
-  async getCard({id,forceUpdate}):Promise<ICard>{
-    let card
-    if(!forceUpdate){
+  async getCard({id, ignoreCache, key}):Promise<ICard>{
+    let card:ICard|undefined
+    if(!ignoreCache){
       card = await this.cache.getCard(id)
     }
 
@@ -177,41 +178,33 @@ class CardManager extends Base{
       await this.cache.setCard(card)
     }
 
-    return card
-  }
-
-  async setLike(params){
-    return api.setCardLike(params)
-  }
-
-  async syncCheck(id){
-    const cacheCard = await this.cache.getCard(id)
-    const remoteCard = await api.getCard({_id:id})
-    return JSON.stringify(cacheCard) === JSON.stringify(remoteCard)
-  }
-
-  async getCardImage({image, key}){
-    if(image.salt){
-      try {
-        return await this.getCardImageCache(image)
-      } catch (error) {
-        console.debug('未发现缓存数据，开始解密数据')
-      }
-      const decryptedImage = await this.decryptImage(image, key)
-      if(decryptedImage.extraData.length){
-        await this.cache.setCardExtraData(image, decryptedImage.extraData)
-      }
-      return decryptedImage
-    }else{
-      return {
-        imagePath: image.url,
-        extraData: []
+    for (const image of card.image) {
+      if(card.encrypted && key){ // 解密图片
+        const imageData =  await this.decryptImage(image, key)
+        image._url = imageData.imagePath
+        card.info = imageData.extraData
+        if(card.info.length){
+          await this.cache.setCardExtraData(image, imageData.extraData)
+        }
+      }else{ // 获取图片缓存
+        try {
+          const imageData = await this.cache.getCardImage(image, {})
+          image._url = imageData.imagePath
+          if(card.encrypted){
+            card.info = imageData.extraData
+          }
+        } catch (_) {
+          if(card.encrypted){
+            image._url = DefaultShowLockImage
+          }else{  // 普通图片未缓存则使用远程地址，并在后台缓存
+            image._url = image.url
+            this.cache.setCardImage(image, false)
+          }
+        }
       }
     }
-  }
 
-  async getCardImageCache(image: ICardImage, options?:{imagePath:boolean}){
-    return this.cache.getCardImage(image, options)
+    return card
   }
 
   async cacheCard(card:ICard, key?:string){
@@ -280,6 +273,16 @@ class CardManager extends Base{
     }
   }
 
+  async setLike(params){
+    return api.setCardLike(params)
+  }
+
+  async syncCheck(id){
+    const cacheCard = await this.cache.getCard(id)
+    const remoteCard = await api.getCard({_id:id})
+    return JSON.stringify(cacheCard) === JSON.stringify(remoteCard)
+  }
+  
   async checkImageType(picPath){
     try {
       const imageType = await file.getImageType(picPath)
