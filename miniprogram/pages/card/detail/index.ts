@@ -96,7 +96,7 @@ Page({
   async dataSyncCheck(){
     if(!await cardManager.syncCheck(this.id)){
       const { confirm } = await showChoose('警告','检查到云端数据有变动\n是否同步最新数据？')
-      if(confirm) await this.loadData({ ignore:true , showText:'同步最新卡片数据'})
+      if(confirm) await this.loadData({ ignoreCache:true , showText:'同步最新卡片数据'})
     }
     this.setData({
       syncCheck: false
