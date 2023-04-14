@@ -139,29 +139,17 @@ class Cache extends Base {
     }
   }
 
-  async getCardImage(image:ICardImage, options){
-    const cacheData = {
-      imagePath: '',
-      extraData: []
-    }
-    cacheData.imagePath = await this.getImageFilePath(image)
+  async getCardImage(image:ICardImage){
+    const imagePath = await this.getImageFilePath(image)
     try {
-      await file.checkAccess(cacheData.imagePath)
+      await file.checkAccess(imagePath)
     } catch (error:any) {
       if(!error.message.includes('access:fail')){
         console.error('getCardImage error:', error)
       }
       throw error
     }
-    
-    if(options?.imagePath){
-      
-    }else{
-      cacheData.extraData = await this.getCardExtraData(image)
-      console.debug('getCardImage 命中缓存')
-    }
-
-    return cacheData
+    return imagePath
   }
 
   async getExtraData(){
@@ -169,30 +157,23 @@ class Cache extends Base {
     return cacheData || {}
   }
   
-  async getCardExtraData(image:ICardImage){
-    const keyName = this.getExtraDataKey(image)
+  async getCardExtraData(cardId:string){
     const cacheData = await this.getExtraData()
-    return cacheData[keyName] || []
+    return cacheData[cardId] || []
   }
 
-  async setCardExtraData(image:ICardImage, data:any[]){
-    console.debug('setCardExtraData cache:', image.hash)
-    const keyName = this.getExtraDataKey(image)
+  async setCardExtraData(cardId:string, data:any[]){
+    console.debug('setCardExtraData cache:', cardId)
     const cacheData = await this.getExtraData()
-    cacheData[keyName] = data
+    cacheData[cardId] = data
     return this.setLocalData(LocalCacheKeyMap.CARD_EXTRA_DATA_CACHE_KEY, cacheData)
   }
 
-  async deleteCardExtraData(image:ICardImage){
-    const keyName = this.getExtraDataKey(image)
+  async deleteCardExtraData(cardId:string){
     const cacheData = await this.getExtraData()
-    console.debug('删除缓存卡片附加数据', keyName, cacheData[keyName])
-    delete cacheData[keyName]
+    console.debug('删除缓存卡片附加数据', cardId, cacheData[cardId])
+    delete cacheData[cardId]
     return this.setLocalData(LocalCacheKeyMap.CARD_EXTRA_DATA_CACHE_KEY, cacheData)
-  }
-  
-  getExtraDataKey(image:ICardImage){
-    return `${image.hash}_${image.salt}`
   }
 
   // clear all cache

@@ -56,16 +56,16 @@ class CardManager extends Base{
     return newImages
   }
 
-  async _updateEncryptImage(images:ICardImage[], extraData:any[], key:string){
+  async _updateEncryptImage(images:ICardImage[], options){
+    const {extraData, extraDataChange, key} = options
     const newImages:ICardImage[] = []
     for (const idx in images) {
       const pic = images[idx]
       const image = {url:'',salt:'',hash:''}
       const originPicUrl = pic._url
-      const originImageExtraData = JSON.stringify(await this.cache.getCardExtraData(pic))
       image.hash = await this.crypto.getImageHash(pic.url)
 
-      if(originPicUrl && pic.hash === image.hash && originImageExtraData === JSON.stringify(extraData)){
+      if(originPicUrl && pic.hash === image.hash && !extraDataChange){
         console.log(`编辑卡面${idx}与原始Hash一致并且附加数据一致，保持原始数据不做改变`)
         image.salt = pic.salt
         image.url = originPicUrl
@@ -86,7 +86,13 @@ class CardManager extends Base{
     const cardModel = this._createCardDefaultData(card)
     cardModel._id = card._id
     if(card.encrypted){
-      cardModel.image =  await this._updateEncryptImage(card.image, card.info, key)
+      const originImageExtraData = JSON.stringify(await this.cache.getCardExtraData(card._id))
+      
+      cardModel.image =  await this._updateEncryptImage(card.image, {
+        extraData: card.info,
+        extraDataChange: originImageExtraData === JSON.stringify(card.info),
+        key
+      })
       cardModel.info = []
     }else{
       cardModel.image =  await this._updateNotEncryptImage(card.image)
@@ -184,14 +190,13 @@ class CardManager extends Base{
         image._url = imageData.imagePath
         card.info = imageData.extraData
         if(card.info.length){
-          await this.cache.setCardExtraData(image, imageData.extraData)
+          await this.cache.setCardExtraData(id, imageData.extraData)
         }
       }else{ // 获取图片缓存
         try {
-          const imageData = await this.cache.getCardImage(image, {})
-          image._url = imageData.imagePath
+          image._url = await this.cache.getCardImage(image)
           if(card.encrypted){
-            card.info = imageData.extraData
+            card.info = await this.cache.getCardExtraData(id)
           }
         } catch (_) {
           if(card.encrypted){
@@ -216,24 +221,24 @@ class CardManager extends Base{
       if(!key) return
       for (const image of card.image) {
         try {
-          await this.cache.getCardImage(image, {imagePath: true})
+          await this.cache.getCardImage(image)
           continue
         } catch (_) {}
         try {
           const decryptedImage = await this.decryptImage(image, key)
           image._url = decryptedImage.imagePath
-          this.cache.setCardExtraData(image, decryptedImage.extraData)
+          this.cache.setCardExtraData(card._id, decryptedImage.extraData)
           await this.cache.setCardImage(image, true)
         } catch (_) {}
       }
     }else{
       for (const image of card.image) {
         try {
-          await this.cache.getCardImage(image, {imagePath: true})
+          await this.cache.getCardImage(image)
           continue
         } catch (_) {}
         try {
-          this.cache.setCardExtraData(image, card.info)
+          this.cache.setCardExtraData(card._id, card.info)
           await this.cache.setCardImage(image, false)
         } catch (_) {}
       }
@@ -245,13 +250,13 @@ class CardManager extends Base{
 
   async deleteCard(card: ICard){
     await this.cache.deleteCard(card._id)
-    await this.deleteCardImageCache(card.image)
+    await this.deleteCardImageCache(card)
     return api.deleteCard({_id: card._id})
   }
 
-  async deleteCardImageCache(images: ICardImage[]){
-    for (const image of images) {
-      await this.cache.deleteCardExtraData(image)
+  async deleteCardImageCache(card: ICard){
+    await this.cache.deleteCardExtraData(card._id)
+    for (const image of card.image) {
       try {
         const path = await this.getImageFilePath(image)
         await file.deleteFile(path)
@@ -318,13 +323,13 @@ class CardManager extends Base{
     const setData = {}
     if(card.encrypted){
       try {
-        const { imagePath } = await this.cache.getCardImage(card.image[0], {imagePath: true})
+        const imagePath = await this.cache.getCardImage(card.image[0])
         setData[`${keyName}[${idx}]._url`] = imagePath
         setData[`${keyName}[${idx}]._showEncryptIcon`] = true
       } catch (_) {}
     }else{
       try {
-        const { imagePath } = await this.cache.getCardImage(card.image[0], {imagePath: true})
+        const imagePath = await this.cache.getCardImage(card.image[0])
         setData[`${keyName}[${idx}]._url`] = imagePath
       } catch (error) {
         console.debug('未发现缓存图片，开始缓存', card._id)
