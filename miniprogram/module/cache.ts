@@ -139,7 +139,7 @@ class Cache extends Base {
     }
   }
 
-  async getCardImage(image:ICardImage){
+  async getCardImagePath(image:ICardImage){
     const imagePath = await this.getImageFilePath(image)
     try {
       await file.checkAccess(imagePath)

@@ -194,7 +194,7 @@ class CardManager extends Base{
         }
       }else{ // 获取图片缓存
         try {
-          image._url = await this.cache.getCardImage(image)
+          image._url = await this.cache.getCardImagePath(image)
           if(card.encrypted){
             card.info = await this.cache.getCardExtraData(id)
           }
@@ -216,32 +216,24 @@ class CardManager extends Base{
     // cache card info
     await this.cache.setCard(card)
 
+    if(card.encrypted && !key) return
     // cache card image
-    if(card.encrypted){
-      if(!key) return
-      for (const image of card.image) {
-        try {
-          await this.cache.getCardImage(image)
-          continue
-        } catch (_) {}
-        try {
-          const decryptedImage = await this.decryptImage(image, key)
+    for (const image of card.image) {
+      try {
+        await this.cache.getCardImagePath(image)
+        continue
+      } catch (_) {}
+
+      try {
+        if(card.encrypted){
+          const decryptedImage = await this.decryptImage(image, key!)
           image._url = decryptedImage.imagePath
           this.cache.setCardExtraData(card._id, decryptedImage.extraData)
-          await this.cache.setCardImage(image, true)
-        } catch (_) {}
-      }
-    }else{
-      for (const image of card.image) {
-        try {
-          await this.cache.getCardImage(image)
-          continue
-        } catch (_) {}
-        try {
+        }else{
           this.cache.setCardExtraData(card._id, card.info)
-          await this.cache.setCardImage(image, false)
-        } catch (_) {}
-      }
+        }
+        await this.cache.setCardImage(image, card.encrypted)
+      } catch (_) {}
     }
 
     // cache card extra data
@@ -321,17 +313,15 @@ class CardManager extends Base{
   // 获取图片渲染数据
   async getImageRenderSetData({idx,card,keyName}:{idx:number|string, card:ICard, keyName:string}){
     const setData = {}
-    if(card.encrypted){
-      try {
-        const imagePath = await this.cache.getCardImage(card.image[0])
-        setData[`${keyName}[${idx}]._url`] = imagePath
+
+    try {
+      const imagePath = await this.cache.getCardImagePath(card.image[0])
+      setData[`${keyName}[${idx}]._url`] = imagePath
+      if(card.encrypted){
         setData[`${keyName}[${idx}]._showEncryptIcon`] = true
-      } catch (_) {}
-    }else{
-      try {
-        const imagePath = await this.cache.getCardImage(card.image[0])
-        setData[`${keyName}[${idx}]._url`] = imagePath
-      } catch (error) {
+      }
+    } catch (_) {
+      if(!card.encrypted){
         console.debug('未发现缓存图片，开始缓存', card._id)
         setData[`${keyName}[${idx}]._url`] = card.image[0].url
         this.cache.setCardImage(card.image[0], false)
