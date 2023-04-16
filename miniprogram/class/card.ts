@@ -90,7 +90,7 @@ class CardManager extends Base{
       
       cardModel.image =  await this._updateEncryptImage(card.image, {
         extraData: card.info,
-        extraDataChange: originImageExtraData === JSON.stringify(card.info),
+        extraDataChange: originImageExtraData !== JSON.stringify(card.info),
         key
       })
       cardModel.info = []
