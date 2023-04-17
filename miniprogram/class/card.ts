@@ -212,32 +212,27 @@ class CardManager extends Base{
     return card
   }
 
-  async cacheCard(card:ICard, key?:string){
-    // cache card info
+  async cacheCard(card:ICard, localCard:ICard){
     await this.cache.setCard(card)
-
-    if(card.encrypted && !key) return
     // cache card image
-    for (const image of card.image) {
+    for (const idx in card.image) {
+      const image = card.image[idx]
       try {
         await this.cache.getCardImagePath(image)
+        console.debug(`cacheCard: image ${image.hash} already cached`)
         continue
       } catch (_) {}
 
+      image._url = localCard.image[idx].url
+
       try {
-        if(card.encrypted){
-          const decryptedImage = await this.decryptImage(image, key!)
-          image._url = decryptedImage.imagePath
-          this.cache.setCardExtraData(card._id, decryptedImage.extraData)
-        }else{
-          this.cache.setCardExtraData(card._id, card.info)
-        }
+        await file.checkAccess(image._url)
         await this.cache.setCardImage(image, card.encrypted)
       } catch (_) {}
     }
 
     // cache card extra data
-    // this.cache.setCardExtraData(card.image[0], card.info)
+    this.cache.setCardExtraData(card._id, localCard.info)
   }
 
   async deleteCard(card: ICard){

@@ -130,6 +130,7 @@ Page({
     // 处理标签
     this.renderTagState()
   },
+
   renderTagState(){
     const tags = this.data.tags.map(tag=>{
       tag['selected'] = false
@@ -143,8 +144,9 @@ Page({
       tags
     })
   },
+
   async tapToSaveCard(){
-    const card = Object.assign({},this.data.card)
+    const card = this.data.card
     // 卡片数据有效性检查
     if(card.image.filter(e=>e.url === DefaultAddImage).length > 0) {
       showNotice('请先添加卡片')
@@ -203,9 +205,10 @@ Page({
             .catch(this.saveFailed)
             .finally(this.saveFinish)
   },
-  async saveDone(card){
+
+  async saveDone(card){ 
     console.debug(`提前缓存${this.data.edit?'修改':'新增'}卡片`)
-    cardManager.cacheCard(card, app.masterKey).then(()=>{
+    cardManager.cacheCard(card, this.data.card).then(()=>{
       app.emit('cardChange',card)
     })
     await showChoose('操作成功','卡片数据已保存',{showCancel: false})
@@ -303,6 +306,7 @@ Page({
     const c = this.data.card.title
     navigateTo(`../edit-content/index?value=${c}`)
   },
+
   // 标签部分
   tapToSetTag(){
     const tags = this.data.tags.filter(tag=>tag['selected']).map(e=>e.name)
@@ -352,6 +356,7 @@ Page({
     this.renderTagState()
     return this.hideSelectTag()
   },
+
   // 其他
   cardSwiper(e){
     if(e.detail.source == 'touch'){
