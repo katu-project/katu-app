@@ -1,7 +1,7 @@
 import Base from '@/class/base'
 import AppConfig from '@/config'
 import api from '@/api'
-import { sleep, file } from '@/utils/index'
+import { file } from '@/utils/index'
 import { DefaultShowLockImage } from '@/const'
 import { getCryptoModule } from '@/module/crypto'
 import { getCacheModule } from '@/module/cache'
@@ -293,16 +293,9 @@ class CardManager extends Base{
   }
 
   async parseCardImageByInternalApi(url){
-    const { detectCardByContour, cv} = await require.async('../packages/opencv/index')
-    // todo: 现在cv模块加载是异步的，没办法确认完成时间，后续要优化一下，手动实例化
-    while (!cv.Mat) {
-      await sleep(500)
-    }
-    const imageData = await file.getImageData(url)
-    const src = cv.imread(imageData)
-    const tempPath = await this.getTempFilePath('1234')
-    const cardUrl = await detectCardByContour(src, tempPath)
-    return cardUrl
+    const { detectCardByContour } = await require.async('../packages/opencv/index')
+    const tempPath = await this.getTempFilePath('cv-temp')
+    return detectCardByContour(url, tempPath)
   }
   
   // 获取图片渲染数据

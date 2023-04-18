@@ -1,8 +1,8 @@
 import { cv } from './opencv'
-import utils from '@/utils/index'
+import { sleep, upng, file } from '@/utils/index'
 
 // 识别卡片返回临时路径
-export async function detectCardByContour(src, path){
+export async function detectCardByContour(url, path){
   function getSize(contour){
       let corner1 = new cv.Point(contour.data32S[0], contour.data32S[1]);
       let corner2 = new cv.Point(contour.data32S[2], contour.data32S[3]);
@@ -54,6 +54,11 @@ export async function detectCardByContour(src, path){
       M.delete();finalDestCoords.delete();srcCoords.delete()
       return dst
   }
+
+  await loadOpenCV()
+  const imageData = await file.getImageData(url)
+  const src = cv.imread(imageData)
+
   let originSrc = src.clone()
   cv.cvtColor(src, src, cv.COLOR_RGBA2GRAY, 0);
 
@@ -109,11 +114,22 @@ export async function detectCardByContour(src, path){
 
   rect = cv.export(rect)
 
-  const imageBuffer = utils.upng.encode([rect.data],rect.cols,rect.rows,0)
-  await utils.file.writeFile(path, imageBuffer)
+  const imageBuffer = upng.encode([rect.data],rect.cols,rect.rows,0)
+  await file.writeFile(path, imageBuffer)
   return path
 }
 
-export {
-  cv
+// todo: 现在cv模块加载是异步的，没办法确认完成时间，后续要优化一下，手动实例化
+// return cv 会出错，await 里返回 cv['then']的原因
+async function loadOpenCV() {
+  console.debug('load opencv')
+  let loadCount = 0
+  while (!cv.Mat) {
+    loadCount++
+    if (loadCount > 10) {
+      throw Error('load cv failed')
+    }
+    await sleep(500)
+  }
+  console.debug('opencv load success')
 }
