@@ -283,7 +283,13 @@ class AppManager extends Base {
       throw Error('该客户端不支持选择图片功能')
     }
     getApp().globalData.state.inChooseLocalImage = true
-    return chooseLocalImage()
+    const chooseTempFile = await chooseLocalImage()
+    let userTempFile = ''
+    if(chooseTempFile){
+      userTempFile = await this.getTempFilePath('chooseLocalImage')
+      await file.saveTempFile(chooseTempFile, userTempFile)
+    }
+    return userTempFile
   }
 
   // open app doc
