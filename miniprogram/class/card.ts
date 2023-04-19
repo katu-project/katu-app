@@ -225,10 +225,7 @@ class CardManager extends Base{
 
       image._url = localCard.image[idx].url
 
-      try {
-        await file.checkAccess(image._url)
-        await this.cache.setCardImage(image, card.encrypted)
-      } catch (_) {}
+      await this.cache.setCardImage(image, card.encrypted)
     }
 
     // cache card extra data
@@ -237,32 +234,12 @@ class CardManager extends Base{
 
   async deleteCard(card: ICard){
     await this.cache.deleteCard(card._id)
-    await this.deleteCardImageCache(card)
+    await this.cache.deleteCardImage(card)
     return api.deleteCard({_id: card._id})
   }
 
   async deleteCardImageCache(card: ICard){
-    await this.cache.deleteCardExtraData(card._id)
-    for (const image of card.image) {
-      try {
-        const path = await this.getImageFilePath(image)
-        await file.deleteFile(path)
-        console.debug('delete temp file:', path)
-      } catch (_) {}
-  
-      try {
-        const path = await this.getDownloadFilePath(image)
-        await file.deleteFile(path)
-        console.debug('delete temp file:', path)
-      } catch (_) {}
-  
-      // try delete temp file : 
-      try {
-        const path = await this.getTempFilePath(image.hash)
-        await file.deleteFile(path)
-        console.debug('delete temp file:', path)
-      } catch (_) {}
-    }
+    return this.cache.deleteCardImage(card)
   }
 
   async setLike(params){

@@ -78,6 +78,7 @@ class Cache extends Base {
   }
 
   async setHomeCacheData(homeData:IHomeData){
+    console.debug('设置首页数据缓存')
     const cacheData = {
       cacheTime: new Date().getTime(),
       data: homeData
@@ -136,6 +137,30 @@ class Cache extends Base {
       } catch (error) {
         console.error('缓存普通图片失败:',error)
       }
+    }
+  }
+
+  async deleteCardImage(card: ICard){
+    await this.deleteCardExtraData(card._id)
+    for (const image of card.image) {
+      try {
+        const path = await this.getImageFilePath(image)
+        await file.deleteFile(path)
+        console.debug('delete temp file:', path)
+      } catch (_) {}
+  
+      try {
+        const path = await this.getDownloadFilePath(image)
+        await file.deleteFile(path)
+        console.debug('delete temp file:', path)
+      } catch (_) {}
+  
+      // try delete temp file : 
+      try {
+        const path = await this.getTempFilePath(image.hash)
+        await file.deleteFile(path)
+        console.debug('delete temp file:', path)
+      } catch (_) {}
     }
   }
 
