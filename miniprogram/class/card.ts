@@ -1,7 +1,6 @@
 import Base from '@/class/base'
 import AppConfig from '@/config'
 import api from '@/api'
-import { file } from '@/utils/index'
 import { DefaultShowLockImage } from '@/const'
 import { getCryptoModule } from '@/module/crypto'
 import { getCacheModule } from '@/module/cache'
@@ -252,9 +251,9 @@ class CardManager extends Base{
     return JSON.stringify(cacheCard) === JSON.stringify(remoteCard)
   }
   
-  async checkImageType(picPath){
+  async checkImageType(picPath:string){
     try {
-      const imageType = await file.getImageType(picPath)
+      const imageType = await this.getImageType(picPath)
       if(!AppConfig.allowUploadImageType.includes(imageType)) throw Error(` ${imageType} 图片格式不支持`)
     } catch (error) {
       console.error('image type check err:',error)

@@ -1,4 +1,4 @@
-import { APP_DOWN_DIR, APP_IMAGE_DIR, APP_ROOT_DIR, APP_TEMP_DIR, DefaultLoadFailedImage, WX_CLOUD_STORAGE_FILE_HEAD } from "@/const"
+import { APP_DOWN_DIR, APP_IMAGE_DIR, APP_ROOT_DIR, APP_TEMP_DIR, WX_CLOUD_STORAGE_FILE_HEAD } from "@/const"
 import { getCache, selfish, setCache, delCache, file, net } from "@/utils/index"
 import mitt from 'mitt'
 const emitter = mitt()
@@ -77,6 +77,10 @@ export default class Base {
       dir: APP_DOWN_DIR,
       name: fileName
     })
+  }
+
+  async getImageType(path:string){
+    return file.getImageType(path)
   }
 
   async getImageFilePath(image: Pick<ICardImage,'url'>){
