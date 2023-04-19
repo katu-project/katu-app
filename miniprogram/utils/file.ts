@@ -43,6 +43,15 @@ export async function moveFile(oldPath, newPath){
   return toPromise(moveFile, options)
 }
 
+export async function saveTempFile(tempFilePath:string, filePath:string){
+  const saveTempFile = args => wx.getFileSystemManager().saveFile(args)
+  const options = {
+    tempFilePath,
+    filePath
+  }
+  return toPromise(saveTempFile, options)
+}
+
 export async function checkAccess(path: string) {
   const checkAccess = args => wx.getFileSystemManager().access(args)
   checkAccess.noLog = true
@@ -157,6 +166,7 @@ export default {
   writeFile,
   copyFile,
   moveFile,
+  saveTempFile,
   checkAccess,
   getStats,
   readdir,
