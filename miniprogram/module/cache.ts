@@ -124,7 +124,7 @@ class Cache extends Base {
     const cachePath = await this.getImageFilePath(image)
     if(isEncrypt){
       try {
-        await file.copyFile(image._url, cachePath)
+        await file.moveFile(image._url, cachePath)
       } catch (error) {
         console.error('缓存加密图片失败:',error)
       }
