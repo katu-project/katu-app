@@ -34,6 +34,15 @@ export async function copyFile(srcPath, destPath){
   return toPromise(copyFile, options)
 }
 
+export async function moveFile(oldPath, newPath){
+  const moveFile = args => wx.getFileSystemManager().rename(args)
+  const options = {
+    oldPath,
+    newPath
+  }
+  return toPromise(moveFile, options)
+}
+
 export async function checkAccess(path: string) {
   const checkAccess = args => wx.getFileSystemManager().access(args)
   checkAccess.noLog = true
@@ -147,6 +156,7 @@ export default {
   deleteFile,
   writeFile,
   copyFile,
+  moveFile,
   checkAccess,
   getStats,
   readdir,
