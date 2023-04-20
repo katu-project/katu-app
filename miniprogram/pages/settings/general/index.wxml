@@ -32,6 +32,6 @@
       <switch class="sm" bindchange="tapToConfig" data-key="config_general_autoShowContent" checked="{{config_general_autoShowContent}}"></switch>
     </view>
   </view>
-  <view class="padding bg-white text-grey">如果加密卡片已经解密过，将直接显示内容</view>
+  <view class="padding bg-white text-grey">进入详情页将自动显示加密卡片内容</view>
 
 </view>
