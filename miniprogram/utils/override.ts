@@ -18,6 +18,7 @@ console._log = console.log
 console._warn = console.warn
 console._debug = console.debug
 console._error = console.error
+console._table = console.table
 
 const levelColors = {
   info: 'forestgreen',
@@ -75,4 +76,11 @@ console.error = (...args)=>{
     console._error(...args)
   }else 
   if(isDev) advLog('error',...args)
+}
+
+console.table = (...args)=>{
+  if(forceDebug){
+    console._table(...args)
+  }else 
+  if(isDev) console._table(...args)
 }
