@@ -14,6 +14,15 @@ export async function readFile<T extends string | ArrayBuffer>(filePath, encodin
   return toPromise<T>(readFile, options , 'data')
 }
 
+export async function readFileByPosition<T extends string | ArrayBuffer>(options: WechatMiniprogram.ReadFileOption){
+  const readFile = args => wx.getFileSystemManager().readFile(args)
+  if(options.encoding === 'hex' && options.length){
+    if(options.length * 4 % 8 !== 0) throw Error('读取长度需是8的倍数')
+    options.length = options.length * 4 / 8
+  }
+  return toPromise<T>(readFile, options , 'data')
+}
+
 export async function writeFile(filePath, fileData, encoding?: string){
   const writeFile = args => wx.getFileSystemManager().writeFile(args)
   const options = {
@@ -162,6 +171,7 @@ export async function getImageData(url){
 
 export default {
   readFile,
+  readFileByPosition,
   deleteFile,
   writeFile,
   copyFile,
