@@ -14,13 +14,11 @@ export async function readFile<T extends string | ArrayBuffer>(filePath, encodin
   return toPromise<T>(readFile, options , 'data')
 }
 
-export async function readFileByPosition<T extends string | ArrayBuffer>(options: WechatMiniprogram.ReadFileOption){
-  const readFile = args => wx.getFileSystemManager().readFile(args)
-  if(options.encoding === 'hex' && options.length){
-    if(options.length * 4 % 8 !== 0) throw Error('读取长度需是8的倍数')
-    options.length = options.length * 4 / 8
-  }
-  return toPromise<T>(readFile, options , 'data')
+export async function getFileInfo(filePath){
+  const getFileInfo = args => wx.getFileSystemManager().getFileInfo(args)
+  getFileInfo.noLog = true
+  const options = {filePath}
+  return toPromise<{size:number}>(getFileInfo, options)
 }
 
 export async function writeFile(filePath, fileData, encoding?: string){
@@ -114,6 +112,24 @@ export async function advReaddir(dir:string){
   return getStats<{path:string,stats:WechatMiniprogram.Stats}[]>(dir,true)
 }
 
+export async function readFileByPosition<T extends string | ArrayBuffer>(options: WechatMiniprogram.ReadFileOption){
+  const readFileByPosition = args => wx.getFileSystemManager().readFile(args)
+  readFileByPosition.noLog = true
+  if(options.encoding === 'hex' && options.length){
+    if(options.length * 4 % 8 !== 0) throw Error('读取长度需是8的倍数')
+    options.length = options.length * 4 / 8
+  }
+  return toPromise<T>(readFileByPosition, options , 'data')
+}
+
+export async function getFileSize(filePath, unit?:string){
+  const {size} = await getFileInfo(filePath)
+  if(unit === 'hex'){
+    return size * 2
+  }
+  return size
+}
+
 export async function getFilePath({dir, name, suffix}:{dir: string, name:string, suffix?:string}){
   let dirPath = dir
   let fileName = name
@@ -184,6 +200,7 @@ export default {
   advReaddir,
   getSavedFileList,
   getFilePath,
+  getFileSize,
   getImageType,
   getImageData
 }
