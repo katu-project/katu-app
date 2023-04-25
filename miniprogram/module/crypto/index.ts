@@ -1,5 +1,6 @@
 import Base from "@/class/base"
-import { KATU_MARK, PACKAGE_TAIL_LENGTH } from "@/const"
+import pkv from "./pkv/index"
+import { PACKAGE_VER_LENGTH } from "@/const"
 import { bip39, convert, crypto, file } from "@/utils/index"
 
 const ConvertUserKeyError = '密码转化出错'
@@ -28,12 +29,18 @@ class Crypto extends Base {
     return crypto.decryptString(ciphertext,key)
   }
 
-  encryptFile(fileData,key){
-    return crypto.encryptFile(fileData,key)
+  encryptFile(fileData:string, key:string, options?:any){
+    if(options){
+      console.debug('encryptFile use config: ', options)
+    }
+    return crypto.encryptFile(fileData, key)
   }
 
-  decryptFile(fileData,key){
-    return crypto.decryptFile(fileData,key)
+  decryptFile(fileData:string, key:string, options?:any){
+    if(options){
+      console.debug('decryptFile use config: ', options)
+    }
+    return crypto.decryptFile(fileData, key)
   }
 
   async getImageHash(filePath){
@@ -49,20 +56,14 @@ class Crypto extends Base {
   }
 
   async encryptImage({keyPair:{key, salt}, imagePath, extraData, savePath}: IEncryptImageOptions){
-    const imageHexData = await file.readFile(imagePath, 'hex')
-    const extraDataPack = this.packExtraData(extraData)
-    const flag = '00000000'
-    
-    const mixHexData = (imageHexData as string).concat(extraDataPack.data)
-    const encryptedData = this.encryptFile(mixHexData, key)
-    
-    const encryptPackage = encryptedData.concat(salt)
-                                        .concat(flag).concat(extraDataPack.lengthData)
-                                        .concat(KATU_MARK)
-
-    console.debug('encryptPackage:',encryptedData.length, encryptPackage.slice(-PACKAGE_TAIL_LENGTH), salt, key)
-
-    await file.writeFile(savePath, encryptPackage, 'hex')
+    const p = pkv[this.config.usePackageVersion]
+    const edh = this.packExtraData(extraData)
+    const plaintext = await p.cpt(imagePath, edh)
+    const encryptedData = this.encryptFile(plaintext, key, p.dea)
+    const encryptedPackage = encryptedData + await p.cem(salt, extraData)
+    console.debug('加密信息:')
+    this.printDebugInfo({key, salt, extraData, edh, plaintext, encryptedData, encryptedPackage})
+    await file.writeFile(savePath, encryptedPackage, 'hex')
     return {
       imageSecretKey: salt,
       imagePath: savePath
@@ -74,56 +75,53 @@ class Crypto extends Base {
       savePath,
       extraData: []
     }
-    const encryptedHexData = await file.readFile(imagePath, 'hex')
-    // 解密数据
-    const metaData = encryptedHexData.slice(-PACKAGE_TAIL_LENGTH)
-    const mixHexData = encryptedHexData.slice(0, -PACKAGE_TAIL_LENGTH)
+    const packageVersion = await this.getPackageVersion(imagePath)
+    const p = pkv[packageVersion]
 
-    const decryptedData = this.decryptFile(mixHexData, key)
-    if(!decryptedData) throw Error("解密错误")
+    const encryptedData = await p.eed(imagePath)
+    const plaintext = await this.decryptFile(encryptedData, key, p.dea)
+    if(!plaintext) throw Error("解密错误")
+    const { image, extraData } = await p.spt(plaintext, imagePath)
     // 检测并解密附加数据
-    const {data:extraData, dataLength: extraDataLength} = this.unpackExtraData(decryptedData, metaData)
-    if(extraDataLength){
-      decryptedImage.extraData = extraData
+    try {
+      decryptedImage.extraData = this.unpackExtraData(extraData)
+    } catch (error) {
+      console.error('unpackExtraData err:', error, extraData)
+      throw Error("附加数据读取出错")
     }
-    const imageData = extraDataLength?decryptedData.slice(0, -extraDataLength): decryptedData
 
-    await file.writeFile(decryptedImage.savePath, imageData, 'hex')
+    console.debug('解密信息:')
+    this.printDebugInfo({key, image, edh:extraData, extraData:decryptedImage.extraData, plaintext, encryptedData})
+    
+    await file.writeFile(decryptedImage.savePath, image, 'hex')
     return decryptedImage
   }
 
-  packExtraData(extraData){
-    const retDataInfo = {
-      data: '',
-      lengthData: '00000000'
-    }
-    extraData = JSON.stringify(extraData)
-    if(extraData !== '[]') {
-      const hexStr = convert.string2hex(extraData)
-      console.log('packData',hexStr, hexStr.length)
-      retDataInfo.data = hexStr
-      retDataInfo.lengthData = hexStr.length.toString().padStart(8,'0')
-    }
-    return retDataInfo
+  async getPackageVersion(filePath:string){
+    const fileSize = await file.getFileSize(filePath)
+    const verField = await file.readFileByPosition<string>({
+      filePath,
+      encoding: 'hex',
+      position: fileSize - PACKAGE_VER_LENGTH
+    })
+    if(!pkv.vMap[verField]) throw Error(`未知加密版本: ${verField}`)
+    return pkv.vMap[verField]
   }
 
-  unpackExtraData(mixHexData, metaData){
-    const retDataInfo:{dataLength:number, data:any[]} = {
-      dataLength: 0,
-      data: []
+  unpackExtraData(edHexData:string): ((string|number)[])[]{
+    if(!edHexData) return []
+    return JSON.parse(convert.hex2string(edHexData))
+  }
+
+  packExtraData(extraData){
+    let ed = JSON.stringify(extraData)
+    if(ed !== '[]') {
+        ed = convert.string2hex(ed)
+    }else{
+        ed = ''
     }
-    const extraDataLength = parseInt(metaData.slice(-24,-16))
-    if(extraDataLength){
-      retDataInfo.dataLength = extraDataLength
-      try {
-        retDataInfo.data = JSON.parse(convert.hex2string(mixHexData.slice(-extraDataLength)))
-      } catch (error) {
-        console.log('unpackExtraData err:',error)
-        throw Error("附加数据读取出错")
-        
-      }
-    }
-    return retDataInfo
+    console.log('packExtraData',ed,ed.length)
+    return ed
   }
 
   randomKey(){
@@ -237,6 +235,43 @@ class Crypto extends Base {
     const masterKey = this.decryptString(keyPack.pack, rk)
     if(!masterKey) throw Error("密码有误")
     return masterKey
+  }
+
+  printDebugInfo(obj){
+    console.table({
+      ['encrypted Package']: {
+        data: '-',
+        length: obj.encryptedPackage?.length || '-',
+      },
+      ['encrypted Data']: {
+        data: '-',
+        length: obj.encryptedData?.length || '-',
+      },
+      ['plaintext']: {
+        data: '-',
+        length: obj.plaintext?.length || '-',
+      },
+      image: {
+        data: '-',
+        length: obj.image?.length || '-',
+      },
+      ['extraData Hex']: {
+        data: obj.edh,
+        length: obj.edh?.length || '-',
+      },
+      extraData: {
+        data: JSON.stringify(obj.extraData),
+        length: obj.extraData?.length || '-',
+      },
+      salt: {
+        data: obj.salt,
+        length: obj.salt?.length || '-',
+      },
+      key: {
+        data: obj.key,
+        length: obj.key?.length || '-',
+      }
+    })
   }
 }
 

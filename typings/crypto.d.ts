@@ -12,8 +12,9 @@ interface IAppCryptoConfig {
     method: HashType
   },
   image: {
-    hash: HashType,
-  }
+    hash: HashType
+  },
+  usePackageVersion: 'v0' | 'v1' | 'v2'
 }
 
 interface IEncryptImageOptions {

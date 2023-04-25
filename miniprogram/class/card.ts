@@ -2,7 +2,7 @@ import Base from '@/class/base'
 import AppConfig from '@/config'
 import api from '@/api'
 import { DefaultShowLockImage } from '@/const'
-import { getCryptoModule } from '@/module/crypto'
+import { getCryptoModule } from '@/module/crypto/index'
 import { getCacheModule } from '@/module/cache'
 
 class CardManager extends Base{

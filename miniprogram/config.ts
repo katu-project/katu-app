@@ -98,7 +98,8 @@ const AppConfig = {
     },
     image: {
       hash: 'MD5'
-    }
+    },
+    usePackageVersion: 'v0'
   }
 }
 
