@@ -119,14 +119,14 @@ export default class Base {
     }
     
     if(url.startsWith(WX_CLOUD_STORAGE_FILE_HEAD)){
-      const {fileList: [imageInfo]} = await wx.cloud.getTempFileURL({
-        fileList: [url]
-      })
-      if(imageInfo.status !== 0){
-        console.error('get cloud file tempUrl error:', imageInfo.errMsg)
+      try {
+        const { tempFilePath } = await wx.cloud.downloadFile({ fileID: url })
+        await file.moveFile(tempFilePath, savePath)
+      } catch (error:any) {
+        console.error('download Cloud File error:', error.errMsg)
         throw Error('文件下载失败')
       }
-      url = imageInfo.tempFileURL
+      return savePath
     }
 
     console.debug('start download file:', url);
