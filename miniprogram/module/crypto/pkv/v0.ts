@@ -72,7 +72,7 @@ export const v0 = {
     mid: VERSION_MARK,
     dea: dataEncryptionAlgorithm,
     cpt: createPlaintext,
-    cem: createMetaData,
+    cmd: createMetaData,
     eed: extractEncryptedData,
     spt: separatePlaintext
 }

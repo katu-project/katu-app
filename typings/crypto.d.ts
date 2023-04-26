@@ -2,6 +2,17 @@ type KeyPair = {key:string, salt:string}
 
 type HashType = 'MD5' | 'SHA1' | 'SHA256'
 
+type CpkVersion = 'v0' | 'v1' | 'v2'
+
+interface ICryotoPackage {
+  mid: string
+  dea: any
+  cpt: (imagePath: string, extraData: string) => Promise<string>
+  cmd: (salt: string, extraData: string[][]) => Promise<string>
+  eed: (imagePath: string) => Promise<string>
+  spt: (plaintext: string, imagePath: string) => Promise<{image: string, extraData: string}>
+}
+
 interface IAppCryptoConfig {
   masterKeyLength: number,
   calculateKeyId: {
@@ -14,7 +25,7 @@ interface IAppCryptoConfig {
   image: {
     hash: HashType
   },
-  usePackageVersion: 'v0' | 'v1' | 'v2'
+  usePackageVersion: CpkVersion
 }
 
 interface IEncryptImageOptions {

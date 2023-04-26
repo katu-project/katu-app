@@ -1,6 +1,5 @@
 import Base from "@/class/base"
-import pkv from "./pkv/index"
-import { PACKAGE_VER_LENGTH } from "@/const"
+import { getCpk, getCpkFromFile } from "./pkv/index"
 import { bip39, convert, crypto, file } from "@/utils/index"
 
 const ConvertUserKeyError = '密码转化出错'
@@ -56,11 +55,11 @@ class Crypto extends Base {
   }
 
   async encryptImage({keyPair:{key, salt}, imagePath, extraData, savePath}: IEncryptImageOptions){
-    const p = pkv[this.config.usePackageVersion]
+    const cpk = getCpk(this.config.usePackageVersion)
     const edh = this.packExtraData(extraData)
-    const plaintext = await p.cpt(imagePath, edh)
-    const encryptedData = this.encryptFile(plaintext, key, p.dea)
-    const encryptedPackage = encryptedData + await p.cem(salt, extraData)
+    const plaintext = await cpk.cpt(imagePath, edh)
+    const encryptedData = this.encryptFile(plaintext, key, cpk.dea)
+    const encryptedPackage = encryptedData + await cpk.cmd(salt, extraData)
     console.debug('加密信息:')
     this.printDebugInfo({key, salt, extraData, edh, plaintext, encryptedData, encryptedPackage})
     await file.writeFile(savePath, encryptedPackage, 'hex')
@@ -75,13 +74,12 @@ class Crypto extends Base {
       savePath,
       extraData: []
     }
-    const packageVersion = await this.getPackageVersion(imagePath)
-    const p = pkv[packageVersion]
+    const cpk = await getCpkFromFile(imagePath)
 
-    const encryptedData = await p.eed(imagePath)
-    const plaintext = await this.decryptFile(encryptedData, key, p.dea)
+    const encryptedData = await cpk.eed(imagePath)
+    const plaintext = await this.decryptFile(encryptedData, key, cpk.dea)
     if(!plaintext) throw Error("解密错误")
-    const { image, extraData } = await p.spt(plaintext, imagePath)
+    const { image, extraData } = await cpk.spt(plaintext, imagePath)
     // 检测并解密附加数据
     try {
       decryptedImage.extraData = this.unpackExtraData(extraData)
@@ -97,18 +95,7 @@ class Crypto extends Base {
     return decryptedImage
   }
 
-  async getPackageVersion(filePath:string){
-    const fileSize = await file.getFileSize(filePath)
-    const verField = await file.readFileByPosition<string>({
-      filePath,
-      encoding: 'hex',
-      position: fileSize - PACKAGE_VER_LENGTH
-    })
-    if(!pkv.vMap[verField]) throw Error(`未知加密版本: ${verField}`)
-    return pkv.vMap[verField]
-  }
-
-  unpackExtraData(edHexData:string): ((string|number)[])[]{
+  unpackExtraData(edHexData:string): string[][]{
     if(!edHexData) return []
     return JSON.parse(convert.hex2string(edHexData))
   }
