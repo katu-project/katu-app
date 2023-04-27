@@ -68,7 +68,7 @@ async function _getMetaData(filePath:string){
     }
 }
 
-export const v0 = {
+export default {
     mid: VERSION_MARK,
     dea: dataEncryptionAlgorithm,
     cpt: createPlaintext,

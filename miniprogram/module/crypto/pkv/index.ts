@@ -1,17 +1,17 @@
 import { PACKAGE_VER_LENGTH } from '@/const'
 import { file } from '@/utils/index'
-import { v0 } from './v0'
+import v0 from './v0'
 
-const markMap: {[v:string]:CpkVersion} = {
+const CPKMarkMap: {[v:string]:CpkVersion} = {
     [v0.mid]: 'v0'
 }
 
-const vMap = {
+const CPKMap: {[k in CpkVersion]:ICryotoPackage} = {
     v0
 }
 
 export function getCpk(ver:CpkVersion){
-    return vMap[ver] as ICryotoPackage
+    return CPKMap[ver]
 }
 
 export async function getCpkFromFile(filePath:string){
@@ -21,6 +21,6 @@ export async function getCpkFromFile(filePath:string){
       encoding: 'hex',
       position: fileSize - PACKAGE_VER_LENGTH
     })
-    if(!markMap[versionMark]) throw Error(`未知加密版本: ${versionMark}`)
-    return getCpk(markMap[versionMark])
+    if(!CPKMarkMap[versionMark]) throw Error(`未知加密版本: ${versionMark}`)
+    return getCpk(CPKMarkMap[versionMark])
 }

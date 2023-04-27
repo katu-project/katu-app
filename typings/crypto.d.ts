@@ -2,7 +2,7 @@ type KeyPair = {key:string, salt:string}
 
 type HashType = 'MD5' | 'SHA1' | 'SHA256'
 
-type CpkVersion = 'v0' | 'v1' | 'v2'
+type CpkVersion = 'v0'
 
 interface ICryotoPackage {
   mid: string
