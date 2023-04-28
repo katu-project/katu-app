@@ -4,6 +4,49 @@ import { bip39, convert, crypto, file } from "@/utils/index"
 
 const ConvertUserKeyError = '密码转化出错'
 const CalculateKeyIdError = '获取密码ID出错'
+const KatuCryptoFormatter = {
+  stringify: function(cipherParams) {
+    const KatuMark = [0x9527,0x4396]
+    const SaltMark = [0x53616c74, 0x65645f5f]
+    const salt = cipherParams.salt
+    const ciphertext = cipherParams.ciphertext
+    
+    const wordArray = crypto.createWordArray(KatuMark)
+                      .concat(crypto.createWordArray(SaltMark))
+                      .concat(salt)
+                      .concat(ciphertext)
+    return wordArray.toString(crypto.HexCoding)
+  },
+  parse: function(encryptedHexString) {
+      const KatuMark = [0x9527,0x4396]
+      const SaltMark = [0x53616c74, 0x65645f5f]
+
+      const ciphertext = crypto.HexCoding.parse(encryptedHexString)
+      const ciphertextWords = ciphertext.words
+      if(ciphertextWords[0] !== KatuMark[0] || ciphertextWords[1] !== KatuMark[1]){
+          throw Error("ciphertext format error")
+      }
+      
+      // 移除卡兔标志
+      ciphertextWords.splice(0,2)
+      ciphertext.sigBytes -= 8
+
+      let salt
+      if (ciphertextWords[0] == SaltMark[0] && ciphertextWords[1] == SaltMark[1]) {
+          // Extract salt
+          salt = crypto.createWordArray(ciphertextWords.slice(2, 4));
+
+          // Remove salt from ciphertext
+          ciphertextWords.splice(0, 4);
+          ciphertext.sigBytes -= 16;
+      }
+
+      return crypto.createCipherParams({
+          ciphertext,
+          salt
+      })
+  }
+}
 
 class Crypto extends Base {
   _config = {} as IAppCryptoConfig
@@ -32,14 +75,18 @@ class Crypto extends Base {
     if(options){
       console.debug('encryptFile use config: ', options)
     }
-    return crypto.encryptFile(fileData, key)
+    return crypto.AES.encrypt(fileData, key, {
+      format: KatuCryptoFormatter
+    }).toString()
   }
 
   decryptFile(fileData:string, key:string, options?:any){
     if(options){
       console.debug('decryptFile use config: ', options)
     }
-    return crypto.decryptFile(fileData, key)
+    return crypto.AES.decrypt(fileData, key, {
+      format: KatuCryptoFormatter
+    }).toString()
   }
 
   async getImageHash(filePath){
