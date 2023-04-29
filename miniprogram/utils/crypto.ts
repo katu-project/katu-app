@@ -41,12 +41,12 @@ export function SHA1(string){
   return CryptoJS.SHA1(string).toString()
 }
 
-export function sha256(string){
+export function SHA256(string){
   return CryptoJS.SHA256(string).toString()
 }
 
-export function sha512(string){
-  return CryptoJS.SHA256(string).toString()
+export function SHA512(string){
+  return CryptoJS.SHA512(string).toString()
 }
 
 /**
@@ -84,8 +84,8 @@ export default {
   randomBytesHexString,
   MD5,
   SHA1,
-  sha256,
-  sha512,
+  SHA256,
+  SHA512,
   AES,
   pbkdf2,
   encryptString,
