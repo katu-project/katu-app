@@ -72,21 +72,27 @@ class Crypto extends Base {
   }
 
   encryptFile(fileData:string, key:string, options?:any){
+    const cfg = {
+      mode: crypto.AES_MODE.CBC,
+      padding: crypto.AES_PAD.Pkcs7,
+      format: KatuCryptoFormatter
+    } 
     if(options){
       console.debug('encryptFile use config: ', options)
     }
-    return crypto.AES.encrypt(fileData, key, {
-      format: KatuCryptoFormatter
-    }).toString()
+    return crypto.AES.encrypt(fileData, key, cfg).toString()
   }
 
   decryptFile(fileData:string, key:string, options?:any){
+    const cfg = {
+      mode: crypto.AES_MODE.CBC,
+      padding: crypto.AES_PAD.Pkcs7,
+      format: KatuCryptoFormatter
+    } 
     if(options){
       console.debug('decryptFile use config: ', options)
     }
-    return crypto.AES.decrypt(fileData, key, {
-      format: KatuCryptoFormatter
-    }).toString()
+    return crypto.AES.decrypt(fileData, key, cfg).toString()
   }
 
   async getImageHash(filePath){

@@ -3,6 +3,8 @@ import { BufferToHex } from './convert'
 
 export const HexCoding = CryptoJS.enc.Hex
 export const AES = CryptoJS.AES
+export const AES_MODE = CryptoJS.mode
+export const AES_PAD = CryptoJS.pad
 
 export function createWordArray(words){
   return CryptoJS.lib.WordArray.create(words)
