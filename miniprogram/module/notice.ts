@@ -2,11 +2,21 @@ import Base from "@/class/base"
 import { LocalCacheKeyMap, ONCE_NOTICE_KEYS } from "@/const"
 
 class Notice extends Base {
+  lastNoticeFetchTime: number = 0
   constructor(){
     super()
   }
 
   async init(){
+  }
+
+  resetNoticeFetchTime(){
+    this.lastNoticeFetchTime = new Date().getTime()
+  }
+
+  checkNeedFetchNotice(){
+    const nowTime = new Date().getTime()
+    return nowTime - this.lastNoticeFetchTime > 60000
   }
 
   async _getOnceNoticeLog(){

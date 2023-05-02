@@ -21,8 +21,6 @@ class AppManager extends Base {
   }
   _masterKey: string = ''
 
-  lastNoticeFetchTime: number = 0
-
   constructor(){
     super()
   }
@@ -334,13 +332,13 @@ class AppManager extends Base {
 
   async fetchNotice(forceFetch?:boolean){
     if(!forceFetch){
-      const nowTime = new Date().getTime()
-      if(nowTime - this.lastNoticeFetchTime < 60000){
+      const needFetchNotice = this.notice.checkNeedFetchNotice()
+      if(!needFetchNotice){
         return
       }
     }
     const notice = await api.getNotice()
-    this.lastNoticeFetchTime = new Date().getTime()
+    this.notice.resetNoticeFetchTime()
     return notice
   }
 
