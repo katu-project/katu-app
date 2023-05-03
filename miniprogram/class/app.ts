@@ -331,15 +331,7 @@ class AppManager extends Base {
   }
 
   async fetchNotice(forceFetch?:boolean){
-    if(!forceFetch){
-      const needFetchNotice = this.notice.checkNeedFetchNotice()
-      if(!needFetchNotice){
-        return
-      }
-    }
-    const notice = await api.getNotice()
-    this.notice.resetNoticeFetchTime()
-    return notice
+    return this.notice.fetchNotice(forceFetch)
   }
 
   //数据

@@ -1,4 +1,5 @@
 import Base from "@/class/base"
+import api from "@/api"
 import { LocalCacheKeyMap, ONCE_NOTICE_KEYS } from "@/const"
 
 class Notice extends Base {
@@ -17,6 +18,18 @@ class Notice extends Base {
   checkNeedFetchNotice(){
     const nowTime = new Date().getTime()
     return nowTime - this.lastNoticeFetchTime > 60000
+  }
+
+  async fetchNotice(forceFetch?:boolean){
+    if(!forceFetch){
+      const needFetchNotice = this.checkNeedFetchNotice()
+      if(!needFetchNotice){
+        return
+      }
+    }
+    const notice = await api.getNotice()
+    this.resetNoticeFetchTime()
+    return notice
   }
 
   async _getOnceNoticeLog(){
