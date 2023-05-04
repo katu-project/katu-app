@@ -1,3 +1,5 @@
+import { APP_ENTRY_PATH } from '@/const'
+
 const AppConfig = {
   contacts:{
     email: 'info@katucloud.com'
@@ -100,6 +102,11 @@ const AppConfig = {
       hash: 'MD5'
     },
     usePackageVersion: 'v0'
+  },
+  shareInfo: {
+    title: '卡兔-安全好用的卡片管理助手',
+    path: `/pages/${APP_ENTRY_PATH}`,
+    imageUrl: '/static/share.png'
   }
 }
 

@@ -275,7 +275,7 @@ Page({
   },
 
   onShareAppMessage(){
-    return app.ShareInfo
+    return app.shareInfo
   },
   
   hideModal(name){
