@@ -47,7 +47,7 @@ Page({
       
       try {
         this.updateMasterKey()
-      } catch (error) {
+      } catch (error:any) {
         showError(error.message)
       }
     }else{
@@ -57,7 +57,7 @@ Page({
       }
       try {
         this.setMasterKey()
-      } catch (error) {
+      } catch (error:any) {
         showError(error.message)
       }
     }
