@@ -52,7 +52,7 @@ export default class User extends Base {
   }
 
   get ccv(){
-    return this.user.masterKeyPack?.ccv || this.app.Config.crypto.defaultCommonCryptoVersion as CommonCryptoVersion
+    return this.user.masterKeyPack?.ccv || this.app.Config.crypto.defaultCommonCryptoVersion
   }
 
   get isSetMasterKey():boolean{

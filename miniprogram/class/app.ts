@@ -103,7 +103,7 @@ class AppManager extends Base {
       })
     }
     this.notice.init()
-    this.crypto.init(this.Config.crypto as IAppCryptoConfig)
+    this.crypto.init(this.Config.crypto)
   }
   // user section
   async setUserMasterKey(key: string){

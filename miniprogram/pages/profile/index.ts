@@ -10,7 +10,7 @@ const user = getUserManager()
 Page({
   data: {
     user: {} as Partial<IUser>,
-    activeInfo: {} as Partial<IAppConfig['active']>,
+    activeInfo: {} as Partial<IUserConfig['active']>,
     menus: PAGES_MENU.profile,
     DefaultUserAvatar
   },
@@ -97,7 +97,7 @@ Page({
   
   async loadActiveData(){
     if(this.data.activeInfo.id) return
-    const activeInfo = await loadData(api.getAppConfig, 'active')
+    const activeInfo = await loadData(api.getUserConfig, 'active')
     const doc = await loadData(api.getDoc, {_id: activeInfo.id})
     this.setData({
       activeInfo,

@@ -12,6 +12,26 @@ interface IAppOption {
   userInfoReadyCallback?: WechatMiniprogram.GetUserInfoSuccessCallback,
 }
 
+interface IAppConfig {
+  contacts: {
+    email: string
+  }
+  uploadCardNamePrefix: string
+  uploadShareCardNamePrefix: string
+  allowUploadImageType: string[]
+  cardImageMaxNum: number
+  devHomeDataCacheTime: number
+  homeDataCacheTime: number
+  qaDocType: any[]
+  tags: Omit<ICardTag,'color'>[]
+  extraFieldsKeys: ICardExtraField[]
+  imageMogr2: string
+  doc: IAnyObject
+  smsGapTime: number
+  crypto: IAppCryptoConfig
+  shareInfo: IAnyObject
+}
+
 interface INotice {
   _id: string
   type: string
@@ -63,7 +83,7 @@ interface IDoc {
   content: string
 }
 
-interface IAppConfig {
+interface IUserConfig {
   active: {
     id: string
     protocols: any[]
@@ -72,7 +92,7 @@ interface IAppConfig {
 }
 
 type filterAppConfigItem<T> = 
-    T extends "active" ? IAppConfig['active'] :
+    T extends "active" ? IUserConfig['active'] :
     never;
 
 interface IChangeLog extends IAnyObject{

@@ -2,7 +2,7 @@ import { request } from '@/utils/index'
 
 export default {
   // sys
-  getAppConfig: <T extends keyof IAppConfig>(name: T) => request<filterAppConfigItem<T>>('app/config', {name}),
+  getUserConfig: <T extends keyof IUserConfig>(name: T) => request<filterAppConfigItem<T>>('app/config', {name}),
   
   getDefaultTag: () => request<ICardTag[]>('app/tags'),
 
