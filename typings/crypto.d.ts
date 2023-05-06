@@ -14,17 +14,8 @@ interface ICryotoPackage {
 }
 
 interface IAppCryptoConfig {
-  masterKeyLength: number,
-  calculateKeyId: {
-    method: HashType,
-    length: number
-  },
-  userKeyConvert: {
-    method: HashType
-  },
-  image: {
-    hash: HashType
-  },
+  defaultCommonCryptoVersion: CommonCryptoVersion,
+  useCommonCryptoVersion: CommonCryptoVersion,
   usePackageVersion: CpkVersion
 }
 

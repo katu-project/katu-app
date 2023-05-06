@@ -30,8 +30,7 @@ interface IUser {
       lockOnExit: boolean
       rememberPassword: boolean
       setRecoveryKey: boolean
-    },
-    crypto: IAppCryptoConfig
+    }
   }
 }
 

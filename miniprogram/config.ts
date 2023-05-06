@@ -89,18 +89,9 @@ const AppConfig = {
     dataCheckNotice: '534fc1e163b68f2700197d67754d9673'
   },
   smsGapTime: 60,
-  cryptoConfig: {
-    masterKeyLength: 16,
-    calculateKeyId: {
-      method: 'SHA1',
-      length: 20
-    },
-    userKeyConvert: {
-      method: 'SHA1'
-    },
-    image: {
-      hash: 'MD5'
-    },
+  crypto: {
+    defaultCommonCryptoVersion: 'v0',
+    useCommonCryptoVersion: 'v0',
     usePackageVersion: 'v0'
   },
   shareInfo: {

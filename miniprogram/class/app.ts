@@ -2,7 +2,7 @@ import '@/utils/override'
 import Base from './base'
 import api from '@/api'
 import AppConfig from '@/config'
-import { navigateTo, showChoose, chooseLocalImage, switchTab, mergeDeep, sleep, file } from '@/utils/index'
+import { navigateTo, showChoose, chooseLocalImage, switchTab, sleep, file } from '@/utils/index'
 import { APP_ENTRY_PATH, APP_ROOT_DIR } from '@/const'
 import { getCardManager } from './card'
 import { getUserManager } from './user'
@@ -103,12 +103,7 @@ class AppManager extends Base {
       })
     }
     this.notice.init()
-    if(!this.user.config?.crypto) { 
-      setTimeout(this.loadModules.bind(this), 1000)
-      return
-    }
-    const cryptoOptions = mergeDeep(this.Config.cryptoConfig, this.user.config.crypto)
-    getCryptoModule().init(cryptoOptions)
+    this.crypto.init(this.Config.crypto as IAppCryptoConfig)
   }
   // user section
   async setUserMasterKey(key: string){
@@ -118,12 +113,12 @@ class AppManager extends Base {
   }
 
   async updateUserMasterKey({key, newKey}){
-    const hexCode = this.crypto.convertToHexString(key)
-    const newHexCode = this.crypto.convertToHexString(newKey)
+    const hexCode = this.crypto.convertToHexString(key, this.user.ccv)
+    const newHexCode = this.crypto.convertToHexString(newKey, this.user.ccv)
     if(!this.user.masterKeyPack?.keyPack) throw Error('未设置主密码')
     // 获取主密码
     const masterKey = await this.crypto.fetchKeyFromKeyPack(this.user.masterKeyPack.keyPack, hexCode)
-    // 重新生成新的主密码包
+    // 重新生成新的主密码包, 更新时使用最新的ccv
     const masterKeyPack = await this.crypto.createCommonKeyPack(newHexCode, masterKey)
     // 更新主密码包
     return api.setMasterKeyInfo(masterKeyPack)
@@ -143,7 +138,7 @@ class AppManager extends Base {
   // 用户主密码导出原始主密码
   async loadMasterKeyWithKey(key:string){
     this.checkMasterKeyFormat(key)
-    const hexCode = this.crypto.convertToHexString(key)
+    const hexCode = this.crypto.convertToHexString(key, this.user.ccv)
     if(!this.user.masterKeyPack?.keyPack) throw Error('未设置主密码')
     const masterKey = await this.crypto.fetchKeyFromKeyPack(this.user.masterKeyPack.keyPack, hexCode)
     this.setMasterKey(masterKey)
@@ -188,7 +183,7 @@ class AppManager extends Base {
     }
 
     try {
-      this.crypto.verifyKeyId(this.masterKey, this.user.masterKeyPack?.keyId!)
+      this.crypto.verifyKeyId(this.masterKey, this.user.masterKeyPack!, this.user.ccv)
     } catch (err) {
       error.code = '22'
       error.message = '主密码不匹配'
@@ -347,7 +342,7 @@ class AppManager extends Base {
 
   //主密码备份/重置
   async generateRecoveryKey(){
-    return this.crypto.createRecoveryKey(this.masterKey)
+    return this.crypto.createRecoveryKey(this.masterKey, this.user.ccv)
   }
 
   setRecoveryKey(keyPack){
@@ -367,7 +362,7 @@ class AppManager extends Base {
     this.checkMasterKeyFormat(newKey)
     if(!this.user.recoveryKeyPack) throw Error("没有设置备份主密码")
     const masterKey = this.crypto.extractKeyFromRecoveryKeyPack(this.user.recoveryKeyPack, rk)
-    const newHexCode = this.crypto.convertToHexString(newKey)
+    const newHexCode = this.crypto.convertToHexString(newKey, this.user.ccv)
     // 重新生成新的主密码包
     const masterKeyPack = await this.crypto.createCommonKeyPack(newHexCode, masterKey)
     // 更新主密码包

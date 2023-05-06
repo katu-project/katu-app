@@ -47,15 +47,29 @@ const KatuCryptoFormatter = {
       })
   }
 }
+const CommonCryptoVersionMap = {
+  'v0': {
+    commonKey: {
+      method: 'random',
+      length: 16
+    },
+    calculateKeyId: {
+      method: 'SHA1',
+      length: 40
+    },
+    keyConvert: {
+      method: 'SHA1',
+      length: 40
+    }
+  }
+}
 
 class Crypto extends Base {
   _config = {} as IAppCryptoConfig
-  constructor(){
-    super()
-  }
 
   async init(config:IAppCryptoConfig){
-    console.debug('使用加密配置:',config)
+    console.debug('使用加密配置:')
+    console.table(config)
     this._config = config
   }
 
@@ -157,10 +171,6 @@ class Crypto extends Base {
     return ed
   }
 
-  randomKey(){
-    return this.randomHexString(this.config.masterKeyLength)
-  }
-
   randomHexString(byteLength:number){
     return crypto.random(byteLength)
   }
@@ -173,44 +183,47 @@ class Crypto extends Base {
     return crypto.pbkdf2(key,options)
   }
 
-  convertToHexString(key:string){
-    const {method} = this.config.userKeyConvert
+  convertToHexString(key:string, ccv?: CommonCryptoVersion){
+    const {method, length} = CommonCryptoVersionMap[ccv || this.config.useCommonCryptoVersion].keyConvert
     try {
       if(!crypto[method] || typeof crypto[method] !== 'function') throw Error(ConvertUserKeyError)
       const hexCode:string = crypto[method].call(null,key)
       if(!hexCode) throw Error(ConvertUserKeyError)
-      return hexCode
+      return length ? hexCode.slice(0,length) : hexCode
     } catch (error) {
       console.error(error)
       throw Error(ConvertUserKeyError)
     }
   }
 
-  calculateKeyId(key:string){
-    const {method} = this.config.calculateKeyId
+  calculateKeyId(key:string, ccv){
+    const {method, length} = CommonCryptoVersionMap[ccv].calculateKeyId
     try {
       if(!crypto[method] || typeof crypto[method] !== 'function') throw Error(CalculateKeyIdError)
       const hexCode:string = crypto[method].call(null,key)
       if(!hexCode) throw Error(CalculateKeyIdError)
-      return hexCode
+      return length ? hexCode.slice(0,length) : hexCode
     } catch (error) {
       console.error(error)
       throw Error(CalculateKeyIdError)
     }
   }
 
-  verifyKeyId(key:string, keyId:string){
-    if(this.calculateKeyId(key) !== keyId) throw Error("密码ID验证失败")
+  verifyKeyId(key:string, keyPack:IMasterKeyPack, ccv){
+    if(this.calculateKeyId(key, ccv) !== keyPack.keyId) throw Error("密码ID未通过验证")
   }
 
   async createCommonKeyPack(dkey: string, key?: string){
+    const ccv = this.config.useCommonCryptoVersion
     if(!key){
-      key = await this.randomKey()
+      const commonKeyConfig = CommonCryptoVersionMap[ccv].commonKey
+      key = await crypto[commonKeyConfig.method].call(null, commonKeyConfig.length) as string
     }
-    const keyPack = {
+    const keyPack:IMasterKeyPack = {
       keyPack: this.encryptString(key, dkey),
-      hexKeyId: this.calculateKeyId(dkey),
-      keyId: this.calculateKeyId(key)
+      hexKeyId: this.calculateKeyId(dkey, ccv),
+      keyId: this.calculateKeyId(key, ccv),
+      ccv
     }
     return keyPack
   }
@@ -235,11 +248,11 @@ class Crypto extends Base {
     }
   }
 
-  async createRecoveryKeyPack(rkContent, dkey){
+  async createRecoveryKeyPack(rkContent, dkey, ccv){
     const keyPack: IRecoveryKeyPack = {
       qrId: rkContent.id,
       createTime: rkContent.time,
-      keyId: this.calculateKeyId(rkContent.rk),
+      keyId: this.calculateKeyId(rkContent.rk, ccv),
       pack: this.encryptString(dkey, rkContent.rk)
     }
     return keyPack
@@ -254,9 +267,9 @@ class Crypto extends Base {
     return qrPack
   }
 
-  async createRecoveryKey(masterKey:string){
+  async createRecoveryKey(masterKey:string, ccv){
     const rkContent = await this.createRecoveryKeyContent()
-    const keyPack = await this.createRecoveryKeyPack(rkContent, masterKey)
+    const keyPack = await this.createRecoveryKeyPack(rkContent, masterKey, ccv)
     const qrPack = await this.createRecoveryKeyQrCodePack(rkContent)
     return {
       keyPack,

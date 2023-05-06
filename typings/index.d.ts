@@ -36,10 +36,12 @@ interface CreateShareOptions {
   expiredTime?: number
 }
 
+type CommonCryptoVersion = 'v0' | 'v1'
 interface IMasterKeyPack {
   keyPack: string
   keyId: string
   hexKeyId: string
+  ccv: CommonCryptoVersion
 }
 
 interface IRecoveryKeyPack {
