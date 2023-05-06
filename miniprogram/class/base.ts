@@ -1,5 +1,5 @@
 import { APP_DOWN_DIR, APP_IMAGE_DIR, APP_ROOT_DIR, APP_TEMP_DIR, WX_CLOUD_STORAGE_FILE_HEAD } from "@/const"
-import { getCache, selfish, setCache, delCache, file, net } from "@/utils/index"
+import { getCache, selfish, setCache, delCache, file, net, crypto } from "@/utils/index"
 import mitt from 'mitt'
 const emitter = mitt()
 
@@ -81,6 +81,13 @@ export default class Base {
 
   async getImageType(path:string){
     return file.getImageType(path)
+  }
+
+  async getImageHash(filePath:string, hash?:string){
+    const fileHexData = await file.readFile(filePath, 'hex')
+    const hashValue = crypto[hash || 'MD5'].call(null,fileHexData)
+    console.debug('getHash: ',filePath, hashValue)
+    return hashValue as string
   }
 
   async getImageFilePath(image: Pick<ICardImage,'url'>){

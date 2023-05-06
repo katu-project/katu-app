@@ -95,13 +95,6 @@ class Crypto extends Base {
     return crypto.AES.decrypt(fileData, key, cfg).toString()
   }
 
-  async getImageHash(filePath){
-    const fileHexData = await file.readFile(filePath, 'hex')
-    const hashValue = crypto[this.config.image.hash].call(null,fileHexData)
-    console.debug('getHash: ',filePath, hashValue)
-    return hashValue
-  }
-
   async getFileHash(filePath, hashType: HashType){
     const fileHexData = await file.readFile(filePath, 'hex')
     return crypto[hashType].call(null,fileHexData)
