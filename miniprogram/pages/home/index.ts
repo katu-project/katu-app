@@ -26,13 +26,9 @@ Page({
     app.on('cardDelete',this.onEventCardDelete)
     app.on('cardDecrypt',this.onEventCardChange)
     app.on('cardHide',this.onEventCardHide)
-    // 加载用户信息需要在一开始，加载图片判断自动显示需要检查用户配置
     await loadData(user.init,{},'加载用户信息')
     await this.loadData()
     this.loadNotice()
-    if(!user.isActive){
-      app.showActiveNotice('现在激活账户可领取免费兔币')
-    }
   },
 
   onUnload(){
@@ -201,7 +197,14 @@ Page({
 
   async loadNotice(forceFetch?:boolean){
     // 未激活和有未读消息两种情况跳过
-    if(!user.isActive || this.data.notice._id) return
+    if(!user.uid) return
+
+    if(!user.isActive){
+      app.showActiveNotice('现在激活账户可领取免费兔币')
+      return
+    }
+
+    if(this.data.notice._id) return
 
     return app.fetchNotice(forceFetch).then(notice=>{
       if(!notice) return

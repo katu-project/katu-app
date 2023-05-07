@@ -39,6 +39,10 @@ export default class User extends Base {
     return this.user.config
   }
 
+  get uid(){
+    return this.user._id
+  }
+
   get quota(){
     return this.user.quota?.remain || 0
   }
