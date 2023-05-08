@@ -13,20 +13,6 @@ export default class User extends Base {
     super()
   }
 
-  async init(){
-    await this.loadInfo()
-    if(this.isSetMasterKey && this.config?.security.rememberPassword){
-      console.log("启用记住密码: 加载主密码");
-      this.app.loadMasterKey()
-    }
-    wx.nextTick(()=>{
-      setTimeout(() => {
-        this.loadCustomTags()
-      }, 3000);
-    })
-    this.loadOnAppHideConfig()
-  }
-
   get app(){
     return getAppManager()
   }
@@ -99,6 +85,16 @@ export default class User extends Base {
     return this._user
   }
 
+  async init(){
+    await this.loadInfo()
+    wx.nextTick(()=>{
+      setTimeout(() => {
+        this.loadCustomTags()
+      }, 3000);
+    })
+    this.loadOnAppHideConfig()
+  }
+  
   async loadInfo(){
     this._user = await api.getUser()
     await this.cacheAvatar()

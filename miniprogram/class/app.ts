@@ -69,6 +69,14 @@ class AppManager extends Base {
   }
   // modules end
 
+  async loadUser(){
+    await this.user.init()
+    if(this.user.isSetMasterKey && this.user.config?.security.rememberPassword){
+      console.log("启用记住密码: 加载主密码");
+      this.loadMasterKey()
+    }
+  }
+
   loadBaseInfo(){
     wx.getSystemInfoAsync({
       success: info => {

@@ -26,7 +26,8 @@ Page({
     app.on('cardDelete',this.onEventCardDelete)
     app.on('cardDecrypt',this.onEventCardChange)
     app.on('cardHide',this.onEventCardHide)
-    await loadData(user.init,{},'加载用户信息')
+    await loadData(app.loadUser,{},'加载用户信息')
+  
     await this.loadData()
     this.loadNotice()
   },
