@@ -45,7 +45,7 @@ Page({
         nickName: user.nickName,
         avatarUrl: user.avatar,
         isActive: user.isActive,
-        identifyCode: user.id
+        identifyCode: user.uid
       }
     })
   },

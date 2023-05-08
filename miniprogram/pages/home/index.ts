@@ -196,8 +196,8 @@ Page({
   },
 
   async loadNotice(forceFetch?:boolean){
-    // 未激活和有未读消息两种情况跳过
-    if(!user.uid) return
+    // 未获取到用户信息，未激活，有未读消息 三种情况跳过
+    if(!user.id) return
 
     if(!user.isActive){
       app.showActiveNotice('现在激活账户可领取免费兔币')

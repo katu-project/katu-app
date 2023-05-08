@@ -40,6 +40,10 @@ export default class User extends Base {
   }
 
   get uid(){
+    return this.user.identifyCode
+  }
+
+  get id(){
     return this.user._id
   }
 
@@ -52,7 +56,7 @@ export default class User extends Base {
   }
 
   get isActive():boolean{
-    return this.user.isActive!
+    return !!this.user.isActive
   }
 
   get ccv(){
@@ -81,10 +85,6 @@ export default class User extends Base {
 
   get openid(){
     return this.user.openid
-  }
-
-  get id(){
-    return this.user.identifyCode
   }
 
   get tel(){

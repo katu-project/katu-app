@@ -14,8 +14,8 @@ Page({
   },
   loadData(){
     const setData = {}
-    if(user.id){
-      setData['userId'] = user.id
+    if(user.uid){
+      setData['userId'] = user.uid
     }
     setData['userTel'] = user.tel ? user.tel.replace(/^(\d{3}).*(\d{4})$/,'$1****$2') : ''
     this.setData(setData)
