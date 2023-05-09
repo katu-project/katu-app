@@ -7,7 +7,9 @@ const metaInfo = {
     flag: 4,
     edl: 4
 }
-const dataEncryptionAlgorithm = null
+const dataEncryptionAlgorithm = {
+    cryptoMethod: 'AES_256_CBC'
+}
 
 async function createPlaintext(imagePath:string, extraData) {
     const image = await file.readFile<string>(imagePath, 'hex')

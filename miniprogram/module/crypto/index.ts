@@ -85,28 +85,20 @@ class Crypto extends Base {
     return crypto.decryptString(ciphertext,key)
   }
 
-  encryptFile(fileData:string, key:string, options?:any){
-    const cfg = {
-      mode: crypto.AES_MODE.CBC,
-      padding: crypto.AES_PAD.Pkcs7,
+  encryptFile(fileData:string, key:string, options:any){
+    console.debug('encryptFile use config: ', options)
+    const cryptoMethod = options.cryptoMethod
+    return crypto[cryptoMethod].encrypt(fileData, key, {
       format: KatuCryptoFormatter
-    } 
-    if(options){
-      console.debug('encryptFile use config: ', options)
-    }
-    return crypto.AES.encrypt(fileData, key, cfg).toString()
+    })
   }
 
-  decryptFile(fileData:string, key:string, options?:any){
-    const cfg = {
-      mode: crypto.AES_MODE.CBC,
-      padding: crypto.AES_PAD.Pkcs7,
+  decryptFile(fileData:string, key:string, options:any){
+    console.debug('decryptFile use config: ', options)
+    const cryptoMethod = options.cryptoMethod
+    return crypto[cryptoMethod].decrypt(fileData, key, {
       format: KatuCryptoFormatter
-    } 
-    if(options){
-      console.debug('decryptFile use config: ', options)
-    }
-    return crypto.AES.decrypt(fileData, key, cfg).toString()
+    })
   }
 
   async getFileHash(filePath, hashType: HashType){

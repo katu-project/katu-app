@@ -35,6 +35,25 @@ export async function randomBytesHexString(len: number){
   return random(len)
 }
 
+export const AES_256_CBC = {
+  encrypt: function(plaintext:string, key:string, options){
+    const cfg = {
+      mode: AES_MODE.CBC,
+      padding: AES_PAD.Pkcs7,
+      format: options.format
+    } 
+    return AES.encrypt(plaintext, key, cfg).toString()
+  },
+  decrypt: function(encryptedData:string, key:string, options){
+    const cfg = {
+      mode: AES_MODE.CBC,
+      padding: AES_PAD.Pkcs7,
+      format: options.format
+    } 
+    return AES.decrypt(encryptedData, key, cfg).toString()
+  }
+}
+
 export function MD5(string){
   return CryptoJS.MD5(string).toString()
 }
