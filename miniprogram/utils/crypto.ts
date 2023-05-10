@@ -44,13 +44,13 @@ export const AES_256_CBC = {
     } 
     return AES.encrypt(plaintext, key, cfg).toString()
   },
-  decrypt: function(encryptedData:string, key:string, options){
+  decrypt: function(ciphertext:string, key:string, options){
     const cfg = {
       mode: AES_MODE.CBC,
       padding: AES_PAD.Pkcs7,
       format: options.format
     } 
-    return AES.decrypt(encryptedData, key, cfg).toString()
+    return AES.decrypt(ciphertext, key, cfg).toString()
   }
 }
 

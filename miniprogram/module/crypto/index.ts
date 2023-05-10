@@ -85,18 +85,18 @@ class Crypto extends Base {
     return crypto.decryptString(ciphertext,key)
   }
 
-  encryptFile(fileData:string, key:string, options:any){
+  encryptText(plaintext:string, key:string, options:any){
     console.debug('encryptFile use config: ', options)
     const cryptoMethod = options.cryptoMethod
-    return crypto[cryptoMethod].encrypt(fileData, key, {
+    return crypto[cryptoMethod].encrypt(plaintext, key, {
       format: KatuCryptoFormatter
     })
   }
 
-  decryptFile(fileData:string, key:string, options:any){
+  decryptText(ciphertext:string, key:string, options:any){
     console.debug('decryptFile use config: ', options)
     const cryptoMethod = options.cryptoMethod
-    return crypto[cryptoMethod].decrypt(fileData, key, {
+    return crypto[cryptoMethod].decrypt(ciphertext, key, {
       format: KatuCryptoFormatter
     })
   }
@@ -110,7 +110,7 @@ class Crypto extends Base {
     const cpk = getCpk(this.config.usePackageVersion)
     const edh = this.packExtraData(extraData)
     const plaintext = await cpk.cpt(imagePath, edh)
-    const encryptedData = this.encryptFile(plaintext, key, cpk.dea)
+    const encryptedData = this.encryptText(plaintext, key, cpk.dea)
     const encryptedPackage = encryptedData + await cpk.cmd(salt, extraData)
     console.debug('加密信息:')
     this.printDebugInfo({key, salt, extraData, edh, plaintext, encryptedData, encryptedPackage})
@@ -129,7 +129,7 @@ class Crypto extends Base {
     const cpk = await getCpkFromFile(imagePath)
 
     const encryptedData = await cpk.eed(imagePath)
-    const plaintext = await this.decryptFile(encryptedData, key, cpk.dea)
+    const plaintext = await this.decryptText(encryptedData, key, cpk.dea)
     if(!plaintext) throw Error("解密错误")
     const { image, extraData } = await cpk.spt(plaintext, imagePath)
     // 检测并解密附加数据
