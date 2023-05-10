@@ -4,7 +4,8 @@ type HashType = 'MD5' | 'SHA1' | 'SHA256'
 
 type CpkVersion = 'v0'
 
-interface ICryotoPackage {
+interface ICryptoPackage {
+  ver: CpkVersion
   mid: string
   dea: any
   cpt: (imagePath: string, extraData: string) => Promise<string>

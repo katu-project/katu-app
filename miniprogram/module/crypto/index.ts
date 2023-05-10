@@ -112,7 +112,7 @@ class Crypto extends Base {
     const plaintext = await cpk.cpt(imagePath, edh)
     const encryptedData = this.encryptText(plaintext, key, cpk.dea)
     const encryptedPackage = encryptedData + await cpk.cmd(salt, extraData)
-    console.debug('加密信息:')
+    console.debug(`加密版本: ${cpk.ver}`)
     this.printDebugInfo({key, salt, extraData, edh, plaintext, encryptedData, encryptedPackage})
     await file.writeFile(savePath, encryptedPackage, 'hex')
     return {
@@ -140,7 +140,7 @@ class Crypto extends Base {
       throw Error("附加数据读取出错")
     }
 
-    console.debug('解密信息:')
+    console.debug(`解密版本: ${cpk.ver}`)
     this.printDebugInfo({key, image, edh:extraData, extraData:decryptedImage.extraData, plaintext, encryptedData})
     
     await file.writeFile(decryptedImage.savePath, image, 'hex')

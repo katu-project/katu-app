@@ -3,10 +3,10 @@ import { file } from '@/utils/index'
 import v0 from './v0'
 
 const CPKMarkMap: {[v:string]:CpkVersion} = {
-    [v0.mid]: 'v0'
+    [v0.mid]: v0.ver
 }
 
-const CPKMap: {[k in CpkVersion]:ICryotoPackage} = {
+const CPKMap: {[k in CpkVersion]:ICryptoPackage} = {
     v0
 }
 

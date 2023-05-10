@@ -71,10 +71,11 @@ async function _getMetaData(filePath:string){
 }
 
 export default {
+    ver: 'v0',
     mid: VERSION_MARK,
     dea: dataEncryptionAlgorithm,
     cpt: createPlaintext,
     cmd: createMetaData,
     eed: extractEncryptedData,
     spt: separatePlaintext
-}
+} as ICryptoPackage
