@@ -18,7 +18,7 @@ console._log = console.log
 console._warn = console.warn
 console._debug = console.debug
 console._error = console.error
-console._table = console.table
+console._table = console.table || console._log
 
 const levelColors = {
   info: 'forestgreen',
