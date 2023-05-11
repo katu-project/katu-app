@@ -125,10 +125,13 @@ export default class Base {
       }
     }
     
+    console.debug(`start download file:`, url)
     if(url.startsWith(WX_CLOUD_STORAGE_FILE_HEAD)){
       try {
         const { tempFilePath } = await wx.cloud.downloadFile({ fileID: url })
-        await file.moveFile(tempFilePath, savePath)
+        console.debug('download tempFilePath:', tempFilePath)
+        // 不能使用moveFile，moveFile无权限操作临时文件
+        await file.saveTempFile(tempFilePath, savePath)
       } catch (error:any) {
         console.error('download Cloud File error:', error.errMsg)
         throw Error('文件下载失败')
@@ -136,7 +139,6 @@ export default class Base {
       return savePath
     }
 
-    console.debug('start download file:', url);
     const downloadRes = await net.download(url, savePath)
     if(downloadRes.statusCode !== 200 || !downloadRes.filePath){
       throw Error("文件下载出错")
