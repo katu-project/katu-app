@@ -101,11 +101,6 @@ class Crypto extends Base {
     })
   }
 
-  async getFileHash(filePath, hashType: HashType){
-    const fileHexData = await file.readFile(filePath, 'hex')
-    return crypto[hashType].call(null,fileHexData)
-  }
-
   async encryptImage({keyPair:{key, salt}, imagePath, extraData, savePath}: IEncryptImageOptions){
     const cpk = getCpk(this.config.usePackageVersion)
     const edh = this.packExtraData(extraData)

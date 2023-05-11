@@ -383,7 +383,7 @@ class AppManager extends Base {
   }
 
   async imageContentCheck({imagePath}){
-    const hash = await this.crypto.getFileHash(imagePath, 'SHA1')
+    const hash = await this.getImageHash(imagePath, 'SHA1')
     const cloudFilePath = `tmp/csc_image_${hash}`
     const url = await this.uploadFile(imagePath, cloudFilePath)
   
