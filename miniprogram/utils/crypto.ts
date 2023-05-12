@@ -41,7 +41,8 @@ export const AES_256_CBC = {
       mode: AES_MODE.CBC,
       padding: AES_PAD.Pkcs7,
       format: options.format
-    } 
+    }
+    plaintext = HexCoding.parse(plaintext)
     return AES.encrypt(plaintext, key, cfg).toString()
   },
   decrypt: function(ciphertext:string, key:string, options){
