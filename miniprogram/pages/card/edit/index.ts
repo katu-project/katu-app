@@ -32,17 +32,21 @@ Page({
     if(options.id){
       this.id = options.id
     }
-    this.removeAllEvent()
-    app.on('setCardImage',this.onEventSetCardImage)
-    app.on('setCardTitle',this.onEventSetCardTitle)
-    app.on('setCardExtraData',this.onEventSetCardExtraData)
+    this.removeAllEvents()
+    this.addAllEvents()
   },
 
   onUnload(){
     this.removeAllEvent()
   },
 
-  removeAllEvent(){
+  addAllEvents(){
+    app.on('setCardImage',this.onEventSetCardImage)
+    app.on('setCardTitle',this.onEventSetCardTitle)
+    app.on('setCardExtraData',this.onEventSetCardExtraData)
+  },
+
+  removeAllEvents(){
     app.off('setCardImage')
     app.off('setCardTitle')
     app.off('setCardExtraData')
