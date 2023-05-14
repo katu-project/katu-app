@@ -150,6 +150,8 @@ const ONCE_NOTICE_KEYS = Object.fromEntries(_ONCE_NOTICE_KEYS.map(e=>[e,e])) as 
 
 const APP_ENTRY_PATH = 'home/index'
 
+const DEFAULT_IMAGE_HASH_METHOD = 'MD5'
+
 export {
   DefaultShowImage,
   DefaultShowLockImage,
@@ -168,5 +170,6 @@ export {
   APP_ENTRY_PATH,
   WX_CLOUD_STORAGE_FILE_HEAD,
   LocalCacheKeyMap,
-  ONCE_NOTICE_KEYS
+  ONCE_NOTICE_KEYS,
+  DEFAULT_IMAGE_HASH_METHOD
 }

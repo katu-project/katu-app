@@ -1,4 +1,4 @@
-import { APP_DOWN_DIR, APP_IMAGE_DIR, APP_ROOT_DIR, APP_TEMP_DIR, WX_CLOUD_STORAGE_FILE_HEAD } from "@/const"
+import { APP_DOWN_DIR, APP_IMAGE_DIR, APP_ROOT_DIR, APP_TEMP_DIR, WX_CLOUD_STORAGE_FILE_HEAD, DEFAULT_IMAGE_HASH_METHOD } from "@/const"
 import { getCache, selfish, setCache, delCache, file, net, crypto } from "@/utils/index"
 import mitt from 'mitt'
 const emitter = mitt()
@@ -85,7 +85,7 @@ export default class Base {
 
   async getImageHash(filePath:string, hash?:string){
     const fileHexData = await file.readFile(filePath, 'hex')
-    const hashValue = crypto[hash || 'MD5'].call(null,fileHexData)
+    const hashValue = crypto[hash || DEFAULT_IMAGE_HASH_METHOD].call(null,fileHexData)
     console.debug('getHash: ',filePath, hashValue)
     return hashValue as string
   }
