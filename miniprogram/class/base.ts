@@ -53,11 +53,7 @@ export default class Base {
   }
   
   async uploadFile(filePath:string, cloudPath:string){
-    const {fileID} = await wx.cloud.uploadFile({
-      cloudPath,
-      filePath
-    })
-    return fileID
+    return net.uploadCloudFile(filePath, cloudPath)
   }
 
   async getTempFilePath(fileName:string){

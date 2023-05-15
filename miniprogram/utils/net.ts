@@ -41,7 +41,16 @@ export async function download(url, filePath){
   })
 }
 
+export async function uploadCloudFile(filePath:string, cloudPath:string){
+  const {fileID} = await wx.cloud.uploadFile({
+    cloudPath,
+    filePath
+  })
+  return fileID
+}
+
 export default {
+  request,
   download,
-  request
+  uploadCloudFile
 }
