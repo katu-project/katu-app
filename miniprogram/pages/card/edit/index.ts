@@ -37,7 +37,7 @@ Page({
   },
 
   onUnload(){
-    this.removeAllEvent()
+    this.removeAllEvents()
   },
 
   addAllEvents(){
