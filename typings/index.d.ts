@@ -13,6 +13,10 @@ interface IAppOption {
 }
 
 interface IAppConfig {
+  api: {
+    type: 'wxc'|'api',
+    baseUrl: string
+  },
   contacts: {
     email: string
   }

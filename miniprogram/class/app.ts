@@ -39,6 +39,14 @@ class AppManager extends Base {
     return this.DeviceInfo.platform
   }
 
+  get apiType(){
+    return this.Config.api.type
+  }
+
+  get apiBaseUrl(){
+    return this.Config.api.baseUrl
+  }
+
   get user(){
     return getUserManager()
   }

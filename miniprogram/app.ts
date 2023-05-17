@@ -1,11 +1,12 @@
 import { getAppManager } from '@/class/app'
-
-wx.cloud.init({
-  env: 'dev-4gglcut52bffa0ff',
-  traceUser: true,
-})
-
 const app = getAppManager()
+
+if(app.apiType === 'wxc'){
+  wx.cloud.init({
+    env: app.apiBaseUrl,
+    traceUser: true,
+  })
+}
 
 App({
   onLaunch: function () {
