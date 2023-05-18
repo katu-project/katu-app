@@ -166,9 +166,8 @@ class CardManager extends Base{
     })
   }
 
-  async upload(filePath, type: 'card' | 'share' = 'card'){
-    const uploadFileId = await api.getUploadFileId({type})
-    return this.uploadFile(filePath, uploadFileId)
+  async upload(filePath, type: UploadFileType = 'card'){
+    return this.uploadFile(filePath, type)
   }
 
   // 渲染层业务接口
@@ -263,7 +262,8 @@ class CardManager extends Base{
 
   async parseCardImageByRemoteApi(imagePath){
     await this.checkImageType(imagePath)
-    const fileID = await this.uploadFile(imagePath,`tmp/pic-${imagePath.slice(-32)}`)
+    // `tmp/pic-${imagePath.slice(-32)}`
+    const fileID = await this.uploadFile(imagePath, AppConfig.uploadTempFileType)
     const {fileID: fileUrl} = await api.captureCard(fileID)
     return this.downloadImage({url: fileUrl})
   }

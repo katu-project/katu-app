@@ -4,6 +4,20 @@ type HashType = 'MD5' | 'SHA1' | 'SHA256'
 
 type CpkVersion = 'v0'
 
+type CommonCryptoVersion = 'v0' | 'v1'
+interface IMasterKeyPack {
+  keyPack: string
+  keyId: string
+  hexKeyId: string
+  ccv: CommonCryptoVersion
+}
+
+interface IRecoveryKeyPack {
+  createTime: string
+  keyId: string
+  pack: string
+  qrId: string
+}
 interface ICryptoPackage {
   ver: CpkVersion
   mid: string

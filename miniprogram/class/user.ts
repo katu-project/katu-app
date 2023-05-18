@@ -182,8 +182,7 @@ export default class User extends Base {
   }
 
   async uploadAvatar(filePath){
-    const time = new Date().getTime()
-    return api.uploadAvatar(filePath, `user/${this.openid}/avatar/${time}`)
+    return this.uploadFile(filePath, 'avatar')
   }
 
   loadOnAppHideConfig(){

@@ -1,6 +1,12 @@
-import { request } from '@/utils/index'
+import { net } from '@/utils/index'
+import AppConfig from "@/config"
+
+const request = net.createRequest(AppConfig.api)
+const upload = net.createUploadRequest(AppConfig.api)
 
 export default {
+  // base
+  uploadFile: data => upload('app/upload', data),
   // sys
   getUserConfig: <T extends keyof IUserConfig>(name: T) => request<filterAppConfigItem<T>>('app/config', {name}),
   
@@ -22,7 +28,7 @@ export default {
 
   removeBindTelNumber: data => request('app/removeBindUserTel', data),
 
-  getUploadFileId: data => request<string>('app/getUploadFileId', data),
+  getUploadInfo: data => request<IAnyObject>('app/getUploadInfo', data),
 
   // user
   updateUserConfig: (configItem:any) => request('user/updateConfig', configItem),
@@ -59,14 +65,6 @@ export default {
 
   setRecoveryKey: keyPack => request('user/setRecoveryKey',{keyPack}),
 
-  uploadAvatar: async (filePath, url) => {
-    const {fileID} = await wx.cloud.uploadFile({
-      cloudPath: url,
-      filePath
-    })
-    return fileID
-  },
-
   // card
   getHomeData: () => request<IHomeData>('card/all'),
 
@@ -95,5 +93,6 @@ export default {
 
   // data check
   imageContentSafetyCheck: (data:{url:string, hash:string}) => request<{checkEnd:boolean,checkPass:boolean}>('app/imageContentCheck', data),
+  
   textContentSafetyCheck: (data:{text:string}) => request<{checkPass:boolean}>('app/textContentCheck', data)
 }

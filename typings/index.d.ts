@@ -20,8 +20,10 @@ interface IAppConfig {
   contacts: {
     email: string
   }
-  uploadCardNamePrefix: string
-  uploadShareCardNamePrefix: string
+  uploadCardType: UploadFileType
+  uploadShareType: UploadFileType
+  uploadUserAvatarType: UploadFileType
+  uploadTempFileType: UploadFileType
   allowUploadImageType: string[]
   cardImageMaxNum: number
   devHomeDataCacheTime: number
@@ -36,6 +38,7 @@ interface IAppConfig {
   shareInfo: IAnyObject
 }
 
+type UploadFileType = 'share' | 'card' | 'avatar' | 'temp'
 interface INotice {
   _id: string
   type: string
@@ -60,44 +63,12 @@ interface CreateShareOptions {
   expiredTime?: number
 }
 
-type CommonCryptoVersion = 'v0' | 'v1'
-interface IMasterKeyPack {
-  keyPack: string
-  keyId: string
-  hexKeyId: string
-  ccv: CommonCryptoVersion
-}
-
-interface IRecoveryKeyPack {
-  createTime: string
-  keyId: string
-  pack: string
-  qrId: string
-}
-
-interface IUsageStatistic {
-  usedCardCount: number
-  usedEncryptedCardCount: number
-}
-
 interface IDoc {
   _id: string
   title: string
   updateTime: string
   content: string
 }
-
-interface IUserConfig {
-  active: {
-    id: string
-    protocols: any[]
-    tip: string
-  }
-}
-
-type filterAppConfigItem<T> = 
-    T extends "active" ? IUserConfig['active'] :
-    never;
 
 interface IChangeLog extends IAnyObject{
   createTime: string

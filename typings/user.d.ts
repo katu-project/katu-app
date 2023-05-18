@@ -46,3 +46,20 @@ interface IQuotaLog {
 
   couponId: string
 }
+
+interface IUserConfig {
+  active: {
+    id: string
+    protocols: any[]
+    tip: string
+  }
+}
+
+type filterAppConfigItem<T> = 
+    T extends "active" ? IUserConfig['active'] :
+    never;
+
+interface IUsageStatistic {
+  usedCardCount: number
+  usedEncryptedCardCount: number
+}

@@ -8,8 +8,10 @@ const AppConfig:IAppConfig = {
   contacts:{
     email: 'info@katucloud.com'
   },
-  uploadCardNamePrefix: 'card',
-  uploadShareCardNamePrefix: 'share',
+  uploadCardType: 'card',
+  uploadShareType: 'share',
+  uploadUserAvatarType: 'avatar',
+  uploadTempFileType: 'temp',
   allowUploadImageType: ['jpeg','png','jpg'],
   cardImageMaxNum: 2,
   devHomeDataCacheTime: 3600000,

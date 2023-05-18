@@ -1,3 +1,4 @@
+import api from "@/api"
 import { APP_DOWN_DIR, APP_IMAGE_DIR, APP_ROOT_DIR, APP_TEMP_DIR, WX_CLOUD_STORAGE_FILE_HEAD, DEFAULT_IMAGE_HASH_METHOD } from "@/const"
 import { getCache, selfish, setCache, delCache, file, net, crypto } from "@/utils/index"
 import mitt from 'mitt'
@@ -52,8 +53,9 @@ export default class Base {
     }
   }
   
-  async uploadFile(filePath:string, cloudPath:string){
-    return net.uploadCloudFile(filePath, cloudPath)
+  async uploadFile(filePath:string, type:UploadFileType){
+    const uploadInfo = await api.getUploadInfo({type})
+    return api.uploadFile({filePath, ...uploadInfo})
   }
 
   async getTempFilePath(fileName:string){
