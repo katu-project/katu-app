@@ -1,11 +1,11 @@
-import Base from '@/class/base'
+import Agent from '@/class/agent'
 import AppConfig from '@/config'
 import api from '@/api'
 import { DefaultShowLockImage } from '@/const'
 import { getCryptoModule } from '@/module/crypto/index'
 import { getCacheModule } from '@/module/cache'
 
-class CardManager extends Base{
+class CardManager extends Agent{
   constructor(){
     super()
     this.init()
@@ -262,7 +262,6 @@ class CardManager extends Base{
 
   async parseCardImageByRemoteApi(imagePath){
     await this.checkImageType(imagePath)
-    // `tmp/pic-${imagePath.slice(-32)}`
     const fileID = await this.uploadFile(imagePath, AppConfig.uploadTempFileType)
     const {fileID: fileUrl} = await api.captureCard(fileID)
     return this.downloadImage({url: fileUrl})

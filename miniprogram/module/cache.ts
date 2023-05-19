@@ -1,8 +1,8 @@
-import Base from "@/class/base"
+import Core from "@/class/core"
 import { LocalCacheKeyMap } from "@/const"
 import { file } from "@/utils/index"
 
-class Cache extends Base {
+class Cache extends Core {
   inited: boolean = false
   config = {} as ICacheModuleInitConfig
   constructor(){

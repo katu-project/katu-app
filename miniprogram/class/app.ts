@@ -1,5 +1,5 @@
 import '@/utils/override'
-import Base from './base'
+import Agent from '@/class/agent'
 import api from '@/api'
 import AppConfig from '@/config'
 import { navigateTo, showChoose, chooseLocalImage, switchTab, sleep, file } from '@/utils/index'
@@ -10,7 +10,7 @@ import { getNoticeModule } from '@/module/notice'
 import { getCryptoModule } from '@/module/crypto/index'
 import { getCacheModule } from '@/module/cache'
 
-class AppManager extends Base {
+class AppManager extends Agent {
   Config = AppConfig
   AppInfo = wx.getAccountInfoSync()
   DeviceInfo: Partial<WechatMiniprogram.SystemInfo> = {}
@@ -392,9 +392,7 @@ class AppManager extends Base {
 
   async imageContentCheck({imagePath}){
     const hash = await this.getImageHash(imagePath, 'SHA1')
-    // const cloudFilePath = `tmp/csc_image_${hash}`
     const url = await this.uploadFile(imagePath, this.Config.uploadTempFileType)
-  
     for(let i=0;i<10;i++){
       const res = await api.imageContentSafetyCheck({hash, url})
       if(res.checkEnd) return res

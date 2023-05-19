@@ -1,10 +1,10 @@
-import Base from "./base"
+import Agent from '@/class/agent'
 import api from "@/api"
 import { objectSetValue } from "@/utils/index"
 import { getAppManager } from "@/class/app"
 import { getCacheModule } from '@/module/cache'
 
-export default class User extends Base {
+export default class User extends Agent {
   _user: Partial<IUser> = {}
   _avatar: string = ''
   _tags: ICardTag[] = []

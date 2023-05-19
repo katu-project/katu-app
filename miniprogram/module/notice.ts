@@ -1,8 +1,8 @@
-import Base from "@/class/base"
+import Core from "@/class/core"
 import api from "@/api"
 import { LocalCacheKeyMap, ONCE_NOTICE_KEYS } from "@/const"
 
-class Notice extends Base {
+class Notice extends Core {
   lastNoticeFetchTime: number = 0
   constructor(){
     super()
