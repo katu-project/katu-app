@@ -41,14 +41,14 @@ class CardManager extends Agent{
           }else{
             await this.checkImageType(pic.url)
             console.log(`检测到卡面${idx}修改，重新上传`)
-            image.url = await this.upload(pic.url)
+            image.url = await this.uploadCardFile(pic.url)
           }
         }
       }else{  // 更新添加卡面
         console.log(`检测到新增卡面${idx}，重新保存卡片数据`)
         await this.checkImageType(pic.url)
         image.hash = await this.getImageHash(pic.url)
-        image.url = await this.upload(pic.url)
+        image.url = await this.uploadCardFile(pic.url)
       }
       newImages.push(image)
     }
@@ -73,7 +73,7 @@ class CardManager extends Agent{
         await this.checkImageType(pic.url)
         image.url = pic.url
         const encrytedPic = await this.encryptImage(image, extraData, key)
-        image.url = await this.upload(encrytedPic.imagePath)
+        image.url = await this.uploadCardFile(encrytedPic.imagePath)
         image.salt = encrytedPic.imageSecretKey
       }
       newImages.push(image)
@@ -108,10 +108,10 @@ class CardManager extends Agent{
       image.hash = await this.getImageHash(image.url)
       if(cardModel.encrypted){
         const encrytedImage = await this.encryptImage(image, cardModel.info, key)
-        image.url = await this.upload(encrytedImage.imagePath)
+        image.url = await this.uploadCardFile(encrytedImage.imagePath)
         image.salt = encrytedImage.imageSecretKey
       }else{
-        image.url = await this.upload(image.url)
+        image.url = await this.uploadCardFile(image.url)
       }
       cardModel.image!.push(image)
     }
@@ -164,10 +164,6 @@ class CardManager extends Agent{
       url: image.url,
       savePath: await this.getDownloadFilePath(image)
     })
-  }
-
-  async upload(filePath, type: UploadFileType = 'card'){
-    return this.uploadFile(filePath, type)
   }
 
   // 渲染层业务接口
@@ -262,7 +258,7 @@ class CardManager extends Agent{
 
   async parseCardImageByRemoteApi(imagePath){
     await this.checkImageType(imagePath)
-    const fileID = await this.uploadFile(imagePath, AppConfig.uploadTempFileType)
+    const fileID = await this.uploadTempFile(imagePath)
     const {fileID: fileUrl} = await api.captureCard(fileID)
     return this.downloadImage({url: fileUrl})
   }

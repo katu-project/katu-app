@@ -181,10 +181,6 @@ export default class User extends Agent {
     return api.updateTag(tag)
   }
 
-  async uploadAvatar(filePath){
-    return this.uploadFile(filePath, 'avatar')
-  }
-
   loadOnAppHideConfig(){
     wx.onAppHide(res=>{
       const globalState = getApp().globalData.state

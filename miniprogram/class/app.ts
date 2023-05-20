@@ -239,7 +239,7 @@ class AppManager extends Agent {
         if(!pic._url || !await file.checkAccess(pic._url)) throw Error("分享生成错误")
         const image = {url: pic._url, salt: '', hash: pic.hash}
         const encrytedPic = await this.cardManager.encryptImage(image, card.info, dk)
-        image.url = await this.cardManager.upload(encrytedPic.imagePath, this.Config.uploadShareType)
+        image.url = await this.uploadShareFile(encrytedPic.imagePath)
         image.salt = encrytedPic.imageSecretKey
         shareCard.image!.push(image)
       }
@@ -392,7 +392,7 @@ class AppManager extends Agent {
 
   async imageContentCheck({imagePath}){
     const hash = await this.getImageHash(imagePath, 'SHA1')
-    const url = await this.uploadFile(imagePath, this.Config.uploadTempFileType)
+    const url = await this.uploadTempFile(imagePath)
     for(let i=0;i<10;i++){
       const res = await api.imageContentSafetyCheck({hash, url})
       if(res.checkEnd) return res
