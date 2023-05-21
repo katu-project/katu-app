@@ -44,6 +44,6 @@ Page({
     navigateTo(page)
   },
   tapToReadDoc(){
-    app.navToDoc(app.Config.doc.rememberKeyNotice)
+    app.openRememberKeyNotice()
   }
 })

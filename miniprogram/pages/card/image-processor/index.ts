@@ -142,14 +142,14 @@ Page({
   tapToShowInternalApiNotice(){
     showChoose("未识别出卡片？","这些小技巧能帮助提高卡片识别率！",{confirmText:'去查看'})
     .then(({confirm})=>{
-      if(confirm) app.navToDoc(app.Config.doc.imageProcessorTip_1)
+      if(confirm) app.openInternalApiNotice()
     })
   },
 
   async showRemoteApiNotice(){
     const {confirm, cancel} = await showChoose("警告","外部接口由第三方提供!\n敏感数据请谨慎使用。",{cancelText: '去查看'})
     if(cancel) {
-      app.navToDoc(app.Config.doc.imageProcessorTip_2)
+      app.openRemoteApiNotice()
       this.setData({
         selectedMethod: 0
       })

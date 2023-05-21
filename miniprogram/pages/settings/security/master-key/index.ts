@@ -112,7 +112,7 @@ Page({
     })
   },
   tapToOpenDoc(){
-    app.navToDoc(app.Config.doc.masterKeyNotice)
+    app.openMasterKeyNotice()
   },
   tapToResetKey(){
     navigateTo('../reset-key/index')

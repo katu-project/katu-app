@@ -2,7 +2,7 @@ import '@/utils/override'
 import Agent from '@/class/agent'
 import api from '@/api'
 import AppConfig from '@/config'
-import { navigateTo, showChoose, chooseLocalImage, switchTab, sleep, file } from '@/utils/index'
+import { showChoose, chooseLocalImage, switchTab, sleep, file } from '@/utils/index'
 import { APP_ENTRY_PATH, APP_ROOT_DIR } from '@/const'
 import { getCardManager } from './card'
 import { getUserManager } from './user'
@@ -299,28 +299,6 @@ class AppManager extends Agent {
     return userTempFile
   }
 
-  // open app doc
-  openUserUsageProtocol(){
-    return this.navToDoc(this.Config.doc.userUsageProtocol)
-  }
-
-  openUserPrivacyProtocol(){
-    return this.navToDoc(this.Config.doc.userPrivacyProtocol)
-  }
-
-  openDataSaveSecurityNoticeDoc(){
-    return this.navToDoc(this.Config.doc.dataSaveSecurityNotice)
-  }
-
-  openDataShareDoc(){
-    return this.navToDoc(this.Config.doc.dataShareNotice)
-  }
-
-  openDataCheckDoc(){
-    return this.navToDoc(this.Config.doc.dataCheckNotice)
-  }
-  // open app doc end
-
   async getHomeData(forceUpdate?:boolean):Promise<IHomeData>{
     let homeData
     if(!forceUpdate){
@@ -386,9 +364,6 @@ class AppManager extends Agent {
   }
 
   //主密码备份/重置 结束
-  navToDoc(id){
-    navigateTo(`/pages/qa/detail/index?id=${id}`)
-  }
 
   async imageContentCheck({imagePath}){
     const hash = await this.getImageHash(imagePath, 'SHA1')

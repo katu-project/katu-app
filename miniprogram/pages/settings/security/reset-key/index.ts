@@ -22,6 +22,6 @@ Page({
     navigateTo(page)
   },
   tapToDoc(){
-    app.navToDoc(app.Config.doc.forgetKeyNotice)
+    app.openForgetKeyNotice()
   }
 })

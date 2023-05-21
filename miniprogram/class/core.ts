@@ -1,7 +1,8 @@
 import Base from '@/class/base'
 import api from "@/api"
 import { APP_TEMP_DIR, APP_ROOT_DIR, APP_IMAGE_DIR, APP_DOWN_DIR, WX_CLOUD_STORAGE_FILE_HEAD, DEFAULT_IMAGE_HASH_METHOD } from "@/const"
-import { getCache, setCache, delCache, file, net, crypto } from "@/utils/index"
+import { navigateTo, getCache, setCache, delCache, file, net, crypto } from "@/utils/index"
+
 
 export default class Core extends Base {
   async getLocalData<T>(key: string) {
@@ -103,5 +104,9 @@ export default class Core extends Base {
   async uploadFile(filePath: string, type: UploadFileType) {
     const uploadInfo = await api.getUploadInfo({ type })
     return api.uploadFile({ filePath, ...uploadInfo })
+  }
+
+  navToDoc(id){
+    navigateTo(`/pages/qa/detail/index?id=${id}`)
   }
 } 
