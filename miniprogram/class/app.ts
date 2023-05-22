@@ -318,7 +318,15 @@ class AppManager extends Agent {
   }
 
   async fetchNotice(forceFetch?:boolean){
-    return this.notice.fetchNotice(forceFetch)
+    if(!forceFetch){
+      const needFetchNotice = this.notice.checkNeedFetchNotice()
+      if(!needFetchNotice){
+        return
+      }
+    }
+    const notice = await api.getNotice()
+    this.notice.resetNoticeFetchTime()
+    return notice
   }
 
   //数据
