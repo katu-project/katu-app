@@ -2,6 +2,10 @@ import Core from '@/class/core'
 import AppConfig from '@/config'
 export default class Agent extends Core {
 
+  get defaultCommonCryptoVersion(){
+    return AppConfig.crypto.defaultCommonCryptoVersion
+  }
+
   async uploadAvatar(filePath:string){
     return this.uploadFile(filePath, AppConfig.uploadUserAvatarType)
   }

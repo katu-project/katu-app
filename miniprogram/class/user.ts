@@ -46,7 +46,7 @@ export default class User extends Agent {
   }
 
   get ccv(){
-    return this.user.masterKeyPack?.ccv || this.app.Config.crypto.defaultCommonCryptoVersion
+    return this.user.masterKeyPack?.ccv || this.defaultCommonCryptoVersion
   }
 
   get isSetMasterKey():boolean{
