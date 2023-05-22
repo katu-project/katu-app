@@ -16,6 +16,7 @@ const AppConfig:IAppConfig = {
   cardImageMaxNum: 2,
   devHomeDataCacheTime: 3600000,
   homeDataCacheTime: 86400000,
+  noticeFetchTime: 60000,
   qaDocType: [{
     icon: 'apps',
     color: 'green',

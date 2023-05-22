@@ -28,6 +28,7 @@ interface IAppConfig {
   cardImageMaxNum: number
   devHomeDataCacheTime: number
   homeDataCacheTime: number
+  noticeFetchTime: number
   qaDocType: any[]
   tags: Omit<ICardTag,'color'>[]
   extraFieldsKeys: ICardExtraField[]

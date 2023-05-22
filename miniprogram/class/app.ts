@@ -118,7 +118,7 @@ class AppManager extends Agent {
         homeDataCacheTime: this.Config[this.isDev ? 'devHomeDataCacheTime' : 'homeDataCacheTime']
       })
     }
-    this.notice.init()
+    this.notice.init({noticeFetchIntervalTime: this.Config.noticeFetchTime})
     this.crypto.init(this.Config.crypto)
   }
   // user section

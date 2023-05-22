@@ -1,13 +1,18 @@
-import Core from "@/class/core"
+import Agent from "@/class/agent"
 import { LocalCacheKeyMap, ONCE_NOTICE_KEYS } from "@/const"
 
-class Notice extends Core {
+class Notice extends Agent {
+  inited: boolean = false
   lastNoticeFetchTime: number = 0
+  noticeFetchIntervalTime: number = 0
+
   constructor(){
     super()
   }
 
-  async init(){
+  async init({noticeFetchIntervalTime}){
+    this.noticeFetchIntervalTime = noticeFetchIntervalTime
+    this.inited = true
   }
 
   resetNoticeFetchTime(){
@@ -16,7 +21,7 @@ class Notice extends Core {
 
   checkNeedFetchNotice(){
     const nowTime = new Date().getTime()
-    return nowTime - this.lastNoticeFetchTime > 60000
+    return nowTime - this.lastNoticeFetchTime > this.noticeFetchIntervalTime
   }
 
   async _getOnceNoticeLog(){
