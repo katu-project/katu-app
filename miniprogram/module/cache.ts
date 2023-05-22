@@ -1,8 +1,8 @@
-import Core from "@/class/core"
+import Agent from "@/class/agent"
 import { LocalCacheKeyMap } from "@/const"
 import { file } from "@/utils/index"
 
-class Cache extends Core {
+class Cache extends Agent {
   inited: boolean = false
   config = {} as ICacheModuleInitConfig
   constructor(){
@@ -34,7 +34,7 @@ class Cache extends Core {
   async setUserAvatar(url:string){
     console.debug('开始缓存用户头像')
     try {
-      await file.rmdir(await this.getHomePath(`avatar`), true)
+      await file.rmdir(await this.getAvatarDirPath(), true)
     } catch (_) {}
 
     try {
@@ -48,7 +48,7 @@ class Cache extends Core {
   async getUserAvatarCachePath(url){
     const splitUrl = url.split('/')
     const avatarId = splitUrl[splitUrl.length - 1]
-    return this.getHomePath(`avatar/${avatarId}`)
+    return this.getAvatarPath(avatarId)
   }
 
   // master key cache

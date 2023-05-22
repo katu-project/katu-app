@@ -59,4 +59,12 @@ export default class Agent extends Core {
     return this.navToDoc(AppConfig.doc.forgetKeyNotice)
   }
   // open app doc end
+
+  getAvatarDirPath(){
+    return this.getHomePath(`avatar`)
+  }
+
+  getAvatarPath(avatarId:string){
+    return this.getHomePath(`avatar/${avatarId}`)
+  }
 } 
