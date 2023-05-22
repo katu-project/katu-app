@@ -113,12 +113,12 @@ class AppManager extends Agent {
   }
 
   async loadModules(){
-    if(!this.cache.inited){
-      await this.cache.init({
-        homeDataCacheTime: this.Config[this.isDev ? 'devHomeDataCacheTime' : 'homeDataCacheTime']
-      })
-    }
-    this.notice.init({noticeFetchIntervalTime: this.Config.noticeFetchTime})
+    this.cache.init({
+      homeDataCacheTime: this.Config[this.isDev ? 'devHomeDataCacheTime' : 'homeDataCacheTime']
+    })
+    this.notice.init({
+      noticeFetchIntervalTime: this.Config.noticeFetchTime
+    })
     this.crypto.init(this.Config.crypto)
   }
   // user section

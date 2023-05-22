@@ -2,7 +2,6 @@ import Agent from "@/class/agent"
 import { LocalCacheKeyMap, ONCE_NOTICE_KEYS } from "@/const"
 
 class Notice extends Agent {
-  inited: boolean = false
   lastNoticeFetchTime: number = 0
   noticeFetchIntervalTime: number = 0
 
@@ -10,9 +9,8 @@ class Notice extends Agent {
     super()
   }
 
-  async init({noticeFetchIntervalTime}){
+  init({noticeFetchIntervalTime}){
     this.noticeFetchIntervalTime = noticeFetchIntervalTime
-    this.inited = true
   }
 
   resetNoticeFetchTime(){

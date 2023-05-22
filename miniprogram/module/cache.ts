@@ -3,19 +3,14 @@ import { LocalCacheKeyMap } from "@/const"
 import { file } from "@/utils/index"
 
 class Cache extends Agent {
-  inited: boolean = false
   config = {} as ICacheModuleInitConfig
+  
   constructor(){
     super()
   }
 
-  async init(config:ICacheModuleInitConfig){
+  init(config:ICacheModuleInitConfig){
     this.config = config
-    await this.loadData()
-    this.inited = true
-  }
-
-  async loadData(){
   }
 
   // user cache
