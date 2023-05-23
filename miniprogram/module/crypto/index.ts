@@ -60,6 +60,14 @@ const CommonCryptoVersionMap = {
     keyConvert: {
       method: 'SHA1',
       length: 40
+    },
+    keyPair: {
+      method: 'PBKDF2',
+      options: {
+        keySize: 4,
+        iterations: 5000
+      },
+      saltLength: 8
     }
   }
 }
@@ -162,12 +170,15 @@ class Crypto extends Base {
     return crypto.random(byteLength)
   }
 
-  createCommonKeyPair(key:string, salt?:string){
-    const options = { iterations: 5000 } as Pbkdf2Options
-    if(salt){
-      options.salt = salt
+  async createCommonKeyPair(key:string, salt?:string){
+    const { method, options, saltLength } = CommonCryptoVersionMap[this.config.useCommonCryptoVersion].keyPair
+    try {
+      options.salt = salt || await this.randomHexString(saltLength)
+      return crypto[method].call(null, key, options)
+    } catch (error) {
+      console.error(error)
+      throw Error('keyPair create error')
     }
-    return crypto.pbkdf2(key,options)
   }
 
   convertToHexString(key:string, ccv?: CommonCryptoVersion){
@@ -297,7 +308,7 @@ class Crypto extends Base {
         length: obj.extraData?.length || '-',
       },
       salt: {
-        data: obj.salt,
+        data: obj.salt || '-',
         length: obj.salt?.length || '-',
       },
       key: {

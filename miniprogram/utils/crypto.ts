@@ -71,19 +71,11 @@ export function SHA512(string){
   return CryptoJS.SHA512(string).toString()
 }
 
-/**
- * use sha1
- * keySize 4(4x32bits)
- * iterations 1
- * output hex 128bits
- * masterKey sha1 => 16 bytes
- * salt no limit, use random value: 16bytes
- */
-export async function pbkdf2(masterKey: string, options?: Partial<Pbkdf2Options>) : Promise<{key:string, salt: string}>{
-  const salt = CryptoJS.enc.Hex.parse(options?.salt || await randomBytesHexString(8))
-  const iterations = options?.iterations || 1
-  const key = CryptoJS.PBKDF2(masterKey,salt,{
-    keySize: options?.size || 4, 
+export async function PBKDF2(mainKey: string, options: Pbkdf2Options) : Promise<{key:string, salt: string}>{
+  const salt = HexCoding.parse(options.salt)
+  const iterations = options.iterations
+  const key = CryptoJS.PBKDF2(mainKey, salt, {
+    keySize: options.size,
     iterations
   }).toString()
   return {key, salt: salt.toString()}
@@ -109,7 +101,7 @@ export default {
   SHA256,
   SHA512,
   AES,
-  pbkdf2,
+  PBKDF2,
   encryptString,
   decryptString
 }
