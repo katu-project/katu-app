@@ -1,7 +1,7 @@
-import Agent from "@/class/agent"
+import Module from "@/class/module"
 import { LocalCacheKeyMap, ONCE_NOTICE_KEYS } from "@/const"
 
-class Notice extends Agent {
+class Notice extends Module {
   lastNoticeFetchTime: number = 0
   noticeFetchIntervalTime: number = 0
 

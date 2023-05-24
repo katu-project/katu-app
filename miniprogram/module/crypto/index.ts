@@ -1,4 +1,4 @@
-import Base from "@/class/base"
+import Module from "@/class/module"
 import { getCpk, getCpkFromFile } from "./pkv/index"
 import { bip39, convert, crypto, file } from "@/utils/index"
 
@@ -72,7 +72,7 @@ const CommonCryptoVersionMap = {
   }
 }
 
-class Crypto extends Base {
+class Crypto extends Module {
   _config = {} as IAppCryptoConfig
 
   init(config:IAppCryptoConfig){
