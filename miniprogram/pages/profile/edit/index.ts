@@ -1,5 +1,5 @@
 import { loadData, showError, showSuccess, showNotice, navigateBack } from '@/utils/index'
-import { getUserManager } from '@/class/user'
+import { getUserManager } from '@/controller/user'
 import { DefaultUserAvatar } from '@/const'
 import api from '@/api'
 const user = getUserManager()

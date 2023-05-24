@@ -1,6 +1,6 @@
 import api from "@/api";
-import { getAppManager } from "@/class/app";
-import { getCardManager } from "@/class/card";
+import { getAppManager } from "@/controller/app";
+import { getCardManager } from "@/controller/card";
 import { DefaultShowLockImage, DefaultShowImage } from "@/const";
 import { loadData, showChoose, showError } from "@/utils/index";
 

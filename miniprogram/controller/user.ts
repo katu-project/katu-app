@@ -1,10 +1,10 @@
-import Agent from '@/class/agent'
+import Controller from '@/class/controller'
 import api from "@/api"
 import { objectSetValue } from "@/utils/index"
-import { getAppManager } from "@/class/app"
+import { getAppManager } from "@/controller/app"
 import { getCacheModule } from '@/module/cache'
 
-export default class User extends Agent {
+export default class User extends Controller {
   _user: Partial<IUser> = {}
   _avatar: string = ''
   _tags: ICardTag[] = []

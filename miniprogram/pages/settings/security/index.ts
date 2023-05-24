@@ -1,6 +1,6 @@
 import { loadData, showSuccess, navigateTo, showError } from "@/utils/index"
-import { getUserManager } from '@/class/user'
-import { getAppManager } from '@/class/app'
+import { getUserManager } from '@/controller/user'
+import { getAppManager } from '@/controller/app'
 const user = getUserManager()
 const app = getAppManager()
 

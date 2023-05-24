@@ -1,8 +1,8 @@
 import api from '@/api'
 import { createAdvSetData, loadData, navigateTo } from '@/utils/index'
 import { DefaultShowImage, DefaultShowLockImage } from '@/const'
-import { getAppManager } from '@/class/app'
-import { getCardManager } from '@/class/card'
+import { getAppManager } from '@/controller/app'
+import { getCardManager } from '@/controller/card'
 const app = getAppManager()
 const cardManager = getCardManager()
 

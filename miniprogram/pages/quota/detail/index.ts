@@ -1,5 +1,5 @@
 import { loadData} from '@/utils/index'
-import { getUserManager } from '@/class/user'
+import { getUserManager } from '@/controller/user'
 const user = getUserManager()
 
 Page({

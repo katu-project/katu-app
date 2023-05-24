@@ -1,8 +1,8 @@
 import { showChoose, loadData, showError, showSuccess } from '@/utils/index'
 import { ColorList } from '@/const'
 
-import { getAppManager } from '@/class/app'
-import { getUserManager } from '@/class/user'
+import { getAppManager } from '@/controller/app'
+import { getUserManager } from '@/controller/user'
 const user = getUserManager()
 const app = getAppManager()
 

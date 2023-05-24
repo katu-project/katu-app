@@ -1,11 +1,11 @@
-import Agent from '@/class/agent'
+import Controller from '@/class/controller'
 import AppConfig from '@/config'
 import api from '@/api'
 import { DefaultShowLockImage } from '@/const'
 import { getCryptoModule } from '@/module/crypto/index'
 import { getCacheModule } from '@/module/cache'
 
-class CardManager extends Agent{
+class CardManager extends Controller{
   constructor(){
     super()
     this.init()

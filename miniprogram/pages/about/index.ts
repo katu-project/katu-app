@@ -1,5 +1,5 @@
 import { navigateTo } from '@/utils/index'
-import { getAppManager } from '@/class/app'
+import { getAppManager } from '@/controller/app'
 const app = getAppManager()
 
 Page({

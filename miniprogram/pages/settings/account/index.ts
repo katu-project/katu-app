@@ -1,7 +1,7 @@
 import { loadData, navigateTo, showChoose } from "@/utils/index"
 
-import { getAppManager } from '@/class/app'
-import { getUserManager } from "@/class/user"
+import { getAppManager } from '@/controller/app'
+import { getUserManager } from "@/controller/user"
 const app = getAppManager()
 const user = getUserManager()
 Page({

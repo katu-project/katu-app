@@ -1,6 +1,8 @@
 import Core from '@/class/core'
 import AppConfig from '@/config'
-export default class Agent extends Core {
+export default abstract class Agent extends Core {
+
+  abstract uploadFile(filePath:string, uploadType:UploadFileType): Promise<string>
 
   get defaultCommonCryptoVersion(){
     return AppConfig.crypto.defaultCommonCryptoVersion
@@ -64,11 +66,7 @@ export default class Agent extends Core {
   }
   // open app doc end
 
-  getAvatarDirPath(){
-    return this.getHomePath(`avatar`)
-  }
-
-  getAvatarPath(avatarId:string){
-    return this.getHomePath(`avatar/${avatarId}`)
+  getUserAvatarDir(){
+    return this.getRootPath(`avatar`)
   }
 } 

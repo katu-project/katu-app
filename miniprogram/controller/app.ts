@@ -1,5 +1,5 @@
 import '@/utils/override'
-import Agent from '@/class/agent'
+import Controller from '@/class/controller'
 import api from '@/api'
 import AppConfig from '@/config'
 import { showChoose, chooseLocalImage, switchTab, sleep, file } from '@/utils/index'
@@ -10,7 +10,7 @@ import { getNoticeModule } from '@/module/notice'
 import { getCryptoModule } from '@/module/crypto/index'
 import { getCacheModule } from '@/module/cache'
 
-class AppManager extends Agent {
+class AppManager extends Controller {
   Config = AppConfig
   AppInfo = wx.getAccountInfoSync()
   DeviceInfo: Partial<WechatMiniprogram.SystemInfo> = {}
@@ -114,6 +114,7 @@ class AppManager extends Agent {
 
   async loadModules(){
     this.cache.init({
+      userAvatarDir: await this.getUserAvatarDir(),
       homeDataCacheTime: this.Config[this.isDev ? 'devHomeDataCacheTime' : 'homeDataCacheTime']
     })
     this.notice.init({

@@ -1,7 +1,7 @@
 import { loadData, showChoose, showError, navigateBack, showNotice } from '@/utils/index'
 import { DefaultShowImage } from '@/const'
-import { getCardManager } from '@/class/card'
-import { getAppManager } from '@/class/app'
+import { getCardManager } from '@/controller/card'
+import { getAppManager } from '@/controller/app'
 const app = getAppManager()
 const cardManager = getCardManager()
 

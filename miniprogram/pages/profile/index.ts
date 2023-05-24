@@ -2,8 +2,8 @@ import { loadData, navigateTo, showSuccess } from '@/utils/index'
 import { DefaultUserAvatar, PAGES_MENU } from '@/const'
 import api from '@/api'
 
-import { getAppManager } from '@/class/app'
-import { getUserManager } from '@/class/user'
+import { getAppManager } from '@/controller/app'
+import { getUserManager } from '@/controller/user'
 const app = getAppManager()
 const user = getUserManager()
 

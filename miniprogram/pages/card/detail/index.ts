@@ -1,8 +1,8 @@
 import { DefaultShowLockImage, DefaultShowImage, DefaultShareImage, DefaultLoadFailedImage } from '@/const'
 import { showChoose, showError, loadData, navigateBack, setClipboardData, navigateTo, showNotice } from '@/utils/index'
-import { getCardManager } from '@/class/card'
-import { getUserManager } from '@/class/user'
-import { getAppManager } from '@/class/app'
+import { getCardManager } from '@/controller/card'
+import { getUserManager } from '@/controller/user'
+import { getAppManager } from '@/controller/app'
 const app = getAppManager()
 const user = getUserManager()
 const cardManager = getCardManager()

@@ -1,4 +1,4 @@
-import { getAppManager } from '@/class/app'
+import { getAppManager } from '@/controller/app'
 import { navigateBack } from '@/utils/index'
 const app = getAppManager()
 
