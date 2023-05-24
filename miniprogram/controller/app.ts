@@ -372,6 +372,15 @@ class AppManager extends Controller {
     return api.textContentSafetyCheck({text})
   }
 
+  async getActiveInfo(){
+    const activeInfo = await api.getSysConfig('active')
+    const { content } = await api.getDoc({_id: activeInfo.id})
+    return {
+      activeInfo,
+      content
+    }
+  }
+
   async showActiveNotice(title?:string){
     await showChoose("温馨提示", title || "账户未激活，无法进行该操作。", {
       confirmText:'去激活',

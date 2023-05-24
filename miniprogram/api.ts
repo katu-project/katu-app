@@ -8,7 +8,7 @@ export default {
   // base
   uploadFile: data => upload('app/upload', data),
   // sys
-  getUserConfig: <T extends keyof IUserConfig>(name: T) => request<filterAppConfigItem<T>>('app/config', {name}),
+  getSysConfig: <T extends keyof ISysConfig>(name: T) => request<filterSysConfigItem<T>>('app/config', {name}),
   
   getDefaultTag: () => request<ICardTag[]>('app/tags'),
 

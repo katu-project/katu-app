@@ -1,7 +1,5 @@
 import { loadData, navigateTo, showSuccess } from '@/utils/index'
 import { DefaultUserAvatar, PAGES_MENU } from '@/const'
-import api from '@/api'
-
 import { getAppManager } from '@/controller/app'
 import { getUserManager } from '@/controller/user'
 const app = getAppManager()
@@ -10,7 +8,7 @@ const user = getUserManager()
 Page({
   data: {
     user: {} as Partial<IUser>,
-    activeInfo: {} as Partial<IUserConfig['active']>,
+    activeInfo: {},
     menus: PAGES_MENU.profile,
     DefaultUserAvatar
   },
@@ -19,7 +17,6 @@ Page({
     this.loadUserInfo()
   },
   onReady() {
-    
   },
   onShow() {
     this.getTabBar().setData({selected: 2})
@@ -29,7 +26,7 @@ Page({
     if(user.isActive) {
       return this.tapToEditInfo()
     }
-    return this.showActiveNotice()
+    return this.showActiveInfo()
   },
   
   async tapToActiveAccount(){
@@ -82,26 +79,25 @@ Page({
     app.navToDoc(e.currentTarget.dataset.item.id)
   },
 
-  async showActiveNotice(){
+  async showActiveInfo(){
     await this.loadActiveData()
     this.setData({
-      showActiveNotice: true
+      showActiveInfo: true
     })
   },
 
   hideActiveNotice(){
     this.setData({
-      showActiveNotice: false
+      showActiveInfo: false
     })
   },
   
   async loadActiveData(){
     if(this.data.activeInfo.id) return
-    const activeInfo = await loadData(api.getUserConfig, 'active')
-    const doc = await loadData(api.getDoc, {_id: activeInfo.id})
+    const { activeInfo, content } = await loadData(app.getActiveInfo)
     this.setData({
       activeInfo,
-      'activeInfo.notice': doc.content
+      'activeInfo.notice': content
     })
   }
 })

@@ -47,7 +47,7 @@ interface IQuotaLog {
   couponId: string
 }
 
-interface IUserConfig {
+interface ISysConfig {
   active: {
     id: string
     protocols: any[]
@@ -55,8 +55,8 @@ interface IUserConfig {
   }
 }
 
-type filterAppConfigItem<T> = 
-    T extends "active" ? IUserConfig['active'] :
+type filterSysConfigItem<T> = 
+    T extends "active" ? ISysConfig['active'] :
     never;
 
 interface IUsageStatistic {

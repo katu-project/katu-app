@@ -35,7 +35,7 @@
   <view style="flex:1"></view>
 </view>
 
-<view class="cu-modal {{showActiveNotice?'show':''}}">
+<view class="cu-modal {{showActiveInfo?'show':''}}">
   <view class="cu-dialog bg-white br-16" style="width: 75vw;">
     <view class="cu-bar justify-end">
       <view class="content text-black">温馨提示</view>
