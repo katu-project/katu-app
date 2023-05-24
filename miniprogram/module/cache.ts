@@ -11,6 +11,7 @@ class Cache extends Module {
 
   init(config:ICacheModuleInitConfig){
     this.config = config
+    console.debug('Module Cache inited')
   }
 
   // user cache

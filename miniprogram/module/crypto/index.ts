@@ -79,6 +79,7 @@ class Crypto extends Module {
     console.debug('使用加密配置:')
     console.table(config)
     this._config = config
+    console.debug('Module Crypto inited')
   }
 
   get config(){

@@ -6,9 +6,6 @@ import { showChoose, chooseLocalImage, switchTab, sleep, file } from '@/utils/in
 import { APP_ENTRY_PATH, APP_ROOT_DIR } from '@/const'
 import { getCardManager } from './card'
 import { getUserManager } from './user'
-import { getNoticeModule } from '@/module/notice'
-import { getCryptoModule } from '@/module/crypto/index'
-import { getCacheModule } from '@/module/cache'
 
 class AppManager extends Controller {
   Config = AppConfig
@@ -59,23 +56,9 @@ class AppManager extends Controller {
     return this._masterKey
   }
 
-  // modules
-  get notice(){
-    return getNoticeModule()
-  }
-
-  get crypto(){
-    return getCryptoModule()
-  }
-
-  get cache(){
-    return getCacheModule()
-  }
-
   get shareInfo(){
     return this.Config.shareInfo
   }
-  // modules end
 
   async loadUser(){
     await this.user.init()

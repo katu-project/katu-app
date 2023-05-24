@@ -2,7 +2,6 @@ import Controller from '@/class/controller'
 import api from "@/api"
 import { objectSetValue } from "@/utils/index"
 import { getAppManager } from "@/controller/app"
-import { getCacheModule } from '@/module/cache'
 
 export default class User extends Controller {
   _user: Partial<IUser> = {}
@@ -15,10 +14,6 @@ export default class User extends Controller {
 
   get app(){
     return getAppManager()
-  }
-
-  get cache(){
-    return getCacheModule()
   }
 
   get config(){

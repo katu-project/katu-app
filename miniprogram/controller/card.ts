@@ -2,8 +2,6 @@ import Controller from '@/class/controller'
 import AppConfig from '@/config'
 import api from '@/api'
 import { DefaultShowLockImage } from '@/const'
-import { getCryptoModule } from '@/module/crypto/index'
-import { getCacheModule } from '@/module/cache'
 
 class CardManager extends Controller{
   constructor(){
@@ -12,14 +10,6 @@ class CardManager extends Controller{
   }
 
   init(){
-  }
-
-  get cache(){
-    return getCacheModule()
-  }
-
-  get crypto(){
-    return getCryptoModule()
   }
 
   async _updateNotEncryptImage(images:ICardImage[]){

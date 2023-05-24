@@ -11,6 +11,7 @@ class Notice extends Module {
 
   init({noticeFetchIntervalTime}){
     this.noticeFetchIntervalTime = noticeFetchIntervalTime
+    console.debug('Module Notice inited')
   }
 
   resetNoticeFetchTime(){
