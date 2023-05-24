@@ -47,4 +47,8 @@ interface IDecryptImageOptions {
   keyPair: KeyPair 
 }
 
-type Pbkdf2Options = {salt:string, size:number, iterations:number}
+type Pbkdf2Options = {
+  salt: string 
+  keySize: number
+  iterations: number
+}

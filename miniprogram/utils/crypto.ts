@@ -73,10 +73,9 @@ export function SHA512(string){
 
 export async function PBKDF2(mainKey: string, options: Pbkdf2Options) : Promise<{key:string, salt: string}>{
   const salt = HexCoding.parse(options.salt)
-  const iterations = options.iterations
   const key = CryptoJS.PBKDF2(mainKey, salt, {
-    keySize: options.size,
-    iterations
+    keySize: options.keySize,
+    iterations: options.iterations
   }).toString()
   return {key, salt: salt.toString()}
 }
