@@ -1,13 +1,6 @@
 import { getAppManager } from '@/controller/app'
 const app = getAppManager()
 
-if(app.apiType === 'wxc'){
-  wx.cloud.init({
-    env: app.apiBaseUrl,
-    traceUser: true,
-  })
-}
-
 App({
   onLaunch: function () {
     wx.getSystemInfo({

@@ -1,11 +1,59 @@
 import Core from '@/class/core'
-import AppConfig from '@/config'
+import { AppConfig } from '@/config/index'
 export default abstract class Agent extends Core {
 
   abstract uploadFile(filePath:string, uploadType:UploadFileType): Promise<string>
 
   get defaultCommonCryptoVersion(){
     return AppConfig.crypto.defaultCommonCryptoVersion
+  }
+
+  get allowUploadImageType(){
+    return AppConfig.allowUploadImageType
+  }
+
+  get serviceContactsEmail(){
+    return AppConfig.contacts.email
+  }
+
+  get defaultUsableTag(){
+    return AppConfig.tags
+  }
+
+  get defaultUsableImageMaxNum(){
+    return AppConfig.cardImageMaxNum
+  }
+
+  get defaultExtraFieldsKeys(){
+    return AppConfig.extraFieldsKeys
+  }
+
+  get qaDocTypeCate(){
+    return AppConfig.qaDocType
+  }
+
+  get defaultSmsTimeInterval(){
+    return AppConfig.smsGapTime
+  }
+
+  get shareAppInfo(){
+    return AppConfig.shareInfo
+  }
+
+  get devHomeDataCacheTime(){
+    return AppConfig.devHomeDataCacheTime
+  }
+
+  get homeDataCacheTime(){
+    return AppConfig.homeDataCacheTime
+  }
+
+  get defaultNoticeFetchTimeInterval(){
+    return AppConfig.noticeFetchTime
+  }
+
+  get cryptoConfig(){
+    return AppConfig.crypto
   }
 
   async uploadAvatar(filePath:string){

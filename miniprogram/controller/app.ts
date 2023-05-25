@@ -1,14 +1,12 @@
 import '@/utils/override'
 import Controller from '@/class/controller'
 import api from '@/api'
-import AppConfig from '@/config'
 import { showChoose, chooseLocalImage, switchTab, sleep, file } from '@/utils/index'
 import { APP_ENTRY_PATH, APP_ROOT_DIR } from '@/const'
 import { getCardManager } from './card'
 import { getUserManager } from './user'
 
 class AppManager extends Controller {
-  Config = AppConfig
   AppInfo = wx.getAccountInfoSync()
   DeviceInfo: Partial<WechatMiniprogram.SystemInfo> = {}
   _masterKey: string = ''
@@ -35,14 +33,6 @@ class AppManager extends Controller {
     return this.DeviceInfo.platform
   }
 
-  get apiType(){
-    return this.Config.api.type
-  }
-
-  get apiBaseUrl(){
-    return this.Config.api.baseUrl
-  }
-
   get user(){
     return getUserManager()
   }
@@ -56,7 +46,7 @@ class AppManager extends Controller {
   }
 
   get shareInfo(){
-    return this.Config.shareInfo
+    return this.shareAppInfo
   }
 
   async loadUser(){
@@ -79,12 +69,12 @@ class AppManager extends Controller {
   async loadModules(){
     this.cache.init({
       userAvatarDir: await this.getUserAvatarDir(),
-      homeDataCacheTime: this.Config[this.isDev ? 'devHomeDataCacheTime' : 'homeDataCacheTime']
+      homeDataCacheTime: this.isDev ? this.devHomeDataCacheTime : this.homeDataCacheTime
     })
     this.notice.init({
-      noticeFetchIntervalTime: this.Config.noticeFetchTime
+      noticeFetchIntervalTime: this.defaultNoticeFetchTimeInterval
     })
-    this.crypto.init(this.Config.crypto)
+    this.crypto.init(this.cryptoConfig)
   }
   // user section
   async setUserMasterKey(key: string){
@@ -242,7 +232,7 @@ class AppManager extends Controller {
   rebuildExtraFields(extraFields: Partial<ICardExtraField>[]){
     return extraFields.map(item=>{
       const [key,cuName] = item[0].split('-')
-      let extraField = this.Config.extraFieldsKeys.find(e=>e.key===key)
+      let extraField = this.defaultExtraFieldsKeys.find(e=>e.key===key)
       extraField = Object.assign({name: '未知', value: '无'},extraField)
       if(key === 'cu') extraField.name = cuName
       extraField.value = item[1]

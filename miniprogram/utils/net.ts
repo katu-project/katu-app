@@ -74,6 +74,12 @@ export async function uploadCloudFile({filePath, cloudPath}){
 }
 
 export function createRequest(config){
+  if(config.type === 'wxc'){
+    wx.cloud.init({
+      env: config.apiBaseUrl,
+      traceUser: true,
+    })
+  }
   return function<T>(url, data?:any){
     return request<T>(url, data, config)
   }

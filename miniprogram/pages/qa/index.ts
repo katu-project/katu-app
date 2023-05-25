@@ -11,7 +11,7 @@ Page({
   },
   onLoad() {
     this.setData({
-      qaCate: app.Config.qaDocType
+      qaCate: app.qaDocTypeCate
     })
   },
   onReady() {

@@ -1,5 +1,4 @@
 import Controller from '@/class/controller'
-import AppConfig from '@/config'
 import api from '@/api'
 import { DefaultShowLockImage } from '@/const'
 
@@ -236,16 +235,6 @@ class CardManager extends Controller{
     return JSON.stringify(cacheCard) === JSON.stringify(remoteCard)
   }
   
-  async checkImageType(picPath:string){
-    try {
-      const imageType = await this.getImageType(picPath)
-      if(!AppConfig.allowUploadImageType.includes(imageType)) throw Error(` ${imageType} 图片格式不支持`)
-    } catch (error) {
-      console.error('image type check err:',error)
-      throw Error('图片格式不支持')
-    }
-  }
-
   async parseCardImageByRemoteApi(imagePath){
     await this.checkImageType(imagePath)
     const fileID = await this.uploadTempFile(imagePath)

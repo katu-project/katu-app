@@ -1,6 +1,6 @@
 import { APP_ENTRY_PATH } from '@/const'
 
-const AppConfig:IAppConfig = {
+export const AppConfig:IAppConfig = {
   api: {
     type: 'wxc',
     baseUrl: 'dev-4gglcut52bffa0ff'
@@ -107,5 +107,3 @@ const AppConfig:IAppConfig = {
     imageUrl: '/static/share.png'
   }
 }
-
-export default AppConfig

@@ -76,7 +76,7 @@ Page({
       return
     }
 
-    if(user.config?.general.useDefaultTag && app.Config.tags.find(tag=>tag.name === tagName)){
+    if(user.config?.general.useDefaultTag && app.defaultUsableTag.find(tag=>tag.name === tagName)){
       showError("内置标签已存在")
       return
     }

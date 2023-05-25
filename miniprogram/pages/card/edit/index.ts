@@ -69,7 +69,7 @@ Page({
 
   loadTagData(){
     const useDefaultTag = user.config?.general.useDefaultTag
-    const tags = (useDefaultTag ? app.Config.tags: []).concat(user.tags!)
+    const tags = (useDefaultTag ? app.defaultUsableTag: []).concat(user.tags!)
     this.setData({
       tags
     })
@@ -157,7 +157,7 @@ Page({
       return
     }
     // 检查卡面数量
-    if(card.image.length > app.Config.cardImageMaxNum) {
+    if(card.image.length > app.defaultUsableImageMaxNum) {
       showNotice("卡面数量错误")
       return
     }
