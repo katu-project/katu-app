@@ -19,7 +19,6 @@ class AppManager extends Controller {
 
   async init(){
     this.loadBaseInfo()
-    this.loadConfig()
     await this.loadModules()
     return
   }
@@ -75,24 +74,6 @@ class AppManager extends Controller {
         console.debug(info)
       }
     })
-  }
-
-  loadConfig(){
-    this.rewriteConfig()
-  }
-
-  rewriteConfig(){
-    wx.nextTick(()=>{
-      setTimeout(()=>{
-        this.loadDefaultTag()
-      },3000)
-    })
-  }
-
-  loadDefaultTag(){
-    api.getDefaultTag().then(tags=>{
-      this.Config.tags = tags
-    }).catch(console.warn)
   }
 
   async loadModules(){
