@@ -1,10 +1,6 @@
 import { APP_ENTRY_PATH } from '@/const'
 
 export const AppConfig:IAppConfig = {
-  api: {
-    type: 'wxc',
-    baseUrl: 'dev-4gglcut52bffa0ff'
-  },
   contacts:{
     email: 'info@katucloud.com'
   },

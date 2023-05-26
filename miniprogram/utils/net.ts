@@ -1,6 +1,30 @@
 import { toPromise } from './base'
 
-const request = async <T>(action: string, data={}, {baseUrl,type}): Promise<T> => {
+const createCommonRequestor = (options:ICommonRequestOptions) => {
+  const apiReq = args => wx.request(args)
+  apiReq.noLog = true
+  const request = (url:string, data?:any) => {
+    return toPromise(apiReq, {
+      url: `${options.baseUrl}/${url}`,
+      data,
+      method: options.method || 'POST'
+    }, 'data')
+  }
+  return request
+}
+
+const createCloudRequestor = (options:ICloudRequestOptions) => {
+  const request = async (url:string, data?:any)=>{
+    const {result} = await wx.cloud.callFunction({ 
+                    name: options.apiName,
+                    data: { action:url, data }
+                })
+    return result
+  }
+  return request
+}
+
+const request = async <T>(action: string, data:any, requestor): Promise<T> => {
   const error = {
     code: 0,
     message: ''
@@ -10,19 +34,7 @@ const request = async <T>(action: string, data={}, {baseUrl,type}): Promise<T> =
   let resp
 
   try {
-    if(type === 'api'){
-      const apiReq = (args) => wx.request(args)
-      apiReq.noLog = true
-      resp = await toPromise(apiReq, {
-        url: `${baseUrl}/${action}`,
-        data,
-        method: 'POST'
-      }, 'data')
-    }else{
-      const {result} = await wx.cloud.callFunction({ name: 'api', data: { action, data } })
-      resp = result
-    }
-    
+    resp = await requestor(action, data)
   } catch (err:any) {
     error.message = err.message
     error.code = 600 // 云函数报错
@@ -37,15 +49,14 @@ const request = async <T>(action: string, data={}, {baseUrl,type}): Promise<T> =
     throw error
   }
 
-  if(resp.code === 0){
-    return resp.data
-  }else{
+  if(resp.code !== 0){
     error.message = resp.msg
     error.code = resp.code // 1 业务报错 其他 系统错误
     if(resp.code != 1) wxLog.debug(error)
     throw error
   }
-  return resp
+
+  return resp.data
 }
 
 export async function download(url, filePath){
@@ -73,21 +84,24 @@ export async function uploadCloudFile({filePath, cloudPath}){
   return fileID
 }
 
-export function createRequest(config){
-  if(config.type === 'wxc'){
+export function createRequest(config:IRequestConfig){
+  let requestor
+  if(config.type === 'cloud'){
     wx.cloud.init({
-      env: config.apiBaseUrl,
+      env: config.cloud!.env,
       traceUser: true,
     })
+    requestor = createCloudRequestor(config.cloud!)
+  }else{
+    requestor = createCommonRequestor(config.common!)
   }
-  return function<T>(url, data?:any){
-    return request<T>(url, data, config)
-  }
+
+  return <T,K extends IAnyObject = IAnyObject>(url:string,data?:K) => request<T>(url,data||{},requestor)
 }
 
-export function createUploadRequest(config){
+export function createUploadRequest(config:IRequestConfig){
   return function(url, data?:any){
-    if(config.type === 'wxc'){
+    if(config.type === 'cloud'){
       return uploadCloudFile(data)
     }else{
       return upload(url, data)
@@ -95,8 +109,12 @@ export function createUploadRequest(config){
   }
 }
 
+export function createBaseRequest(config:IRequestConfig){
+  const request = createRequest(config)
+  const upload = createUploadRequest(config)
+  return {request, upload}
+}
+
 export default {
-  createRequest,
-  createUploadRequest,
   download
 }

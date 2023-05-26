@@ -1,8 +1,7 @@
 import { net } from '@/utils/index'
-import { ApiConfig } from "@/config/index"
+import { RequestConfig } from "@/config/index"
 
-const request = net.createRequest(ApiConfig)
-const upload = net.createUploadRequest(ApiConfig)
+const { request, upload } = net.createBaseRequest(RequestConfig)
 
 export default {
   // base

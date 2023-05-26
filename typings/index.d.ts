@@ -13,10 +13,6 @@ interface IAppOption {
 }
 
 interface IAppConfig {
-  api: {
-    type: 'wxc'|'api',
-    baseUrl: string
-  },
   contacts: {
     email: string
   }
@@ -37,6 +33,22 @@ interface IAppConfig {
   smsGapTime: number
   crypto: IAppCryptoConfig
   shareInfo: IAnyObject
+}
+
+type RequestType = 'cloud' | 'common'
+interface ICommonRequestOptions {
+  baseUrl: string
+  method: 'POST' | 'GET'
+}
+
+interface ICloudRequestOptions {
+  env: string
+  apiName: string
+}
+interface IRequestConfig {
+  type: RequestType
+  cloud?: ICloudRequestOptions
+  common?: ICommonRequestOptions
 }
 
 type UploadFileType = 'share' | 'card' | 'avatar' | 'temp'
