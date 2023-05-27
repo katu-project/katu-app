@@ -67,52 +67,42 @@ export async function download(url, filePath){
   })
 }
 
-export async function upload(url:string, {filePath, key}){
+async function upload({url, options:{filePath, uploadInfo}}){
   const upload = args => wx.uploadFile(args)
   return toPromise<string>(upload, {
     filePath,
     url,
-    key: key || 'file'
+    formData: uploadInfo,
+    key: 'file'
   }, 'data')
 }
 
-export async function uploadCloudFile({filePath, cloudPath}){
+async function uploadCloudFile({options:{filePath, uploadInfo}}){
   const {fileID} = await wx.cloud.uploadFile({
-    cloudPath,
+    cloudPath: uploadInfo.cloudPath,
     filePath
   })
   return fileID
 }
 
 export function createRequest(config:IRequestConfig){
-  let requestor
+  let requestor, uploader
   if(config.type === 'cloud'){
     wx.cloud.init({
       env: config.cloud!.env,
       traceUser: true,
     })
     requestor = createCloudRequestor(config.cloud!)
+    uploader = uploadCloudFile
   }else{
     requestor = createCommonRequestor(config.common!)
+    uploader = upload
   }
 
-  return <T,K extends IAnyObject = IAnyObject>(url:string,data?:K) => request<T>(url,data||{},requestor)
-}
-
-export function createUploadRequest(config:IRequestConfig){
-  return function(url, data?:any){
-    if(config.type === 'cloud'){
-      return uploadCloudFile(data)
-    }else{
-      return upload(url, data)
-    }
+  return {
+    request: <T,K extends IAnyObject = IAnyObject>(url:string,data?:K) => request<T>(url,data||{},requestor),
+    upload: (url:string, options):Promise<string> => uploader({url, options})
   }
-}
-
-export function createBaseRequest(config:IRequestConfig){
-  const request = createRequest(config)
-  const upload = createUploadRequest(config)
-  return {request, upload}
 }
 
 export default {

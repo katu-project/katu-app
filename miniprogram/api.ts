@@ -1,11 +1,11 @@
 import { net } from '@/utils/index'
 import { RequestConfig } from "@/config/index"
 
-const { request, upload } = net.createBaseRequest(RequestConfig)
+const { request, upload } = net.createRequest(RequestConfig)
 
 export default {
   // base
-  uploadFile: data => upload('app/upload', data),
+  uploadFile: (filePath:string, uploadInfo) => upload('app/upload', {filePath, uploadInfo}),
   // sys
   getSysConfig: <T extends keyof ISysConfig>(name: T) => request<filterSysConfigItem<T>>('app/config', {name}),
   

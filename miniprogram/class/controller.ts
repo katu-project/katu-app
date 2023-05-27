@@ -22,7 +22,7 @@ export default class Controller extends Agent {
 
   async uploadFile(filePath:string, type:UploadFileType) {
     const uploadInfo = await api.getUploadInfo({ type })
-    return api.uploadFile({ filePath, ...uploadInfo })
+    return api.uploadFile(filePath, uploadInfo)
   }
 
   async checkImageType(picPath:string){
