@@ -42,7 +42,8 @@
     ],
     "minifyWXML": true,
     "useStaticServer": true,
-    "ignoreUploadUnusedFiles": true
+    "ignoreUploadUnusedFiles": true,
+    "condition": false
   },
   "appid": "",
   "projectname": "卡兔APP",
