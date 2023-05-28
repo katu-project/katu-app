@@ -1,4 +1,5 @@
 import { toPromise } from './base'
+import file from './file'
 
 const createCommonRequestor = (options:ICommonRequestOptions) => {
   const apiReq = args => wx.request(args)
@@ -59,12 +60,25 @@ const request = async <T>(action: string, data:any, requestor): Promise<T> => {
   return resp.data
 }
 
-export async function download(url, filePath){
+export async function downloadCloudFile(url:string, savePath:string){
+  try {
+    const { tempFilePath } = await wx.cloud.downloadFile({ fileID: url })
+    await file.saveTempFile(tempFilePath, savePath)
+  } catch (error: any) {
+    console.error('download Cloud File Error:', error)
+    throw Error('文件下载失败')
+  }
+}
+
+export async function download(url:string, savePath:string){
   const download = args => wx.downloadFile(args)
-  return toPromise<WechatMiniprogram.DownloadFileSuccessCallbackResult>(download, {
+  const { statusCode, filePath } = await toPromise<WechatMiniprogram.DownloadFileSuccessCallbackResult>(download, {
     url,
-    filePath
+    filePath:savePath
   })
+  if (statusCode !== 200 || !filePath) {
+    throw Error("文件下载出错")
+  }
 }
 
 async function upload({url, options:{filePath, uploadInfo}}){
@@ -106,5 +120,6 @@ export function createRequest(config:IRequestConfig){
 }
 
 export default {
-  download
+  download,
+  downloadCloudFile
 }

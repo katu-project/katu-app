@@ -80,23 +80,12 @@ export default class Core extends Base {
 
     console.debug(`start download file:`, url)
     if (url.startsWith(WX_CLOUD_STORAGE_FILE_HEAD)) {
-      try {
-        const { tempFilePath } = await wx.cloud.downloadFile({ fileID: url })
-        console.debug('download tempFilePath:', tempFilePath)
-        // 不能使用moveFile，moveFile无权限操作临时文件
-        await file.saveTempFile(tempFilePath, savePath)
-      } catch (error: any) {
-        console.error('download Cloud File error:', error.errMsg)
-        throw Error('文件下载失败')
-      }
-      return savePath
+      await net.downloadCloudFile(url, savePath)
+    }else{
+      await net.download(url, savePath)
     }
 
-    const downloadRes = await net.download(url, savePath)
-    if (downloadRes.statusCode !== 200 || !downloadRes.filePath) {
-      throw Error("文件下载出错")
-    }
-    return downloadRes.filePath
+    return savePath
   }
 
   navToDoc(id){
