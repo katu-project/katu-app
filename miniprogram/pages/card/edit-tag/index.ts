@@ -81,6 +81,11 @@ Page({
       return
     }
 
+    const {checkPass} = await loadData(app.textContentsafetyCheck,tagName,'内容检查')
+    if(!checkPass){
+      throw new Error("数据似乎存在不适内容")
+    }
+
     const res = await loadData(user.createTag, {name:tagName})
     this.hideModal({currentTarget:{dataset:{key:'showCreateTag'}}})
     this.setData({

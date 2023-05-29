@@ -1,8 +1,6 @@
 import Controller from '@/class/controller'
 import api from "@/api"
 import { objectSetValue } from "@/utils/index"
-import { getAppManager } from "@/controller/app"
-
 export default class User extends Controller {
   _user: Partial<IUser> = {}
   _avatar: string = ''
@@ -10,10 +8,6 @@ export default class User extends Controller {
 
   constructor(){
     super()
-  }
-
-  get app(){
-    return getAppManager()
   }
 
   get config(){
@@ -164,11 +158,6 @@ export default class User extends Controller {
   }
 
   async createTag(tag: Pick<ICardTag,'name'>){
-    const checkText = tag.name
-    const {checkPass} = await this.app.textContentsafetyCheck(checkText)
-    if(!checkPass){
-      throw new Error("数据似乎存在不适内容")
-    }
     return api.createTag(tag.name)
   }
 
@@ -194,11 +183,11 @@ export default class User extends Controller {
 
       if(this.config?.security.rememberPassword){
         console.log('缓存主密码');
-        this.app.cacheMasterKey()
+        this.emit('CacheMasterKey')
       }else{
         if(this.config?.security.lockOnExit){
           console.log('退出并清除主密码');
-          this.app.clearMasterKey()
+          this.emit('ClearMasterKey')
         }
       }
     })

@@ -1,4 +1,3 @@
-import '@/utils/override'
 import Controller from '@/class/controller'
 import api from '@/api'
 import { showChoose, chooseLocalImage, switchTab, sleep, file } from '@/utils/index'
@@ -17,6 +16,7 @@ class AppManager extends Controller {
 
   async init(){
     this.loadBaseInfo()
+    this.loadGlobalEvents()
     await this.loadModules()
     return
   }
@@ -64,6 +64,11 @@ class AppManager extends Controller {
         console.debug(info)
       }
     })
+  }
+
+  loadGlobalEvents(){
+    this.on('CacheMasterKey', this.cacheMasterKey)
+    this.on('ClearMasterKey', this.clearMasterKey)
   }
 
   async loadModules(){

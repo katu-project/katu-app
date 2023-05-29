@@ -1,3 +1,4 @@
+import '@/utils/override'
 import { getAppManager } from '@/controller/app'
 const app = getAppManager()
 
