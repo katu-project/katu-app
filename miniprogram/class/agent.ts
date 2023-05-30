@@ -1,5 +1,6 @@
 import Core from '@/class/core'
 import { AppConfig } from '@/config/index'
+import ConstData from '@/const'
 export default abstract class Agent extends Core {
 
   abstract uploadFile(filePath:string, uploadType:UploadFileType): Promise<string>
@@ -54,6 +55,11 @@ export default abstract class Agent extends Core {
 
   get cryptoConfig(){
     return AppConfig.crypto
+  }
+
+  // const proxy
+  get DefaultShowLockImage(){
+    return ConstData.DefaultShowLockImage
   }
 
   async uploadAvatar(filePath:string){

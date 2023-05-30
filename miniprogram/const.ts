@@ -1,25 +1,25 @@
-const DefaultShowImage = '/static/images/image.svg'
-const DefaultShowLockImage = '/static/images/lock.svg'
-const DefaultLoadFailedImage = '/static/images/load-failed.svg'
-const DefaultUserAvatar = '/static/images/default-avatar.png'
-const DefaultAddImage = '/static/images/add.svg'
-const DefaultShareImage = '/static/share.png'
-const WX_CLOUD_STORAGE_FILE_HEAD = 'cloud://'
+export const DefaultShowImage = '/static/images/image.svg'
+export const DefaultShowLockImage = '/static/images/lock.svg'
+export const DefaultLoadFailedImage = '/static/images/load-failed.svg'
+export const DefaultUserAvatar = '/static/images/default-avatar.png'
+export const DefaultAddImage = '/static/images/add.svg'
+export const DefaultShareImage = '/static/share.png'
+export const WX_CLOUD_STORAGE_FILE_HEAD = 'cloud://'
 
-const APP_ROOT_DIR = `${wx.env.USER_DATA_PATH}/katu`
-const APP_TEMP_DIR = `${APP_ROOT_DIR}/temp`
-const APP_DOWN_DIR = `${APP_ROOT_DIR}/down`
-const APP_IMAGE_DIR = `${APP_ROOT_DIR}/image`
+export const APP_ROOT_DIR = `${wx.env.USER_DATA_PATH}/katu`
+export const APP_TEMP_DIR = `${APP_ROOT_DIR}/temp`
+export const APP_DOWN_DIR = `${APP_ROOT_DIR}/down`
+export const APP_IMAGE_DIR = `${APP_ROOT_DIR}/image`
 
-const PACKAGE_VER_LENGTH = 8
+export const PACKAGE_VER_LENGTH = 8
 
-const STANDARD_CARD_DATA = {
+export const STANDARD_CARD_DATA = {
   width: 85.60,
   height: 53.98,
-  ratio: 53.98 / 85.60
+  ratio: 0.63
 }
 
-const ColorList = [
+export const ColorList = [
   {
     title: '嫣红',
     name: 'red',
@@ -96,7 +96,7 @@ const ColorList = [
     color: '#ffffff'
   },
 ]
-const PAGES_MENU = {
+export const PAGES_MENU = {
   profile: [
     {
       icon: 'choiceness',
@@ -129,7 +129,7 @@ const PAGES_MENU = {
   ]
 }
 
-const _LocalCacheKeyMap = [
+export const _LocalCacheKeyMap = [
   "MASTER_KEY_CACHE_KEY",
   "HOME_DATA_CACHE_KEY",
   "CARD_EXTRA_DATA_CACHE_KEY",
@@ -138,21 +138,21 @@ const _LocalCacheKeyMap = [
   "USER_INFO_CACHE_KEY"
 ] as const
 
-const LocalCacheKeyMap = Object.fromEntries(_LocalCacheKeyMap.map(e=>[e,e])) as TupleToObject<typeof _LocalCacheKeyMap>
+export const LocalCacheKeyMap = Object.fromEntries(_LocalCacheKeyMap.map(e=>[e,e])) as TupleToObject<typeof _LocalCacheKeyMap>
 
-const _ONCE_NOTICE_KEYS = [
+export const _ONCE_NOTICE_KEYS = [
   "ENCRYPT_SAVE",
   "SHARE_DATA",
   "DATA_CHECK",
 ] as const
 
-const ONCE_NOTICE_KEYS = Object.fromEntries(_ONCE_NOTICE_KEYS.map(e=>[e,e])) as TupleToObject<typeof _ONCE_NOTICE_KEYS>
+export const ONCE_NOTICE_KEYS = Object.fromEntries(_ONCE_NOTICE_KEYS.map(e=>[e,e])) as TupleToObject<typeof _ONCE_NOTICE_KEYS>
 
-const APP_ENTRY_PATH = 'home/index'
+export const APP_ENTRY_PATH = 'home/index'
 
-const DEFAULT_IMAGE_HASH_METHOD = 'MD5'
+export const DEFAULT_IMAGE_HASH_METHOD = 'MD5'
 
-export {
+export default {
   DefaultShowImage,
   DefaultShowLockImage,
   DefaultAddImage,

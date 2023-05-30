@@ -8,8 +8,6 @@ export default {
   uploadFile: (filePath:string, uploadInfo) => upload('app/upload', {filePath, uploadInfo}),
   // sys
   getSysConfig: <T extends keyof ISysConfig>(name: T) => request<filterSysConfigItem<T>>('app/config', {name}),
-  
-  getDefaultTag: () => request<ICardTag[]>('app/tags'),
 
   getChangeLog: () => request<IChangeLog[]>('app/changeLog'),
 

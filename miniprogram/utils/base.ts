@@ -22,9 +22,9 @@ export function selfish (target) {
   return proxy;
 }
 
-export function objectSetValue(obj,path,value) {
+export function objectSetValue(obj,path,value,separator) {
   let i
-  path = path.split('_')
+  path = path.split(separator)
   for (i = 0; i < path.length - 1; i++){
     if(!(path[i] in obj)) throw Error('path not exist')
     obj = obj[path[i]];

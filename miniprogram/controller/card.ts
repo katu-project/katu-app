@@ -1,6 +1,5 @@
 import Controller from '@/class/controller'
 import api from '@/api'
-import { DefaultShowLockImage } from '@/const'
 
 class CardManager extends Controller{
   constructor(){
@@ -183,7 +182,7 @@ class CardManager extends Controller{
           }
         } catch (_) {
           if(card.encrypted){
-            image._url = DefaultShowLockImage
+            image._url = this.DefaultShowLockImage
           }else{  // 普通图片未缓存则使用远程地址，并在后台缓存
             image._url = image.url
             this.cache.setCardImage(image, false)

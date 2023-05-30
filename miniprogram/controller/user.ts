@@ -1,6 +1,6 @@
 import Controller from '@/class/controller'
 import api from "@/api"
-import { objectSetValue } from "@/utils/index"
+
 export default class User extends Controller {
   _user: Partial<IUser> = {}
   _avatar: string = ''
@@ -133,7 +133,7 @@ export default class User extends Controller {
   async applyConfig(configItem:{key:string,value:string}){
     try {
       await api.updateUserConfig(configItem)
-      return objectSetValue(this.user, configItem.key, configItem.value)
+      return this.objectSetValue(this.user, configItem.key, configItem.value)
     } catch (error:any) {
       console.warn('applyConfig:',error.message)
       await this.reloadInfo()

@@ -1,4 +1,4 @@
-import { selfish, file } from "@/utils/index"
+import { selfish, file, objectSetValue } from "@/utils/index"
 import mitt from 'mitt'
 const emitter = mitt()
 
@@ -33,5 +33,9 @@ export default class Base {
       dir,
       name
     })
+  }
+
+  objectSetValue(obj:IAnyObject, path:string, value:any, separator?:string){
+    return objectSetValue(obj,path,value,separator || '_')
   }
 }
