@@ -1,5 +1,5 @@
 import { loadData, navigateTo, showSuccess } from '@/utils/index'
-import { DefaultUserAvatar, PAGES_MENU } from '@/const'
+import { DefaultUserAvatar } from '@/const'
 import { getAppManager } from '@/controller/app'
 import { getUserManager } from '@/controller/user'
 const app = getAppManager()
@@ -9,7 +9,7 @@ Page({
   data: {
     user: {} as Partial<IUser>,
     activeInfo: {},
-    menus: PAGES_MENU.profile,
+    menus: app.profileMenus,
     DefaultUserAvatar
   },
   onLoad() {

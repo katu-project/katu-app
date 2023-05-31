@@ -19,39 +19,6 @@ export const STANDARD_CARD_DATA = {
   ratio: 0.63
 }
 
-export const PAGES_MENU = {
-  profile: [
-    {
-      icon: 'choiceness',
-      name: '兔币明细',
-      url: '../quota/index',
-      dev: true
-    },
-    {
-      icon: 'tag',
-      name: '卡片标签',
-      url: '../card/edit-tag/index'
-    },
-    {
-      icon: 'settings',
-      name: '软件设置',
-      url: '../settings/index'
-    },
-    {
-      icon: 'question',
-      name: '使用帮助 ( Q&A )',
-      url: '../qa/index',
-      pass: true
-    },
-    {
-      icon: 'info',
-      name: '关于卡兔',
-      url: '../about/index',
-      pass: true
-    }
-  ]
-}
-
 const _LocalCacheKeyMap = [
   "MASTER_KEY_CACHE_KEY",
   "HOME_DATA_CACHE_KEY",
@@ -88,7 +55,6 @@ export default {
   APP_IMAGE_DIR,
   PACKAGE_VER_LENGTH,
   STANDARD_CARD_DATA,
-  PAGES_MENU,
   APP_ENTRY_PATH,
   WX_CLOUD_STORAGE_FILE_HEAD,
   LocalCacheKeyMap,

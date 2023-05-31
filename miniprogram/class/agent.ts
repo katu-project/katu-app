@@ -1,5 +1,5 @@
 import Core from '@/class/core'
-import { AppConfig, ColorList } from '@/config/index'
+import { AppConfig, ColorList, MenuConfig } from '@/config/index'
 import ConstData from '@/const'
 export default abstract class Agent extends Core {
 
@@ -59,6 +59,10 @@ export default abstract class Agent extends Core {
 
   get tagColorList(){
     return ColorList
+  }
+
+  get profileMenus(){
+    return MenuConfig.profile
   }
 
   // const proxy
