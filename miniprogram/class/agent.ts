@@ -1,5 +1,5 @@
 import Core from '@/class/core'
-import { AppConfig } from '@/config/index'
+import { AppConfig, ColorList } from '@/config/index'
 import ConstData from '@/const'
 export default abstract class Agent extends Core {
 
@@ -55,6 +55,10 @@ export default abstract class Agent extends Core {
 
   get cryptoConfig(){
     return AppConfig.crypto
+  }
+
+  get tagColorList(){
+    return ColorList
   }
 
   // const proxy

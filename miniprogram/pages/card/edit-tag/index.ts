@@ -1,6 +1,4 @@
 import { showChoose, loadData, showError, showSuccess } from '@/utils/index'
-import { ColorList } from '@/const'
-
 import { getAppManager } from '@/controller/app'
 import { getUserManager } from '@/controller/user'
 const user = getUserManager()
@@ -12,7 +10,7 @@ Page({
     tempTagName: '',
     selectedTagIdx: -1,
     tempTagColor: '',
-    colors: ColorList
+    colors: app.tagColorList
   },
   onReady() {
     
