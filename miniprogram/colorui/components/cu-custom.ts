@@ -1,5 +1,4 @@
 const app = getApp()
-import { APP_ENTRY_PATH } from '@/const'
 
 Component({
   options: {
@@ -39,7 +38,7 @@ Component({
     },
     toHome(){
       wx.reLaunch({
-        url: `/pages/${APP_ENTRY_PATH}`,
+        url: `/pages/home/index`,
       })
     }
   }

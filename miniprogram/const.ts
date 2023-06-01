@@ -11,13 +11,11 @@ export const APP_TEMP_DIR = `${APP_ROOT_DIR}/temp`
 export const APP_DOWN_DIR = `${APP_ROOT_DIR}/down`
 export const APP_IMAGE_DIR = `${APP_ROOT_DIR}/image`
 
-export const PACKAGE_VER_LENGTH = 8
-
-export const STANDARD_CARD_DATA = {
-  width: 85.60,
-  height: 53.98,
-  ratio: 0.63
-}
+// export const STANDARD_CARD_DATA = {
+//   width: 85.60,
+//   height: 53.98,
+//   ratio: 0.63
+// }
 
 const _LocalCacheKeyMap = [
   "MASTER_KEY_CACHE_KEY",
@@ -53,8 +51,7 @@ export default {
   APP_TEMP_DIR,
   APP_DOWN_DIR,
   APP_IMAGE_DIR,
-  PACKAGE_VER_LENGTH,
-  STANDARD_CARD_DATA,
+  // STANDARD_CARD_DATA,
   APP_ENTRY_PATH,
   WX_CLOUD_STORAGE_FILE_HEAD,
   LocalCacheKeyMap,

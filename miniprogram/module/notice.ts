@@ -1,5 +1,4 @@
 import Module from "@/class/module"
-import { LocalCacheKeyMap, ONCE_NOTICE_KEYS } from "@/const"
 
 class Notice extends Module {
   lastNoticeFetchTime: number = 0
@@ -24,14 +23,14 @@ class Notice extends Module {
   }
 
   async _getOnceNoticeLog(){
-    const sets = await this.getLocalData<{[key:string]:boolean}>(LocalCacheKeyMap.ONCE_NOTICE_CACHE_KEY)
+    const sets = await this.getLocalData<{[key:string]:boolean}>(this.LocalCacheKeyMap.ONCE_NOTICE_CACHE_KEY)
     return sets || {}
   }
 
   async _setOnceNoticeLog(key, value){
     const sets = await this._getOnceNoticeLog()    
     sets[key] = value
-    return this.setLocalData(LocalCacheKeyMap.ONCE_NOTICE_CACHE_KEY, sets)
+    return this.setLocalData(this.LocalCacheKeyMap.ONCE_NOTICE_CACHE_KEY, sets)
   }
 
   async _getOnceNotice(key){
@@ -40,24 +39,24 @@ class Notice extends Module {
   }
 
   async getKnowEncryptSave(){
-    return this._getOnceNotice(ONCE_NOTICE_KEYS.ENCRYPT_SAVE)
+    return this._getOnceNotice(this.ONCE_NOTICE_KEYS.ENCRYPT_SAVE)
   }
   async setKnowEncryptSave(){
-    return this._setOnceNoticeLog(ONCE_NOTICE_KEYS.ENCRYPT_SAVE,true)
+    return this._setOnceNoticeLog(this.ONCE_NOTICE_KEYS.ENCRYPT_SAVE,true)
   }
 
   async getKnowShareData(){
-    return this._getOnceNotice(ONCE_NOTICE_KEYS.SHARE_DATA)
+    return this._getOnceNotice(this.ONCE_NOTICE_KEYS.SHARE_DATA)
   }
   async setKnowShareData(){
-    return this._setOnceNoticeLog(ONCE_NOTICE_KEYS.SHARE_DATA,true)
+    return this._setOnceNoticeLog(this.ONCE_NOTICE_KEYS.SHARE_DATA,true)
   }
 
   async getKnowDataCheck(){
-    return this._getOnceNotice(ONCE_NOTICE_KEYS.DATA_CHECK)
+    return this._getOnceNotice(this.ONCE_NOTICE_KEYS.DATA_CHECK)
   }
   async setKnowDataCheck(){
-    return this._setOnceNoticeLog(ONCE_NOTICE_KEYS.DATA_CHECK,true)
+    return this._setOnceNoticeLog(this.ONCE_NOTICE_KEYS.DATA_CHECK,true)
   }
 }
 

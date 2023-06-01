@@ -182,7 +182,7 @@ class CardManager extends Controller{
           }
         } catch (_) {
           if(card.encrypted){
-            image._url = this.DefaultShowLockImage
+            image._url = this.getConst('DefaultShowLockImage')
           }else{  // 普通图片未缓存则使用远程地址，并在后台缓存
             image._url = image.url
             this.cache.setCardImage(image, false)

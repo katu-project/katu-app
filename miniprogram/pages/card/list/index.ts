@@ -1,6 +1,5 @@
 import api from '@/api'
 import { createAdvSetData, loadData, navigateTo } from '@/utils/index'
-import { DefaultShowImage, DefaultShowLockImage } from '@/const'
 import { getAppManager } from '@/controller/app'
 import { getCardManager } from '@/controller/card'
 const app = getAppManager()
@@ -48,9 +47,9 @@ Page({
       this.setData({
         list: list.map(card=>{
           if(card.encrypted){
-            card._url = DefaultShowLockImage
+            card._url = app.getConst('DefaultShowLockImage')
           }else{
-            card._url = DefaultShowImage
+            card._url = app.getConst('DefaultShowImage')
           }
           return card
         })
@@ -86,7 +85,7 @@ Page({
       }
       if(originCard.image[0].hash !== card.image[0].hash){
         setData[`list[${idx}].image`] = card.image
-        setData[`list[${idx}]._url`] = card.encrypted ? DefaultShowLockImage : DefaultShowImage
+        setData[`list[${idx}]._url`] = app.getConst(card.encrypted ? 'DefaultShowLockImage' : 'DefaultShowImage')
       }
       if(Object.keys(setData).length) this.setData(setData)
       this.loadCardImage(card, idx)
@@ -99,7 +98,7 @@ Page({
     console.log('list page: onEventCardHide:', id, findCard.title)
     if(findCard){
       const setData = {}
-      setData[`list[${idx}]._url`] = DefaultShowLockImage
+      setData[`list[${idx}]._url`] = app.getConst('DefaultShowLockImage')
       setData[`list[${idx}]._showEncryptIcon`] = false
       this.setData(setData)
     }

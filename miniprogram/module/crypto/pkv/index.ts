@@ -1,7 +1,7 @@
-import { PACKAGE_VER_LENGTH } from '@/const'
 import { file } from '@/utils/index'
 import v0 from './v0'
 
+const PACKAGE_VER_LENGTH = 8
 const CPKMarkMap: {[v:string]:CpkVersion} = {
     [v0.mid]: v0.ver
 }

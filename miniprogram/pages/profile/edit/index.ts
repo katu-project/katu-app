@@ -1,13 +1,12 @@
 import { loadData, showError, showSuccess, showNotice, navigateBack } from '@/utils/index'
 import { getUserManager } from '@/controller/user'
-import { DefaultUserAvatar } from '@/const'
 import api from '@/api'
 const user = getUserManager()
 
 Page({
   originData: {} as {name:string, avatar:string},
   data: {
-    avatar: DefaultUserAvatar,
+    avatar: user.getConst('DefaultUserAvatar'),
     name: ''
   },
   onLoad() {

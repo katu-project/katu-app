@@ -1,5 +1,3 @@
-import { APP_ENTRY_PATH } from '@/const'
-
 export const AppConfig:IAppConfig = {
   contacts:{
     email: 'info@katucloud.com'
@@ -99,7 +97,7 @@ export const AppConfig:IAppConfig = {
   },
   shareInfo: {
     title: '卡兔-安全好用的卡片管理助手',
-    path: `/pages/${APP_ENTRY_PATH}`,
+    path: `/pages/home/index`,
     imageUrl: '/static/share.png'
   }
 }

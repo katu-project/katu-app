@@ -1,7 +1,6 @@
 import Controller from '@/class/controller'
 import api from '@/api'
 import { showChoose, chooseLocalImage, switchTab, sleep, file } from '@/utils/index'
-import { APP_ENTRY_PATH, APP_ROOT_DIR } from '@/const'
 import { getCardManager } from './card'
 import { getUserManager } from './user'
 
@@ -292,7 +291,7 @@ class AppManager extends Controller {
   //数据
   //清除缓存
   async clearCacheData(){
-    await file.rmdir(APP_ROOT_DIR, true)
+    await file.rmdir(this.getConst('APP_ROOT_DIR'), true)
     await this.cache.clearAll()
     return 
   }
@@ -383,7 +382,7 @@ class AppManager extends Controller {
   // 导航
   async reLaunch(path?:string){
     return wx.reLaunch({
-      url: path || `/pages/${APP_ENTRY_PATH}`,
+      url: path || `/pages/${this.getConst('APP_ENTRY_PATH')}`,
     })
   }
 

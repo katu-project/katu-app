@@ -1,5 +1,4 @@
 import { loadData, navigateTo, createAdvSetData, debounce } from '@/utils/index'
-import { DefaultShowLockImage, DefaultShowImage, DefaultLoadFailedImage } from '@/const'
 import api from '@/api'
 import { getAppManager } from '@/controller/app'
 import { getUserManager } from '@/controller/user'
@@ -64,7 +63,7 @@ Page({
 
     if(likeList.length){
       setData['likeList'] = likeList.map(card=>{
-        card._url = card.encrypted ? DefaultShowLockImage : DefaultShowImage
+        card._url = app.getConst(card.encrypted ? 'DefaultShowLockImage' : 'DefaultShowImage')
         return card
       })
     }
@@ -104,7 +103,7 @@ Page({
     console.log('home page: onEventCardHide:', id, findCard.title)
     if(findCard){
       const setData = {}
-      setData[`likeList[${idx}]._url`] = DefaultShowLockImage
+      setData[`likeList[${idx}]._url`] = app.getConst('DefaultShowLockImage')
       setData[`likeList[${idx}]._showEncryptIcon`] = false
       this.setData(setData)
     }
@@ -134,7 +133,7 @@ Page({
         image: [card.image[0]],
         title: card.title,
         _id: card._id,
-        _url: card.encrypted ? DefaultShowLockImage : DefaultShowImage
+        _url:  app.getConst(card.encrypted ? 'DefaultShowLockImage' : 'DefaultShowImage')
       }
     }else{
       const oldCard = this.data.likeList[idx]
@@ -143,7 +142,7 @@ Page({
       }
       if(oldCard.image[0].hash !== card.image[0].hash){
         setData[`likeList[${idx}].image`] = card.image
-        setData[`likeList[${idx}]._url`] = card.encrypted ? DefaultShowLockImage : DefaultShowImage
+        setData[`likeList[${idx}]._url`] = app.getConst(card.encrypted ? 'DefaultShowLockImage' : 'DefaultShowImage')
       }
     }
     if(Object.keys(setData).length) this.setData(setData)
@@ -270,7 +269,7 @@ Page({
 
   onBindLoadError(e){
     this.setData({
-      [`likeList[${e.currentTarget.dataset.idx}]._url`]: DefaultLoadFailedImage
+      [`likeList[${e.currentTarget.dataset.idx}]._url`]: app.getConst('DefaultLoadFailedImage')
     })
   },
 

@@ -1,5 +1,4 @@
 import { showNotice, showChoose, navigateTo, loadData, navigateBack } from '@/utils/index'
-import { DefaultAddImage } from '@/const'
 import { getCardManager } from '@/controller/card'
 import { getAppManager } from '@/controller/app'
 import { getUserManager } from '@/controller/user'
@@ -18,7 +17,7 @@ Page({
       tags: [] as String[],
       setLike: false,
       image: [
-        { url: DefaultAddImage }
+        { url: app.getConst('DefaultAddImage') }
       ],
       info: []
     },
@@ -152,7 +151,7 @@ Page({
   async tapToSaveCard(){
     const card = this.data.card
     // 卡片数据有效性检查
-    if(card.image.filter(e=>e.url === DefaultAddImage).length > 0) {
+    if(card.image.filter(e=>e.url === app.getConst('DefaultAddImage')).length > 0) {
       showNotice('请先添加卡片')
       return
     }
@@ -253,7 +252,7 @@ Page({
     const idx = this.data.card.image.length
     if(idx == 1){
       this.setData({
-        'card.image': this.data.card.image.concat({url: DefaultAddImage})
+        'card.image': this.data.card.image.concat({url: app.getConst('DefaultAddImage')})
       })
     }else{
       this.setData({

@@ -1,6 +1,6 @@
 import { convert, file } from "@/utils/index"
-import { PACKAGE_VER_LENGTH } from "@/const"
 
+const PACKAGE_VER_LENGTH = 8
 const VERSION_MARK = '0000952700004396'
 const metaInfo = {
     salt2: 8,

@@ -1,6 +1,5 @@
 import Core from '@/class/core'
 import { AppConfig, ColorList, MenuConfig } from '@/config/index'
-import ConstData from '@/const'
 export default abstract class Agent extends Core {
 
   abstract uploadFile(filePath:string, uploadType:UploadFileType): Promise<string>
@@ -63,11 +62,6 @@ export default abstract class Agent extends Core {
 
   get profileMenus(){
     return MenuConfig.profile
-  }
-
-  // const proxy
-  get DefaultShowLockImage(){
-    return ConstData.DefaultShowLockImage
   }
 
   async uploadAvatar(filePath:string){

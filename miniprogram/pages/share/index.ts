@@ -1,8 +1,7 @@
-import api from "@/api";
-import { getAppManager } from "@/controller/app";
-import { getCardManager } from "@/controller/card";
-import { DefaultShowLockImage, DefaultShowImage } from "@/const";
-import { loadData, showChoose, showError } from "@/utils/index";
+import api from "@/api"
+import { getAppManager } from "@/controller/app"
+import { getCardManager } from "@/controller/card"
+import { loadData, showChoose, showError } from "@/utils/index"
 
 const app = getAppManager()
 
@@ -17,7 +16,7 @@ Page({
     card: {
       image: [
         {
-          _url: DefaultShowImage
+          _url: app.getConst('DefaultShowImage')
         }
       ]
     } as Partial<ICard>,
@@ -49,7 +48,7 @@ Page({
       'card.encrypted': card.encrypted,
       'card.image': card.image?.map(pic=>{
         pic._url = pic.url
-        if(card.encrypted) pic._url = DefaultShowLockImage
+        if(card.encrypted) pic._url = app.getConst('DefaultShowLockImage')
         return pic
       }),
       [`card.info`]: app.rebuildExtraFields(card.info || []),
@@ -62,13 +61,13 @@ Page({
   async tapToChoosePic(e){
     this.chooseIdx = e.currentTarget.dataset.index
     const image = this.data.card.image![this.chooseIdx]
-    if(!this.data.card.encrypted || image._url !== DefaultShowLockImage){
+    if(!this.data.card.encrypted || image._url !== app.getConst('DefaultShowLockImage')){
       return this.previewImage(this.chooseIdx)
     }
     this.showEncryptedImage()
   },
   async previewImage(idx=0){
-    const pics = this.data.card.image!.filter(e=>e._url !== DefaultShowLockImage).map(e=>e._url!)
+    const pics = this.data.card.image!.filter(e=>e._url !== app.getConst('DefaultShowLockImage')).map(e=>e._url!)
     app.previewImage(pics, idx)
   },
   async showEncryptedImage(){    

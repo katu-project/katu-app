@@ -1,5 +1,4 @@
 import { loadData, showChoose, showError, navigateBack, showNotice } from '@/utils/index'
-import { DefaultShowImage } from '@/const'
 import { getCardManager } from '@/controller/card'
 import { getAppManager } from '@/controller/app'
 const app = getAppManager()
@@ -13,7 +12,7 @@ Page({
   },
   onLoad(options) {
     this.setData({
-      tmpImagePath: DefaultShowImage
+      tmpImagePath: app.getConst('DefaultShowImage')
     })
     if(options.value){
       this.originImagePath = options.value

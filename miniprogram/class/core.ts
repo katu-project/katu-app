@@ -1,8 +1,13 @@
 import Base from '@/class/base'
-import { APP_TEMP_DIR, APP_ROOT_DIR, APP_IMAGE_DIR, APP_DOWN_DIR, WX_CLOUD_STORAGE_FILE_HEAD, DEFAULT_IMAGE_HASH_METHOD } from "@/const"
+import Const from "@/const"
 import { navigateTo, getCache, setCache, delCache, file, net, crypto } from "@/utils/index"
 
 export default class Core extends Base {
+
+  getConst<T extends keyof typeof Const>(key:T){
+    return Const[key]
+  }
+
   async getLocalData<T>(key: string) {
     try {
       const res: T = await getCache(key)
@@ -31,17 +36,17 @@ export default class Core extends Base {
 
   async getImageHash(filePath: string, hash?: string) {
     const fileHexData = await file.readFile(filePath, 'hex')
-    const hashValue = crypto[hash || DEFAULT_IMAGE_HASH_METHOD].call(null, fileHexData)
+    const hashValue = crypto[hash || this.getConst('DEFAULT_IMAGE_HASH_METHOD')].call(null, fileHexData)
     console.debug('getHash: ', filePath, hashValue)
     return hashValue as string
   }
 
   async getTempFilePath(fileName: string) {
-    return this.getFilePath(APP_TEMP_DIR, fileName)
+    return this.getFilePath(this.getConst('APP_TEMP_DIR'), fileName)
   }
 
   async getRootPath(fileName: string) {
-    return this.getFilePath(APP_ROOT_DIR, fileName)
+    return this.getFilePath(this.getConst('APP_ROOT_DIR'), fileName)
   }
 
   async getImageFilePath(image: Pick<ICardImage, 'url'>) {
@@ -50,7 +55,7 @@ export default class Core extends Base {
     if (!fileName) {
       throw Error('图片文件名不能为空')
     }
-    return this.getFilePath(APP_IMAGE_DIR, fileName)
+    return this.getFilePath(this.getConst('APP_IMAGE_DIR'), fileName)
   }
 
   async getDownloadFilePath(image: Pick<ICardImage, 'url'>) {
@@ -59,7 +64,7 @@ export default class Core extends Base {
     if (!fileName) {
       throw Error('图片文件名不能为空')
     }
-    return this.getFilePath(APP_DOWN_DIR, fileName)
+    return this.getFilePath(this.getConst('APP_DOWN_DIR'), fileName)
   }
 
   async downloadFile(options: { url: string, savePath?: string, ignoreCache?: boolean }) {
@@ -79,7 +84,7 @@ export default class Core extends Base {
     }
 
     console.debug(`start download file:`, url)
-    if (url.startsWith(WX_CLOUD_STORAGE_FILE_HEAD)) {
+    if (url.startsWith(this.getConst('WX_CLOUD_STORAGE_FILE_HEAD'))) {
       await net.downloadCloudFile(url, savePath)
     }else{
       await net.download(url, savePath)

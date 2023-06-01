@@ -1,5 +1,4 @@
 import { loadData, navigateTo, showSuccess } from '@/utils/index'
-import { DefaultUserAvatar } from '@/const'
 import { getAppManager } from '@/controller/app'
 import { getUserManager } from '@/controller/user'
 const app = getAppManager()
@@ -10,7 +9,7 @@ Page({
     user: {} as Partial<IUser>,
     activeInfo: {},
     menus: app.profileMenus,
-    DefaultUserAvatar
+    DefaultUserAvatar: app.getConst('DefaultUserAvatar')
   },
   onLoad() {
     app.on('userChange',this.onEventUserChange)
@@ -61,7 +60,7 @@ Page({
   onEventUserChange(){
     console.log('onEventUserChange')
     this.setData({
-      'user.avatarUrl': DefaultUserAvatar
+      'user.avatarUrl': app.getConst('DefaultUserAvatar')
     })
     this.reloadUserInfo()
   },

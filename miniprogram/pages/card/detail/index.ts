@@ -1,4 +1,3 @@
-import { DefaultShowLockImage, DefaultShowImage, DefaultShareImage, DefaultLoadFailedImage } from '@/const'
 import { showChoose, showError, loadData, navigateBack, setClipboardData, navigateTo, showNotice } from '@/utils/index'
 import { getCardManager } from '@/controller/card'
 import { getUserManager } from '@/controller/user'
@@ -25,7 +24,7 @@ Page({
       encrypted: false,
       image: [
         {
-          _url: DefaultShowImage,
+          _url: app.getConst('DefaultShowImage'),
           url: '',
           salt: '',
           hash: ''
@@ -79,14 +78,14 @@ Page({
     this.setData({
       card,
       'extraData': app.rebuildExtraFields(card.info),
-      'showHideCardData': card.encrypted && !user.config?.general.autoShowContent && card.image.some(e=>e._url !== DefaultShowLockImage)
+      'showHideCardData': card.encrypted && !user.config?.general.autoShowContent && card.image.some(e=>e._url !== app.getConst('DefaultShowLockImage'))
     })
     // this.checkActionUsability()
     this.autoShowContent()
   },
 
   autoShowContent(){
-    if(this.data.card.encrypted && this.data.card.image?.some(e=>e._url === DefaultShowLockImage)){
+    if(this.data.card.encrypted && this.data.card.image?.some(e=>e._url === app.getConst('DefaultShowLockImage'))){
       if(this.data.card.encrypted && user.config?.general.autoShowContent){
         this.showEncryptedImage()
       }
@@ -141,7 +140,7 @@ Page({
   async tapToChoosePic(e){
     this.chooseIdx = e.currentTarget.dataset.index
     const image = this.data.card.image![this.chooseIdx]
-    if(!this.data.card.encrypted || image._url !== DefaultShowLockImage){
+    if(!this.data.card.encrypted || image._url !== app.getConst('DefaultShowLockImage')){
       return this.previewImage(this.chooseIdx)
     }
     this.showEncryptedImage()
@@ -176,7 +175,7 @@ Page({
   },
 
   async previewImage(idx=0){
-    const pics = this.data.card.image!.filter(e=>e._url !== DefaultShowLockImage).map(e=>e._url!)
+    const pics = this.data.card.image!.filter(e=>e._url !== app.getConst('DefaultShowLockImage')).map(e=>e._url!)
     app.previewImage(pics, idx)
   },
 
@@ -186,7 +185,7 @@ Page({
   },
 
   _tapToEditCard(){
-    if(this.data.card.encrypted && this.data.card.image?.some(e=>e._url === DefaultShowLockImage)){
+    if(this.data.card.encrypted && this.data.card.image?.some(e=>e._url === app.getConst('DefaultShowLockImage'))){
       this.showEncryptedImage()
       return
     }
@@ -217,13 +216,13 @@ Page({
     return {
       title: `来自 ${app.user.nickName} 分享的内容`,
       path: `/pages/share/index?${params}`,
-      imageUrl: DefaultShareImage
+      imageUrl: app.getConst('DefaultShareImage')
     }
   },
 
   async tapToShowShareDialog(){
     if(this.data.card.encrypted){
-      if(this.data.card.image?.some(pic => pic._url === DefaultShowLockImage )){
+      if(this.data.card.image?.some(pic => pic._url === app.getConst('DefaultShowLockImage') )){
         showNotice('请先解密卡片内容')
         return
       }
@@ -269,7 +268,7 @@ Page({
           this._tapToEditCard()
         }
         this.chooseAction = ''
-      }else if(this.data.card.image?.some(e=>e._url === DefaultShowLockImage)){
+      }else if(this.data.card.image?.some(e=>e._url === app.getConst('DefaultShowLockImage'))){
         this.showEncryptedImage()
       }
     }).catch(error=>{
@@ -281,7 +280,7 @@ Page({
 
   onImageShowError(e){
     const setData = {}
-    setData[`card.image[${e.currentTarget.dataset.index}]._url`] = DefaultLoadFailedImage
+    setData[`card.image[${e.currentTarget.dataset.index}]._url`] = app.getConst('DefaultLoadFailedImage')
     this.setData(setData)
     showError('数据加载出错')
   },
