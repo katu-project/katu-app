@@ -1,4 +1,5 @@
-export default [
+const ThemeConfig = {
+  DefaultColors: [
     {
       title: '嫣红',
       name: 'red',
@@ -75,3 +76,6 @@ export default [
       color: '#ffffff'
     },
   ]
+}
+
+export default ThemeConfig

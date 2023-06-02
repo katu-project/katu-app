@@ -1,4 +1,4 @@
-export const AppConfig:IAppConfig = {
+const AppConfig:IAppConfig = {
   contacts:{
     email: 'info@katucloud.com'
   },
@@ -101,3 +101,5 @@ export const AppConfig:IAppConfig = {
     imageUrl: '/static/share.png'
   }
 }
+
+export default AppConfig

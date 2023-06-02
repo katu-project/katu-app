@@ -1,7 +1,7 @@
 import Base from '@/class/base'
 import Const from "@/const"
 import { navigateTo, getCache, setCache, delCache, file, net, crypto } from "@/utils/index"
-import { AppConfig, ColorList, MenuConfig } from '@/config/index'
+import Config from '@/config/index'
 
 export default class Core extends Base {
 
@@ -10,15 +10,15 @@ export default class Core extends Base {
   }
 
   getConfig<T extends keyof IAppConfig>(key:T){
-    return AppConfig[key]
+    return Config.App[key]
   }
 
-  get tagColorList(){
-    return ColorList
+  get theme(){
+    return Config.Theme
   }
 
-  get profileMenus(){
-    return MenuConfig.profile
+  get menu(){
+    return Config.Menu
   }
 
   async getLocalData<T>(key: string) {

@@ -12,7 +12,7 @@ Page({
     tempTagName: '',
     selectedTagIdx: -1,
     tempTagColor: '',
-    colors: app.tagColorList
+    colors: app.theme.DefaultColors
   },
   onReady() {
     

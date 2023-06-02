@@ -1,4 +1,4 @@
-export default {
+const MenuConfig = {
   profile: [
     {
       icon: 'choiceness',
@@ -30,3 +30,5 @@ export default {
     }
   ]
 }
+
+export default MenuConfig

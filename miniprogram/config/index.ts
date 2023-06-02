@@ -1,4 +1,18 @@
-export { AppConfig } from './app'
-export { RequestConfig } from './api'
-export { default as ColorList } from './color'
-export { default as MenuConfig } from './menu'
+import App from './app'
+import Request from './request'
+import Theme from './theme'
+import Menu from './menu'
+
+export {
+   App,
+   Request,
+   Theme,
+   Menu
+}
+
+export default {
+   App,
+   Request,
+   Theme,
+   Menu
+}

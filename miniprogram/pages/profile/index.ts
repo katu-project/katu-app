@@ -8,7 +8,7 @@ Page({
   data: {
     user: {} as Partial<IUser>,
     activeInfo: {},
-    menus: app.profileMenus,
+    menus: app.menu.profile,
     DefaultUserAvatar: app.getConst('DefaultUserAvatar')
   },
   onLoad() {

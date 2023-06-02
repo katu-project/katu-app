@@ -1,5 +1,5 @@
 import { net } from '@/utils/index'
-import { RequestConfig } from "@/config/index"
+import RequestConfig from "@/config/request"
 
 const { request, upload } = net.createRequest(RequestConfig)
 

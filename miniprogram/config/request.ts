@@ -6,6 +6,4 @@ const RequestConfig:IRequestConfig = {
   }
 }
 
-export {
-  RequestConfig
-}
+export default RequestConfig
