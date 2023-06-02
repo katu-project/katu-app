@@ -1,7 +1,7 @@
 import Base from '@/class/base'
 import Const from "@/const"
-import { navigateTo, getCache, setCache, delCache, file, net, crypto } from "@/utils/index"
 import Config from '@/config/index'
+import { getCache, setCache, delCache, file, net, crypto } from "@/utils/index"
 
 export default class Core extends Base {
 
@@ -104,9 +104,5 @@ export default class Core extends Base {
     }
 
     return savePath
-  }
-
-  navToDoc(id){
-    navigateTo(`/pages/qa/detail/index?id=${id}`)
   }
 } 

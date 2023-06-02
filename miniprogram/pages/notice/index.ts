@@ -17,6 +17,6 @@ Page({
     this.setData(setData)
   },
   tapToDetail({currentTarget:{dataset:{key}}}){
-    app.navToDoc(key)
+    app.navToDocPage(key)
   }
 })

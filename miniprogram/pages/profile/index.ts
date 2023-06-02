@@ -75,7 +75,7 @@ Page({
   },
 
   tapToReadDoc(e){
-    app.navToDoc(e.currentTarget.dataset.item.id)
+    app.navToDocPage(e.currentTarget.dataset.item.id)
   },
 
   async showActiveInfo(){

@@ -3,6 +3,8 @@ export default abstract class Agent extends Core {
 
   abstract uploadFile(filePath:string, uploadType:UploadFileType): Promise<string>
 
+  abstract navToDocPage(docId:string): void
+
   get _docMap(){
     return this.getConfig('doc')
   }
@@ -25,43 +27,43 @@ export default abstract class Agent extends Core {
 
   // open app doc
   openUserUsageProtocol(){
-    return this.navToDoc(this._docMap.userUsageProtocol)
+    return this.navToDocPage(this._docMap.userUsageProtocol)
   }
 
   openUserPrivacyProtocol(){
-    return this.navToDoc(this._docMap.userPrivacyProtocol)
+    return this.navToDocPage(this._docMap.userPrivacyProtocol)
   }
 
   openDataSaveSecurityNoticeDoc(){
-    return this.navToDoc(this._docMap.dataSaveSecurityNotice)
+    return this.navToDocPage(this._docMap.dataSaveSecurityNotice)
   }
 
   openDataShareDoc(){
-    return this.navToDoc(this._docMap.dataShareNotice)
+    return this.navToDocPage(this._docMap.dataShareNotice)
   }
 
   openDataCheckDoc(){
-    return this.navToDoc(this._docMap.dataCheckNotice)
+    return this.navToDocPage(this._docMap.dataCheckNotice)
   }
 
   openInternalApiNotice(){
-    return this.navToDoc(this._docMap.imageProcessorTip_1)
+    return this.navToDocPage(this._docMap.imageProcessorTip_1)
   }
 
   openRemoteApiNotice(){
-    return this.navToDoc(this._docMap.imageProcessorTip_2)
+    return this.navToDocPage(this._docMap.imageProcessorTip_2)
   }
 
   openRememberKeyNotice(){
-    return this.navToDoc(this._docMap.rememberKeyNotice)
+    return this.navToDocPage(this._docMap.rememberKeyNotice)
   }
 
   openMasterKeyNotice(){
-    return this.navToDoc(this._docMap.masterKeyNotice)
+    return this.navToDocPage(this._docMap.masterKeyNotice)
   }
 
   openForgetKeyNotice(){
-    return this.navToDoc(this._docMap.forgetKeyNotice)
+    return this.navToDocPage(this._docMap.forgetKeyNotice)
   }
   // open app doc end
 

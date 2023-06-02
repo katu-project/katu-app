@@ -302,7 +302,7 @@ Page({
       cancelText: '查看详情'
     }).then(res=>{
       if(!res.confirm){
-        app.navToDoc('534fc1e163b68f2700197d67754d9673')
+        app.navToDocPage('534fc1e163b68f2700197d67754d9673')
       }
     })
   }
