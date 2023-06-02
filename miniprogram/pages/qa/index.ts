@@ -1,6 +1,7 @@
 import { loadData, navigateTo } from '@/utils/index'
 import { getAppManager } from '@/controller/app'
 const app = getAppManager()
+const QaTypeCate = app.getConfig('qaDocType')
 import api from '@/api'
 
 Page({
@@ -11,7 +12,7 @@ Page({
   },
   onLoad() {
     this.setData({
-      qaCate: app.qaDocTypeCate
+      qaCate: QaTypeCate
     })
   },
   onReady() {

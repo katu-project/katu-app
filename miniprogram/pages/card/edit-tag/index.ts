@@ -4,6 +4,8 @@ import { getUserManager } from '@/controller/user'
 const user = getUserManager()
 const app = getAppManager()
 
+const DefaultAppTags = app.getConfig('tags')
+
 Page({
   data: {
     list: [] as ICardTag[],
@@ -74,7 +76,7 @@ Page({
       return
     }
 
-    if(user.config?.general.useDefaultTag && app.defaultUsableTag.find(tag=>tag.name === tagName)){
+    if(user.config?.general.useDefaultTag && DefaultAppTags.find(tag=>tag.name === tagName)){
       showError("内置标签已存在")
       return
     }

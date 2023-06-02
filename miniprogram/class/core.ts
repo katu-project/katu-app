@@ -1,11 +1,24 @@
 import Base from '@/class/base'
 import Const from "@/const"
 import { navigateTo, getCache, setCache, delCache, file, net, crypto } from "@/utils/index"
+import { AppConfig, ColorList, MenuConfig } from '@/config/index'
 
 export default class Core extends Base {
 
   getConst<T extends keyof typeof Const>(key:T){
     return Const[key]
+  }
+
+  getConfig<T extends keyof IAppConfig>(key:T){
+    return AppConfig[key]
+  }
+
+  get tagColorList(){
+    return ColorList
+  }
+
+  get profileMenus(){
+    return MenuConfig.profile
   }
 
   async getLocalData<T>(key: string) {

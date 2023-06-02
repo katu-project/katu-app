@@ -3,7 +3,7 @@ import { getAppManager } from '@/controller/app'
 import { getUserManager } from "@/controller/user"
 const app = getAppManager()
 const user = getUserManager()
-const smsGapTime = app.defaultSmsTimeInterval
+const smsGapTime = app.getConfig('smsGapTime')
 
 Page({
   lastSendTime: 0,

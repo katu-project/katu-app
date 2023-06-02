@@ -3,7 +3,7 @@ const app = getAppManager()
 
 Page({
   data: {
-    email: app.serviceContactsEmail
+    email: app.getConfig('contacts').email
   },
   onLoad() {
 

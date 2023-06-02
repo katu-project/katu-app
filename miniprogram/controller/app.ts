@@ -45,7 +45,7 @@ class AppManager extends Controller {
   }
 
   get shareInfo(){
-    return this.shareAppInfo
+    return this.getConfig('shareInfo')
   }
 
   async loadUser(){
@@ -73,12 +73,12 @@ class AppManager extends Controller {
   async loadModules(){
     this.cache.init({
       userAvatarDir: await this.getUserAvatarDir(),
-      homeDataCacheTime: this.isDev ? this.devHomeDataCacheTime : this.homeDataCacheTime
+      homeDataCacheTime: this.getConfig(this.isDev?'devHomeDataCacheTime':'homeDataCacheTime')
     })
     this.notice.init({
-      noticeFetchIntervalTime: this.defaultNoticeFetchTimeInterval
+      noticeFetchIntervalTime: this.getConfig('noticeFetchTime')
     })
-    this.crypto.init(this.cryptoConfig)
+    this.crypto.init(this.getConfig('crypto'))
   }
   // user section
   async setUserMasterKey(key: string){
@@ -236,7 +236,7 @@ class AppManager extends Controller {
   rebuildExtraFields(extraFields: Partial<ICardExtraField>[]){
     return extraFields.map(item=>{
       const [key,cuName] = item[0].split('-')
-      let extraField = this.defaultExtraFieldsKeys.find(e=>e.key===key)
+      let extraField = this.getConfig('extraFieldsKeys').find(e=>e.key===key)
       extraField = Object.assign({name: '未知', value: '无'},extraField)
       if(key === 'cu') extraField.name = cuName
       extraField.value = item[1]

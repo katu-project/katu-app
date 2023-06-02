@@ -35,7 +35,7 @@ export default class User extends Controller {
   }
 
   get ccv(){
-    return this.user.masterKeyPack?.ccv || this.defaultCommonCryptoVersion
+    return this.user.masterKeyPack?.ccv || this.getConfig('crypto').defaultCommonCryptoVersion
   }
 
   get isSetMasterKey():boolean{

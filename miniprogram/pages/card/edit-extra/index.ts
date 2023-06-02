@@ -4,7 +4,7 @@ const app = getAppManager()
 
 Page({
   data: {
-    extraFieldsKeys: app.defaultExtraFieldsKeys,
+    extraFieldsKeys: app.getConfig('extraFieldsKeys'),
     extraFields: [] as ICardExtraField[],
     dataChange: false
   },
@@ -63,7 +63,7 @@ Page({
       dataChange: true
     }
     if(selectedField.key !== 'cu'){
-      setData[`extraFieldsKeys`] = this.data.extraFieldsKeys.concat(app.defaultExtraFieldsKeys.find(e=>e.key === selectedField.key)!).sort((a,b)=> a.xid-b.xid)
+      setData[`extraFieldsKeys`] = this.data.extraFieldsKeys.concat(app.getConfig('extraFieldsKeys').find(e=>e.key === selectedField.key)!).sort((a,b)=> a.xid-b.xid)
     }
 
     this.setData(setData)

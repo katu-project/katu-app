@@ -1,6 +1,7 @@
 import { loadData, navigateTo } from '@/utils/index'
 import { getAppManager } from '@/controller/app'
 const app = getAppManager()
+const QaTypeCate = app.getConfig('qaDocType')
 import api from '@/api'
 
 Page({
@@ -14,7 +15,7 @@ Page({
     this.cate = options.cate || ''
   },
   onReady() {
-    const cateData = app.qaDocTypeCate.find(e=>e.value === this.cate)
+    const cateData = QaTypeCate.find(e=>e.value === this.cate)
     this.setData({
       cate: cateData
     })
