@@ -6,6 +6,7 @@ import * as convert from './convert'
 import { UPNG as upng } from './upng'
 import * as bip39 from './bip39/index'
 import { drawQrcode as qrcode } from './qrcode/index'
+import cache from './cache'
 
 export { selfish, objectSetValue, createAdvSetData, mergeDeep, sleep } from './base'
 export * as crypto from './crypto'
@@ -16,7 +17,6 @@ export * from './action'
 export { UPNG as upng } from './upng'
 export * as bip39 from './bip39/index'
 export { drawQrcode as qrcode } from './qrcode/index'
-export * from './cache'
 
 export default {
   selfish,
@@ -32,5 +32,6 @@ export default {
 }
 
 export {
-  debounce
+  debounce,
+  cache
 }

@@ -1,7 +1,7 @@
 import Base from '@/class/base'
 import Const from "@/const"
 import Config from '@/config/index'
-import { getCache, setCache, delCache, file, net, crypto } from "@/utils/index"
+import { cache, file, net, crypto } from "@/utils/index"
 
 export default class Core extends Base {
 
@@ -23,7 +23,7 @@ export default class Core extends Base {
 
   async getLocalData<T>(key: string) {
     try {
-      const res: T = await getCache(key)
+      const res: T = await cache.getCache(key)
       return res
     } catch (error) {
       console.warn('getLocalData:', key, error)
@@ -32,12 +32,12 @@ export default class Core extends Base {
   }
 
   async setLocalData(key, data) {
-    return setCache(key, data)
+    return cache.setCache(key, data)
   }
 
   async deleteLocalData(key: string) {
     try {
-      await delCache(key)
+      await cache.delCache(key)
     } catch (error) {
       console.error(error)
     }
