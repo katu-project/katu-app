@@ -29,7 +29,9 @@ interface IAppConfig {
   tags: Omit<ICardTag,'color'>[]
   extraFieldsKeys: ICardExtraField[]
   imageMogr2: string
-  doc: IAnyObject
+  doc: {
+    [id:string]: string
+  }
   smsGapTime: number
   crypto: IAppCryptoConfig
   shareInfo: IAnyObject
