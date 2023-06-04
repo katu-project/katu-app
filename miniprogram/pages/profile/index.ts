@@ -66,9 +66,8 @@ Page({
   },
 
   tapToItem(e){
-    const needActiveItemList = ['兔币明细','卡片标签','软件设置']
     const item = e.currentTarget.dataset.item
-    if(needActiveItemList.includes(item.name) && !user.isActive){
+    if(item.needActive && !user.isActive){
       return app.showActiveNotice()
     }
     return navigateTo(item.url || item)

@@ -4,17 +4,20 @@ const MenuConfig = {
       icon: 'choiceness',
       name: '兔币明细',
       url: '../quota/index',
-      dev: true
+      dev: true,
+      needActive: true
     },
     {
       icon: 'tag',
       name: '卡片标签',
-      url: '../card/edit-tag/index'
+      url: '../card/edit-tag/index',
+      needActive: true
     },
     {
       icon: 'settings',
       name: '软件设置',
-      url: '../settings/index'
+      url: '../settings/index',
+      needActive: true
     },
     {
       icon: 'question',
