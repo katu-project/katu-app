@@ -1,8 +1,6 @@
-import api from "@/api"
+import { loadData, showChoose, showError } from "@/utils/index"
 import { getAppManager } from "@/controller/app"
 import { getCardManager } from "@/controller/card"
-import { loadData, showChoose, showError } from "@/utils/index"
-
 const app = getAppManager()
 
 Page({
@@ -42,7 +40,7 @@ Page({
 
   },
   async loadData(){
-    const {card,endTime} = await loadData(api.getShareItem, {sid: this.shareInfo.sid, sk: this.shareInfo.sk},'读取分享数据')
+    const {card,endTime} = await loadData(app.getShareItem, {sid: this.shareInfo.sid, sk: this.shareInfo.sk},'读取分享数据')
 
     this.setData({
       'card.encrypted': card.encrypted,

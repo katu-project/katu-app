@@ -233,6 +233,10 @@ class CardManager extends Controller{
     const remoteCard = await api.getCard({_id:id})
     return JSON.stringify(cacheCard) === JSON.stringify(remoteCard)
   }
+
+  async getList(params){
+    return api.getCardList(params)
+  }
   
   async parseCardImageByRemoteApi(imagePath){
     await this.checkImageType(imagePath)

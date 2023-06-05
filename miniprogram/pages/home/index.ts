@@ -1,5 +1,4 @@
 import { loadData, navigateTo, createAdvSetData, debounce } from '@/utils/index'
-import api from '@/api'
 import { getAppManager } from '@/controller/app'
 import { getUserManager } from '@/controller/user'
 import { getCardManager } from '@/controller/card'
@@ -51,7 +50,7 @@ Page({
   },
 
   async loadData(forceUpdate?:boolean){
-    const {likeList, cateList} = await loadData(app.getHomeData,forceUpdate,'加载数据中')
+    const {likeList, cateList} = await loadData(app.getHomeData,{forceUpdate},'加载数据中')
     
     const setData = {}
 
@@ -185,7 +184,8 @@ Page({
       })
     }else{ // 卡片新增，内容更新，无法判断tag变化，直接请求对应接口获取数据
       try {
-        setData['cateList'] = await api.getCardSummary()
+        const { cateList } = await app.getHomeData({getCateList:true})
+        setData['cateList'] = cateList
       } catch (error) {}
     }
     
@@ -226,7 +226,7 @@ Page({
   },
 
   tapToMarkRead: debounce(async function({currentTarget:{dataset:{key}}}){
-    await api.markRead(key)
+    await user.markDocRead(key)
     this.setData({
       'notice._id': ''
     })

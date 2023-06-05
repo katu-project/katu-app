@@ -1,4 +1,3 @@
-import api from '@/api'
 import { createAdvSetData, loadData, navigateTo } from '@/utils/index'
 import { getAppManager } from '@/controller/app'
 import { getCardManager } from '@/controller/card'
@@ -42,7 +41,7 @@ Page({
   },
 
   loadData(){
-    return loadData(api.getCardList, {where: this.where}).then(list=>{
+    return loadData(cardManager.getList, {where: this.where}).then(list=>{
       this.originList = list
       this.setData({
         list: list.map(card=>{

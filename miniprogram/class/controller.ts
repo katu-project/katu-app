@@ -4,7 +4,6 @@ import { navigateTo } from '@/utils/index'
 import { getNoticeModule, getCryptoModule, getCacheModule } from '@/module/index'
 
 export default class Controller extends Agent {
-
   constructor(){
     super()
   }

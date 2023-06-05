@@ -258,8 +258,17 @@ class AppManager extends Controller {
     return userTempFile
   }
 
-  async getHomeData(forceUpdate?:boolean):Promise<IHomeData>{
-    let homeData
+  async getHomeData({forceUpdate, getCateList}:{forceUpdate?:boolean, getCateList?:boolean}):Promise<IHomeData>{
+    let homeData:IHomeData|undefined
+
+    if(getCateList){
+      homeData = {
+        likeList: [],
+        cateList: await api.getCardSummary()
+      }
+      return homeData
+    }
+
     if(!forceUpdate){
       homeData = await this.cache.getHomeData()
     }
@@ -377,6 +386,26 @@ class AppManager extends Controller {
   // simple api proxy
   async getNotices(){
     return api.getNotices()
+  }
+
+  async getHotDoc(){
+    return api.getHotDoc()
+  }
+
+  async getChangeLog(){
+    return api.getChangeLog()
+  }
+
+  async getDoc(params){
+    return api.getDoc(params)
+  }
+
+  async getCateDoc(params){
+    return api.getCateDoc(params)
+  }
+
+  async getShareItem(params){
+    return api.getShareItem(params)
   }
 
   // 导航

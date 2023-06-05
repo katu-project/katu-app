@@ -2,7 +2,6 @@ import { loadData, navigateTo } from '@/utils/index'
 import { getAppManager } from '@/controller/app'
 const app = getAppManager()
 const QaTypeCate = app.getConfig('qaDocType')
-import api from '@/api'
 
 Page({
   cate: '',
@@ -25,7 +24,7 @@ Page({
     // this.loadData()
   },
   loadData(){
-    loadData(api.getCateDoc, this.cate).then(list=>{
+    loadData(app.getCateDoc, this.cate).then(list=>{
       this.setData({list,isLoading: false})
     })
   },

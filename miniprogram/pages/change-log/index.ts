@@ -1,7 +1,6 @@
 import { loadData } from '@/utils/index'
-import api from '@/api'
-
-export {}
+import { getAppManager } from '@/controller/app'
+const app = getAppManager()
 
 Page({
   data: {
@@ -17,7 +16,7 @@ Page({
     this.loadData()
   },
   loadData(){
-    loadData(api.getChangeLog).then(list=>{
+    loadData(app.getChangeLog).then(list=>{
       this.setData({
         list: list.map(e=>{
           e.time = e.updateTime.slice(0,10)

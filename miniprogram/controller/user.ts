@@ -114,8 +114,16 @@ export default class User extends Controller {
     }
   }
 
+  async markDocRead(params){
+    return api.markRead(params)
+  }
+
   async getQuotaLog(params){
     return api.getUserQuotaLog(params)
+  }
+
+  async updateProfile(userInfo){
+    return api.updateUserProfile(userInfo)
   }
 
   async getQuotaLogDetail(params){
