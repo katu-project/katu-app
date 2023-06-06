@@ -76,11 +76,14 @@ Page({
       }
       const extraFields = app.condenseExtraFields(this.data.extraFields)
       const checkText = this.data.extraFields.map(e=>e.key === 'cu'? `${e.name}${e.value}`: e.value).join('')
-      const {checkPass} = await loadData(app.textContentsafetyCheck,checkText)
-      if(!checkPass){
+      
+      try {
+        await loadData(app.textContentSafetyCheck,checkText,'内容安全检查')
+      } catch (error) {
         showChoose("系统提示","数据存在不适内容?",{showCancel:false})
         return
       }
+
       app.emit('setCardExtraData', extraFields)
     }else{
       app.emit('setCardExtraData', [])

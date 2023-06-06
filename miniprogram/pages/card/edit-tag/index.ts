@@ -81,9 +81,11 @@ Page({
       return
     }
 
-    const {checkPass} = await loadData(app.textContentsafetyCheck,tagName,'内容检查')
-    if(!checkPass){
-      throw new Error("数据似乎存在不适内容")
+    try {
+      await loadData(app.textContentSafetyCheck,tagName,'内容安全检查')
+    } catch (error) {
+      showChoose("系统提示","数据存在不适内容?",{showCancel:false})
+      return
     }
 
     const res = await loadData(user.createTag, {name:tagName})

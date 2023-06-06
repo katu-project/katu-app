@@ -40,7 +40,7 @@ Page({
   async useAndBack() {
     const isKnowDataCheck = await app.notice.getKnowDataCheck()
     if(!isKnowDataCheck){
-      const res = await showChoose('温馨提示','即将进行数据安全检测\n此过程会需要5-10秒',{
+      const res = await showChoose('温馨提示','即将开始数据安全检测',{
         cancelText: '了解详情',
         confirmText: '不再提示'
       })
