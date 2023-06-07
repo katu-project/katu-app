@@ -165,8 +165,8 @@ export default class User extends Controller {
     return api.deleteTag({_id})
   }
 
-  async createTag(tag: Pick<ICardTag,'name'>){
-    return api.createTag(tag.name)
+  async createTag(tagName:string){
+    return api.createTag(tagName)
   }
 
   async updateTag(tag: Pick<ICardTag,'color'|'_id'>){

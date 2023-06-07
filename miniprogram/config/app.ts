@@ -43,11 +43,11 @@ const AppConfig:IAppConfig = {
     value: 'other'
   }],
   tags: [
-    { name: '储蓄卡' },
-    { name: '信用卡' },
-    { name: '购物卡' },
-    { name: '名片' },
-    { name: '其他' }
+    { name: '储蓄卡', color:'' },
+    { name: '信用卡', color:'' },
+    { name: '购物卡', color:'' },
+    { name: '名片', color:'' },
+    { name: '其他', color:'' }
   ],
   extraFieldsKeys: [
     {

@@ -5,61 +5,90 @@ const user = getUserManager()
 const app = getAppManager()
 
 const DefaultAppTags = app.getConfig('tags')
+const DefaultThemeColors = app.theme.DefaultColors
 
 Page({
   data: {
-    list: [] as ICardTag[],
+    list: [],
     tempTagName: '',
     selectedTagIdx: -1,
     tempTagColor: '',
-    colors: app.theme.DefaultColors
+    colors: DefaultThemeColors
   },
+
   onReady() {
     
   },
+
   onShow(){
     this.loadData()
   },
+
   async loadData(){
     const tags = await loadData(user.getTags)
     this.setData({
       list: tags
     })
   },
+
   checkInputTag(){
 
   },
-  tapToShowAddTag(){
-    this.setData({
-      showCreateTag: true
-    })
+
+  tapToShowCreateTag(){
+    const showDialogCreateTag = () => {
+      this.setData({
+        showDialogCreateTag: true
+      })
+    }
+
+    showDialogCreateTag()
   },
-  hideModal(e){
-    const modalKey = e.currentTarget.dataset.key
+
+  tapToShowSetColor(e){
+    const idx = parseInt(e.currentTarget.dataset.idx)
     this.setData({
-      [modalKey]: false,
+      selectedTagIdx: idx,
+      tempTagColor: this.data.list[idx].color || 'gray'
+    })
+
+    const showDialogSetColor = ()=> {
+      this.setData({
+        showDialogSetColor: true
+      })
+    }
+    showDialogSetColor()
+  },
+
+  tapToHideDialog(e){
+    this.hideDialog(e.currentTarget.dataset.key)
+  },
+
+  hideDialog(dialogKey:string){
+    this.setData({
+      [dialogKey]: false,
       selectedTagIdx: -1,
       tempTagName: '',
       tempTagColor: ''
     })
   },
-  tapToDeleteTag(e){
+
+  async tapToDeleteTag(e){
     const idx = parseInt(e.currentTarget.dataset.idx)
     const tag = this.data.list[idx]
-    showChoose('删除这个标签？', tag.name).then(({confirm})=>{
-      if(confirm){
-        loadData(user.deleteTag, tag._id).then(()=>{
-          this.data.list.splice(idx,1)
-          this.setData({
-            list: this.data.list
-          })
-          showSuccess('删除成功')
-          user.loadCustomTags()
-        })
-      }
-    })
+    const { confirm } = await showChoose('删除这个标签？', tag.name)
+    if(confirm){
+      await loadData(user.deleteTag, tag._id)
+      this.data.list.splice(idx,1)
+      this.setData({
+        list: this.data.list
+      })
+      showSuccess('删除成功')
+      user.loadCustomTags()
+    }
   },
-  async tapToAddTag(){
+
+  async tapToSaveTag(){
     if(!this.data.tempTagName){
       showError("请输入名字")
       return
@@ -72,12 +101,12 @@ Page({
     const tagName = this.data.tempTagName
 
     if(this.data.list.find(tag=>tag.name === tagName)){
-      showError("标签已经存在")
+      showError("标签已存在")
       return
     }
 
     if(user.config?.general.useDefaultTag && DefaultAppTags.find(tag=>tag.name === tagName)){
-      showError("内置标签已存在")
+      showError("标签已存在")
       return
     }
 
@@ -88,51 +117,34 @@ Page({
       return
     }
 
-    const res = await loadData(user.createTag, {name:tagName})
-    this.hideModal({currentTarget:{dataset:{key:'showCreateTag'}}})
+    const res = await loadData(user.createTag, tagName)
+    this.hideDialog('showDialogCreateTag')
     this.setData({
       [`list[${this.data.list.length}]`]: {name: res.name, _id: res._id}
     })
     showSuccess('创建成功')
     user.loadCustomTags()
   },
-  tapToShowSetColor(e){
-    const idx = parseInt(e.currentTarget.dataset.idx)
-    this.setData({
-      selectedTagIdx: idx,
-      tempTagColor: this.data.list[idx].color || 'gray'
-    })
-    this.showSetColor()
-  },
+
   tapToSelectColor(e){
     const color = this.data.colors[parseInt(e.currentTarget.dataset.idx)].name
     this.setData({
       tempTagColor: color
     })
   },
+
   tapToSetColor(){
-    if(this.data.tempTagColor && this.data.tempTagColor !== this.data.list[this.data.selectedTagIdx].color) {
+    const selectedColor = this.data.tempTagColor
+    if(selectedColor && selectedColor !== this.data.list[this.data.selectedTagIdx].color) {
       const tag = this.data.list[this.data.selectedTagIdx]
-      tag.color = this.data.tempTagColor
+      tag.color = selectedColor
       loadData(user.updateTag,tag).then(()=>{
         this.setData({
-          [`list[${this.data.selectedTagIdx}].color`]: tag.color
+          [`list[${this.data.selectedTagIdx}].color`]: tag.color,
         })
-        this.hideSetColor()
+        this.hideDialog('showDialogSetColor')
         user.loadCustomTags()
       })
     }
-  },
-  showSetColor(){
-    this.setData({
-      showSetColor: true
-    })
-  },
-  hideSetColor(){
-    this.setData({
-      tempTagColor: '',
-      showSetColor: false,
-      selectedTagIdx: -1
-    })
   }
 })

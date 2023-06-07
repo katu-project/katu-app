@@ -26,7 +26,7 @@ Page({
     curShowPicIdx: 0,
     showInputKey: false,
     dataChange: false,
-    tags: [] as ICardTag[]
+    tags: []
   },
 
   onLoad(options){

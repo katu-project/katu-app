@@ -26,7 +26,7 @@ interface IAppConfig {
   homeDataCacheTime: number
   noticeFetchTime: number
   qaDocType: any[]
-  tags: Omit<ICardTag,'color'>[]
+  tags: ICardTag[]
   extraFieldsKeys: ICardExtraField[]
   imageMogr2: string
   doc: {

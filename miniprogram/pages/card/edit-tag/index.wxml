@@ -11,7 +11,7 @@
         <text class="padding-left-sm">我的标签<text class="text-df text-grey" wx:if="{{list.length}}">・{{list.length}}</text></text>
       </view>
       <view class="text-df padding-right">
-        <button class="cu-btn icon round line-cyan sm" style="width:100rpx" bindtap="tapToShowAddTag">
+        <button class="cu-btn icon round line-cyan sm" style="width:100rpx" bindtap="tapToShowCreateTag">
           <text class="cuIcon-add text-cyan gfw">添加</text>
         </button>
       </view>
@@ -28,7 +28,7 @@
 </view>
 <view wx:if="{{showSetColor}}" style="height: 30vh;"></view>
 
-<view class="cu-modal {{showCreateTag?'show':''}}">
+<view class="cu-modal {{showDialogCreateTag?'show':''}}">
   <view class="cu-dialog">
     <view class="cu-bar bg-white justify-end">
       <view class="content">输入标签名字</view>
@@ -43,18 +43,18 @@
     </view>
     <view class="cu-bar bg-white justify-end">
       <view class="action">
-        <button class="cu-btn line-green text-green gfw" style="width: 200rpx;" data-key="showCreateTag" bindtap="hideModal">取消</button>
+        <button class="cu-btn line-green text-green gfw" style="width: 200rpx;" data-key="showDialogCreateTag" bindtap="tapToHideDialog">取消</button>
         <view class="padding-left-sm"></view>
-        <button class="cu-btn bg-green margin-left gfw" style="width: 200rpx;" bindtap="tapToAddTag">确定</button>
+        <button class="cu-btn bg-green margin-left gfw" style="width: 200rpx;" bindtap="tapToSaveTag">确定</button>
       </view>
     </view>
   </view>
 </view>
 
-<view class="cu-modal bottom-modal {{showSetColor?'show':''}}">
+<view class="cu-modal bottom-modal {{showDialogSetColor?'show':''}}">
   <view class="cu-dialog">
     <view class="cu-bar bg-white">
-      <view class="action text-green" data-key="showSetColor" bindtap="hideModal">取消</view>
+      <view class="action text-green" data-key="showDialogSetColor" bindtap="tapToHideDialog">取消</view>
       <view class="action text-blue" style="margin-right: 30rpx;" bindtap="tapToSetColor">确定</view>
     </view>
     <view class="padding-xl">
