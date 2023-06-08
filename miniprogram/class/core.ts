@@ -63,7 +63,12 @@ export default class Core extends Base {
   }
 
   async getImageFilePath(image: Pick<ICardImage, 'url'>) {
-    const splitUrl = image.url.split('/')
+    let checkUrl = image.url
+     // 分享的卡片连接是http，需要移除请求参数
+     if(checkUrl.startsWith('http')){
+      checkUrl = checkUrl.split('?')[0]
+    }
+    const splitUrl = checkUrl.split('/')
     const fileName = splitUrl[splitUrl.length - 1]
     if (!fileName) {
       throw Error('图片文件名不能为空')
@@ -72,7 +77,12 @@ export default class Core extends Base {
   }
 
   async getDownloadFilePath(image: Pick<ICardImage, 'url'>) {
-    const splitUrl = image.url.split('/')
+    let checkUrl = image.url
+    // 分享的卡片连接是http，需要移除请求参数
+    if(checkUrl.startsWith('http')){
+      checkUrl = checkUrl.split('?')[0]
+    }
+    const splitUrl = checkUrl.split('/')
     const fileName = splitUrl[splitUrl.length - 1]
     if (!fileName) {
       throw Error('图片文件名不能为空')
