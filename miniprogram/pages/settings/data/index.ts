@@ -2,8 +2,6 @@ import { loadData, showChoose, showSuccess } from '@/utils/index'
 import { getAppManager } from '@/controller/app'
 const app = getAppManager()
 
-export {}
-
 Page({
   data: {
     user: app.user

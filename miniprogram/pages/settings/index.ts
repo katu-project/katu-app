@@ -2,8 +2,6 @@ import { navigateTo } from "@/utils/index"
 import { getAppManager } from '@/controller/app'
 const app = getAppManager()
 
-export {}
-
 Page({
   data: {
     menu: [
