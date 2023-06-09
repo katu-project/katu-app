@@ -12,7 +12,7 @@
       <switch class="switch-lock sm" bindchange="tapToConfig" data-key="config_general_defaultUseEncrytion" checked="{{config_general_defaultUseEncrytion}}"></switch>
     </view>
   </view>
-  <view class="padding bg-white text-grey">创建新卡片时，默认开启加密卡片数据</view>
+  <view class="padding bg-white text-grey">卡片默认使用加密保存</view>
 
   <view class="cu-item">
     <view class="content">
@@ -22,7 +22,7 @@
       <switch class="sm" bindchange="tapToConfig" data-key="config_general_useDefaultTag" checked="{{config_general_useDefaultTag}}"></switch>
     </view>
   </view>
-  <view class="padding bg-white text-grey">开启/关闭使用系统内置卡片标签</view>
+  <view class="padding bg-white text-grey">使用系统内置卡片标签</view>
 
   <view class="cu-item">
     <view class="content">
@@ -32,6 +32,6 @@
       <switch class="sm" bindchange="tapToConfig" data-key="config_general_autoShowContent" checked="{{config_general_autoShowContent}}"></switch>
     </view>
   </view>
-  <view class="padding bg-white text-grey">进入详情页将自动显示加密卡片内容</view>
+  <view class="padding bg-white text-grey">详情页自动显示加密卡片内容</view>
 
 </view>

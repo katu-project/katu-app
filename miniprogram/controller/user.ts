@@ -145,7 +145,7 @@ export default class User extends Controller {
     } catch (error:any) {
       console.warn('applyConfig:',error.message)
       await this.reloadInfo()
-      throw new Error("修改失败")
+      throw error
     }
   }
 

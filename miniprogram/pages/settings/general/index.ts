@@ -1,4 +1,4 @@
-import { loadData, showError, showSuccess } from "@/utils/index"
+import { loadData, showChoose, showSuccess } from "@/utils/index"
 import { getUserManager } from '@/controller/user'
 const user = getUserManager()
 
@@ -28,7 +28,7 @@ Page({
       showSuccess('修改成功')
     }).catch(err=>{
       this.loadData()
-      showError(err.message)
+      showChoose('修改出错',err.message,{showCancel:false})
     })
   }
 })
