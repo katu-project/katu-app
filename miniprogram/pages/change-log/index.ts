@@ -4,7 +4,7 @@ const app = getAppManager()
 
 Page({
   data: {
-    list: [] as IChangeLog[]
+    list: []
   },
   onLoad() {
 
@@ -21,7 +21,7 @@ Page({
         list: list.map(e=>{
           e.time = e.updateTime.slice(0,10)
           return e
-        }).sort((a,b)=> -a.version.localeCompare(b.version))
+        })
       })
     })
   }

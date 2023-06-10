@@ -14,3 +14,6 @@
     </view>
   </view>
 </view>
+<view class="padding text-center">
+  <text class="text-gray">更多发布历史可前往代码库查看</text>
+</view>
