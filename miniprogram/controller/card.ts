@@ -235,7 +235,15 @@ class CardManager extends Controller{
   }
 
   async getList(params){
-    return api.getCardList(params)
+    const list = await api.getCardList(params)
+    return list.map(card=>{
+      if(card.encrypted){
+        card._url = this.getConst('DefaultShowLockImage')
+      }else{
+        card._url = this.getConst('DefaultShowImage')
+      }
+      return card
+    })
   }
   
   async parseCardImageByRemoteApi(imagePath){

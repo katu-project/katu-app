@@ -6,11 +6,11 @@ const cardManager = getCardManager()
 
 Page({
   where: {},
-  originList: [] as ICard[],
+  originList: [],
   data: {
     key: '',
     tag: '',
-    list: [] as ICard[],
+    list: [],
     isRefresh: false
   },
 
@@ -21,15 +21,13 @@ Page({
         tag: options.tag
       })
     }
-    app.on('cardDelete',this.onEventCardDelete)
-    app.on('cardChange',this.onEventCardChange)
-    app.on('cardDecrypt',this.onEventCardChange)
-    app.on('cardHide',this.onEventCardHide)
+    this.subscribeEvents()
   },
 
   onUnload(){
     app.off('cardDelete',this.onEventCardDelete)
     app.off('cardChange',this.onEventCardChange)
+    app.off('cardDecrypt',this.onEventCardChange)
     app.off('cardHide',this.onEventCardHide)
   },
 
@@ -40,21 +38,18 @@ Page({
   onShow() {
   },
 
-  loadData(){
-    return loadData(cardManager.getList, {where: this.where}).then(list=>{
-      this.originList = list
-      this.setData({
-        list: list.map(card=>{
-          if(card.encrypted){
-            card._url = app.getConst('DefaultShowLockImage')
-          }else{
-            card._url = app.getConst('DefaultShowImage')
-          }
-          return card
-        })
-      })
-      this.loadCardImage()
-    })
+  async loadData(){
+    const list = await loadData(cardManager.getList, {where: this.where})
+    this.originList = list
+    this.setData({ list })
+    this.loadCardImage()
+  },
+
+  subscribeEvents(){
+    app.on('cardDelete',this.onEventCardDelete)
+    app.on('cardChange',this.onEventCardChange)
+    app.on('cardDecrypt',this.onEventCardChange)
+    app.on('cardHide',this.onEventCardHide)
   },
 
   onEventCardDelete(card){
