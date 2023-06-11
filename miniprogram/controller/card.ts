@@ -264,8 +264,12 @@ class CardManager extends Controller{
     const setData = {}
 
     try {
-      const imagePath = await this.cache.getCardImagePath(card.image[0])
-      setData[`${keyName}[${idx}]._url`] = imagePath
+      setData[`${keyName}[${idx}]._url`] = await this.cache.getCardImagePath(card.image[0])
+      if(card.encrypted){
+        const extraData = await this.cache.getCardExtraData(card._id)
+        setData[`${keyName}[${idx}].info`] = extraData
+        setData[`${keyName}[${idx}].cn`] = extraData[0] ? extraData[0][1].match(/.{1,4}/g).join(' ') : '****'
+      }
       if(card.encrypted){
         setData[`${keyName}[${idx}]._showEncryptIcon`] = true
       }

@@ -1,8 +1,10 @@
-import { createAdvSetData, loadData, navigateTo } from '@/utils/index'
+import { createAdvSetData, loadData, navigateTo, setClipboardData } from '@/utils/index'
 import { getAppManager } from '@/controller/app'
 import { getCardManager } from '@/controller/card'
 const app = getAppManager()
 const cardManager = getCardManager()
+
+const AppDefaultTags = app.getConfig('tags')
 
 Page({
   where: {},
@@ -11,15 +13,21 @@ Page({
     key: '',
     tag: '',
     list: [],
-    isRefresh: false
+    isRefresh: false,
+    layout: 'default'
   },
 
   onLoad(options) {
     if(options.tag){
       this.where = {tag: options.tag}
-      this.setData({
-        tag: options.tag
-      })
+      if(options.tag){
+        const appTag = AppDefaultTags.find(e=>e.name === options.tag)
+        const setData = {
+          tag: options.tag
+        }
+        if(appTag?.layout) setData['layout'] = appTag.layout
+        this.setData(setData)
+      }
     }
     this.subscribeEvents()
   },
@@ -124,6 +132,10 @@ Page({
     })
   },
 
+  tapToCopyValue(e){
+    setClipboardData(e.currentTarget.dataset.value)
+  },
+  
   tapToCardDetail(e){
     navigateTo(`../detail/index?id=${e.currentTarget.dataset.key}`)
   },

@@ -252,7 +252,8 @@ Page({
   },
 
   tapToCardList(e){
-    navigateTo('../card/list/index?tag='+e.currentTarget.dataset.tag, true)
+    const { tag } = e.currentTarget.dataset
+    navigateTo(`../card/list/index?tag=${tag}`, true)
   },
 
   tapToCardDetail(e){

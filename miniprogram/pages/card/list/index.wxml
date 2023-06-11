@@ -24,8 +24,8 @@
   refresher-triggered="{{isRefresh}}"
   show-scrollbar="false">
   <view style="height: 80vh">
-    <view class="cu-list menu margin-top-sm margin-bottom-xl">
-      <view class="cu-item arrow"  wx:for="{{list}}" wx:key="_id" data-key="{{item._id}}" bindtap="tapToCardDetail">
+    <view wx:if="{{layout === 'default'}}" class="cu-list menu margin-top-sm margin-bottom-xl default">
+      <view class="cu-item arrow" wx:for="{{list}}" wx:key="_id" data-key="{{item._id}}" bindtap="tapToCardDetail">
         <view class="margin-right-sm flex-col br-10" style="border: 1px solid darkcyan;">
           <image lazy-load="true" mode="{{item._mode || 'aspectFit'}}" class="image br-16" src="{{item._url}}"></image>
         </view>
@@ -40,6 +40,29 @@
           </view>
         </view>
         <view class="action">
+        </view>
+      </view>
+    </view>
+
+    <view wx:if="{{layout === 'bank_card'}}" class="bank-card">
+      <view class="cu-card case" wx:for="{{list}}" wx:key="_id">
+        <view class="cu-item shadow">
+          <view class="image flex-row justify-center" data-key="{{item._id}}" bindtap="tapToCardDetail">
+            <image class="card" src="{{item._url}}" mode="{{item._mode || 'aspectFill'}}"></image>
+            <view class="cu-tag bg-cyan padding-sm cuIcon-{{item.encrypted?'lock':'unlock'}}"></view>
+            <view class="cu-bar bg-shadeBottom">
+              <text class="text-cut">{{item.title}}</text>
+            </view>
+          </view>
+          <view class="padding-top-sm info">
+            <view class="flex-row text-xxl padding-tb-xs padding-left justify-between align-center">
+              <view class="">{{item.cn}}</view>
+              <text class="cuIcon-copy text-cyan margin-right-xl" data-value="{{item.info[0][1]}}" bindtap="tapToCopyValue"></text>
+            </view>
+            <view class="text-grey text-sm padding-left padding-bottom-sm">
+               {{item.tags}}
+            </view>
+          </view>
         </view>
       </view>
     </view>

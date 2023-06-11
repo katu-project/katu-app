@@ -22,6 +22,7 @@ interface ICardTag {
   _id?: string
   name: string
   color: string
+  layout?: string
 }
 
 interface ICardExtraField {
