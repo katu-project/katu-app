@@ -104,6 +104,10 @@ class Cache extends Module {
     console.debug('setCard cache:', card._id)
     const cards = await this.getCards()
     cards[card._id] = card
+    // 加密卡片在解密时设置附加数据缓存，普通卡片在这里缓存附加数据
+    if(!card.encrypted){
+      await this.setCardExtraData(card._id, card.info)
+    }
     return this.setLocalData(this.LocalCacheKeyMap.CARD_DATA_CACHE_KEY,cards)
   }
 
