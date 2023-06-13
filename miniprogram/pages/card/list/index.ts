@@ -1,4 +1,4 @@
-import { createAdvSetData, loadData, navigateTo, setClipboardData } from '@/utils/index'
+import { createAdvSetData, loadData, navigateTo, setClipboardData, showNotice } from '@/utils/index'
 import { getAppManager } from '@/controller/app'
 import { getCardManager } from '@/controller/card'
 const app = getAppManager()
@@ -133,7 +133,12 @@ Page({
   },
 
   tapToCopyValue(e){
-    setClipboardData(e.currentTarget.dataset.value)
+    const idx = e.currentTarget.dataset.idx
+    if(!this.data.list[idx].cn){
+      showNotice(this.data.list[idx].cnText)
+      return
+    }
+    setClipboardData(this.data.list[idx].cn)
   },
   
   tapToCardDetail(e){

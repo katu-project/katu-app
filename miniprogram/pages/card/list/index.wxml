@@ -44,27 +44,41 @@
       </view>
     </view>
 
-    <view wx:if="{{layout === 'bank_card'}}" class="bank-card">
+    <view wx:if="{{layout === 'debit_card'}}" class="bank-card">
       <view class="cu-card case" wx:for="{{list}}" wx:key="_id">
-        <view class="cu-item shadow">
-          <view class="image flex-row justify-center" data-key="{{item._id}}" bindtap="tapToCardDetail">
-            <image class="card" src="{{item._url}}" mode="{{item._mode || 'aspectFill'}}"></image>
-            <view class="cu-tag bg-cyan padding-sm cuIcon-{{item.encrypted?'lock':'unlock'}}"></view>
-            <view class="cu-bar bg-shadeBottom">
-              <text class="text-cut">{{item.title}}</text>
-            </view>
-          </view>
-          <view class="padding-top-sm info">
-            <view class="flex-row text-xxl padding-tb-xs padding-left justify-between align-center">
-              <view class="">{{item.cn}}</view>
-              <text class="cuIcon-copy text-cyan margin-right-xl" data-value="{{item.info[0][1]}}" bindtap="tapToCopyValue"></text>
-            </view>
-            <view class="text-grey text-sm padding-left padding-bottom-sm">
-               {{item.tags}}
-            </view>
-          </view>
-        </view>
+        <template is="commonInfo" data="{{item,index}}"/>
+     
+      </view>
+    </view>
+
+    <view wx:if="{{layout === 'credit_card'}}" class="bank-card">
+      <view class="cu-card case" wx:for="{{list}}" wx:key="_id">
+        <template is="commonInfo" data="{{item,index,isCredit:true}}"/>
       </view>
     </view>
   </view>
 </scroll-view>
+
+
+<template name="commonInfo">
+  <view class="cu-item shadow">
+    <view class="image flex-row justify-center" data-key="{{item._id}}" bindtap="tapToCardDetail">
+      <image class="card" src="{{item._url}}" mode="{{item._mode || 'aspectFill'}}"></image>
+      <view class="cu-tag bg-cyan padding-sm cuIcon-{{item.encrypted?'lock':'unlock'}}"></view>
+      <view class="cu-bar bg-shadeBottom">
+        <text class="text-cut">{{item.title}}</text>
+      </view>
+    </view>
+    <view class="padding-tb-sm info">
+      <view class="flex-row text-xxl padding-tb-xs padding-left justify-between align-center">
+        <view class="text-{{item.cn?'xxl':'lg'}}">{{item.cnText}}</view>
+        <text class="cuIcon-copy text-cyan margin-right-xl" data-idx="{{index}}" bindtap="tapToCopyValue"></text>
+      </view>
+      <view wx:if="{{isCredit}}" class="padding-left padding-tb-xs flex-row align-center">
+          <view class="padding-right">
+            CVV : <text class="bg-gray light text-lg padding-xs radius">{{item.cvv || '???'}}</text>
+          </view>
+      </view>
+    </view>
+  </view>
+</template>

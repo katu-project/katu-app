@@ -43,8 +43,8 @@ const AppConfig:IAppConfig = {
     value: 'other'
   }],
   tags: [
-    { name: '储蓄卡', color:'', layout:'bank_card' },
-    { name: '信用卡', color:'' },
+    { name: '储蓄卡', color:'', layout:'debit_card' },
+    { name: '信用卡', color:'', layout:'credit_card' },
     { name: '购物卡', color:'' },
     { name: '名片', color:'' },
     { name: '其他', color:'' }
@@ -56,7 +56,7 @@ const AppConfig:IAppConfig = {
       xid: 1
     },
     {
-      key: 'cvc',
+      key: 'cvv',
       name: '校验码',
       xid: 2
     },

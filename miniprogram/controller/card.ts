@@ -261,25 +261,38 @@ class CardManager extends Controller{
   
   // 获取图片渲染数据
   async getImageRenderSetData({idx,card,keyName}:{idx:number|string, card:ICard, keyName:string}){
+    const cardDataKey = `${keyName}[${idx}]`
     const setData = {}
 
+    setData[`${cardDataKey}.cnText`] = '未设置卡号'
+    setData[`${cardDataKey}.cn`] = ''
+    setData[`${cardDataKey}.cvv`] = ''
+
+    const extraData = await this.cache.getCardExtraData(card._id)
+    setData[`${cardDataKey}.info`] = extraData
+    if(extraData.length >= 1 && extraData[0][0] === 'cn' ){
+      setData[`${cardDataKey}.cnText`] = extraData[0][1].match(/.{1,4}/g).join(' ')
+      setData[`${cardDataKey}.cn`] = extraData[0][1]
+    }
+    if(extraData.length >= 2 && extraData[1][0] === 'cvv' ){
+      setData[`${cardDataKey}.cvv`] = extraData[1][1]
+    }
+
     try {
-      setData[`${keyName}[${idx}]._url`] = await this.cache.getCardImagePath(card.image[0])
+      setData[`${cardDataKey}._url`] = await this.cache.getCardImagePath(card.image[0])
       if(card.encrypted){
-        const extraData = await this.cache.getCardExtraData(card._id)
-        setData[`${keyName}[${idx}].info`] = extraData
-        setData[`${keyName}[${idx}].cn`] = extraData[0] ? extraData[0][1].match(/.{1,4}/g).join(' ') : '****'
-      }
-      if(card.encrypted){
-        setData[`${keyName}[${idx}]._showEncryptIcon`] = true
+        setData[`${cardDataKey}._showEncryptIcon`] = true
       }
     } catch (_) {
-      if(!card.encrypted){
+      if(card.encrypted){
+        setData[`${cardDataKey}.cnText`] = '解密后查看卡号'
+      }else{
         console.debug('未发现缓存图片，开始缓存', card._id)
-        setData[`${keyName}[${idx}]._url`] = card.image[0].url
+        setData[`${cardDataKey}._url`] = card.image[0].url
         this.cache.setCardImage(card.image[0], false)
       }
     }
+
     return setData
   }
 }
