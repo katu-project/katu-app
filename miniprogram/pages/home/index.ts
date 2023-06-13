@@ -24,7 +24,7 @@ Page({
     app.on('cardDelete',this.onEventCardDelete)
     app.on('cardDecrypt',this.onEventCardChange)
     app.on('cardHide',this.onEventCardHide)
-    await loadData(app.loadUser,{},'加载用户信息')
+    await loadData(app.loadUser,{},'检查用户数据')
   
     await this.loadData()
     this.loadNotice()
@@ -50,7 +50,7 @@ Page({
   },
 
   async loadData(forceUpdate?:boolean){
-    const {likeList, cateList} = await loadData(app.getHomeData,{forceUpdate},'加载数据中')
+    const {likeList, cateList} = await loadData(app.getHomeData,{forceUpdate},'加载卡片数据')
     
     const setData = {}
 
