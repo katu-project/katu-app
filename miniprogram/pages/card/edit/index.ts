@@ -347,7 +347,14 @@ Page({
 
   tapToEditExtraData(){
     const c = JSON.stringify(this.data.card.info)
-    navigateTo(`../edit-extra/index?value=${c}`)
+    let tag = ''
+    if(this.data.card.tags.includes('储蓄卡')){
+      tag = 'dc'
+    }
+    if(this.data.card.tags.includes('信用卡')){
+      tag = 'cc'
+    }
+    navigateTo(`../edit-extra/index?value=${c}&tag=${tag}`)
   },
 
   hideSelectTag(){
