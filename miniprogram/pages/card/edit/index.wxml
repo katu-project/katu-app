@@ -84,7 +84,7 @@
       <view class="action text-green" style="margin-right: 30rpx;" bindtap="tapToSetTag">确定</view>
     </view>
     <view class="padding-tb flex flex-wrap">
-      <view class="padding-tb-sm padding-lr-sm margin-sm light bg-{{ item.selected ? item.color||'cyan' : 'gray'}} br-14" data-value="{{item.name}}" bindtap="tapToSelectTag" wx:for="{{tags}}" wx:key="index">
+      <view class="padding-tb-sm padding-lr-sm margin-sm light bg-{{ item.selected ? item.color||'cyan' : 'gray'}} br-14" data-value="{{index}}" bindtap="tapToSelectTag" wx:for="{{tags}}" wx:key="name">
         <text class="">{{item.name}}</text>
       </view>
       <view class="padding-tb-sm padding-lr-sm margin-sm light bg-orange br-14" bindtap="tapToCustomTag">

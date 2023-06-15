@@ -71,6 +71,9 @@ Page({
   loadTagData(){
     const useDefaultTag = user.config?.general.useDefaultTag
     const tags = (useDefaultTag ? DefaultAppTags : []).concat(user.tags!)
+    // 记录【其他】标签的idx
+    const idx = tags.findIndex(e=>e.name === '其他')
+    this.otherTagIdx = idx
     this.setData({
       tags
     })
@@ -314,7 +317,7 @@ Page({
 
   // 标签部分
   tapToSetTag(){
-    const tags = this.data.tags.filter(tag=>tag['selected']).map(e=>e.name)
+    const tags = this.data.tags.filter(tag=>tag.selected).map(e=>e.name)
     this.setData({
       'card.tags': tags
     })
@@ -335,10 +338,26 @@ Page({
   },
 
   tapToSelectTag(e){
-    const index = this.data.tags.findIndex(tag=>tag.name === e.currentTarget.dataset.value)
-    this.setData({
-      [`tags[${index}].selected`]: !this.data.tags[index]['selected']
-    })
+    const index = parseInt(e.currentTarget.dataset.value)
+    const setData = {}
+    if(this.otherTagIdx === index){
+      if(this.data.tags[this.otherTagIdx].selected){
+        setData[`tags[${index}].selected`] = false
+      }else{
+        this.data.tags.map((e,idx)=>{
+          if(e.selected){
+            setData[`tags[${idx}].selected`] = false
+          }
+        })
+        setData[`tags[${index}].selected`] = true
+      }     
+    }else{
+      setData[`tags[${index}].selected`] = !this.data.tags[index]['selected']
+      if(this.data.tags[this.otherTagIdx].selected){
+        setData[`tags[${this.otherTagIdx}].selected`] = false
+      }
+    }
+    this.setData(setData)
   },
 
   tapToCustomTag(){
