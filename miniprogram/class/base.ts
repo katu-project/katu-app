@@ -1,4 +1,4 @@
-import { selfish, file, objectSetValue } from "@/utils/index"
+import { selfish, file, objectSetValue, clonedeep } from "@/utils/index"
 import mitt from 'mitt'
 const emitter = mitt()
 
@@ -37,5 +37,9 @@ export default class Base {
 
   objectSetValue(obj:IAnyObject, path:string, value:any, separator?:string){
     return objectSetValue(obj,path,value,separator || '_')
+  }
+
+  deepCloneObject<T>(args:T):T{
+    return clonedeep(args)
   }
 }

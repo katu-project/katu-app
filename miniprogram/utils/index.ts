@@ -1,5 +1,6 @@
 import { selfish, objectSetValue, createAdvSetData } from './base'
 import debounce from 'lodash.debounce'
+import clonedeep from 'lodash.clonedeep'
 import * as crypto from './crypto'
 import * as file from './file'
 import * as convert from './convert'
@@ -33,5 +34,6 @@ export default {
 
 export {
   debounce,
+  clonedeep,
   cache
 }

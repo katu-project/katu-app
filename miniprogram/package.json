@@ -11,6 +11,7 @@
   "dependencies": {
     "crypto-js": "3.3.0",
     "js-base64": "^3.7.2",
+    "lodash.clonedeep": "^4.5.0",
     "lodash.debounce": "^4.0.8",
     "mitt": "^3.0.0",
     "pako": "^2.0.4"
