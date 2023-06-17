@@ -10,7 +10,7 @@ export default class Core extends Base {
   }
 
   getConfig<T extends keyof IAppConfig>(key:T){
-    return Config.App[key]
+    return this.deepCloneObject(Config.App[key])
   }
 
   get theme(){

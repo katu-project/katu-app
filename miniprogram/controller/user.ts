@@ -27,7 +27,7 @@ export default class User extends Controller {
   }
 
   get tags(){
-    return this._tags
+    return this.deepCloneObject(this._tags)
   }
 
   get isActive():boolean{
