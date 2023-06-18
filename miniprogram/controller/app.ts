@@ -264,7 +264,7 @@ class AppManager extends Controller {
     if(getCateList){
       homeData = {
         likeList: [],
-        cateList: await api.getCardSummary()
+        cateList: await api.getCardSummary('CateList')
       }
       return homeData
     }

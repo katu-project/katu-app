@@ -186,7 +186,9 @@ Page({
       try {
         const { cateList } = await app.getHomeData({getCateList:true})
         setData['cateList'] = cateList
-      } catch (error) {}
+      } catch (error) {
+        console.error('renderCateList getHomeData:', error)
+      }
     }
     
     if(Object.keys(setData).length){
