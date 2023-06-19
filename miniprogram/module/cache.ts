@@ -193,10 +193,14 @@ class Cache extends Module {
     return this.setLocalData(this.LocalCacheKeyMap.CARD_EXTRA_DATA_CACHE_KEY, cacheData)
   }
 
-  async deleteCardExtraData(cardId:string){
+  async deleteCardExtraData(cardId:string|string[]){
     const cacheData = await this.getExtraData()
-    console.debug('删除缓存卡片附加数据', cardId, cacheData[cardId])
-    delete cacheData[cardId]
+    if(typeof cardId === 'string'){
+      console.debug('删除缓存卡片附加数据', cardId, cacheData[cardId])
+      delete cacheData[cardId]
+    }else{
+      cardId.forEach(id => delete cacheData[id])
+    }
     return this.setLocalData(this.LocalCacheKeyMap.CARD_EXTRA_DATA_CACHE_KEY, cacheData)
   }
 

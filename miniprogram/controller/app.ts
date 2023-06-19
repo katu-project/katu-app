@@ -16,6 +16,7 @@ class AppManager extends Controller {
   async init(){
     this.loadBaseInfo()
     this.loadGlobalEvents()
+    this.loadGlobalTask()
     await this.loadModules()
     return
   }
@@ -68,6 +69,19 @@ class AppManager extends Controller {
   loadGlobalEvents(){
     this.on('CacheMasterKey', this.cacheMasterKey)
     this.on('ClearMasterKey', this.clearMasterKey)
+  }
+
+  async loadGlobalTask(){
+    const clearExtraDataCache = async ()=> {
+      const cardIdxs = await api.getCardSummary('CardIdxs')
+      const localExtraDataCache = await this.cache.getExtraData()
+      const invalidIds = Object.keys(localExtraDataCache).filter(e=>!cardIdxs.includes(e))
+      if(invalidIds.length){
+        console.log(`删除无效附加数据本地缓存：${invalidIds.length} 条`)
+        await this.cache.deleteCardExtraData(invalidIds)
+      }
+    }
+    setTimeout(clearExtraDataCache, 2000)
   }
 
   async loadModules(){
