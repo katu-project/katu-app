@@ -33,15 +33,20 @@ interface ICardExtraField {
   value?: string
 }
 
-interface ICardSummary {
+type CateItem = {
   name: string
   count: number
   color: string
 }
 
+interface ICardSummary {
+  CateList: CateItem[]
+  CardIdxs: string[]
+}
+
 interface IHomeData {
   likeList: ICard[]
-  cateList: ICardSummary[]
+  cateList: CateItem[]
 }
 
 interface IHomeDataCache {

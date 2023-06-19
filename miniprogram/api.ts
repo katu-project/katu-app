@@ -65,7 +65,7 @@ export default {
   // card
   getHomeData: () => request<IHomeData>('card/all'),
 
-  getCardSummary: (type:'CateList'|'CardIdxs') => request<ICardSummary[]>('card/summary',{type}),
+  getCardSummary: <T extends keyof ICardSummary>(type: T) => request<ICardSummary[T]>('card/summary',{type}),
 
   getLikeCard: () => request<ICard[]>('card/like'),
 
