@@ -52,10 +52,10 @@ Page({
   },
 
   async onReady(){
-    this.checkSetting()
     if(this.id){
       this.loadData()
     }
+    this.applyUserSetting()
   },
 
   onShow() {
@@ -100,13 +100,12 @@ Page({
     this.checkDataChange()
   },
 
-  checkSetting(){
+  applyUserSetting(){
     if(user.isActive){
       if(user.config?.general.defaultUseEncrytion){
         this.setData({
           'card.encrypted': true
         })
-        this.checkShowSetMasterKey()
       }
     }
   },
@@ -265,17 +264,17 @@ Page({
     this.checkDataChange()
   },
 
-  changeEncrypt(e){
-    this.setData({
-      'card.encrypted': e.detail.value
-    })
-    if(e.detail.value){
-      if(!user.isActive){
-        app.showActiveNotice()
-        return
-      }
+  onBindCryptModeChange(e){
+    this.changeCryptoMode(e.detail.value)
+    if(user.isActive && e.detail.value){
       this.checkShowSetMasterKey()
     }
+  },
+
+  changeCryptoMode(value:boolean){
+    this.setData({
+      'card.encrypted': value
+    })
   },
 
   changeLikeState(e){
@@ -289,7 +288,7 @@ Page({
     if(!user.isSetMasterKey){
       showChoose("警告","未设置主密码",{confirmText:'去设置'}).then(({cancel})=>{
         if(cancel) {
-          this.changeEncrypt({detail:{value: false}})
+          this.changeCryptoMode(false)
           return
         }
         navigateTo('/pages/settings/security/master-key/index')
