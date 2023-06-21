@@ -161,6 +161,10 @@ export default class User extends Controller {
     return api.getUserTag()
   }
 
+  // ui action 
+  // ui action end
+
+  // simple api proxy
   async deleteTag(_id: string){
     return api.deleteTag({_id})
   }
@@ -172,6 +176,12 @@ export default class User extends Controller {
   async updateTag(tag: Pick<ICardTag,'color'|'_id'>){
     return api.updateTag(tag)
   }
+
+  async activeAccount(){
+    return api.activeAccount({})
+  }
+
+  // simple api proxy end
 
   loadOnAppHideConfig(){
     wx.onAppHide(res=>{
@@ -201,9 +211,6 @@ export default class User extends Controller {
     })
   }
 
-  async activeAccount(){
-    return api.activeAccount({})
-  }
 }
 
 

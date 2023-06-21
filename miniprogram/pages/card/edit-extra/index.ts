@@ -24,7 +24,6 @@ Page({
         extraFields
       })
     }
-    console.log(options)
     //不存在数据时根据tag来显示默认填写的字段
     if(!parseExtraData.length && options.tag){
       if(options.tag == 'dc'){
