@@ -31,6 +31,34 @@ const MenuConfig = {
       url: '../about/index',
       pass: true
     }
+  ],
+  settings: [
+    {
+      icon: 'apps',
+      title: '通用',
+      url: 'general'
+    },
+    {
+      icon: 'profile',
+      title: '账户',
+      url: 'account'
+    },
+    {
+      icon: 'file',
+      title: '数据',
+      url: 'data'
+    },
+    {
+      icon: 'unlock',
+      title: '安全',
+      url: 'security'
+    },
+    {
+      icon: 'repair',
+      title: '调试',
+      url: '../../packages/debug/pages/index',
+      hide: true
+    }
   ]
 }
 
