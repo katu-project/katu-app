@@ -81,7 +81,12 @@ class AppManager extends Controller {
         await this.cache.deleteCardExtraData(invalidIds)
       }
     }
+    const clearCardImageCache = async ()=> {
+      const imageIds = await api.getCardSummary('ImageIds')
+      return this.cache.deleteCardFile(imageIds)
+    }
     setTimeout(clearExtraDataCache, 2000)
+    setTimeout(clearCardImageCache, 3000)
   }
 
   async loadModules(){

@@ -204,6 +204,26 @@ class Cache extends Module {
     return this.setLocalData(this.LocalCacheKeyMap.CARD_EXTRA_DATA_CACHE_KEY, cacheData)
   }
 
+  async deleteCardFile(imageIds:string[]){
+    try {
+      const localImageIdxs = await file.readdir(this.getConst('APP_IMAGE_DIR'))
+      const invalidIds = localImageIdxs.filter(e=>!imageIds.includes(e))
+      invalidIds.forEach( async fileId=>{
+        const path = await this.getFilePath(this.getConst('APP_IMAGE_DIR'), fileId)
+        file.deleteFile(path)
+      })
+      console.log(`删除无效图片文件：${invalidIds.length} 条`)
+    } catch (_) {}
+    try {
+      const localDownIdxs = await file.readdir(this.getConst('APP_DOWN_DIR'))
+      const invalidIds = localDownIdxs.filter(e=>!imageIds.includes(e))
+      invalidIds.forEach( async fileId=>{
+        const path = await this.getFilePath(this.getConst('APP_DOWN_DIR'), fileId)
+        file.deleteFile(path)
+      })
+      console.log(`删除无效下载文件：${invalidIds.length} 条`)
+    } catch (_) {}
+  }
   // clear all cache
   async clearAll(){
     for (const key in this.LocalCacheKeyMap) {
