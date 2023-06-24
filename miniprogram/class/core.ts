@@ -10,7 +10,7 @@ export default class Core extends Base {
   }
 
   getConfig<T extends keyof IAppConfig>(key:T){
-    return this.deepCloneObject(Config.App[key])
+    return typeof key === 'object' ? this.deepCloneObject(Config.App[key]) : Config.App[key]
   }
 
   get theme(){
