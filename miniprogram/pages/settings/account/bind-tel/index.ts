@@ -137,11 +137,11 @@ Page({
   },
   cacheWaitTime(){
     if(this.data.waitTime){
-      app.setLocalData('LastSendCodeTime', this.lastSendTime || new Date().getTime() - (smsGapTime-this.data.waitTime)*1000)
+      app.setLocalData('SMS_LAST_SEND_TIME', this.lastSendTime || new Date().getTime() - (smsGapTime-this.data.waitTime)*1000)
     }
   },
   loadWaitTime(){
-    app.getLocalData<number>('LastSendCodeTime').then(lastTime=>{
+    app.getLocalData<number>('SMS_LAST_SEND_TIME').then(lastTime=>{
       if(lastTime){
         const now = new Date().getTime()
         const costTime = Math.floor((now - lastTime)/1000)

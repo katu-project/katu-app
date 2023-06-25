@@ -23,7 +23,8 @@ const _LocalCacheKeyMap = [
   "CARD_EXTRA_DATA_CACHE_KEY",
   "CARD_DATA_CACHE_KEY",
   "ONCE_NOTICE_CACHE_KEY",
-  "USER_INFO_CACHE_KEY"
+  "USER_INFO_CACHE_KEY",
+  "SMS_LAST_SEND_TIME"
 ] as const
 
 export const LocalCacheKeyMap = Object.fromEntries(_LocalCacheKeyMap.map(e=>[e,e])) as TupleToObject<typeof _LocalCacheKeyMap>
