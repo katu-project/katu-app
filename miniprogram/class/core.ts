@@ -23,7 +23,7 @@ export default class Core extends Base {
 
   async getLocalData<T>(key: keyof typeof Const.LocalCacheKeyMap) {
     try {
-      const res: T = await cache.getCache(key)
+      const res: T = await cache.getCache(Const.LocalCacheKeyMap[key])
       return res
     } catch (error) {
       console.warn('getLocalData:', key, error)
@@ -32,12 +32,12 @@ export default class Core extends Base {
   }
 
   async setLocalData(key: keyof typeof Const.LocalCacheKeyMap, data) {
-    return cache.setCache(key, data)
+    return cache.setCache(Const.LocalCacheKeyMap[key], data)
   }
 
   async deleteLocalData(key: keyof typeof Const.LocalCacheKeyMap) {
     try {
-      await cache.delCache(key)
+      await cache.delCache(Const.LocalCacheKeyMap[key])
     } catch (error) {
       console.error(error)
     }
