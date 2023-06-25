@@ -48,20 +48,20 @@ class Cache extends Module {
 
   // master key cache
   async getMasterKey(){
-    return this.getLocalData<string>(this.LocalCacheKeyMap.MASTER_KEY_CACHE_KEY)
+    return this.getLocalData<string>('MASTER_KEY_CACHE_KEY')
   }
 
   async setMasterKey(masterKey:string){
-    return this.setLocalData(this.LocalCacheKeyMap.MASTER_KEY_CACHE_KEY, masterKey)
+    return this.setLocalData('MASTER_KEY_CACHE_KEY', masterKey)
   }
 
   async deleteMasterKey(){
-    this.deleteLocalData(this.LocalCacheKeyMap.MASTER_KEY_CACHE_KEY)
+    this.deleteLocalData('MASTER_KEY_CACHE_KEY')
   }
 
   // home data cache
   async getHomeData(){
-    const homeDataCache = await this.getLocalData<IHomeDataCache>(this.LocalCacheKeyMap.HOME_DATA_CACHE_KEY)
+    const homeDataCache = await this.getLocalData<IHomeDataCache>('HOME_DATA_CACHE_KEY')
     if(homeDataCache){
       const nowTime = new Date().getTime()
       if(homeDataCache.cacheTime + this.config.homeDataCacheTime > nowTime){
@@ -78,16 +78,16 @@ class Cache extends Module {
       cacheTime: new Date().getTime(),
       data: homeData
     }
-    return this.setLocalData(this.LocalCacheKeyMap.HOME_DATA_CACHE_KEY, cacheData)
+    return this.setLocalData('HOME_DATA_CACHE_KEY', cacheData)
   }
 
   async deleteHomeData(){
-    this.deleteLocalData(this.LocalCacheKeyMap.HOME_DATA_CACHE_KEY)
+    this.deleteLocalData('HOME_DATA_CACHE_KEY')
   }
 
   // card data cache
   async getCards(){
-    const cacheData = await this.getLocalData<{[id:string]:ICard}>(this.LocalCacheKeyMap.CARD_DATA_CACHE_KEY)
+    const cacheData = await this.getLocalData<{[id:string]:ICard}>('CARD_DATA_CACHE_KEY')
     return cacheData || {}
   }
 
@@ -108,13 +108,13 @@ class Cache extends Module {
     if(!card.encrypted){
       await this.setCardExtraData(card._id, card.info)
     }
-    return this.setLocalData(this.LocalCacheKeyMap.CARD_DATA_CACHE_KEY,cards)
+    return this.setLocalData('CARD_DATA_CACHE_KEY',cards)
   }
 
   async deleteCard(id:string){
     const cards = await this.getCards()
     delete cards[id]
-    return this.setLocalData(this.LocalCacheKeyMap.CARD_DATA_CACHE_KEY,cards)
+    return this.setLocalData('CARD_DATA_CACHE_KEY',cards)
   }
 
   // card image cache
@@ -177,7 +177,7 @@ class Cache extends Module {
   }
 
   async getExtraData(){
-    const cacheData = await this.getLocalData(this.LocalCacheKeyMap.CARD_EXTRA_DATA_CACHE_KEY)
+    const cacheData = await this.getLocalData('CARD_EXTRA_DATA_CACHE_KEY')
     return cacheData || {}
   }
   
@@ -190,7 +190,7 @@ class Cache extends Module {
     console.debug('setCardExtraData cache:', cardId)
     const cacheData = await this.getExtraData()
     cacheData[cardId] = data
-    return this.setLocalData(this.LocalCacheKeyMap.CARD_EXTRA_DATA_CACHE_KEY, cacheData)
+    return this.setLocalData('CARD_EXTRA_DATA_CACHE_KEY', cacheData)
   }
 
   async deleteCardExtraData(cardId:string|string[]){
@@ -201,7 +201,7 @@ class Cache extends Module {
     }else{
       cardId.forEach(id => delete cacheData[id])
     }
-    return this.setLocalData(this.LocalCacheKeyMap.CARD_EXTRA_DATA_CACHE_KEY, cacheData)
+    return this.setLocalData('CARD_EXTRA_DATA_CACHE_KEY', cacheData)
   }
 
   async deleteCardFile(imageIds:string[]){
@@ -226,9 +226,9 @@ class Cache extends Module {
   }
   // clear all cache
   async clearAll(){
-    for (const key in this.LocalCacheKeyMap) {
-      await this.deleteLocalData(key)
-    }
+    await this.deleteLocalData('CARD_DATA_CACHE_KEY')
+    await this.deleteLocalData('CARD_EXTRA_DATA_CACHE_KEY')
+    await this.deleteLocalData('HOME_DATA_CACHE_KEY')
   }
 }
 

@@ -23,14 +23,14 @@ class Notice extends Module {
   }
 
   async _getOnceNoticeLog(){
-    const sets = await this.getLocalData<{[key:string]:boolean}>(this.LocalCacheKeyMap.ONCE_NOTICE_CACHE_KEY)
+    const sets = await this.getLocalData<{[key:string]:boolean}>('ONCE_NOTICE_CACHE_KEY')
     return sets || {}
   }
 
   async _setOnceNoticeLog(key, value){
     const sets = await this._getOnceNoticeLog()    
     sets[key] = value
-    return this.setLocalData(this.LocalCacheKeyMap.ONCE_NOTICE_CACHE_KEY, sets)
+    return this.setLocalData('ONCE_NOTICE_CACHE_KEY', sets)
   }
 
   async _getOnceNotice(key){

@@ -21,7 +21,7 @@ export default class Core extends Base {
     return Config.Menu
   }
 
-  async getLocalData<T>(key: string) {
+  async getLocalData<T>(key: keyof typeof Const.LocalCacheKeyMap) {
     try {
       const res: T = await cache.getCache(key)
       return res
@@ -31,11 +31,11 @@ export default class Core extends Base {
     return
   }
 
-  async setLocalData(key, data) {
+  async setLocalData(key: keyof typeof Const.LocalCacheKeyMap, data) {
     return cache.setCache(key, data)
   }
 
-  async deleteLocalData(key: string) {
+  async deleteLocalData(key: keyof typeof Const.LocalCacheKeyMap) {
     try {
       await cache.delCache(key)
     } catch (error) {
