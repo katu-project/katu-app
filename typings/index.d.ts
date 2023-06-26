@@ -35,6 +35,7 @@ interface IAppConfig {
   smsGapTime: number
   crypto: IAppCryptoConfig
   shareInfo: IAnyObject
+  cacheClearGapTime: number
 }
 
 type RequestType = 'cloud' | 'common'

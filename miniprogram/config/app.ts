@@ -99,7 +99,8 @@ const AppConfig:IAppConfig = {
     title: '卡兔-安全好用的卡片管理助手',
     path: `/pages/home/index`,
     imageUrl: '/static/share.png'
-  }
+  },
+  cacheClearGapTime: 86400
 }
 
 export default AppConfig

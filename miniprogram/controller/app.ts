@@ -82,8 +82,14 @@ class AppManager extends Controller {
       }
     }
     const clearCardImageCache = async ()=> {
-      const imageIds = await api.getCardSummary('ImageIds')
-      return this.cache.deleteCardFile(imageIds)
+      const lastCacheClearTime = await this.getLocalData<number>('CACHE_CLEAR_TIME')
+      const nowTime = new Date().getTime()
+      const gapTime = Math.floor((nowTime - (lastCacheClearTime||0))/1000)
+      if(gapTime > this.getConfig('cacheClearGapTime')){
+        const imageIds = await api.getCardSummary('ImageIds')
+        this.cache.deleteCardFile(imageIds)
+        this.setLocalData('CACHE_CLEAR_TIME', nowTime)
+      }
     }
     setTimeout(clearExtraDataCache, 2000)
     setTimeout(clearCardImageCache, 3000)
