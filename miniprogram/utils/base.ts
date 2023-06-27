@@ -70,9 +70,9 @@ export function createAdvSetData(originSetData,dataCount:number,gap?:number){
       originSetData(_setData)
     }
     if(doIdx === dataCount){
-      console.debug('adv setData  end:',`${dataSets.length}/${dataCount}`)
+      // console.debug('adv setData  end:',`${dataSets.length}/${dataCount}`)
     }else if(dataSets.length % gap! === 0){
-      console.debug('adv setData part:',`${dataSets.length}/${dataCount}`)
+      // console.debug('adv setData part:',`${dataSets.length}/${dataCount}`)
       dataSets = []
     } 
   }

@@ -19,6 +19,15 @@ export { UPNG as upng } from './upng'
 export * as bip39 from './bip39/index'
 export { drawQrcode as qrcode } from './qrcode/index'
 
+function checkTimeout(oldTime:number, gapTime:number){
+  const now = new Date().getTime()
+  if(oldTime > now) return 0
+  const costTime = Math.floor((now - oldTime)/1000)
+  const remainSecond =  costTime - gapTime
+  if(remainSecond >= 0) throw Error('Timeout')
+  return -remainSecond
+}
+
 export default {
   selfish,
   objectSetValue,
@@ -35,5 +44,6 @@ export default {
 export {
   debounce,
   clonedeep,
-  cache
+  cache,
+  checkTimeout
 }
