@@ -223,6 +223,7 @@ class Cache extends Module {
       })
       console.log(`删除无效下载文件：${invalidIds.length} 条`)
     } catch (_) {}
+    this.setLocalData('CACHE_CLEAR_TIME', new Date().getTime())
   }
   // clear all cache
   async clearAll(){

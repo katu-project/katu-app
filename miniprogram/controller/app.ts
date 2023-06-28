@@ -82,13 +82,13 @@ class AppManager extends Controller {
       }
     }
     const clearCardImageCache = async ()=> {
-      const lastCacheClearTime = await this.getLocalData<number>('CACHE_CLEAR_TIME')
-      const nowTime = new Date().getTime()
-      const gapTime = Math.floor((nowTime - (lastCacheClearTime||0))/1000)
-      if(gapTime > this.getConfig('cacheClearGapTime')){
+      const lastCacheClearTime = await this.getLocalData<number>('CACHE_CLEAR_TIME') || 0
+      try {
+        this.checkCacheClearTimeout(lastCacheClearTime)
+        console.log('距离上次清理卡片文件缓存未超过24小时')
+      } catch (error) {
         const imageIds = await api.getCardSummary('ImageIds')
         this.cache.deleteCardFile(imageIds)
-        this.setLocalData('CACHE_CLEAR_TIME', nowTime)
       }
     }
     setTimeout(clearExtraDataCache, 2000)
