@@ -54,6 +54,10 @@ export function mergeDeep(target, ...sources) {
   return mergeDeep(target, ...sources);
 }
 
+export function getCurrentTimestamp(){
+  return new Date().getTime()
+}
+
 export function createAdvSetData(originSetData,dataCount:number,gap?:number){
   let dataSets: any[] = []
   let doIdx = 0
@@ -111,5 +115,6 @@ export default {
   mergeDeep,
   selfish,
   objectSetValue,
-  createAdvSetData
+  createAdvSetData,
+  getCurrentTimestamp
 }

@@ -1,4 +1,4 @@
-import { selfish, file, objectSetValue, clonedeep } from "@/utils/index"
+import { selfish, file, objectSetValue, clonedeep, getCurrentTimestamp } from "@/utils/index"
 import mitt from 'mitt'
 const emitter = mitt()
 
@@ -22,6 +22,10 @@ export default class Base {
 
   get emit(){
     return this.emitter.emit
+  }
+
+  get currentTimestamp(){
+    return getCurrentTimestamp()
   }
 
   getEeventList(){

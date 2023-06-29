@@ -63,8 +63,7 @@ class Cache extends Module {
   async getHomeData(){
     const homeDataCache = await this.getLocalData<IHomeDataCache>('HOME_DATA_CACHE_KEY')
     if(homeDataCache){
-      const nowTime = new Date().getTime()
-      if(homeDataCache.cacheTime + this.config.homeDataCacheTime > nowTime){
+      if(homeDataCache.cacheTime + this.config.homeDataCacheTime > this.currentTimestamp){
         console.debug('使用首页缓存数据')
         return homeDataCache.data
       }
@@ -75,7 +74,7 @@ class Cache extends Module {
   async setHomeCacheData(homeData:IHomeData){
     console.debug('设置首页数据缓存')
     const cacheData = {
-      cacheTime: new Date().getTime(),
+      cacheTime: this.currentTimestamp,
       data: homeData
     }
     return this.setLocalData('HOME_DATA_CACHE_KEY', cacheData)
@@ -223,7 +222,7 @@ class Cache extends Module {
       })
       console.log(`删除无效下载文件：${invalidIds.length} 条`)
     } catch (_) {}
-    this.setLocalData('CACHE_CLEAR_TIME', new Date().getTime())
+    this.setLocalData('CACHE_CLEAR_TIME', this.currentTimestamp)
   }
   // clear all cache
   async clearAll(){

@@ -50,7 +50,7 @@ Page({
         return pic
       }),
       [`card.info`]: app.rebuildExtraFields(card.info || []),
-      endTime: Math.floor((new Date(endTime).getTime() - new Date().getTime()) / 1000)
+      endTime: Math.floor((new Date(endTime).getTime() - app.currentTimestamp) / 1000)
     })
     if(card.encrypted){
       await this.showEncryptedImage()

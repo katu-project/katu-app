@@ -97,7 +97,7 @@ Page({
       return
     }
     loadData(app.sendVerifyCode, {tel:this.data.tel}).then(({verifyId})=>{
-      this.lastSendTime = new Date().getTime()
+      this.lastSendTime = app.currentTimestamp
       this.setData({
         sendCode: true,
         waitTime: smsGapTime,
@@ -146,7 +146,7 @@ Page({
 
   cacheWaitTime(){
     if(this.data.waitTime){
-      app.setLocalData('SMS_LAST_SEND_TIME', this.lastSendTime || new Date().getTime() - (smsGapTime-this.data.waitTime)*1000)
+      app.setLocalData('SMS_LAST_SEND_TIME', this.lastSendTime || app.currentTimestamp - (smsGapTime-this.data.waitTime)*1000)
     }
   },
 

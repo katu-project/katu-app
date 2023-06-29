@@ -14,12 +14,11 @@ class Notice extends Module {
   }
 
   resetNoticeFetchTime(){
-    this.lastNoticeFetchTime = new Date().getTime()
+    this.lastNoticeFetchTime = this.currentTimestamp
   }
 
   checkNeedFetchNotice(){
-    const nowTime = new Date().getTime()
-    return nowTime - this.lastNoticeFetchTime > this.noticeFetchIntervalTime
+    return this.currentTimestamp - this.lastNoticeFetchTime > this.noticeFetchIntervalTime
   }
 
   async _getOnceNoticeLog(){
