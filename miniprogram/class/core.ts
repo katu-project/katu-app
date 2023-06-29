@@ -1,7 +1,7 @@
 import Base from '@/class/base'
 import Const from "@/const"
 import Config from '@/config/index'
-import { cache, file, net, crypto, checkTimeout } from "@/utils/index"
+import { cache, file, net, crypto } from "@/utils/index"
 
 export default class Core extends Base {
 
@@ -114,13 +114,5 @@ export default class Core extends Base {
     }
 
     return savePath
-  }
-
-  checkSmsTimeout(lastTime:number){
-    return checkTimeout(lastTime, this.getConfig('smsGapTime'))
-  }
-
-  checkCacheClearTimeout(lastTime:number){
-    return checkTimeout(lastTime, this.getConfig('cacheClearGapTime'))
   }
 } 

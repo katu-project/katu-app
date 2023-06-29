@@ -16,13 +16,16 @@ Page({
     waitTime: 0,
     sendResetTelCode: false
   },
+
   onShow(){
     this.loadData()
     this.loadWaitTime()
   },
+
   onUnload(){
     this.cacheWaitTime()
   },
+
   loadData(){
     if(user.tel){
       this.setData({
@@ -45,8 +48,10 @@ Page({
       })
     }
   },
+
   onBindInput(){
   },
+
   tapToChangeTel(){
     if(this.data.sendResetTelCode){
       if(this.data.code.length !== 4 || !this.data.verifyId){
@@ -85,6 +90,7 @@ Page({
       })
     }
   },
+
   tapToSendCode(){
     if(this.data.tel.length !== 11){
       showError('号码有误')
@@ -101,6 +107,7 @@ Page({
       this.showWaitTime()
     })
   },
+
   tapToBindTel(){
     if(!this.data.sendCode){
       return
@@ -120,6 +127,7 @@ Page({
       })
     })
   },
+
   showWaitTime(){
     if(this.data.waitTime>1){
       this.setData({
@@ -135,25 +143,24 @@ Page({
       })
     }
   },
+
   cacheWaitTime(){
     if(this.data.waitTime){
       app.setLocalData('SMS_LAST_SEND_TIME', this.lastSendTime || new Date().getTime() - (smsGapTime-this.data.waitTime)*1000)
     }
   },
+
   loadWaitTime(){
-    app.getLocalData<number>('SMS_LAST_SEND_TIME').then(lastTime=>{
-      if(lastTime){
-        const now = new Date().getTime()
-        const costTime = Math.floor((now - lastTime)/1000)
-        if(costTime < smsGapTime){
-          this.lastSendTime = lastTime
-          this.data.waitTime = smsGapTime - costTime
-          this.setData({
-            sendCode: true
-          })
-          this.showWaitTime()
-        }
-      }
+    app.getLastSmsSendTime().then(lastTime=>{
+      try {
+        const remainSecond = app.checkSmsTimeout(lastTime)
+        this.lastSendTime = lastTime
+        this.data.waitTime = remainSecond
+        this.setData({
+          sendCode: true
+        })
+        this.showWaitTime()
+      } catch (_) {}
     })
   }
 })

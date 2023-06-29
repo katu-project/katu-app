@@ -1,6 +1,6 @@
 import Agent from '@/class/agent'
 import api from "@/api"
-import { navigateTo } from '@/utils/index'
+import { navigateTo, checkTimeout } from '@/utils/index'
 import { getNoticeModule, getCryptoModule, getCacheModule } from '@/module/index'
 
 export default class Controller extends Agent {
@@ -37,5 +37,14 @@ export default class Controller extends Agent {
       console.error('image type check err:',error)
       throw Error('图片格式不支持')
     }
+  }
+
+  checkSmsTimeout(lastTime:number){
+    return checkTimeout(lastTime, this.getConfig('smsGapTime'))
+  }
+
+  async checkCacheClearTimeout(){
+    const lastTime = await this.getLastCacheClearTime()
+    return checkTimeout(lastTime, this.getConfig('cacheClearGapTime'))
   }
 }
