@@ -271,7 +271,7 @@ class CardManager extends Controller{
     const extraData = await this.cache.getCardExtraData(card._id)
     setData[`${cardDataKey}.info`] = extraData
     if(extraData.length >= 1 && extraData[0][0] === 'cn' ){
-      setData[`${cardDataKey}.cnText`] = extraData[0][1].match(/.{1,4}/g).join(' ')
+      setData[`${cardDataKey}.cnText`] = extraData[0][1].match(/.{1,4}/g)?.join(' ')
       setData[`${cardDataKey}.cn`] = extraData[0][1]
     }
     if(extraData.length >= 2 && extraData[1][0] === 'cvv' ){

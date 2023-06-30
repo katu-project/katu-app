@@ -175,25 +175,25 @@ class Cache extends Module {
     return imagePath
   }
 
-  async getExtraData(){
-    const cacheData = await this.getLocalData('CARD_EXTRA_DATA_CACHE_KEY')
+  async getExtraDatas(){
+    const cacheData = await this.getLocalData<{[key:string]:string[][]}>('CARD_EXTRA_DATA_CACHE_KEY')
     return cacheData || {}
   }
   
   async getCardExtraData(cardId:string){
-    const cacheData = await this.getExtraData()
+    const cacheData = await this.getExtraDatas()
     return cacheData[cardId] || []
   }
 
   async setCardExtraData(cardId:string, data:any[]){
     console.debug('setCardExtraData cache:', cardId)
-    const cacheData = await this.getExtraData()
+    const cacheData = await this.getExtraDatas()
     cacheData[cardId] = data
     return this.setLocalData('CARD_EXTRA_DATA_CACHE_KEY', cacheData)
   }
 
   async deleteCardExtraData(cardId:string|string[]){
-    const cacheData = await this.getExtraData()
+    const cacheData = await this.getExtraDatas()
     if(typeof cardId === 'string'){
       console.debug('删除缓存卡片附加数据', cardId, cacheData[cardId])
       delete cacheData[cardId]
