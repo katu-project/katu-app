@@ -51,8 +51,8 @@ class AppManager extends Controller {
 
   async loadUser(){
     await this.user.init()
-    if(this.user.isSetMasterKey && this.user.config?.security.rememberPassword){
-      console.log("启用记住密码: 加载主密码");
+    if(this.user.isSetMasterKey && this.user.rememberPassword){
+      console.log("用户启用记住密码，尝试加载主密码")
       this.loadMasterKey()
     }
   }
@@ -130,7 +130,7 @@ class AppManager extends Controller {
       this.setMasterKey(masterKey)
       console.log("本地缓存的主密码加载成功")
     }else{
-      console.warn("读取主密码缓存失败")
+      console.warn("未发现本地缓存的主密码")
     }
   }
 
@@ -169,7 +169,7 @@ class AppManager extends Controller {
       throw error
     }
 
-    if(!this.user.config?.security.rememberPassword && !this.masterKey){
+    if(!this.user.rememberPassword && !this.masterKey){
       error.code = '21'
       error.message = '请输入主密码'
       throw error

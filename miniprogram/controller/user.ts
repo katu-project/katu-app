@@ -74,6 +74,10 @@ export default class User extends Controller {
     return this._user
   }
 
+  get rememberPassword(){
+    return this.user.config?.security.rememberPassword || false
+  }
+
   async init(){
     await this.loadInfo()
     wx.nextTick(()=>{
@@ -199,7 +203,7 @@ export default class User extends Controller {
         return
       }
 
-      if(this.config?.security.rememberPassword){
+      if(this.rememberPassword){
         console.log('缓存主密码');
         this.emit('CacheMasterKey')
       }else{
