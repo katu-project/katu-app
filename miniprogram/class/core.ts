@@ -23,11 +23,8 @@ export default class Core extends Base {
 
   async getLocalData<T>(key: keyof typeof Const.LocalCacheKeyMap) {
     try {
-      const res: T = await cache.getCache(Const.LocalCacheKeyMap[key])
-      return res
-    } catch (error) {
-      console.warn('getLocalData:', key, error)
-    }
+      return await cache.getCache<T>(Const.LocalCacheKeyMap[key])
+    } catch (_) {}
     return
   }
 

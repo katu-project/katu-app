@@ -1,6 +1,6 @@
-export async function getCache(key){
+export async function getCache<T>(key:string){
   const { data } = await wx.getStorage({ key })
-  return data
+  return data as T
 }
 
 export async function setCache(key, data){
