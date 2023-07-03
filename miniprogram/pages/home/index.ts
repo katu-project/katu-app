@@ -1,4 +1,4 @@
-import { loadData, navigateTo, createAdvSetData, debounce } from '@/utils/index'
+import { loadData, navigateTo, debounce } from '@/utils/index'
 import { getAppManager } from '@/controller/app'
 import { getUserManager } from '@/controller/user'
 import { getCardManager } from '@/controller/card'
@@ -156,7 +156,7 @@ Page({
       const setData = await cardManager.getImageRenderSetData({idx, card, keyName: 'likeList'})
       if(Object.keys(setData).length) this.setData(setData)
     }else{
-      const advSetData = createAdvSetData(this.setData.bind(this), this.data.likeList.length)
+      const advSetData = app.createAdvSetData(this.setData.bind(this), this.data.likeList.length)
       for (const idx in this.data.likeList) {
         const card = this.data.likeList[idx]
         cardManager.getImageRenderSetData({idx, card, keyName: 'likeList'})

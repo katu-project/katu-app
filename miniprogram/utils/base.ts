@@ -58,30 +58,6 @@ export function getCurrentTimestamp(){
   return new Date().getTime()
 }
 
-export function createAdvSetData(originSetData,dataCount:number,gap?:number){
-  let dataSets: any[] = []
-  let doIdx = 0
-  gap = gap || 4
-  return function(setData){
-    dataSets.push(setData)
-    doIdx ++
-    if(dataSets.length % gap! !== 0 && doIdx !== dataCount){
-      return
-    }
-    const _setData = dataSets.reduce((a,b)=>Object.assign(a,b))
-    const _setDataLength = Object.keys(_setData).length
-    if(_setDataLength){
-      originSetData(_setData)
-    }
-    if(doIdx === dataCount){
-      // console.debug('adv setData  end:',`${dataSets.length}/${dataCount}`)
-    }else if(dataSets.length % gap! === 0){
-      // console.debug('adv setData part:',`${dataSets.length}/${dataCount}`)
-      dataSets = []
-    } 
-  }
-}
-
 // wx method to promise
 export const toPromise = <T>(func, options={}, returnKey?:string): Promise<T> => {
   return new Promise((resolve,reject)=>{
@@ -115,6 +91,5 @@ export default {
   mergeDeep,
   selfish,
   objectSetValue,
-  createAdvSetData,
   getCurrentTimestamp
 }

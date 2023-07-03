@@ -2,7 +2,7 @@ import debounce from 'lodash.debounce'
 import clonedeep from 'lodash.clonedeep'
 import { getCurrentTimestamp } from './base'
 
-export { selfish, objectSetValue, createAdvSetData, mergeDeep, sleep, getCurrentTimestamp } from './base'
+export { selfish, objectSetValue, mergeDeep, sleep, getCurrentTimestamp } from './base'
 export * as crypto from './crypto'
 export * as file from './file'
 export * as net from './net'

@@ -1,4 +1,4 @@
-import { createAdvSetData, loadData, navigateTo, setClipboardData, showNotice } from '@/utils/index'
+import { loadData, navigateTo, setClipboardData, showNotice } from '@/utils/index'
 import { getAppManager } from '@/controller/app'
 import { getCardManager } from '@/controller/card'
 const app = getAppManager()
@@ -111,7 +111,7 @@ Page({
       const setData = await cardManager.getImageRenderSetData({idx:idx!, card, keyName:'list'})
       if(Object.keys(setData).length) this.setData(setData)
     }else{
-      const advSetData = createAdvSetData(this.setData.bind(this), this.data.list.length)
+      const advSetData = app.createAdvSetData(this.setData.bind(this), this.data.list.length)
       for (const idx in this.data.list) {
         const card = this.data.list[idx]
         cardManager.getImageRenderSetData({idx, card, keyName:'list'})
