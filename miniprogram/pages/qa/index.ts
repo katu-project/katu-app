@@ -5,21 +5,24 @@ const QaTypeCate = app.getConfig('qaDocType')
 
 Page({
   data: {
-    qaCate: [] as IAnyObject[],
-    list: [] as IAnyObject[],
+    qaCate: [],
+    list: [],
     isLoading: true
   },
+
   onLoad() {
     this.setData({
       qaCate: QaTypeCate
     })
   },
+
   onReady() {
     this.loadData()
   },
+
   onShow() {
-    // this.loadData()
   },
+
   loadData(){
     loadData(app.getHotDoc).then(list=>{
       this.setData({
@@ -28,13 +31,18 @@ Page({
       })
     })
   },
+
   tapToDetail(e){
     navigateTo('./detail/index?id='+ e.currentTarget.dataset.key)
   },
+
   tapToGoDocList(e){
     navigateTo('./list/index?cate='+ e.currentTarget.dataset.key)
   },
-  onShareAppMessage() {
 
+  onShareAppMessage() {
+    return {
+      title: '卡兔使用文档'
+    }
   }
 })

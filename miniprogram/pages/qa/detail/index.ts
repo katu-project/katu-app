@@ -8,20 +8,23 @@ Page({
       title: '',
       content: '数据加载中',
       updateTime: ''
-    } as IDoc
+    }
   },
+
   onLoad(options) {
     this.id = options.id
   },
+
   onReady() {
     this.loadData()
   },
+
   onShow(){
-    // this.loadData()
   },
+
   loadData(){
     if(!this.id){
-      showChoose('该文档不存在').then(()=> navigateBack())
+      showChoose('文档不存在').then(()=> navigateBack())
       return
     }
     loadData(app.getDoc,{_id:this.id}).then(doc=>{
@@ -30,9 +33,10 @@ Page({
       this.setData({doc})
     })
   },
+
   onShareAppMessage() {
     return {
-      title: '卡兔使用帮助文档 - '+this.data.doc.title
+      title: '卡兔使用文档 - ' + this.data.doc.title
     }
   }
 })

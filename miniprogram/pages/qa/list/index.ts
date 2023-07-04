@@ -7,12 +7,14 @@ Page({
   cate: '',
   data: {
     cate: {},
-    list: [] as IAnyObject[],
+    list: [],
     isLoading: true
   },
+
   onLoad(options) {
     this.cate = options.cate || ''
   },
+
   onReady() {
     const cateData = QaTypeCate.find(e=>e.value === this.cate)
     this.setData({
@@ -20,18 +22,23 @@ Page({
     })
     this.loadData()
   },
+
   onShow() {
-    // this.loadData()
   },
+
   loadData(){
     loadData(app.getCateDoc, this.cate).then(list=>{
       this.setData({list,isLoading: false})
     })
   },
+
   tapToDetail(e){
     navigateTo('../detail/index?id='+ e.currentTarget.dataset.key)
   },
-  onShareAppMessage() {
 
+  onShareAppMessage() {
+    return {
+      title: '卡兔使用文档-' + this.data.cate.name
+    }
   }
 })
