@@ -52,10 +52,9 @@ Page({
   onBindInput(){
   },
 
-  tapToChangeTel(){
+  async tapToChangeTel(){
     if(this.data.sendResetTelCode){
-      if(this.data.code.length !== 4 || !this.data.verifyId){
-        showError('验证码有误')
+      if(!this.smsSendPrecheck()){
         return
       }
 
@@ -75,45 +74,42 @@ Page({
         showNotice('稍后再获取验证码')
         return
       }
-      showChoose('系统提示','更换手机号需解绑当前号码').then(res=>{
-        if(res.confirm){
-          loadData(app.sendVerifyCode, {tel:this.data.tel}).then(({verifyId})=>{
-            this.setData({
-              sendResetTelCode: true,
-              sendCode: true,
-              waitTime: smsGapTime,
-              verifyId
-            })
-            this.showWaitTime()
-          })
-        }
-      })
+      const {confirm} = await showChoose('系统提示','更换手机号需解绑当前号码')
+      if(confirm){
+        await this.sendCode(this.data.tel)
+        this.setData({
+          sendResetTelCode: true
+        })
+      }
     }
   },
 
-  tapToSendCode(){
+  async tapToSendCode(){
     if(this.data.tel.length !== 11){
       showError('号码有误')
       return
     }
-    loadData(app.sendVerifyCode, {tel:this.data.tel}).then(({verifyId})=>{
-      this.lastSendTime = app.currentTimestamp
-      this.setData({
-        sendCode: true,
-        waitTime: smsGapTime,
-        verifyId
-      })
-      showNotice('验证码已发送')
-      this.showWaitTime()
+    await this.sendCode(this.data.tel)
+    this.lastSendTime = app.currentTimestamp
+  },
+
+  async sendCode(tel:string){
+    const {verifyId} = await loadData(app.sendVerifyCode, {tel})
+    this.setData({
+      sendCode: true,
+      waitTime: smsGapTime,
+      verifyId
     })
+    showNotice('验证码已发送')
+    this.showWaitTime()
   },
 
   tapToBindTel(){
     if(!this.data.sendCode){
       return
     }
-    if(this.data.code.length !== 4 || !this.data.verifyId){
-      showError('验证码有误')
+    
+    if(!this.smsSendPrecheck()){
       return
     }
 
@@ -126,6 +122,19 @@ Page({
         showNotice('绑定成功')
       })
     })
+  },
+
+  smsSendPrecheck(){
+    if(!this.data.code || this.data.code.length !== 4){
+      showError('验证码有误')
+      return false
+    }
+
+    if(!this.data.verifyId){
+      showChoose('系统提示','验证码失效,请重新发送验证码',{showCancel:false})
+      return false
+    }
+    return true
   },
 
   showWaitTime(){
