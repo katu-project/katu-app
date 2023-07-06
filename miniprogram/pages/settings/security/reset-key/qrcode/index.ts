@@ -71,7 +71,7 @@ Page({
   finishTask(){
     app.clearMasterKey()
     user.reloadInfo()
-    showChoose(`主密码重置成功`,"",{showCancel:false}).then(()=>{
+    app.showNotice(`主密码重置成功`).then(()=>{
       navigateBack()
     })
   },

@@ -175,7 +175,7 @@ Page({
       setRecoveryKey: true,
       readyExport: true
     })
-    showChoose("操作成功!","请及时导出并妥善保存该凭证。",{showCancel: false})
+    app.showNotice("请及时导出并妥善保存该凭证。")
   },
   async tapToGenKey(){
     if(this.data.setRecoveryKey){

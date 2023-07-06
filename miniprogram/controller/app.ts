@@ -1,6 +1,6 @@
 import Controller from '@/class/controller'
 import api from '@/api'
-import { showChoose, chooseLocalImage, switchTab, sleep, file } from '@/utils/index'
+import { chooseLocalImage, showChoose, switchTab, sleep, file } from '@/utils/index'
 import { getCardManager } from './card'
 import { getUserManager } from './user'
 
@@ -331,7 +331,7 @@ class AppManager extends Controller {
 
   //数据备份
   exportCardData(){
-    showChoose('温馨提示','由于小程序平台限制,导出数据功能需要前往卡兔web端操作。')
+    this.showNotice('由于平台限制\n导出数据需前往卡兔web端操作。')
   }
 
   //主密码备份/重置
@@ -431,6 +431,10 @@ class AppManager extends Controller {
 
   async getShareItem(params){
     return api.getShareItem(params)
+  }
+
+  showNotice(msg:string){
+    return showChoose('温馨提示',msg, { showCancel: false })
   }
 
   // 导航

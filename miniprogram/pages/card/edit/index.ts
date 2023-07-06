@@ -215,7 +215,7 @@ Page({
     cardManager.cacheCard(card, this.data.card).then(()=>{
       app.emit('cardChange',card)
     })
-    await showChoose('操作成功','卡片数据已保存',{showCancel: false})
+    await app.showNotice('卡片数据已保存')
     navigateBack()
   },
 
@@ -323,7 +323,7 @@ Page({
 
   tapToShowEncryptChangeNotice(){
     if(this.id){
-      showChoose('温馨提示','更新卡片暂不支持切换加密模式',{showCancel:false})
+      app.showNotice('更新卡片暂不支持切换加密模式')
     }
   },
 

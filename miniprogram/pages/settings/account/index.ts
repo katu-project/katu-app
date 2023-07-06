@@ -30,9 +30,7 @@ Page({
     }).then(({confirm})=>{
       if(confirm) {
         loadData(app.deleteAccount).then(()=>{
-          showChoose('操作成功','账户删除成功',{
-            showCancel: false
-          }).then(()=>{
+          app.showNotice('账户删除成功').then(()=>{
             app.reLaunch()
           })
         })
