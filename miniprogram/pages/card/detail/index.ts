@@ -233,7 +233,7 @@ Page({
         confirmText: '不再提示'
       })
       if(res.cancel){
-        app.openDataSaveSecurityNoticeDoc()
+        app.openDataShareDoc()
         return 
       }
       if(res.confirm){
