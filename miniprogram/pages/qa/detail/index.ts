@@ -1,4 +1,4 @@
-import { loadData, showChoose, navigateBack } from '@/utils/index'
+import { loadData, navigateBack } from '@/utils/index'
 import { getAppManager } from '@/controller/app'
 const app = getAppManager()
 
@@ -24,9 +24,10 @@ Page({
 
   loadData(){
     if(!this.id){
-      showChoose('文档不存在').then(()=> navigateBack())
+      app.showNotice('文档不存在').then(()=> navigateBack())
       return
     }
+    
     loadData(app.getDoc,{_id:this.id}).then(doc=>{
       doc.updateTime = new Date(doc.updateTime).toLocaleDateString()
       doc.content = doc.content.replaceAll('<p></p>','<br/>')

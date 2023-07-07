@@ -1,4 +1,4 @@
-import { showNotice, showChoose, navigateTo, loadData, navigateBack } from '@/utils/index'
+import { navigateTo, loadData, navigateBack } from '@/utils/index'
 import { getCardManager } from '@/controller/card'
 import { getAppManager } from '@/controller/app'
 import { getUserManager } from '@/controller/user'
@@ -153,12 +153,12 @@ Page({
     const card = this.data.card
     // 卡片数据有效性检查
     if(card.image.filter(e=>e.url === app.getConst('DefaultAddImage')).length > 0) {
-      showNotice('请先添加卡片')
+      app.showNotice('请先添加卡片')
       return
     }
     // 检查卡面数量
     if(card.image.length > app.getConfig('cardImageMaxNum')) {
-      showNotice("卡面数量错误")
+      app.showNotice("卡面数量错误")
       return
     }
 
@@ -166,7 +166,7 @@ Page({
     if(!card.encrypted){
       const noticeReadCheck = await app.notice.getKnowEncryptSave()
       if(!noticeReadCheck){
-        const res = await showChoose('温馨提示','非加密保存有数据泄漏风险！',{
+        const res = await app.showNotice('非加密保存有数据泄漏风险！',{
           cancelText: '了解详情',
           confirmText: '不再提示'
         })
@@ -188,7 +188,7 @@ Page({
         if(error.code[0] === '2'){
           this.showInputKey()
         }else{
-          showChoose('保存卡片出错',error.message)
+          this.saveFailed(error)
         }
         return
       }
@@ -199,7 +199,7 @@ Page({
       try {
         await user.checkQuota()
       } catch (error:any) {
-        showChoose('无法创建卡片',error.message,{showCancel: false})
+        this.saveFailed(error)
         return
       }
     }
@@ -220,7 +220,7 @@ Page({
   },
 
   async saveFailed(error){
-    showChoose('保存卡片出错',error.message)
+    return app.showNotice(`保存出错: ${error.message}`)
   },
 
   async saveFinish(){
@@ -245,7 +245,7 @@ Page({
       await navigateTo(`../image-processor/index?value=${picPath}`)
     } catch (error:any) {
       console.error(error)
-      showChoose('选取图片失败',error.message||'未知错误',{showCancel:false})
+      app.showNotice(`选取错误: ${error.message||'未知错误'}`)
     }
   },
 
@@ -284,15 +284,11 @@ Page({
     this.checkDataChange()
   },
 
-  checkShowSetMasterKey(){
+  async checkShowSetMasterKey(){
     if(!user.isSetMasterKey){
-      showChoose("警告","未设置主密码",{confirmText:'去设置'}).then(({cancel})=>{
-        if(cancel) {
-          this.changeCryptoMode(false)
-          return
-        }
-        navigateTo('/pages/settings/security/master-key/index')
-      })
+      this.changeCryptoMode(false)
+      await app.showConfirm("未设置主密码",'去设置')
+      navigateTo('/pages/settings/security/master-key/index')
     }
   },
 
@@ -301,7 +297,7 @@ Page({
     app.loadMasterKeyWithKey(key).then(()=>{
       this.tapToSaveCard()
     }).catch(error=>{
-      showChoose(error.message,'',{showCancel:false})
+      app.showNotice(error.message)
     })
   },
 

@@ -1,4 +1,4 @@
-import { showChoose, showError, loadData, navigateBack, setClipboardData, navigateTo, showNotice } from '@/utils/index'
+import { showError, loadData, navigateBack, setClipboardData, navigateTo } from '@/utils/index'
 import { getCardManager } from '@/controller/card'
 import { getUserManager } from '@/controller/user'
 import { getAppManager } from '@/controller/app'
@@ -94,8 +94,8 @@ Page({
 
   async dataSyncCheck(){
     if(!await cardManager.syncCheck(this.id)){
-      const { confirm } = await showChoose('警告','检查到云端数据有变动\n是否同步最新数据？')
-      if(confirm) await this.loadData({ ignoreCache:true , showText:'同步最新卡片数据'})
+      await app.showConfirm('检查到云端数据有变动\n是否同步最新数据？')
+      await this.loadData({ ignoreCache:true , showText:'同步最新卡片数据'})
     }
     this.setData({
       syncCheck: false
@@ -153,7 +153,7 @@ Page({
       if(error.code[0] === '2'){
         this.showInputKey()
       }else{
-        showChoose('解密卡片出错',error.message)
+        app.showNotice(`解密卡片出错: ${error.message}`)
       }
       return
     }
@@ -198,9 +198,7 @@ Page({
   },
 
   tapToDeleteCard(){
-    showChoose("确认删除卡片","卡片删除后不可恢复！").then(({cancel})=>{
-      if(cancel) return
-
+    app.showConfirm("卡片删除后不可恢复！").then(()=>{
       loadData(cardManager.deleteCard, this.data.card).then(()=>{
         app.emit('cardDelete', this.data.card)
         navigateBack()
@@ -223,14 +221,14 @@ Page({
   async tapToShowShareDialog(){
     if(this.data.card.encrypted){
       if(this.data.card.image?.some(pic => pic._url === app.getConst('DefaultShowLockImage') )){
-        showNotice('请先解密卡片内容')
+        app.showNotice('请先解密卡片内容')
         return
       }
     }
 
     const noticeReadCheck = await app.notice.getKnowShareData()
     if(!noticeReadCheck){
-      const res = await showChoose('温馨提示','更多分享帮助点击【了解详情】',{
+      const res = await app.showNotice('更多分享帮助点击【了解详情】',{
         cancelText: '了解详情',
         confirmText: '不再提示'
       })
@@ -298,12 +296,6 @@ Page({
   },
 
   tapToShowDataCheckHelp(){
-    showChoose("关于内容安全检测","该卡片似乎存在不合适内容",{
-      cancelText: '查看详情'
-    }).then(res=>{
-      if(!res.confirm){
-        app.openDataCheckDoc()
-      }
-    })
+    app.showConfirm("卡片似乎存在不合适内容",'查看详情').then(app.openDataCheckDoc)
   }
 })

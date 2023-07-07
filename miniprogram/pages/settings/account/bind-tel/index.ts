@@ -1,4 +1,4 @@
-import { loadData, showChoose, showError, showNotice } from "@/utils/index"
+import { loadData, showError, showNotice } from "@/utils/index"
 import { getAppManager } from '@/controller/app'
 import { getUserManager } from "@/controller/user"
 const app = getAppManager()
@@ -54,7 +54,7 @@ Page({
 
   async tapToChangeTel(){
     if(this.data.sendResetTelCode){
-      if(!this.smsSendPrecheck()){
+      if(!await this.smsSendPrecheck()){
         return
       }
 
@@ -74,13 +74,11 @@ Page({
         showNotice('稍后再获取验证码')
         return
       }
-      const {confirm} = await showChoose('系统提示','更换手机号需解绑当前号码')
-      if(confirm){
-        await this.sendCode(this.data.tel)
-        this.setData({
-          sendResetTelCode: true
-        })
-      }
+      await app.showConfirm('更换手机号需解绑当前号码')
+      await this.sendCode(this.data.tel)
+      this.setData({
+        sendResetTelCode: true
+      })
     }
   },
 
@@ -104,12 +102,12 @@ Page({
     this.showWaitTime()
   },
 
-  tapToBindTel(){
+  async tapToBindTel(){
     if(!this.data.sendCode){
       return
     }
     
-    if(!this.smsSendPrecheck()){
+    if(!await this.smsSendPrecheck()){
       return
     }
 
@@ -124,14 +122,14 @@ Page({
     })
   },
 
-  smsSendPrecheck(){
+  async smsSendPrecheck(){
     if(!this.data.code || this.data.code.length !== 4){
       showError('验证码有误')
       return false
     }
 
     if(!this.data.verifyId){
-      showChoose('系统提示','验证码失效,请重新发送验证码',{showCancel:false})
+      await app.showNotice('验证码失效,请重新发送验证码')
       return false
     }
     return true

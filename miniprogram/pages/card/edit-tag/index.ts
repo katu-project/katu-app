@@ -1,4 +1,4 @@
-import { showChoose, loadData, showError, showSuccess } from '@/utils/index'
+import { loadData, showError, showSuccess } from '@/utils/index'
 import { getAppManager } from '@/controller/app'
 import { getUserManager } from '@/controller/user'
 const user = getUserManager()
@@ -76,16 +76,15 @@ Page({
   async tapToDeleteTag(e){
     const idx = parseInt(e.currentTarget.dataset.idx)
     const tag = this.data.list[idx]
-    const { confirm } = await showChoose('删除这个标签？', tag.name)
-    if(confirm){
-      await loadData(user.deleteTag, tag._id)
-      this.data.list.splice(idx,1)
-      this.setData({
-        list: this.data.list
-      })
-      showSuccess('删除成功')
-      user.loadCustomTags()
-    }
+    await app.showConfirm(`删除标签: ${tag.name}`)
+    await loadData(user.deleteTag, tag._id)
+    this.data.list.splice(idx,1)
+    this.setData({
+      list: this.data.list
+    })
+    showSuccess('删除成功')
+    user.loadCustomTags()
+    
   },
 
   async tapToSaveTag(){
@@ -113,7 +112,7 @@ Page({
     try {
       await loadData(app.textContentSafetyCheck,tagName,'内容安全检查')
     } catch (error) {
-      showChoose("系统提示","数据存在不适内容?",{showCancel:false})
+      app.showNotice("数据存在不适内容?")
       return
     }
 

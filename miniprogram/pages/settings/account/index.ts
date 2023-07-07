@@ -1,9 +1,9 @@
-import { loadData, navigateTo, showChoose } from "@/utils/index"
-
+import { loadData, navigateTo } from "@/utils/index"
 import { getAppManager } from '@/controller/app'
 import { getUserManager } from "@/controller/user"
 const app = getAppManager()
 const user = getUserManager()
+
 Page({
   data: {
     userId: '',
@@ -24,17 +24,12 @@ Page({
     navigateTo(`./${page}/index`)
   },
   tapToDeleteAccount(){
-    showChoose('警告','此操作将删除用户所有数据！',{
-      confirmText: '删除',
-      confirmColor: '#FF0000',
-    }).then(({confirm})=>{
-      if(confirm) {
-        loadData(app.deleteAccount).then(()=>{
-          app.showNotice('账户删除成功').then(()=>{
-            app.reLaunch()
-          })
+    app.showConfirm('此操作将删除用户所有数据！','删除').then(()=>{
+      loadData(app.deleteAccount).then(()=>{
+        app.showNotice('账户删除成功').then(()=>{
+          app.reLaunch()
         })
-      }
+      })
     })
   }
 })

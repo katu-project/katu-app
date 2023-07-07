@@ -1,4 +1,4 @@
-import { loadData, showSuccess, showChoose, showError, qrcode, showLoading } from "@/utils/index"
+import { loadData, showSuccess, showError, qrcode, showLoading } from "@/utils/index"
 import { getAppManager } from '@/controller/app'
 import { getUserManager } from '@/controller/user'
 const app = getAppManager()
@@ -11,11 +11,14 @@ Page({
     recoveryKeyId: '0000',
     readyExport: false
   },
+  
   onLoad() {
 
   },
+
   onReady() {
   },
+
   async onShow() {
     const setData = {
       setRecoveryKey: false,
@@ -31,6 +34,7 @@ Page({
     await this.initCanvas()
     this.initCanvasContent(this._canvasCtx)
   },
+
   async initCanvas(){
     if(this._canvasCtx?.__inited) return this._canvasCtx
     return new Promise((resolve)=>{
@@ -57,6 +61,7 @@ Page({
       })
     })
   },
+
   async initCanvasContent(ctx){
     await showLoading('检查数据',1000)
 
@@ -70,16 +75,19 @@ Page({
       this.drawNotice(ctx, `凭证ID: ${this.data.recoveryKeyId}`,'green', textX, 175)
     }
   },
+
   async setCanvasBg(ctx, color, dx, dy){
     ctx.fillStyle = color || '#ccefee'
     ctx.fillRect(0, 0, dx, dy)
   },
+
   async drawNotice(ctx, text, color, dx, dy){
     ctx.fillStyle = color
     ctx.font = '20px serif'
     ctx.textAlign = 'center'
     ctx.fillText(text, dx, dy)
   },
+
   async drawRecoveryKey(ctx, qrData){
     const rx = this._canvasCtx.__width/300
     const ry = this._canvasCtx.__height/400
@@ -137,6 +145,7 @@ Page({
         bottomImage.width - 2, bottomImage.height - 2
     )
   },
+
   async getImageCanvas(url){
 		const image = wx.createOffscreenCanvas({type: '2d'}).createImage()
 		await new Promise(function (resolve, reject) {
@@ -146,6 +155,7 @@ Page({
     })
     return image
   },
+
   async getCanvasImage(){
     return new Promise((resolve,reject)=>{
       wx.createSelectorQuery()
@@ -162,6 +172,7 @@ Page({
       })
     })    
   },
+
   async genCert(){
     await showLoading('请稍等')
     const { keyPack, qrPack } = await app.generateRecoveryKey()
@@ -177,10 +188,10 @@ Page({
     })
     app.showNotice("请及时导出并妥善保存该凭证。")
   },
+
   async tapToGenKey(){
     if(this.data.setRecoveryKey){
-      const {confirm} = await showChoose("警告！","导出新凭证会使已有凭证失效",{confirmText: '仍然继续'})
-      if(!confirm) return
+      await app.showConfirm("生成新凭证会使已有凭证失效",'仍然继续')
     }
     try {
       app.checkMasterKey()
@@ -188,15 +199,15 @@ Page({
       if(error.code[0] === '2'){
         this.showInputKey()
       }else{
-        showChoose('主密码出错',error.message)
+        app.showNotice(`主密码错误: ${error.message}`)
       }
       return
     }
     this.genCert()
   },
+
   async tapToExport(){
-    const {cancel} = await showChoose("特别提示","请妥善保管该凭证，否则存在数据泄漏风险！")
-    if(cancel) return
+    await app.showNotice("请妥善保管该凭证\n否则存在数据泄漏风险！")
     const url = await this.getCanvasImage()
     wx.saveImageToPhotosAlbum({
       filePath: url as string,
@@ -214,17 +225,19 @@ Page({
       }
     })
   },
+
   showInputKey(){
     this.setData({
       showInputKey: true
     })
   },
+
   inputKeyConfirm(e){
     const key = e.detail.value
     app.loadMasterKeyWithKey(key).then(()=>{
       this.genCert()
     }).catch(error=>{
-      showChoose(error.message,'',{showCancel:false})
+      app.showNotice(error.message)
     })
   },
 })

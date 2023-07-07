@@ -1,6 +1,8 @@
-import { loadData, showChoose, showSuccess } from "@/utils/index"
+import { loadData, showSuccess } from "@/utils/index"
 import { getUserManager } from '@/controller/user'
+import { getAppManager } from "@/controller/app"
 const user = getUserManager()
+const app = getAppManager()
 
 Page({
   data: {
@@ -28,7 +30,7 @@ Page({
       showSuccess('修改成功')
     }).catch(err=>{
       this.loadData()
-      showChoose('修改出错',err.message,{showCancel:false})
+      app.showNotice(`修改出错: ${err.message}`)
     })
   }
 })

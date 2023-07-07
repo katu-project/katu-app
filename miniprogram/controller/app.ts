@@ -391,11 +391,8 @@ class AppManager extends Controller {
   }
 
   async showActiveNotice(title?:string){
-    await showChoose("温馨提示", title || "账户未激活，无法进行该操作。", {
-      confirmText:'去激活',
-    }).then(({confirm})=>{
-      if(confirm) this.goToUserUserProfilePage()
-    })
+    await this.showConfirm(title || "账户未激活，无法进行该操作。",'现在激活')
+    return this.goToUserUserProfilePage()
   }
 
   async deleteAccount(){
@@ -433,8 +430,15 @@ class AppManager extends Controller {
     return api.getShareItem(params)
   }
 
-  showNotice(msg:string){
-    return showChoose('温馨提示',msg, { showCancel: false })
+  showNotice(msg:string, options?:any){
+    return showChoose('温馨提示',msg, { showCancel: true, ...options})
+  }
+
+  async showConfirm(msg:string, confirmText?:string){
+    const options = {showCancel:true}
+    if(confirmText) options['confirmText'] = confirmText
+    const { confirm } = await this.showNotice(msg, options)
+    return new Promise((resolve,_)=>confirm && resolve(confirm))
   }
 
   // 导航

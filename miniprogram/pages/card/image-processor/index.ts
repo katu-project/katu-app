@@ -1,4 +1,4 @@
-import { loadData, showChoose, showError, navigateBack, showNotice } from '@/utils/index'
+import { loadData, showError, navigateBack, showNotice } from '@/utils/index'
 import { getCardManager } from '@/controller/card'
 import { getAppManager } from '@/controller/app'
 const app = getAppManager()
@@ -40,7 +40,7 @@ Page({
   async useAndBack() {
     const isKnowDataCheck = await app.notice.getKnowDataCheck()
     if(!isKnowDataCheck){
-      const res = await showChoose('温馨提示','即将开始数据安全检测',{
+      const res = await app.showNotice('即将开始数据安全检测',{
         cancelText: '了解详情',
         confirmText: '不再提示'
       })
@@ -54,7 +54,7 @@ Page({
     }
     const res = await loadData(app.imageContentCheck,{imagePath:this.data.tmpImagePath},'内容安全检测中')
     if(!res.checkPass){
-      showChoose("系统提示","图片存在不适内容?",{showCancel:false})
+      await app.showNotice("图片存在不适内容?")
       return
     }
     app.emit('setCardImage',this.data.tmpImagePath)
@@ -139,14 +139,12 @@ Page({
   },
 
   tapToShowInternalApiNotice(){
-    showChoose("未识别出卡片？","这些小技巧能帮助提高卡片识别率！",{confirmText:'去查看'})
-    .then(({confirm})=>{
-      if(confirm) app.openInternalApiNotice()
-    })
+    app.showConfirm("这些小技巧能提高卡片识别率！",'去查看')
+    .then(app.openInternalApiNotice)
   },
 
   async showRemoteApiNotice(){
-    const {confirm, cancel} = await showChoose("警告","外部接口由第三方提供!\n敏感数据请谨慎使用。",{cancelText: '去查看'})
+    const {confirm, cancel} = await app.showNotice("外部接口由第三方提供!\n敏感数据请谨慎使用。",{showCancel:true, cancelText: '去查看'})
     if(cancel) {
       app.openRemoteApiNotice()
       this.setData({

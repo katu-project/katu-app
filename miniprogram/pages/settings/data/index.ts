@@ -1,4 +1,4 @@
-import { loadData, showChoose, showSuccess } from '@/utils/index'
+import { loadData, showSuccess } from '@/utils/index'
 import { getAppManager } from '@/controller/app'
 const app = getAppManager()
 
@@ -22,10 +22,8 @@ Page({
     })
   },
   async tapToClearCacheData(){
-    const {confirm} = await showChoose('温馨提示','确认清空缓存数据？')
-    if(confirm){
-      await loadData(app.clearCacheData)
-      showSuccess('缓存数据删除成功')
-    }
+    await app.showConfirm('确认清空缓存数据？')
+    await loadData(app.clearCacheData)
+    showSuccess('缓存数据删除成功')
   }
 })

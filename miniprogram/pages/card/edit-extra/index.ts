@@ -1,4 +1,4 @@
-import { loadData, navigateBack, showChoose, showError } from '@/utils/index'
+import { loadData, navigateBack, showError } from '@/utils/index'
 import { getAppManager } from '@/controller/app'
 const app = getAppManager()
 const CardExtraDataFieldsKeys = app.getConfig('extraFieldsKeys')
@@ -100,7 +100,7 @@ Page({
       try {
         await loadData(app.textContentSafetyCheck,checkText,'内容安全检查')
       } catch (error) {
-        showChoose("系统提示","数据存在不适内容?",{showCancel:false})
+        app.showNotice("数据存在不适内容?")
         return
       }
 

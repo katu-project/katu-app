@@ -1,4 +1,4 @@
-import { loadData, showChoose, showError } from "@/utils/index"
+import { loadData, showError } from "@/utils/index"
 import { getAppManager } from "@/controller/app"
 import { getCardManager } from "@/controller/card"
 const app = getAppManager()
@@ -70,14 +70,8 @@ Page({
   },
   async showEncryptedImage(){    
     if(!this.shareInfo.dk){
-      showChoose('警告','未检测到密钥，无法读取数据',{
-        confirmText: '输入密钥'
-      }).then(res=>{
-        if(res.confirm){
-          this.showInputKey()
-        }
-      })
-      return
+      await app.showConfirm('未检测到密钥，无法读取数据','输入密钥')
+      return this.showInputKey()
     }
     return loadData(this.decryptImage,{},'读取加密数据')
   },

@@ -1,4 +1,4 @@
-import { showError, loadData, showChoose, navigateTo, navigateBack } from '@/utils/index'
+import { showError, loadData, navigateTo, navigateBack } from '@/utils/index'
 import { getAppManager } from '@/controller/app'
 import { getUserManager } from '@/controller/user'
 const app = getAppManager()
@@ -73,8 +73,7 @@ Page({
 
     app.checkMasterKeyFormat(this.data.newMasterKey)
 
-    showChoose('确认使用该密码？').then(({cancel})=>{
-      if(cancel) return
+    app.showConfirm('确认使用该密码？').then(()=>{
       loadData(app.updateUserMasterKey,params).then(()=>{
         this.finishTask()
       })
@@ -88,8 +87,7 @@ Page({
 
     app.checkMasterKeyFormat(this.data.masterKey)
 
-    showChoose('确认使用该密码？').then(({cancel})=>{
-      if(cancel) return
+    app.showConfirm('确认使用该密码？').then(()=>{
       loadData(app.setUserMasterKey,this.data.masterKey).then(()=>{
         this.finishTask()
       })
