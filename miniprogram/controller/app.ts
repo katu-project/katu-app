@@ -392,7 +392,7 @@ class AppManager extends Controller {
 
   async showActiveNotice(title?:string){
     await this.showConfirm(title || "账户未激活，无法进行该操作。",'现在激活')
-    return this.goToUserUserProfilePage()
+    return this.goToUserProfilePage()
   }
 
   async deleteAccount(){
@@ -448,7 +448,7 @@ class AppManager extends Controller {
     })
   }
 
-  async goToUserUserProfilePage(){
+  async goToUserProfilePage(){
     return switchTab('/pages/profile/index',false)
   }
 
