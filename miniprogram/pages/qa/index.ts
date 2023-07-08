@@ -1,4 +1,4 @@
-import { loadData, navigateTo } from '@/utils/index'
+import { loadData } from '@/utils/index'
 import { getAppManager } from '@/controller/app'
 const app = getAppManager()
 const QaTypeCate = app.getConfig('qaDocType')
@@ -33,11 +33,11 @@ Page({
   },
 
   tapToDetail(e){
-    navigateTo('./detail/index?id='+ e.currentTarget.dataset.key)
+    app.goDocDetailPage(e.currentTarget.dataset.key)
   },
 
   tapToGoDocList(e){
-    navigateTo('./list/index?cate='+ e.currentTarget.dataset.key)
+    app.goDocListPage(e.currentTarget.dataset.key)
   },
 
   onShareAppMessage() {

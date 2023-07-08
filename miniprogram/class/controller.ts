@@ -25,8 +25,13 @@ export default class Controller extends Agent {
     return api.uploadFile(filePath, uploadInfo)
   }
 
+  goToPage(page:string, params?:string, vibrate?:boolean){
+    const pagePath = `${page.startsWith('/') ? '':'/pages/'}${page}?${params}`
+    return navigateTo(pagePath, vibrate || false)
+  }
+
   navToDocPage(id){
-    navigateTo(`/pages/qa/detail/index?id=${id}`)
+    return this.goToPage('qa/detail/index',`id=${id}`)
   }
 
   async checkImageType(picPath:string){

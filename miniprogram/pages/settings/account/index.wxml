@@ -15,7 +15,7 @@
     </view>
     <view class="padding bg-white text-grey text-sm">卡兔 APP 为每个用户分配的唯一识别码</view>
 
-    <view class="cu-item arrow" style="padding-right: 70rpx;" bindtap="tapToPage" data-page="bind-tel">
+    <view class="cu-item arrow" style="padding-right: 70rpx;" bindtap="tapToPage" data-page="settings/account/bind-tel/index">
       <view class="content">
         <text class="text-black">手机号码</text>
       </view>

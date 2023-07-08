@@ -5,7 +5,7 @@
 
 <view class="">
   <view class="cu-list menu sm-border card-menu margin-top">
-    <view class="cu-item arrow" bindtap="tapToPage" data-page="./master-key/index">
+    <view class="cu-item arrow" bindtap="tapToPage" data-page="settings/security/master-key/index">
       <view class="content">
         <text class="">主密码</text>
       </view>
@@ -16,7 +16,7 @@
     </view>
     <view class="padding bg-white text-grey text-sm">访问加密数据的唯一密钥</view>
 
-    <view class="cu-item arrow" bindtap="tapToPage" data-page="./recovery-key/index">
+    <view class="cu-item arrow" bindtap="tapToPage" data-page="settings/security/recovery-key/index">
       <view class="content">
         <text class="">主密码备份</text>
       </view>

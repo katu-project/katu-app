@@ -1,4 +1,4 @@
-import { loadData, navigateTo, debounce } from '@/utils/index'
+import { loadData, debounce } from '@/utils/index'
 import { getAppManager } from '@/controller/app'
 import { getUserManager } from '@/controller/user'
 import { getCardManager } from '@/controller/card'
@@ -241,7 +241,7 @@ Page({
   },
 
   tapToSearch(){
-    navigateTo('../card/list/index', true)
+    return app.goCardListPage()
   },
 
   tapToShowNotice(){
@@ -249,17 +249,17 @@ Page({
       const data = {showNotice: true}
       this.setData(data)
     }else{
-      navigateTo('../notice/index')
+      app.goNoticePage()
     }
   },
 
   tapToCardList(e){
     const { tag } = e.currentTarget.dataset
-    navigateTo(`../card/list/index?tag=${tag}`, true)
+    return app.goCardListPage(tag)
   },
 
   tapToCardDetail(e){
-    navigateTo(`/pages/card/detail/index?id=${e.currentTarget.dataset.item._id}`)
+    return app.goCardDetailPage(e.currentTarget.dataset.item._id)
   },
 
   onBindRefresh(){

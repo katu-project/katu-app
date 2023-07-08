@@ -455,6 +455,81 @@ class AppManager extends Controller {
   async goToHomePage(){
     return switchTab('/pages/home/index',false)
   }
+
+  // edit page nav
+  goCardEditPage(id:string, vibrate?:boolean){
+    return this.goToPage('card/edit/index',`id=${id}`, vibrate)
+  }
+
+  goEditImagePage(picPath?:string){
+    return this.goToPage('card/image-processor/index',`value=${picPath}`)
+  }
+
+  goEditContentPage(content?:string){
+    return this.goToPage('card/edit-content/index',`value=${content}`)
+  }
+
+  goEditExtraDataPage(content?:string, tag?:string){
+    return this.goToPage('card/edit-extra/index',`value=${content}&tag=${tag}`)
+  }
+
+  goEditTagPage(){
+    return this.goToPage('card/edit-tag/index')
+  }
+
+  // home page nav
+  goCardDetailPage(id?:string){
+    return this.goToPage('card/detail/index',`id=${id||''}`)
+  }
+
+  goCardListPage(tag?:string){
+    return this.goToPage('card/list/index',`tag=${tag||''}`, true)
+  }
+
+  goNoticePage(){
+    return this.goToPage('notice/index')
+  }
+
+  // settings page nav
+  goEditMasterKeyPage(){
+    return this.goToPage('settings/security/master-key/index')
+  }
+
+  goResetKeyPage(){
+    return this.goToPage('settings/security/reset-key/index')
+  }
+
+  goResetKeyByQrcodePage(){
+    return this.goToPage('settings/security/reset-key/qrcode/index')
+  }
+
+  // quota page nav
+  goQuotaDetailPage(id:string){
+    return this.goToPage('quota/detail/index',`id=${id||''}`)
+  }
+
+  // qa doc page nav
+  goDocListPage(cate?:string){
+    return this.goToPage('qa/list/index',`cate=${cate||''}`)
+  }
+
+  goDocDetailPage(id?:string){
+    return this.goToPage('qa/detail/index',`id=${id||''}`)
+  }
+
+  // user profile nav
+  goProfileEditPage(){
+    return this.goToPage('profile/edit/index')
+  }
+
+  // about katu
+  goContactUsPage(){
+    return this.goToPage('about/contact/index')
+  }
+
+  goChangeLogPage(){
+    return this.goToPage('change-log/index')
+  }
 }
 
 function getAppManager(){

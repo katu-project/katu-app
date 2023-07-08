@@ -1,4 +1,4 @@
-import { navigateTo, loadData, navigateBack } from '@/utils/index'
+import { loadData, navigateBack } from '@/utils/index'
 import { getCardManager } from '@/controller/card'
 import { getAppManager } from '@/controller/app'
 import { getUserManager } from '@/controller/user'
@@ -241,8 +241,7 @@ Page({
     try {
       const picPath = await app.chooseLocalImage()
       if(!picPath) return
-
-      await navigateTo(`../image-processor/index?value=${picPath}`)
+      await app.goEditImagePage(picPath)
     } catch (error:any) {
       console.error(error)
       app.showNotice(`选取错误: ${error.message||'未知错误'}`)
@@ -288,7 +287,7 @@ Page({
     if(!user.isSetMasterKey){
       this.changeCryptoMode(false)
       await app.showConfirm("未设置主密码",'去设置')
-      navigateTo('/pages/settings/security/master-key/index')
+      app.goEditMasterKeyPage()
     }
   },
 
@@ -303,8 +302,7 @@ Page({
 
   // 卡片名称
   tapToEditTitle(){
-    const c = this.data.card.title
-    navigateTo(`../edit-content/index?value=${c}`)
+    app.goEditContentPage(this.data.card.title)
   },
 
   // 标签部分
@@ -353,7 +351,7 @@ Page({
   },
 
   tapToCustomTag(){
-    navigateTo('../edit-tag/index')
+    app.goEditTagPage()
   },
 
   tapToEditExtraData(){
@@ -365,7 +363,7 @@ Page({
     if(this.data.card.tags.includes('信用卡')){
       tag = 'cc'
     }
-    navigateTo(`../edit-extra/index?value=${c}&tag=${tag}`)
+    app.goEditExtraDataPage(c,tag)
   },
 
   hideSelectTag(){

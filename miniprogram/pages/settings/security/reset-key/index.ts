@@ -1,4 +1,3 @@
-import { navigateTo } from "@/utils/index"
 import { getAppManager } from '@/controller/app'
 import { getUserManager } from "@/controller/user"
 const app = getAppManager()
@@ -6,9 +5,9 @@ const user = getUserManager()
 
 Page({
   data: {
-    setRecoveryKey: false,
-
+    setRecoveryKey: false
   },
+  
   onShow() {
     const setData = {
       setRecoveryKey: false
@@ -18,9 +17,13 @@ Page({
     }
     this.setData(setData)
   },
-  tapToPage({currentTarget:{dataset:{page}}}){
-    navigateTo(page)
+
+  tapToPage({currentTarget:{dataset:{idx}}}){
+    if(idx==1){
+      app.goResetKeyByQrcodePage()
+    }
   },
+
   tapToDoc(){
     app.openForgetKeyNotice()
   }

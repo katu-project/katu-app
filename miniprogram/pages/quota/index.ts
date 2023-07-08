@@ -1,6 +1,8 @@
-import { loadData, navigateTo, showSuccess } from '@/utils/index'
+import { loadData, showSuccess } from '@/utils/index'
 import { getUserManager } from '@/controller/user'
+import { getAppManager } from '@/controller/app'
 const user = getUserManager()
+const app = getAppManager()
 
 Page({
   data: {
@@ -47,7 +49,7 @@ Page({
   },
   tapToDetail(e){
     const id = e.currentTarget.dataset.key
-    navigateTo(`./detail/index?id=${id}`)
+    return app.goQuotaDetailPage(id)
   },
   tapToShowExchangeDialog(){
     this.showExchangeDialog()

@@ -1,4 +1,4 @@
-import { loadData, navigateTo, setClipboardData, showNotice } from '@/utils/index'
+import { loadData, setClipboardData, showNotice } from '@/utils/index'
 import { getAppManager } from '@/controller/app'
 import { getCardManager } from '@/controller/card'
 const app = getAppManager()
@@ -142,7 +142,7 @@ Page({
   },
   
   tapToCardDetail(e){
-    navigateTo(`../detail/index?id=${e.currentTarget.dataset.key}`)
+    app.goCardDetailPage(e.currentTarget.dataset.key)
   },
 
   tapToCloseFilter(){

@@ -1,4 +1,4 @@
-import { showError, loadData, navigateTo, navigateBack } from '@/utils/index'
+import { showError, loadData, navigateBack } from '@/utils/index'
 import { getAppManager } from '@/controller/app'
 import { getUserManager } from '@/controller/user'
 const app = getAppManager()
@@ -12,20 +12,25 @@ Page({
     newMasterKey: '',
     newMasterKeyRepeat: ''
   },
+
   onLoad() {
 
   },
+
   onShow(){
     this.setData({
       setMasterKey: user.isSetMasterKey
     })
   },
+
   checkInput(){
 
   },
+
   checkRepeatInput(){
 
   },
+
   tapToSetMasterKey(){
     if(this.data.setMasterKey){
       if(!this.data.masterKey) {
@@ -62,6 +67,7 @@ Page({
       }
     }
   },
+
   updateMasterKey(){
     if(!user.isSetMasterKey){
       throw Error('请先设置主密码')
@@ -79,6 +85,7 @@ Page({
       })
     })
   },
+
   setMasterKey(){
     if(user.isSetMasterKey){
       showError('已设置过主密码')
@@ -93,6 +100,7 @@ Page({
       })
     })
   },
+
   finishTask(){
     app.clearMasterKey()
     user.reloadInfo()
@@ -101,6 +109,7 @@ Page({
       navigateBack()
     })
   },
+  
   resetContent(){
     this.setData({
       masterKey: '',
@@ -109,10 +118,12 @@ Page({
       newMasterKeyRepeat: ''
     })
   },
+
   tapToOpenDoc(){
     app.openMasterKeyNotice()
   },
+
   tapToResetKey(){
-    navigateTo('../reset-key/index')
+    app.goResetKeyPage()
   }
 })

@@ -1,4 +1,4 @@
-import { showError, loadData, navigateBack, setClipboardData, navigateTo } from '@/utils/index'
+import { showError, loadData, navigateBack, setClipboardData } from '@/utils/index'
 import { getCardManager } from '@/controller/card'
 import { getUserManager } from '@/controller/user'
 import { getAppManager } from '@/controller/app'
@@ -189,8 +189,7 @@ Page({
       this.showEncryptedImage()
       return
     }
-
-    navigateTo(`../edit/index?id=${this.id}`)
+    app.goCardEditPage(this.id)
   },
 
   tapToCopyValue(e){

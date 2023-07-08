@@ -1,4 +1,3 @@
-import { navigateTo } from '@/utils/index'
 import { getAppManager } from '@/controller/app'
 const app = getAppManager()
 
@@ -7,26 +6,31 @@ Page({
     logo: '/static/logo.svg',
     version: 'dev'
   },
+
   onLoad() {
 
   },
+
   onReady() {
     this.loadAppInfo()
   },
+
   onShow() {
 
   },
+
   loadAppInfo(){
     this.setData({
       'version': app.version
     })
   },
+
   tapToChangeLog(){
-    navigateTo('../change-log/index')
+    app.goChangeLogPage()
   },
 
   tapToContactUs(){
-    navigateTo('./contact/index')
+    app.goContactUsPage()
   },
 
   tapToDoc({currentTarget:{dataset:{key}}}){

@@ -1,4 +1,4 @@
-import { loadData, navigateTo, showSuccess } from '@/utils/index'
+import { loadData, showSuccess } from '@/utils/index'
 import { getAppManager } from '@/controller/app'
 import { getUserManager } from '@/controller/user'
 const app = getAppManager()
@@ -54,7 +54,7 @@ Page({
 
   tapToEditInfo(){
     if(!user.isActive) return
-    navigateTo('./edit/index')
+    app.goProfileEditPage()
   },
 
   onEventUserChange(){
@@ -70,7 +70,7 @@ Page({
     if(item.needActive && !user.isActive){
       return app.showActiveNotice()
     }
-    return navigateTo(item.url || item)
+    return app.goToPage(item.url)
   },
 
   tapToReadDoc(e){

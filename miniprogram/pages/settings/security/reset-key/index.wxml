@@ -8,7 +8,7 @@
     <text class="text-xl text-cyan">选择适用您的重置方式</text>
   </view>
   <view class="cu-list menu margin-top">
-    <view class="cu-item item arrow" bindtap="tapToPage" data-page="./qrcode/index">
+    <view class="cu-item item arrow" bindtap="tapToPage" data-idx="1">
       <view class="content">
         <text class="cuIcon-scan text-grey"></text>
         <text class="">有二维码重置凭证？</text>

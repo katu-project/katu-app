@@ -1,4 +1,4 @@
-import { loadData, navigateTo } from "@/utils/index"
+import { loadData } from "@/utils/index"
 import { getAppManager } from '@/controller/app'
 import { getUserManager } from "@/controller/user"
 const app = getAppManager()
@@ -9,9 +9,11 @@ Page({
     userId: '',
     userTel: '',
   },
+
   onShow(){
     this.loadData()
   },
+
   loadData(){
     const setData = {}
     if(user.uid){
@@ -20,9 +22,11 @@ Page({
     setData['userTel'] = user.tel ? user.tel.replace(/^(\d{3}).*(\d{4})$/,'$1****$2') : ''
     this.setData(setData)
   },
+
   tapToPage({currentTarget:{dataset:{page}}}){
-    navigateTo(`./${page}/index`)
+    app.goToPage(page)
   },
+
   tapToDeleteAccount(){
     app.showConfirm('此操作将删除用户所有数据！','删除').then(()=>{
       loadData(app.deleteAccount).then(()=>{

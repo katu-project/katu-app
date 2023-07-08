@@ -3,32 +3,32 @@ const MenuConfig = {
     {
       icon: 'choiceness',
       name: '兔币明细',
-      url: '../quota/index',
+      url: 'quota/index',
       dev: true,
       needActive: true
     },
     {
       icon: 'tag',
       name: '卡片标签',
-      url: '../card/edit-tag/index',
+      url: 'card/edit-tag/index',
       needActive: true
     },
     {
       icon: 'settings',
       name: '软件设置',
-      url: '../settings/index',
+      url: 'settings/index',
       needActive: true
     },
     {
       icon: 'question',
       name: '使用帮助 ( Q&A )',
-      url: '../qa/index',
+      url: 'qa/index',
       pass: true
     },
     {
       icon: 'info',
       name: '关于卡兔',
-      url: '../about/index',
+      url: 'about/index',
       pass: true
     }
   ],
@@ -56,7 +56,7 @@ const MenuConfig = {
     {
       icon: 'repair',
       title: '调试',
-      url: '../../packages/debug/pages/index',
+      url: '/packages/debug/pages/index',
       hide: true
     }
   ]

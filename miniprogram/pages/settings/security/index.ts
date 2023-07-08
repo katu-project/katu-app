@@ -1,4 +1,4 @@
-import { loadData, showSuccess, navigateTo, showError } from "@/utils/index"
+import { loadData, showSuccess, showError } from "@/utils/index"
 import { getUserManager } from '@/controller/user'
 import { getAppManager } from '@/controller/app'
 const user = getUserManager()
@@ -15,6 +15,7 @@ Page({
   onShow(){
     this.loadData()
   },
+  
   loadData(){
     const {config} = user
     this.setData({
@@ -24,6 +25,7 @@ Page({
       config_security_setRecoveryKey: config?.security.setRecoveryKey,
     })
   },
+
   tapToConfig(e){
     const configItem = {
       key: e.currentTarget.dataset.key,
@@ -40,9 +42,11 @@ Page({
       showError(err.message)
     })
   },
+
   tapToPage({currentTarget:{dataset:{page}}}){
-    navigateTo(page)
+    app.goToPage(page)
   },
+
   tapToReadDoc(){
     app.openRememberKeyNotice()
   }

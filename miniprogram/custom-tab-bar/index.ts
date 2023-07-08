@@ -1,4 +1,6 @@
-import { navigateTo, switchTab } from '@/utils/index'
+import { getAppManager } from '@/controller/app'
+import { switchTab } from '@/utils/index'
+const app = getAppManager()
 
 Component({
   data: {
@@ -19,14 +21,13 @@ Component({
     switchTab(e) {
       const tabIdx = parseInt(e.currentTarget.dataset.idx)
       if(this.data.selected === tabIdx) return
-      const url = this.data.list[tabIdx].url
       if(tabIdx === 1){
-        navigateTo(url, true)
+        app.goCardEditPage('', true)
       }else{
         this.setData({
           selected: tabIdx
         })
-        switchTab(url)
+        switchTab(this.data.list[tabIdx].url)
       }
     },
     onEventLongPress(){
