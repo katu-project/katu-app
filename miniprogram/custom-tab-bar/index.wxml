@@ -1,14 +1,14 @@
 <view class="nav">
   <view style="height: 10rpx;width: 100%; background-color: rgba(255,255,255,0);"></view>
 	<view class="ul">
-		<view class="li left" bindtap="switchTab" data-idx="0">
+		<view class="li left" bindtap="tapSwitchTab" data-idx="0">
 			<view class="icon">
 				<image class="svg" mode="aspectFit" src="/static/images/home.svg"></image>
         <view class="active-dot {{selected===0?'active':''}}"></view>
 			</view>
 		</view>
 
-		<view class="li" bindtap="switchTab" bindlongpress="onEventLongPress" data-idx="1">
+		<view class="li" bindtap="tapSwitchTab" bindlongpress="onEventLongPress" data-idx="1">
 			<view class="center">
 				<view class="icon plus">
           <image class="svg" mode="aspectFit" src="/static/images/tab-add.svg"></image>
@@ -16,7 +16,7 @@
 			</view>
 		</view>
 
-		<view class="li right" bindtap="switchTab" data-idx="2">
+		<view class="li right" bindtap="tapSwitchTab" data-idx="2">
 			<view class="icon">
 				<image class="svg" mode="aspectFit" src="/static/images/tab-me.svg"></image>
         <view class="active-dot {{selected===2?'active':''}}"></view>

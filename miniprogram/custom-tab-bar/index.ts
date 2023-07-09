@@ -1,24 +1,12 @@
 import { getAppManager } from '@/controller/app'
-import { switchTab } from '@/utils/index'
 const app = getAppManager()
 
 Component({
   data: {
-    selected: 0,
-    list:[
-      {
-        url: `/pages/home/index`
-      },
-      {
-        url: '/pages/card/edit/index'
-      },
-      {
-        url: '/pages/profile/index'
-      }
-    ]
+    selected: 0
   },
   methods: {
-    switchTab(e) {
+    tapSwitchTab(e) {
       const tabIdx = parseInt(e.currentTarget.dataset.idx)
       if(this.data.selected === tabIdx) return
       if(tabIdx === 1){
@@ -27,7 +15,11 @@ Component({
         this.setData({
           selected: tabIdx
         })
-        switchTab(this.data.list[tabIdx].url)
+        if(tabIdx == 0){
+          app.goToHomePage(true)
+        }else{
+          app.goToUserProfilePage(true)
+        }
       }
     },
     onEventLongPress(){

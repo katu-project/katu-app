@@ -79,7 +79,7 @@ async function navigateBack(options?:{delta?: number}){
   wx.navigateBack({delta})
 }
 
-async function switchTab(page, vibrate=true){
+async function switchTab(page:string, vibrate?:boolean){
   vibrate && wx.vibrateShort({
     type: 'light',
     fail: console.warn

@@ -448,12 +448,12 @@ class AppManager extends Controller {
     })
   }
 
-  async goToUserProfilePage(){
-    return switchTab('/pages/profile/index',false)
+  async goToUserProfilePage(vibrate?:boolean){
+    return switchTab('/pages/profile/index', vibrate)
   }
 
-  async goToHomePage(){
-    return switchTab('/pages/home/index',false)
+  async goToHomePage(vibrate?:boolean){
+    return switchTab('/pages/home/index', vibrate)
   }
 
   // edit page nav
