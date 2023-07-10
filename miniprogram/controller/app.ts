@@ -435,9 +435,9 @@ class AppManager extends Controller {
   }
 
   async showConfirm(msg:string, confirmText?:string){
-    const options = {showCancel:true}
+    const options = {}
     if(confirmText) options['confirmText'] = confirmText
-    const { confirm } = await this.showNotice(msg, options)
+    const { confirm } = await showChoose('温馨提示',msg, options)
     return new Promise((resolve,_)=>confirm && resolve(confirm))
   }
 

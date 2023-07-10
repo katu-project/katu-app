@@ -68,7 +68,7 @@ Page({
     }
   },
 
-  updateMasterKey(){
+  async updateMasterKey(){
     if(!user.isSetMasterKey){
       throw Error('请先设置主密码')
     }
@@ -79,14 +79,13 @@ Page({
 
     app.checkMasterKeyFormat(this.data.newMasterKey)
 
-    app.showConfirm('确认使用该密码？').then(()=>{
-      loadData(app.updateUserMasterKey,params).then(()=>{
-        this.finishTask()
-      })
+    await app.showConfirm('确认使用该密码？')
+    loadData(app.updateUserMasterKey,params).then(()=>{
+      this.finishTask()
     })
   },
 
-  setMasterKey(){
+  async setMasterKey(){
     if(user.isSetMasterKey){
       showError('已设置过主密码')
       return
@@ -94,10 +93,9 @@ Page({
 
     app.checkMasterKeyFormat(this.data.masterKey)
 
-    app.showConfirm('确认使用该密码？').then(()=>{
-      loadData(app.setUserMasterKey,this.data.masterKey).then(()=>{
-        this.finishTask()
-      })
+    await app.showConfirm('确认使用该密码？')
+    loadData(app.setUserMasterKey,this.data.masterKey).then(()=>{
+      this.finishTask()
     })
   },
 

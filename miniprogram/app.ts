@@ -20,17 +20,9 @@ App({
     updateManager.onCheckForUpdate(function({hasUpdate}){
       console.log({hasUpdate})
       if(!hasUpdate) return
-      updateManager.onUpdateReady(function () {
-        wx.showModal({
-          title: '更新提示',
-          content: '新版本已经准备好，现在更新？',
-          success(res) {
-            if (res.confirm) {
-              // 新的版本已经下载好，调用 applyUpdate 应用新版本并重启
-              updateManager.applyUpdate()
-            }
-          }
-        })
+      updateManager.onUpdateReady(async ()=>{
+        await app.showConfirm('发现新版本，现在更新？')
+        updateManager.applyUpdate()
       })
     })
   },

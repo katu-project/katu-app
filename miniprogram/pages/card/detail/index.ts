@@ -196,12 +196,11 @@ Page({
     setClipboardData(e.currentTarget.dataset.value)
   },
 
-  tapToDeleteCard(){
-    app.showConfirm("卡片删除后不可恢复！").then(()=>{
-      loadData(cardManager.deleteCard, this.data.card).then(()=>{
-        app.emit('cardDelete', this.data.card)
-        navigateBack()
-      })
+  async tapToDeleteCard(){
+    await app.showConfirm("卡片删除后不可恢复！")
+    loadData(cardManager.deleteCard, this.data.card).then(()=>{
+      app.emit('cardDelete', this.data.card)
+      navigateBack()
     })
   },
 
@@ -294,7 +293,8 @@ Page({
     })
   },
 
-  tapToShowDataCheckHelp(){
-    app.showConfirm("卡片似乎存在不合适内容",'查看详情').then(app.openDataCheckDoc)
+  async tapToShowDataCheckHelp(){
+    await app.showConfirm("卡片似乎存在不合适内容",'查看详情')
+    app.openDataCheckDoc()
   }
 })

@@ -138,9 +138,9 @@ Page({
     })
   },
 
-  tapToShowInternalApiNotice(){
-    app.showConfirm("这些小技巧能提高卡片识别率！",'去查看')
-    .then(app.openInternalApiNotice)
+  async tapToShowInternalApiNotice(){
+    await app.showConfirm('这些小技巧能提高卡片识别率！', '去查看')
+    app.openInternalApiNotice()
   },
 
   async showRemoteApiNotice(){

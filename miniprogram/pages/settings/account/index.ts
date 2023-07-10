@@ -27,12 +27,11 @@ Page({
     app.goToPage(page)
   },
 
-  tapToDeleteAccount(){
-    app.showConfirm('此操作将删除用户所有数据！','删除').then(()=>{
-      loadData(app.deleteAccount).then(()=>{
-        app.showNotice('账户删除成功').then(()=>{
-          app.reLaunch()
-        })
+  async tapToDeleteAccount(){
+    await app.showConfirm('此操作将删除用户所有数据！','删除')
+    loadData(app.deleteAccount).then(()=>{
+      app.showNotice('账户删除成功').then(()=>{
+        app.reLaunch()
       })
     })
   }

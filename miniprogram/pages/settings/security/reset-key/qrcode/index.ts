@@ -58,16 +58,15 @@ Page({
     }
   },
 
-  setMasterKey(){
+  async setMasterKey(){
     app.checkMasterKeyFormat(this.data.masterKey)
 
-    app.showConfirm('确认使用该密码？').then(()=>{
-      loadData(app.resetMasterKeyWithRecoveryKey,{
-        rk: this.data.recoveryKey,
-        newKey: this.data.masterKey
-      }).then(()=>{
-        this.finishTask()
-      })
+    await app.showConfirm('确认使用该密码？')
+    loadData(app.resetMasterKeyWithRecoveryKey,{
+      rk: this.data.recoveryKey,
+      newKey: this.data.masterKey
+    }).then(()=>{
+      this.finishTask()
     })
   },
 
