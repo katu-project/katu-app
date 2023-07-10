@@ -441,6 +441,10 @@ class AppManager extends Controller {
     return new Promise((resolve,_)=>confirm && resolve(confirm))
   }
 
+  async showChoose(msg:string, options?:WechatMiniprogram.ShowModalOption){
+    return showChoose('温馨提示', msg, options)
+  }
+
   // 导航
   async reLaunch(path?:string){
     return wx.reLaunch({

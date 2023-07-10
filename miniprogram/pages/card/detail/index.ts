@@ -227,7 +227,7 @@ Page({
 
     const noticeReadCheck = await app.notice.getKnowShareData()
     if(!noticeReadCheck){
-      const res = await app.showNotice('更多分享帮助点击【了解详情】',{
+      const res = await app.showChoose('更多分享帮助点击【了解详情】',{
         cancelText: '了解详情',
         confirmText: '不再提示'
       })

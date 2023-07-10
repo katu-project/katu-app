@@ -166,7 +166,7 @@ Page({
     if(!card.encrypted){
       const noticeReadCheck = await app.notice.getKnowEncryptSave()
       if(!noticeReadCheck){
-        const res = await app.showNotice('非加密保存有数据泄漏风险！',{
+        const res = await app.showChoose('非加密保存有数据泄漏风险！',{
           cancelText: '了解详情',
           confirmText: '不再提示'
         })

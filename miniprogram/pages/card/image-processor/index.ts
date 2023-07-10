@@ -40,7 +40,7 @@ Page({
   async useAndBack() {
     const isKnowDataCheck = await app.notice.getKnowDataCheck()
     if(!isKnowDataCheck){
-      const res = await app.showNotice('即将开始数据安全检测',{
+      const res = await app.showChoose('即将开始数据安全检测',{
         cancelText: '了解详情',
         confirmText: '不再提示'
       })
@@ -144,7 +144,7 @@ Page({
   },
 
   async showRemoteApiNotice(){
-    const {confirm, cancel} = await app.showNotice("外部接口由第三方提供!\n敏感数据请谨慎使用。",{showCancel:true, cancelText: '去查看'})
+    const {confirm, cancel} = await app.showChoose("外部接口由第三方提供!\n敏感数据请谨慎使用。",{showCancel:true, cancelText: '去查看'})
     if(cancel) {
       app.openRemoteApiNotice()
       this.setData({
