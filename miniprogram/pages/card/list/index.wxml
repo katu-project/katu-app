@@ -64,7 +64,7 @@
   <view class="cu-item shadow">
     <view class="image flex-row justify-center" data-key="{{item._id}}" bindtap="tapToCardDetail">
       <image class="card" src="{{item._url}}" mode="{{item._mode || 'aspectFill'}}"></image>
-      <view class="cu-tag bg-cyan padding-sm cuIcon-{{item.encrypted?'lock':'unlock'}}"></view>
+      <view class="cu-tag light bg-{{item.encrypted?'cyan':'red'}} padding-sm cuIcon-{{item.encrypted?'lock':'unlock'}}"></view>
       <view class="cu-bar bg-shadeBottom">
         <text class="text-cut">{{item.title}}</text>
       </view>

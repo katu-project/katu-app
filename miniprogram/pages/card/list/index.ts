@@ -99,10 +99,7 @@ Page({
     const findCard = this.data.list[idx]
     console.log('list page: onEventCardHide:', id, findCard.title)
     if(findCard){
-      const setData = {}
-      setData[`list[${idx}]._url`] = app.getConst('DefaultShowLockImage')
-      setData[`list[${idx}]._showEncryptIcon`] = false
-      this.setData(setData)
+      this.loadCardImage(findCard, idx)
     }
   },
 

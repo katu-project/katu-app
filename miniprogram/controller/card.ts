@@ -278,11 +278,13 @@ class CardManager extends Controller{
       setData[`${cardDataKey}.cvv`] = extraData[1][1]
     }
 
+    if(card.encrypted){
+      setData[`${cardDataKey}._showEncryptIcon`] = true
+      setData[`${cardDataKey}._url`] = this.getConst('DefaultShowLockImage')
+    }
+
     try {
       setData[`${cardDataKey}._url`] = await this.cache.getCardImagePath(card.image[0])
-      if(card.encrypted){
-        setData[`${cardDataKey}._showEncryptIcon`] = true
-      }
     } catch (_) {
       if(card.encrypted){
         setData[`${cardDataKey}.cnText`] = '解密后查看卡号'
