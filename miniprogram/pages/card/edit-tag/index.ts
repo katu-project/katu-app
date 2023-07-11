@@ -1,10 +1,9 @@
-import { loadData, showError, showSuccess } from '@/utils/index'
+import { loadData, showSuccess } from '@/utils/index'
 import { getAppManager } from '@/controller/app'
 import { getUserManager } from '@/controller/user'
 const user = getUserManager()
 const app = getAppManager()
 
-const DefaultAppTags = app.getConfig('tags')
 const DefaultThemeColors = app.theme.DefaultColors
 
 Page({
@@ -88,26 +87,11 @@ Page({
   },
 
   async tapToSaveTag(){
-    if(!this.data.tempTagName){
-      showError("请输入名字")
-      return
-    }
-
     if(!user.isActive){
       return app.showActiveNotice()
     }
 
     const tagName = this.data.tempTagName
-
-    if(this.data.list.find(tag=>tag.name === tagName)){
-      showError("标签已存在")
-      return
-    }
-
-    if(user.config?.general.useDefaultTag && DefaultAppTags.find(tag=>tag.name === tagName)){
-      showError("标签已存在")
-      return
-    }
 
     try {
       await loadData(app.textContentSafetyCheck,tagName,'内容安全检查')

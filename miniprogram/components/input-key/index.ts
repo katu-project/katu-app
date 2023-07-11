@@ -1,5 +1,3 @@
-import { showError } from "@/utils/index"
-
 Component({
   options: {
   },
@@ -25,7 +23,11 @@ Component({
   methods: {
     async tapToSetKey(){
       if(!this.data.key) {
-        showError("输入有误")
+        wx.showToast({
+          title: '输入有误',
+          icon: 'error',
+          mask: true
+        })
         return
       }
       this.setData({

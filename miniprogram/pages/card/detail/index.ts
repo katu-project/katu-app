@@ -1,4 +1,4 @@
-import { showError, loadData, navigateBack, setClipboardData } from '@/utils/index'
+import { loadData, navigateBack, setClipboardData } from '@/utils/index'
 import { getCardManager } from '@/controller/card'
 import { getUserManager } from '@/controller/user'
 import { getAppManager } from '@/controller/app'
@@ -269,7 +269,7 @@ Page({
       }
     }).catch(error=>{
       console.log(error)
-      showError(error.message)
+      app.showNotice(error.message)
       this.showInputKey()
     })
   },
@@ -278,7 +278,7 @@ Page({
     const setData = {}
     setData[`card.image[${e.currentTarget.dataset.index}]._url`] = app.getConst('DefaultLoadFailedImage')
     this.setData(setData)
-    showError('数据加载出错')
+    app.showNotice('图片加载错误\n请刷新数据重新加载')
   },
 
   showShareDialog(){
