@@ -78,7 +78,7 @@ Page({
     this.setData({
       card,
       'extraData': app.rebuildExtraFields(card.info),
-      'showHideCardData': card.encrypted && !user.config?.general.autoShowContent && card.image.some(e=>e._url !== app.getConst('DefaultShowLockImage'))
+      'showHideCardData': card.encrypted && !user.config?.general.autoShowContent && !card.image.some(e=>e._url === app.getConst('DefaultShowLockImage'))
     })
     // this.checkActionUsability()
     this.autoShowContent()
