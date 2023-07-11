@@ -1,4 +1,4 @@
-import { showError, loadData, navigateBack } from '@/utils/index'
+import { loadData, navigateBack } from '@/utils/index'
 import { getAppManager } from '@/controller/app'
 import { getUserManager } from '@/controller/user'
 const app = getAppManager()
@@ -31,10 +31,13 @@ Page({
       }
     } catch (error:any) {
       if(error && error.errMsg.includes('cancel')){
-        showError('取消选择')
+        wx.showToast({
+          title: '取消选择',
+          icon: 'none'
+        })
         return
       }
-      showError(error.message || '未知错误')
+      app.showNotice(error.message || '未知错误')
     }
   },
 
@@ -46,15 +49,15 @@ Page({
 
   },
 
-  tapToSetMasterKey(){
+  async tapToSetMasterKey(){
     if(!this.data.masterKey || this.data.masterKey !== this.data.masterKeyRepeat){
-      showError('两次输入不一致')
+      app.showNotice('两次输入不一致')
       return
     }
     try {
-      this.setMasterKey()
+      await this.setMasterKey()
     } catch (error:any) {
-      showError(error.message)
+      app.showNotice(error.message)
     }
   },
 

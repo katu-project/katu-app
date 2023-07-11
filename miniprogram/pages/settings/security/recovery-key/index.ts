@@ -1,4 +1,4 @@
-import { loadData, showSuccess, showError, qrcode, showLoading } from "@/utils/index"
+import { loadData, showSuccess, qrcode, showLoading } from "@/utils/index"
 import { getAppManager } from '@/controller/app'
 import { getUserManager } from '@/controller/user'
 const app = getAppManager()
@@ -220,8 +220,8 @@ Page({
         })
       },
       fail: error => {
-        console.log(error);
-        showError("保存失败！")
+        console.log(error)
+        app.showNotice("保存失败,请重试")
       }
     })
   },

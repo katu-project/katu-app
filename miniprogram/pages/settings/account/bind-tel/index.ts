@@ -1,4 +1,4 @@
-import { loadData, showError, showNotice } from "@/utils/index"
+import { loadData } from "@/utils/index"
 import { getAppManager } from '@/controller/app'
 import { getUserManager } from "@/controller/user"
 const app = getAppManager()
@@ -71,7 +71,7 @@ Page({
         this.setData({
           sendResetTelCode: true
         })
-        showNotice('稍后再获取验证码')
+        app.showNotice('稍后再获取验证码')
         return
       }
       await app.showConfirm('更换手机号需解绑当前号码')
@@ -84,7 +84,7 @@ Page({
 
   async tapToSendCode(){
     if(this.data.tel.length !== 11){
-      showError('号码有误')
+      app.showNotice('手机号码有误')
       return
     }
     await this.sendCode(this.data.tel)
@@ -98,7 +98,7 @@ Page({
       waitTime: smsGapTime,
       verifyId
     })
-    showNotice('验证码已发送')
+    await app.showNotice('验证码已发送')
     this.showWaitTime()
   },
 
@@ -117,14 +117,14 @@ Page({
     }).then(()=>{
       user.reloadInfo().then(()=>{
         this.loadData()
-        showNotice('绑定成功')
+        app.showNotice('绑定成功')
       })
     })
   },
 
   async smsSendPrecheck(){
     if(!this.data.code || this.data.code.length !== 4){
-      showError('验证码有误')
+      app.showNotice('验证码有误')
       return false
     }
 

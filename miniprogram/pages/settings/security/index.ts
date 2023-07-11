@@ -1,4 +1,4 @@
-import { loadData, showSuccess, showError } from "@/utils/index"
+import { loadData, showSuccess } from "@/utils/index"
 import { getUserManager } from '@/controller/user'
 import { getAppManager } from '@/controller/app'
 const user = getUserManager()
@@ -39,7 +39,7 @@ Page({
       user.reloadInfo().then(this.loadData)
     }).catch(err=>{
       this.loadData()
-      showError(err.message)
+      app.showNotice(err.message)
     })
   },
 

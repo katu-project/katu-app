@@ -1,4 +1,4 @@
-import { showError, loadData, navigateBack } from '@/utils/index'
+import { loadData, navigateBack } from '@/utils/index'
 import { getAppManager } from '@/controller/app'
 import { getUserManager } from '@/controller/user'
 const app = getAppManager()
@@ -31,39 +31,39 @@ Page({
 
   },
 
-  tapToSetMasterKey(){
+  async tapToSetMasterKey(){
     if(this.data.setMasterKey){
       if(!this.data.masterKey) {
-        showError("输入当前主密码")
+        app.showNotice("输入当前主密码")
         return
       }
       if(!this.data.newMasterKey){
-        showError('主密码不能为空')
+        app.showNotice('新的主密码不能为空')
         return
       }
       if(this.data.newMasterKey === this.data.masterKey){
-        showError('相同密码')
+        app.showNotice('新的主密码不能与旧密码相同')
         return
       }
       if(!this.data.newMasterKey || this.data.newMasterKey !== this.data.newMasterKeyRepeat){
-        showError('两次输入不一致')
+        app.showNotice('两次输入的密码不一致')
         return
       }
       
       try {
-        this.updateMasterKey()
+        await this.updateMasterKey()
       } catch (error:any) {
-        showError(error.message)
+        app.showNotice(error.message)
       }
     }else{
       if(!this.data.masterKey || this.data.masterKey !== this.data.masterKeyRepeat){
-        showError('两次输入不一致')
+        app.showNotice('两次输入的密码不一致')
         return
       }
       try {
-        this.setMasterKey()
+        await this.setMasterKey()
       } catch (error:any) {
-        showError(error.message)
+        app.showNotice(error.message)
       }
     }
   },
@@ -79,7 +79,7 @@ Page({
 
     app.checkMasterKeyFormat(this.data.newMasterKey)
 
-    await app.showConfirm('确认使用该密码？')
+    await app.showConfirm('确认使用该主密码？')
     loadData(app.updateUserMasterKey,params).then(()=>{
       this.finishTask()
     })
@@ -87,7 +87,7 @@ Page({
 
   async setMasterKey(){
     if(user.isSetMasterKey){
-      showError('已设置过主密码')
+      app.showNotice('已设置过主密码')
       return
     }
 

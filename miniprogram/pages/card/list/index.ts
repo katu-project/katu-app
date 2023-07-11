@@ -1,4 +1,4 @@
-import { loadData, setClipboardData, showNotice } from '@/utils/index'
+import { loadData, setClipboardData } from '@/utils/index'
 import { getAppManager } from '@/controller/app'
 import { getCardManager } from '@/controller/card'
 const app = getAppManager()
@@ -132,7 +132,7 @@ Page({
   tapToCopyValue(e){
     const idx = e.currentTarget.dataset.idx
     if(!this.data.list[idx].cn){
-      showNotice(this.data.list[idx].cnText)
+      app.showNotice(this.data.list[idx].cnText)
       return
     }
     setClipboardData(this.data.list[idx].cn)

@@ -57,7 +57,7 @@ Page({
 
   async onReady() {
     if(!this.id) {
-      showError("卡片不存在")
+      app.showNotice("卡片不存在")
       return
     }
 

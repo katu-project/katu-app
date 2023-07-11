@@ -1,4 +1,4 @@
-import { loadData, showError, navigateBack, showNotice } from '@/utils/index'
+import { loadData, navigateBack } from '@/utils/index'
 import { getCardManager } from '@/controller/card'
 import { getAppManager } from '@/controller/app'
 const app = getAppManager()
@@ -10,6 +10,7 @@ Page({
     selectedMethod: 0,
     tmpImagePath: ''
   },
+
   onLoad(options) {
     this.setData({
       tmpImagePath: app.getConst('DefaultShowImage')
@@ -20,11 +21,13 @@ Page({
       navigateBack()
     }
   },
+
   onReady() {
     this.setData({
       tmpImagePath: this.originImagePath
     })
   },
+
   async tapToSelectImage(){
     try {
       const picPath = await app.chooseLocalImage()
@@ -34,9 +37,10 @@ Page({
       })
       this.originImagePath = picPath
     } catch (error:any) {
-      showError(error.message)
+      app.showNotice(error.message)
     }
   },
+
   async useAndBack() {
     const isKnowDataCheck = await app.notice.getKnowDataCheck()
     if(!isKnowDataCheck){
@@ -60,9 +64,11 @@ Page({
     app.emit('setCardImage',this.data.tmpImagePath)
     navigateBack()
   },
+
   async selectMethod(e){
     return this.processImage(parseInt(e.detail.value))
   },
+
   async processImage(idx){
     const imageUrl = this.originImagePath
     switch (idx) {
@@ -122,8 +128,7 @@ Page({
         })
       },
       fail: () => {
-        showNotice('暂不支持')
-        this.findCardFailed('')
+        this.findCardFailed(Error('暂不支持该功能'))
       }
     })
   },
@@ -131,7 +136,7 @@ Page({
   findCardFailed(error){
     if(error) {
       console.error(error)
-      showError(error.message)
+      app.showNotice(error.message)
     }
     this.setData({
       selectedMethod: 0

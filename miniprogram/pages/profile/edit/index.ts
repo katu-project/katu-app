@@ -1,6 +1,8 @@
-import { loadData, showError, showSuccess, showNotice, navigateBack } from '@/utils/index'
+import { loadData, showSuccess, navigateBack } from '@/utils/index'
 import { getUserManager } from '@/controller/user'
+import { getAppManager } from '@/controller/app'
 const user = getUserManager()
+const app = getAppManager()
 
 Page({
   originData: {} as {name:string, avatar:string},
@@ -43,15 +45,15 @@ Page({
   async tapToSaveUserInfo(){
     const nickName = this.data.name
     if(nickName === this.originData.name && this.data.avatar === this.originData.avatar) {
-      showNotice('数据无变动!')
+      app.showNotice('数据无变动!')
       return
     }
     const userData = {}
 
     if(nickName !== this.originData.name){
       if(nickName.length>8){
-        showError("昵称长度有误")
-        return 
+        app.showNotice("昵称长度有误")
+        return
       }
       userData['name'] = nickName
     }

@@ -1,4 +1,4 @@
-import { loadData, showError } from "@/utils/index"
+import { loadData } from "@/utils/index"
 import { getAppManager } from "@/controller/app"
 import { getCardManager } from "@/controller/card"
 const app = getAppManager()
@@ -23,7 +23,7 @@ Page({
   },
   onLoad(options) {
     if(!options.sid || !options.sk){
-      showError('分享已失效')
+      app.showNotice('该分享已经失效')
       return
     }
     if(!this.shareInfo) this.shareInfo = {sid: '',sk: '',dk: ''}

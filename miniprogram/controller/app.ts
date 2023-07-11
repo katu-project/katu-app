@@ -431,7 +431,7 @@ class AppManager extends Controller {
   }
 
   showNotice(msg:string, options?:any){
-    return showChoose('温馨提示',msg, { showCancel: true, ...options})
+    return showChoose('温馨提示',msg, { showCancel: false, ...options})
   }
 
   async showConfirm(msg:string, confirmText?:string){

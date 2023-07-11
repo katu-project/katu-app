@@ -1,4 +1,4 @@
-import { loadData, navigateBack, showError } from '@/utils/index'
+import { loadData, navigateBack } from '@/utils/index'
 import { getAppManager } from '@/controller/app'
 const app = getAppManager()
 const CardExtraDataFieldsKeys = app.getConfig('extraFieldsKeys')
@@ -91,7 +91,7 @@ Page({
   async tapToSave(){
     if(this.data.extraFields.length){
       if(this.data.extraFields.some(field=>!field.value || !field.name)){
-        showError('填写有误')
+        app.showNotice('内容填写有误')
         return
       }
       const extraFields = app.condenseExtraFields(this.data.extraFields)
