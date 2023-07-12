@@ -82,9 +82,10 @@ class AppManager extends Controller {
       }
     }
     const clearCardImageCache = async ()=> {
+      console.debug('开始检测是否清理缓存数据')
       try {
         await this.checkCacheClearTimeout()
-        console.log('距离上次清理卡片文件缓存未超过24小时')
+        console.debug('未满足清理条件，跳过本次清理')
       } catch (error) {
         const imageIds = await api.getCardSummary('ImageIds')
         this.cache.deleteCardFile(imageIds)
@@ -319,6 +320,57 @@ class AppManager extends Controller {
     const notice = await api.getNotice()
     this.notice.resetNoticeFetchTime()
     return notice
+  }
+
+  async knowContentCheck(){
+    const isKnowDataCheck = await this.notice.getKnowDataCheck()
+    if(isKnowDataCheck) return
+
+    const {cancel, confirm} = await this.showChoose('即将开始进行内容合规检测',{
+      cancelText: '了解详情',
+      confirmText: '不再提示'
+    })
+    if(cancel){
+      this.openDataCheckDoc()
+      return new Promise(()=>{})
+    }
+    if(confirm){
+      this.notice.setKnowDataCheck()
+    }
+  }
+
+  async knowDataShare(){
+    const isKnow = await this.notice.getKnowShareData()
+    if(isKnow) return
+    
+    const {cancel, confirm} = await this.showChoose('更多分享帮助点击【了解详情】',{
+      cancelText: '了解详情',
+      confirmText: '不再提示'
+    })
+    if(cancel){
+      this.openDataShareDoc()
+      return new Promise(()=>{})
+    }
+    if(confirm){
+      this.notice.setKnowShareData()
+    }
+  }
+
+  async knowDataEncrypt(){
+    const isKnow = await this.notice.getKnowEncryptSave()
+    if(isKnow) return
+    
+    const {cancel, confirm} = await this.showChoose('非加密保存有数据泄漏风险！',{
+      cancelText: '了解详情',
+      confirmText: '不再提示'
+    })
+    if(cancel){
+      this.openDataSaveSecurityNoticeDoc()
+      return new Promise(()=>{})
+    }
+    if(confirm){
+      this.notice.setKnowEncryptSave()
+    }
   }
 
   //数据

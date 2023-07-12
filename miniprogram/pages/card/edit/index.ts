@@ -164,20 +164,7 @@ Page({
 
     // 相关警告提示
     if(!card.encrypted){
-      const noticeReadCheck = await app.notice.getKnowEncryptSave()
-      if(!noticeReadCheck){
-        const res = await app.showChoose('非加密保存有数据泄漏风险！',{
-          cancelText: '了解详情',
-          confirmText: '不再提示'
-        })
-        if(res.cancel){
-          app.openDataSaveSecurityNoticeDoc()
-          return 
-        }
-        if(res.confirm){
-          app.notice.setKnowEncryptSave()
-        }
-      }
+      await app.knowDataEncrypt()
     }
     
     // 加密模式下，主密码有效性预检查

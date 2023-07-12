@@ -45,6 +45,7 @@ class Notice extends Module {
   async getKnowEncryptSave(){
     return this._getOnceNotice(this.ONCE_NOTICE_KEYS.ENCRYPT_SAVE)
   }
+
   async setKnowEncryptSave(){
     return this._setOnceNoticeLog(this.ONCE_NOTICE_KEYS.ENCRYPT_SAVE,true)
   }
@@ -52,6 +53,7 @@ class Notice extends Module {
   async getKnowShareData(){
     return this._getOnceNotice(this.ONCE_NOTICE_KEYS.SHARE_DATA)
   }
+
   async setKnowShareData(){
     return this._setOnceNoticeLog(this.ONCE_NOTICE_KEYS.SHARE_DATA,true)
   }
@@ -59,6 +61,7 @@ class Notice extends Module {
   async getKnowDataCheck(){
     return this._getOnceNotice(this.ONCE_NOTICE_KEYS.DATA_CHECK)
   }
+
   async setKnowDataCheck(){
     return this._setOnceNoticeLog(this.ONCE_NOTICE_KEYS.DATA_CHECK,true)
   }

@@ -57,7 +57,8 @@ Page({
 
   async onReady() {
     if(!this.id) {
-      app.showNotice("卡片不存在")
+      await app.showNotice("卡片不存在")
+      navigateBack()
       return
     }
 
@@ -224,20 +225,7 @@ Page({
       }
     }
 
-    const noticeReadCheck = await app.notice.getKnowShareData()
-    if(!noticeReadCheck){
-      const res = await app.showChoose('更多分享帮助点击【了解详情】',{
-        cancelText: '了解详情',
-        confirmText: '不再提示'
-      })
-      if(res.cancel){
-        app.openDataShareDoc()
-        return 
-      }
-      if(res.confirm){
-        app.notice.setKnowShareData()
-      }
-    }
+    await app.knowDataShare()
     
     if(this.shareData.sid){
       this.showShareDialog()

@@ -42,21 +42,7 @@ Page({
   },
 
   async useAndBack() {
-    const isKnowDataCheck = await app.notice.getKnowDataCheck()
-    if(!isKnowDataCheck){
-      const res = await app.showChoose('即将开始数据安全检测',{
-        cancelText: '了解详情',
-        confirmText: '不再提示'
-      })
-      if(res.cancel){
-        app.openDataCheckDoc()
-        return 
-      }
-      if(res.confirm){
-        app.notice.setKnowDataCheck()
-      }
-    }
-    
+    await app.knowContentCheck()
     await loadData(app.imageContentCheck,{imagePath:this.data.tmpImagePath},'内容安全检测中').catch(e=>app.showNotice(e.message))
     app.emit('setCardImage',this.data.tmpImagePath)
     navigateBack()
