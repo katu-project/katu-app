@@ -1,7 +1,7 @@
 import Base from '@/class/base'
 import Const from "@/const"
 import Config from '@/config/index'
-import { cache, file, net, crypto } from "@/utils/index"
+import { cache, file, net, crypto, checkTimeout } from "@/utils/index"
 
 export default class Core extends Base {
 
@@ -19,6 +19,10 @@ export default class Core extends Base {
 
   get menu(){
     return Config.Menu
+  }
+
+  get checkTimeout(){
+    return checkTimeout
   }
 
   async getLocalData<T>(key: keyof typeof Const.LocalCacheKeyMap) {

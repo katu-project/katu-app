@@ -8,9 +8,9 @@ const AppConfig:IAppConfig = {
   uploadTempFileType: 'temp',
   allowUploadImageType: ['jpeg','png','jpg'],
   cardImageMaxNum: 2,
-  devHomeDataCacheTime: 3600000,
-  homeDataCacheTime: 86400000,
-  noticeFetchTime: 60000,
+  devHomeDataCacheTime: 3600,
+  homeDataCacheTime: 86400,
+  noticeFetchTime: 60,
   qaDocType: [{
     icon: 'apps',
     color: 'green',

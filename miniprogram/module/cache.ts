@@ -63,9 +63,12 @@ class Cache extends Module {
   async getHomeData(){
     const homeDataCache = await this.getLocalData<IHomeDataCache>('HOME_DATA_CACHE_KEY')
     if(homeDataCache){
-      if(homeDataCache.cacheTime + this.config.homeDataCacheTime > this.currentTimestamp){
+      try {
+        this.checkTimeout(homeDataCache.cacheTime, this.config.homeDataCacheTime)
         console.debug('使用首页缓存数据')
         return homeDataCache.data
+      } catch (error:any) {
+        console.debug(`首页缓存数据: ${error.message}`)
       }
     }
     return

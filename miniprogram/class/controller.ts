@@ -1,6 +1,6 @@
 import Agent from '@/class/agent'
 import api from "@/api"
-import { navigateTo, checkTimeout } from '@/utils/index'
+import { navigateTo } from '@/utils/index'
 import { getNoticeModule, getCryptoModule, getCacheModule } from '@/module/index'
 
 export default class Controller extends Agent {
@@ -45,12 +45,12 @@ export default class Controller extends Agent {
   }
 
   checkSmsTimeout(lastTime:number){
-    return checkTimeout(lastTime, this.getConfig('smsGapTime'))
+    return this.checkTimeout(lastTime, this.getConfig('smsGapTime'))
   }
 
   async checkCacheClearTimeout(){
     const lastTime = await this.getLastCacheClearTime()
-    return checkTimeout(lastTime, this.getConfig('cacheClearGapTime'))
+    return this.checkTimeout(lastTime, this.getConfig('cacheClearGapTime'))
   }
 
   createAdvSetData(originSetData,dataCount:number,gap?:number){
