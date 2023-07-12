@@ -27,6 +27,7 @@ export default {
 
   getUploadInfo: data => request<IAnyObject>('app/getUploadInfo', data),
 
+  getContentCheckInfo: data => request<{needCheck:boolean}>('app/getContentCheckInfo', data),
   // user
   updateUserConfig: (configItem:any) => request('user/updateConfig', configItem),
 

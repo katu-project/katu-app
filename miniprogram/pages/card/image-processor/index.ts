@@ -56,11 +56,8 @@ Page({
         app.notice.setKnowDataCheck()
       }
     }
-    const res = await loadData(app.imageContentCheck,{imagePath:this.data.tmpImagePath},'内容安全检测中')
-    if(!res.checkPass){
-      await app.showNotice("图片存在不适内容?")
-      return
-    }
+    
+    await loadData(app.imageContentCheck,{imagePath:this.data.tmpImagePath},'内容安全检测中').catch(e=>app.showNotice(e.message))
     app.emit('setCardImage',this.data.tmpImagePath)
     navigateBack()
   },

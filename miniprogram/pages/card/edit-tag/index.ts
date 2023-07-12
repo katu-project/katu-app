@@ -90,16 +90,8 @@ Page({
     if(!user.isActive){
       return app.showActiveNotice()
     }
-
     const tagName = this.data.tempTagName
-
-    try {
-      await loadData(app.textContentSafetyCheck,tagName,'内容安全检查')
-    } catch (error) {
-      app.showNotice("数据存在不适内容?")
-      return
-    }
-
+    await loadData(app.textContentSafetyCheck,tagName,'内容安全检查').catch(e=>app.showNotice(e.message))
     const res = await loadData(user.createTag, tagName)
     this.hideDialog('showDialogCreateTag')
     this.setData({

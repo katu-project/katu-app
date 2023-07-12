@@ -86,6 +86,10 @@ class Crypto extends Module {
     return this._config
   }
 
+  getStringHash(str:string, method:HashType){
+    return crypto[method](str) as string
+  }
+  
   encryptString(text,key){
     return crypto.encryptString(text,key)
   }
