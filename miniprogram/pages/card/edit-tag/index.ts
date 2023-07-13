@@ -91,7 +91,7 @@ Page({
       return app.showActiveNotice()
     }
     const tagName = this.data.tempTagName
-    await loadData(app.textContentSafetyCheck,tagName,'内容安全检查').catch(e=>app.showNotice(e.message))
+    await loadData(app.textContentSafetyCheck,tagName,'内容合规检查')
     const res = await loadData(user.createTag, tagName)
     this.hideDialog('showDialogCreateTag')
     this.setData({

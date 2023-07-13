@@ -43,7 +43,7 @@ Page({
 
   async useAndBack() {
     await app.knowContentCheck()
-    await loadData(app.imageContentCheck,{imagePath:this.data.tmpImagePath},'内容安全检测中').catch(e=>app.showNotice(e.message))
+    await loadData(app.imageContentCheck,{imagePath:this.data.tmpImagePath},'内容合规检查')
     app.emit('setCardImage',this.data.tmpImagePath)
     navigateBack()
   },
