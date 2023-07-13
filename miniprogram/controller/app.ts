@@ -419,26 +419,38 @@ class AppManager extends Controller {
 
   async imageContentCheck({imagePath}){
     const hash = await this.getImageHash(imagePath, 'SHA1')
-    const { needCheck } = await api.getContentCheckInfo({hash})
-    if(!needCheck) return
-    const url = await this.uploadTempFile(imagePath)
-    for(let i=0;i<10;i++){
-      const { checkEnd, checkPass } = await api.imageContentSafetyCheck({hash, url})
-      if(checkEnd){
-        if(checkPass) return
-        throw Error('图片存在不适内容')
-      } 
-      await sleep(3000)
+    const { needCheck, checkPass } = await api.getContentCheckInfo({hash})
+    if(needCheck){
+      const url = await this.uploadTempFile(imagePath)
+      for(let i=0;i<10;i++){
+        if(i==9) throw Error("内容检测超时，请稍后重试")
+        const { checkEnd, checkPass } = await api.imageContentSafetyCheck({hash, url})
+        if(checkEnd){
+          if(checkPass){
+            return
+          }else{
+            break
+          }
+        } 
+        await sleep(3000)
+      }
+    }else{
+      if(checkPass) return
     }
-    throw new Error("内容检测超时，请稍后重试")
+    throw Error('图片存在不适内容')
   }
 
   async textContentSafetyCheck(text){
     const hash = this.crypto.getStringHash(text, 'MD5')
-    const { needCheck } = await api.getContentCheckInfo({hash})
-    if(!needCheck) return
-    const { checkPass } = await api.textContentSafetyCheck({text})
-    if(!checkPass) throw Error('数据存在不适内容')
+    const { needCheck, checkPass } = await api.getContentCheckInfo({hash})
+    
+    if(needCheck){
+      const { checkPass } = await api.textContentSafetyCheck({text})
+      if(checkPass) return
+    }else{
+      if(checkPass) return
+    }
+    throw Error('文字存在不适内容')
   }
 
   async getActiveInfo(){
