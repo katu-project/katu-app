@@ -1,4 +1,4 @@
-import { sleep } from './base'
+import { sleep, toPromise } from './base'
 
 async function showInfo(msg, typeIdx=3, mask=true, options={}){
   const type = ['success', 'error', 'loading', 'none']
@@ -211,6 +211,13 @@ async function chooseLocalImage(){
   }
 }
 
+async function editImage(src){
+  const editImage = args => wx.editImage(args)
+  editImage.noLog = true
+  const args = {src}
+  return toPromise<string>(editImage, args, 'tempFilePath')
+}
+
 export {
   showInfo,
   showSuccess,
@@ -224,5 +231,6 @@ export {
   switchTab,
   loadData,
   setClipboardData,
-  chooseLocalImage
+  chooseLocalImage,
+  editImage
 }

@@ -1,6 +1,7 @@
 import Agent from '@/class/agent'
 import api from "@/api"
-import { navigateTo } from '@/utils/index'
+import { navigateTo, file } from '@/utils/index'
+import { editImage } from '@/utils/action'
 import { getNoticeModule, getCryptoModule, getCacheModule } from '@/module/index'
 
 export default class Controller extends Agent {
@@ -42,6 +43,14 @@ export default class Controller extends Agent {
       console.error('image type check err:',error)
       throw Error('图片格式不支持')
     }
+  }
+
+  async editImage(path:string){
+    const tempImagePath = await editImage(path)
+    if(!tempImagePath) throw Error('获取编辑图片失败')
+    const tempFilePath = await this.getTempFilePath('wx-image-editor')
+    await file.copyFile(tempImagePath, tempFilePath)
+    return tempFilePath
   }
 
   checkSmsTimeout(lastTime:number){

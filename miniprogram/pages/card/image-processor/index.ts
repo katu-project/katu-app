@@ -103,17 +103,15 @@ Page({
   },
 
   async useWxEditor(src){
-    wx.editImage({
-      src,
-      success: ({tempFilePath})=>{
-        this.setData({
-          'tmpImagePath': tempFilePath
-        })
-      },
-      fail: () => {
-        this.findCardFailed(Error('暂不支持该功能'))
-      }
-    })
+    try {
+      const tempFilePath = await app.editImage(src)
+      this.setData({
+        'tmpImagePath': tempFilePath
+      })
+    } catch (error) {
+      console.error('useWxEditor: ',error)
+      this.findCardFailed(Error('暂不支持该功能'))
+    }
   },
 
   findCardFailed(error){
