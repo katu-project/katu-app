@@ -100,7 +100,8 @@ const AppConfig:IAppConfig = {
     path: `/pages/home/index`,
     imageUrl: '/static/share.png'
   },
-  cacheClearGapTime: 86400
+  cacheClearGapTime: 86400,
+  contentCheckHash: 'SHA1'
 }
 
 export default AppConfig

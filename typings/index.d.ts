@@ -36,6 +36,7 @@ interface IAppConfig {
   crypto: IAppCryptoConfig
   shareInfo: IAnyObject
   cacheClearGapTime: number
+  contentCheckHash: HashType
 }
 
 type RequestType = 'cloud' | 'common'

@@ -326,7 +326,7 @@ class AppManager extends Controller {
     const isKnowDataCheck = await this.notice.getKnowDataCheck()
     if(isKnowDataCheck) return
 
-    const {cancel, confirm} = await this.showChoose('即将开始进行内容合规检测',{
+    const {cancel, confirm} = await this.showChoose('将进行图片内容合规检测\n此过程可能需要等待5-10秒',{
       cancelText: '了解详情',
       confirmText: '不再提示'
     })
@@ -337,6 +337,7 @@ class AppManager extends Controller {
     if(confirm){
       this.notice.setKnowDataCheck()
     }
+    return
   }
 
   async knowDataShare(){
@@ -354,6 +355,7 @@ class AppManager extends Controller {
     if(confirm){
       this.notice.setKnowShareData()
     }
+    return
   }
 
   async knowDataEncrypt(){
@@ -371,6 +373,7 @@ class AppManager extends Controller {
     if(confirm){
       this.notice.setKnowEncryptSave()
     }
+    return
   }
 
   //数据
@@ -418,7 +421,7 @@ class AppManager extends Controller {
   //主密码备份/重置 结束
 
   async imageContentCheck({imagePath}){
-    const hash = await this.getImageHash(imagePath, 'SHA1')
+    const hash = await this.getImageHash(imagePath, this.getConfig('contentCheckHash'))
     const { needCheck, checkPass } = await api.getContentCheckInfo({hash})
     if(needCheck){
       const url = await this.uploadTempFile(imagePath)
@@ -441,7 +444,7 @@ class AppManager extends Controller {
   }
 
   async textContentSafetyCheck(text){
-    const hash = this.crypto.getStringHash(text, 'MD5')
+    const hash = this.crypto.getStringHash(text, this.getConfig('contentCheckHash'))
     const { needCheck, checkPass } = await api.getContentCheckInfo({hash})
     
     if(needCheck){
