@@ -10,6 +10,7 @@ Page({
   data: {
     tel: '',
     showTel: '',
+    confirmUse: false,
     code: '',
     verifyId: '',
     sendCode: false,
@@ -87,6 +88,7 @@ Page({
       app.showNotice('手机号码有误')
       return
     }
+    await app.showConfirm("确认使用该手机号?")
     await this.sendCode(this.data.tel)
     this.lastSendTime = app.currentTimestamp
   },
@@ -103,6 +105,11 @@ Page({
   },
 
   async tapToBindTel(){
+    if(!this.data.confirmUse){
+      await app.showNotice('请确认以下使用说明')
+      return
+    }
+
     if(!this.data.sendCode){
       return
     }
@@ -133,6 +140,13 @@ Page({
       return false
     }
     return true
+  },
+
+  onBindCheckBoxChange(e){
+    const clicked = e.detail.value.length > 0
+    this.setData({
+      confirmUse: clicked
+    })
   },
 
   showWaitTime(){
