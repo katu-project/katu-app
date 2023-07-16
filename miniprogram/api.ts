@@ -11,9 +11,9 @@ export default {
 
   getChangeLog: () => request<IChangeLog[]>('app/changeLog'),
 
-  getNotice: (data?:any) => request<INotice>('app/notice', data),
+  getHotNotice: (data?:any) => request<INotice>('notice/hot', data),
 
-  getNotices: (data?:any) => request<{sys:INotice[],user:INotice[]}>('app/notices', data),
+  getNotices: (data?:any) => request<{sys:INotice[],user:INotice[]}>('notice/list', data),
 
   getShareItem: (data?:any) => request<IShareItem>('app/share', data),
 
@@ -28,6 +28,19 @@ export default {
   getUploadInfo: data => request<IAnyObject>('app/getUploadInfo', data),
 
   getContentCheckInfo: data => request<{needCheck:boolean, checkPass:boolean}>('app/getContentCheckInfo', data),
+  
+  markRead: (id: string) => request('notice/checkin',{id}),
+
+  activeAccount: (data:any) => request('app/active', data),
+
+  removeAccount: () => request('app/removeAccount'),
+
+  captureCard: fileID => request<{fileID: string}>('app/capture', {fileId: fileID}),
+  // data check
+  imageContentSafetyCheck: (data:{url:string, hash:string}) => request<{checkEnd:boolean,checkPass:boolean}>('app/imageContentCheck', data),
+  
+  textContentSafetyCheck: (data:{text:string}) => request<{checkPass:boolean}>('app/textContentCheck', data),
+
   // user
   updateUserConfig: (configItem:any) => request('user/updateConfig', configItem),
 
@@ -49,17 +62,11 @@ export default {
   updateTag: (tag:Partial<ICardTag>) => request('user/tagUpdate', tag),
   // user custom tag end
 
-  getUser: () => request<IUser>('user/getUser'),
-
-  markRead: (id: string) => request('user/markRead',{id}),
-
-  activeAccount: (data:any) => request('user/active', data),
-
-  removeAccount: () => request('user/removeAccount'),
+  getUser: () => request<IUser>('user/info'),
   
   usageStatistic: () => request<IUsageStatistic>('user/usage'),
 
-  setMasterKeyInfo: keyPack => request('user/setMasterKeyInfo',{keyPack}),
+  setMasterKeyInfo: keyPack => request('user/setMasterKey',{keyPack}),
 
   setRecoveryKey: keyPack => request('user/setRecoveryKey',{keyPack}),
 
@@ -72,8 +79,6 @@ export default {
 
   setCardLike: data => request('card/setLike', data),
 
-  captureCard: fileID => request<{fileID: string}>('card/capture', {fileId: fileID}),
-
   getCard: data => request<ICard>('card/fetch', data),
 
   getCardList: data => request<ICard[]>('card/fetch', data),
@@ -83,14 +88,9 @@ export default {
   deleteCard: id => request('card/delete', id),
 
   // doc
-  getDoc: data => request<IDoc>('doc/getDoc', data),
+  getDoc: data => request<IDoc>('doc/info', data),
 
-  getHotDoc: () => request<IAnyObject[]>('doc/getDoc', {field:{title: true}, where: {type: 2, hot: true}}),
+  getHotDoc: () => request<IAnyObject[]>('doc/list', {field:{title: true}, where: {type: 2, hot: true}}),
 
-  getCateDoc: (cate:string) => request<IAnyObject[]>('doc/getDoc', {field:{title: true}, where: {type: 2, cate}}),
-
-  // data check
-  imageContentSafetyCheck: (data:{url:string, hash:string}) => request<{checkEnd:boolean,checkPass:boolean}>('app/imageContentCheck', data),
-  
-  textContentSafetyCheck: (data:{text:string}) => request<{checkPass:boolean}>('app/textContentCheck', data)
+  getCateDoc: (cate:string) => request<IAnyObject[]>('doc/list', {field:{title: true}, where: {type: 2, cate}})
 }
