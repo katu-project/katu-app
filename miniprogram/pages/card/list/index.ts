@@ -1,7 +1,10 @@
 import { loadData, setClipboardData } from '@/utils/index'
 import { getAppManager } from '@/controller/app'
 import { getCardManager } from '@/controller/card'
+import { getUserManager } from '@/controller/user'
+
 const app = getAppManager()
+const user = getUserManager()
 const cardManager = getCardManager()
 
 const AppDefaultTags = app.getConfig('tags')
@@ -47,6 +50,7 @@ Page({
   },
 
   async loadData(){
+    if(!user.isOk) return
     const list = await loadData(cardManager.getList, {where: this.where})
     this.originList = list
     this.setData({ list })

@@ -54,6 +54,7 @@ Page({
   },
 
   async loadData(forceUpdate?:boolean){
+    if(!user.isOk) return
     const {likeList, cateList} = await loadData(app.getHomeData,{forceUpdate},'加载卡片数据')
     
     const setData = {}

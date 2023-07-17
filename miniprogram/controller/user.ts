@@ -14,6 +14,10 @@ export default class User extends Controller {
     return this.user.config
   }
 
+  get isOk(){
+    return this.user.isActive && this.user.status === 1
+  }
+
   get uid(){
     return this.user.identifyCode
   }
@@ -80,6 +84,7 @@ export default class User extends Controller {
 
   async init(){
     await this.loadInfo()
+    if(!this.isOk) return
     wx.nextTick(()=>{
       setTimeout(() => {
         this.loadCustomTags()

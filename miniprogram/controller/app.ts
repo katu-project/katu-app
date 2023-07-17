@@ -72,6 +72,7 @@ class AppManager extends Controller {
   }
 
   async loadGlobalTask(){
+    if(!this.user.isOk) return
     const clearExtraDataCache = async ()=> {
       const cardIdxs = await api.getCardSummary('CardIdxs')
       const localExtraDataCache = await this.cache.getExtraDatas()

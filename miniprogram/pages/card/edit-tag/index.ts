@@ -24,6 +24,7 @@ Page({
   },
 
   async loadData(){
+    if(!user.isOk) return
     const tags = await loadData(user.getTags)
     this.setData({
       list: tags
