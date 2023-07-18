@@ -318,7 +318,7 @@ class AppManager extends Controller {
         return
       }
     }
-    const notice = await api.getNotice()
+    const notice = await api.getHotNotice()
     this.notice.resetNoticeFetchTime()
     return notice
   }
