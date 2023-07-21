@@ -7,6 +7,7 @@ const smsGapTime = app.getConfig('smsGapTime')
 
 Page({
   lastSendTime: 0,
+  verifyCount: 0,
   data: {
     tel: '',
     showTel: '',
@@ -51,36 +52,6 @@ Page({
   },
 
   onBindInput(){
-  },
-
-  async tapToChangeTel(){
-    if(this.data.sendResetTelCode){
-      if(!await this.smsSendPrecheck()){
-        return
-      }
-
-      loadData(user.removeBindTelNumber, {
-        code: this.data.code,
-        verifyId: this.data.verifyId
-      }).then(()=>{
-        user.reloadInfo().then(()=>{
-          this.loadData()
-        })
-      })
-    }else{
-      if(this.data.sendCode){
-        this.setData({
-          sendResetTelCode: true
-        })
-        app.showNotice('稍后再获取验证码')
-        return
-      }
-      await app.showConfirm('更换手机号需解绑当前号码')
-      await this.sendCode(this.data.tel)
-      this.setData({
-        sendResetTelCode: true
-      })
-    }
   },
 
   async tapToSendCode(){
@@ -129,6 +100,36 @@ Page({
     })
   },
 
+  async tapToChangeTel(){
+    if(this.data.sendResetTelCode){
+      if(!await this.smsSendPrecheck()){
+        return
+      }
+
+      loadData(user.removeBindTelNumber, {
+        code: this.data.code,
+        verifyId: this.data.verifyId
+      }).then(()=>{
+        user.reloadInfo().then(()=>{
+          this.loadData()
+        })
+      })
+    }else{
+      if(this.data.sendCode){
+        this.setData({
+          sendResetTelCode: true
+        })
+        app.showNotice('稍后再获取验证码')
+        return
+      }
+      await app.showConfirm('更换手机号需解绑当前号码')
+      await this.sendCode(this.data.tel)
+      this.setData({
+        sendResetTelCode: true
+      })
+    }
+  },
+
   async smsSendPrecheck(){
     if(!this.data.code || this.data.code.length !== 4){
       app.showNotice('验证码有误')
@@ -139,6 +140,13 @@ Page({
       await app.showNotice('验证码失效,请重新发送验证码')
       return false
     }
+
+    if(this.verifyCount > 2){
+      await app.showConfirm('多次验证失败,请重新发送验证码')
+      return false
+    }
+    this.verifyCount += 1
+
     return true
   },
 
