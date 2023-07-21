@@ -25,8 +25,12 @@ Page({
     app.on('cardDecrypt',this.onEventCardChange)
     app.on('cardHide',this.onEventCardHide)
     await loadData(app.loadUser,{},'检查用户数据')
-  
+    
     await this.loadData()
+    if(!user.isActive){
+      app.showActiveNotice(true, '现在激活账户可领取免费兔币')
+      return
+    }
     this.loadNotice()
   },
 
@@ -202,7 +206,6 @@ Page({
     if(!user.id) return
 
     if(!user.isActive){
-      app.showActiveNotice(true, '现在激活账户可领取免费兔币')
       return
     }
 
