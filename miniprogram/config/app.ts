@@ -87,7 +87,8 @@ const AppConfig:IAppConfig = {
     forgetKeyNotice: 'f6e08a64628b55a704a899564e10cf2e',
     dataShareNotice: 'ab3f0baf6385c56b01345fff7aab1830',
     dataSaveSecurityNotice: '6d85a2b9628b54c1063d7b093f152106',
-    dataCheckNotice: '534fc1e163b68f2700197d67754d9673'
+    dataCheckNotice: '534fc1e163b68f2700197d67754d9673',
+    tagConflictHelp: '70d5158164b92ed10000777b1d35f76b'
   },
   smsGapTime: 60,
   crypto: {

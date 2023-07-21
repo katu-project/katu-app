@@ -77,6 +77,10 @@ export default abstract class Agent extends Core {
   openForgetKeyNotice(){
     return this.navToDocPage(this._docMap.forgetKeyNotice)
   }
+
+  openTagConflictDoc(){
+    return this.navToDocPage(this._docMap.tagConflictHelp)
+  }
   // open app doc end
 
   getUserAvatarDir(){

@@ -28,9 +28,14 @@ Page({
     }
     loadData(user.applyConfig,configItem,{returnFailed: true}).then(()=>{
       showSuccess('修改成功')
-    }).catch(err=>{
+    }).catch(async err=>{
       this.loadData()
-      app.showNotice(`修改出错: ${err.message}`)
+      const { cancel } = await app.showChoose(err.message, {
+        cancelText: '查看详情'
+      })
+      if(cancel){
+        app.openTagConflictDoc()
+      }
     })
   }
 })
