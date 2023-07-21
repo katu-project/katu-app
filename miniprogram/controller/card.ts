@@ -163,6 +163,7 @@ class CardManager extends Controller{
 
     if(!card){
       card = await api.getCard({_id:id})
+      if(!card) throw Error("卡片不存在")
       await this.cache.setCard(card)
     }
 

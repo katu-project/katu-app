@@ -68,21 +68,32 @@ Page({
 
   async loadData(options){
     const {ignoreCache, showText, hideLoading} = options || {}
-    const card = await loadData(cardManager.getCard, 
-                                { 
-                                  id: this.id,
-                                  ignoreCache
-                                }, {
-                                  loadingTitle: showText || '加载卡片数据',
-                                  hideLoading
-                                })
-    this.setData({
-      card,
-      'extraData': app.rebuildExtraFields(card.info),
-      'showHideCardData': card.encrypted && !user.config?.general.autoShowContent && !card.image.some(e=>e._url === app.getConst('DefaultShowLockImage'))
-    })
-    // this.checkActionUsability()
-    this.autoShowContent()
+    try {
+      const card = await loadData(
+        cardManager.getCard, 
+        { 
+          id: this.id,
+          ignoreCache
+        }, 
+        {
+          loadingTitle: showText || '加载卡片数据',
+          hideLoading,
+          returnFailed: true
+        }
+      )
+      this.setData({
+        card,
+        'extraData': app.rebuildExtraFields(card.info),
+        'showHideCardData': card.encrypted && !user.config?.general.autoShowContent && !card.image.some(e=>e._url === app.getConst('DefaultShowLockImage'))
+      })
+      // this.checkActionUsability()
+      this.autoShowContent()
+    } catch (error:any) {
+      if(!hideLoading){
+        await app.showNotice(error.message || '卡片加载错误')
+        navigateBack()
+      }
+    }
   },
 
   autoShowContent(){
@@ -95,8 +106,10 @@ Page({
 
   async dataSyncCheck(){
     if(!await cardManager.syncCheck(this.id)){
-      await app.showConfirm('检查到云端数据有变动\n是否同步最新数据？')
-      await this.loadData({ ignoreCache:true , showText:'同步最新卡片数据'})
+      const { confirm } = await app.showChoose('检查到云端数据有变动\n是否同步最新数据？')
+      if(confirm){
+        await this.loadData({ ignoreCache:true , showText:'同步最新数据'})
+      }
     }
     this.setData({
       syncCheck: false
