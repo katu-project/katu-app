@@ -8,14 +8,14 @@ const user = getUserManager()
 
 Page({
   data: {
-    cateList: [] as ICardSummary[],
-    likeList: [] as ICard[],
+    cateList: [],
+    likeList: [],
     notice: {
       _id: '',
       content: '暂无新消息',
       updateTime: '',
       auto_show: false
-    } as INotice,
+    },
     isRefresh: false
   },
 
@@ -202,7 +202,7 @@ Page({
     if(!user.id) return
 
     if(!user.isActive){
-      app.showActiveNotice('现在激活账户可领取免费兔币')
+      app.showActiveNotice(true, '现在激活账户可领取免费兔币')
       return
     }
 

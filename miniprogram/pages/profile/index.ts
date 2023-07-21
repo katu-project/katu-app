@@ -11,14 +11,21 @@ Page({
     menus: app.menu.profile,
     DefaultUserAvatar: app.getConst('DefaultUserAvatar')
   },
+
   onLoad() {
     app.on('userChange',this.onEventUserChange)
     this.loadUserInfo()
   },
+
   onReady() {
   },
+
   onShow() {
     this.getTabBar().setData({selected: 2})
+    if(getApp().globalData.showActive){
+      getApp().globalData.showActive = false
+      this.showActiveInfo()
+    }
   },
 
   tapUser(){
@@ -65,10 +72,11 @@ Page({
     this.reloadUserInfo()
   },
 
-  tapToItem(e){
+  async tapToItem(e){
     const item = e.currentTarget.dataset.item
     if(item.needActive && !user.isActive){
-      return app.showActiveNotice()
+      await app.showActiveNotice(false)
+      return this.showActiveInfo()
     }
     return app.goToPage(item.url)
   },

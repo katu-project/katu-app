@@ -88,7 +88,7 @@ Page({
 
   async tapToSaveTag(){
     if(!user.isActive){
-      return app.showActiveNotice()
+      return app.showActiveNotice(true)
     }
     const tagName = this.data.tempTagName
     await loadData(app.textContentSafetyCheck,tagName,'内容合规检查')
