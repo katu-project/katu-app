@@ -169,6 +169,10 @@ Page({
     
     // 加密模式下，主密码有效性预检查
     if(card.encrypted){
+      if(!user.isSetMasterKey){
+        await app.showSetMasterKeyNotice()
+        return
+      }
       try {
         app.checkMasterKey()
       } catch (error:any) {
@@ -250,10 +254,13 @@ Page({
     this.checkDataChange()
   },
 
-  onBindCryptModeChange(e){
+  async onBindCryptModeChange(e){
     this.changeCryptoMode(e.detail.value)
     if(user.isActive && e.detail.value){
-      this.checkShowSetMasterKey()
+      if(!user.isSetMasterKey){
+        this.changeCryptoMode(false)
+        await app.showSetMasterKeyNotice()
+      }
     }
   },
 
@@ -268,14 +275,6 @@ Page({
       'card.setLike': e.detail.value
     })
     this.checkDataChange()
-  },
-
-  async checkShowSetMasterKey(){
-    if(!user.isSetMasterKey){
-      this.changeCryptoMode(false)
-      await app.showConfirm("未设置主密码",'去设置')
-      app.goEditMasterKeyPage()
-    }
   },
 
   inputKeyConfirm(e){

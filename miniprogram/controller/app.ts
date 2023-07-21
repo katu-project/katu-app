@@ -471,6 +471,11 @@ class AppManager extends Controller {
     getApp().globalData.showActive = true
     return this.goToUserProfilePage()
   }
+  
+  async showSetMasterKeyNotice(){
+    await this.showConfirm("未设置主密码",'去设置')
+    return this.goEditMasterKeyPage()
+  }
 
   async deleteAccount(){
     await api.removeAccount()
