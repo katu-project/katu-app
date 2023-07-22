@@ -1,8 +1,10 @@
 project.private.config.json
 node_modules
 miniprogram_npm
-package-lock.json
 /minitest
 /miniprogram/components/we-cropper
 /miniprogram/packages/debug
 /scripts
+
+.DS_Store
+/api/*
