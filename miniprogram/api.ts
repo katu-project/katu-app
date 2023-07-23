@@ -53,13 +53,13 @@ export default {
   quotaExchange: (data) => request<IQuotaLog>('user/quotaExchange', data),
   
   // user custom tag
-  getUserTag: () => request<ICardTag[]>('user/tags', {}),
+  getUserTag: () => request<ICardTag[]>('tag/list', {}),
 
-  deleteTag: (data:{_id:string}) => request('user/tagDelete', data),
+  deleteTag: (data:{_id:string}) => request('tag/del', data),
 
-  createTag: (name:string) => request<{_id:string,name:string}>('user/tagCreate', {name}),
+  createTag: (name:string) => request<{_id:string,name:string}>('tag/create', {name}),
 
-  updateTag: (tag:Partial<ICardTag>) => request('user/tagUpdate', tag),
+  updateTag: (tag:Partial<ICardTag>) => request('tag/update', tag),
   // user custom tag end
 
   getUser: () => request<IUser>('user/info'),
