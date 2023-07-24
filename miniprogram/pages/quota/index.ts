@@ -1,4 +1,4 @@
-import { loadData, showSuccess } from '@/utils/index'
+import { loadData } from '@/utils/index'
 import { getUserManager } from '@/controller/user'
 import { getAppManager } from '@/controller/app'
 const user = getUserManager()
@@ -12,11 +12,14 @@ Page({
     },
     code: ''
   },
+  
   onReady(){
     this.loadData()
   },
+
   onShow(){
   },
+
   loadData(){
     this.setData({
       'quota.remain': user.quota
@@ -33,24 +36,25 @@ Page({
   onCodeInput(){
 
   },
+
   tapToExchange(){
     this.hideExchangeDialog()
-    loadData(user.quotaExchange,{code:this.data.code}).then(log=>{
+    loadData(user.quotaExchange,{code:this.data.code}).then(async log=>{
       this.setData({
         'quota.remain': log.remainQuota,
         code: ''
       })
-      showSuccess('兑换成功')
-      wx.nextTick(()=>{
-        this.loadData()
-        user.loadInfo()
-      })
+      await app.showNotice('兑换成功')
+      this.loadData()
+      user.reloadInfo()
     })
   },
+
   tapToDetail(e){
     const id = e.currentTarget.dataset.key
     return app.goQuotaDetailPage(id)
   },
+
   tapToShowExchangeDialog(){
     this.showExchangeDialog()
     // wx.getClipboardData({
@@ -61,19 +65,28 @@ Page({
     //   }
     // })
   },
+
   tapToHideExchangeDialog(){
+    if(this.data.code){
+      this.setData({
+        code: ''
+      })
+    }
     this.hideExchangeDialog()
   },
+
   hideExchangeDialog(){
     this.setData({
       showExchangeDialog: false
     })
   },
+
   showExchangeDialog(){
     this.setData({
       showExchangeDialog: true
     })
   },
+
   createTestCoupon(){
     wx.cloud.callFunction({
       name: 'admin',
