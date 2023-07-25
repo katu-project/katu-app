@@ -329,7 +329,7 @@ Page({
       }     
     }else{
       setData[`tags[${index}].selected`] = !this.data.tags[index]['selected']
-      if(this.data.tags[this.otherTagIdx].selected){
+      if(this.otherTagIdx >=0 && this.data.tags[this.otherTagIdx].selected){
         setData[`tags[${this.otherTagIdx}].selected`] = false
       }
     }
