@@ -25,7 +25,6 @@ interface IAppConfig {
   devHomeDataCacheTime: number
   homeDataCacheTime: number
   noticeFetchTime: number
-  qaDocType: any[]
   tags: ICardTag[]
   extraFieldsKeys: ICardExtraField[]
   imageMogr2: string

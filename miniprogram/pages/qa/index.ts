@@ -1,7 +1,7 @@
 import { loadData } from '@/utils/index'
 import { getAppManager } from '@/controller/app'
 const app = getAppManager()
-const QaTypeCate = app.getConfig('qaDocType')
+const QaTypeCate = app.menu.qa
 
 Page({
   data: {

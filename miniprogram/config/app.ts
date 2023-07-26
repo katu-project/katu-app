@@ -11,37 +11,6 @@ const AppConfig:IAppConfig = {
   devHomeDataCacheTime: 3600,
   homeDataCacheTime: 86400,
   noticeFetchTime: 60,
-  qaDocType: [{
-    icon: 'apps',
-    color: 'green',
-    name: '功能',
-    value: 'function'
-  }, {
-    icon: 'settings',
-    color: 'cyan',
-    name: '设置',
-    value: 'setting'
-  }, {
-    icon: 'people',
-    color: 'orange',
-    name: '账户',
-    value: 'account'
-  }, {
-    icon: 'safe',
-    color: 'red',
-    name: '安全',
-    value: 'safe'
-  }, {
-    icon: 'recharge',
-    color: 'olive',
-    name: '费用',
-    value: 'quota'
-  }, {
-    icon: 'more',
-    color: 'blue',
-    name: '其他',
-    value: 'other'
-  }],
   tags: [
     { name: '储蓄卡', color:'', layout:'debit_card' },
     { name: '信用卡', color:'', layout:'credit_card' },
