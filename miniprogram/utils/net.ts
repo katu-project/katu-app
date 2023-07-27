@@ -81,14 +81,35 @@ export async function download(url:string, savePath:string){
   }
 }
 
-async function upload({url, options:{filePath, uploadInfo}}){
-  const upload = args => wx.uploadFile(args)
-  return toPromise<string>(upload, {
-    filePath,
-    url,
-    formData: uploadInfo,
-    key: 'file'
-  }, 'data')
+function createCommonUploader(options:ICommonRequestOptions){ 
+  return async ({url, options:{filePath, uploadInfo}}) => {
+    const upload = args => wx.uploadFile(args)
+    let resp,respJson
+    try {
+      resp = await toPromise<string>(upload, {
+        filePath,
+        url: `${options.baseUrl}/${url}`,
+        formData: uploadInfo,
+        name: 'file'
+      }, 'data')
+    } catch (error:any) {
+      if(error.errMsg){
+        console.error(error)
+        throw Error('上传出错了[023]')
+      }
+      throw error
+    }
+    try {
+      respJson = JSON.parse(resp)
+    } catch (error) {
+      console.error(error)
+      throw Error('上传出错了[022]')
+    }
+    if(respJson.code !== 0 || !respJson.data){
+      throw Error('上传出错了[021]')
+    }
+    return respJson.data
+  }
 }
 
 async function uploadCloudFile({options:{filePath, uploadInfo}}){
@@ -110,7 +131,7 @@ export function createRequest(config:IRequestConfig){
     uploader = uploadCloudFile
   }else{
     requestor = createCommonRequestor(config.common!)
-    uploader = upload
+    uploader = createCommonUploader(config.common!)
   }
 
   return {
