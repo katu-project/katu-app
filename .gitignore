@@ -7,4 +7,4 @@ miniprogram_npm
 /scripts
 
 .DS_Store
-/api/*
+/api

@@ -211,7 +211,7 @@ Page({
   },
 
   async saveFailed(error){
-    return app.showNotice(`保存出错: ${error.message}`)
+    return app.showNotice(`${error.message}`)
   },
 
   async saveFinish(){
