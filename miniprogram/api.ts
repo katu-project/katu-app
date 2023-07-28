@@ -1,10 +1,12 @@
 import { net } from '@/utils/index'
 import RequestConfig from "@/config/request"
 
-const { request, upload } = net.createRequest(RequestConfig)
+const { request, upload, download } = net.createRequest(RequestConfig)
 
 export default {
   // base
+  downloadFile: (options:{url:string, savePath:string}) => download('app/download', options),
+
   uploadFile: (filePath:string, uploadInfo) => upload('app/upload', {filePath, uploadInfo}),
   // sys
   getSysConfig: <T extends keyof ISysConfig>(name: T) => request<filterSysConfigItem<T>>('app/config', {name}),

@@ -8,7 +8,7 @@ const createCommonRequestor = (options:ICommonRequestOptions) => {
     return toPromise(apiReq, {
       url: `${options.baseUrl}/${url}`,
       data,
-      method: options.method || 'POST'
+      method: 'POST'
     }, 'data')
   }
   return request
@@ -60,25 +60,22 @@ const request = async <T>(action: string, data:any, requestor): Promise<T> => {
   return resp.data
 }
 
-export async function downloadCloudFile(url:string, savePath:string){
+const downloadCloudFile = async (url:string, savePath:string) => {
   try {
     const { tempFilePath } = await wx.cloud.downloadFile({ fileID: url })
     await file.saveTempFile(tempFilePath, savePath)
   } catch (error: any) {
     console.error('download Cloud File Error:', error)
-    throw Error('文件下载失败')
+    throw Error('文件下载出错[033]')
   }
 }
 
-export async function download(url:string, savePath:string){
-  const download = args => wx.downloadFile(args)
-  const { statusCode, filePath } = await toPromise<WechatMiniprogram.DownloadFileSuccessCallbackResult>(download, {
-    url,
-    filePath:savePath
+async function uploadCloudFile({options:{filePath, uploadInfo}}){
+  const {fileID} = await wx.cloud.uploadFile({
+    cloudPath: uploadInfo.cloudPath,
+    filePath
   })
-  if (statusCode !== 200 || !filePath) {
-    throw Error("文件下载出错")
-  }
+  return fileID
 }
 
 function createCommonUploader(options:ICommonRequestOptions){ 
@@ -112,16 +109,26 @@ function createCommonUploader(options:ICommonRequestOptions){
   }
 }
 
-async function uploadCloudFile({options:{filePath, uploadInfo}}){
-  const {fileID} = await wx.cloud.uploadFile({
-    cloudPath: uploadInfo.cloudPath,
-    filePath
-  })
-  return fileID
+function createCommonDownloader(options:ICommonRequestOptions){ 
+  return async ({url, options:{url:fileId, savePath}}) => {
+    const download = args => wx.downloadFile(args)
+    try {
+      const { statusCode, filePath } = await toPromise<WechatMiniprogram.DownloadFileSuccessCallbackResult>(download, {
+        url: `${options.baseUrl}/${url}?url=${fileId}`,
+        filePath: savePath
+      })
+      if (statusCode !== 200 || !filePath) {
+        throw Error("文件下载出错[031]")
+      }
+    } catch (error) {
+      console.error(error)
+      throw Error("文件下载出错[032]")
+    }
+  }
 }
 
 export function createRequest(config:IRequestConfig){
-  let requestor, uploader
+  let requestor, uploader, downloader
   if(config.type === 'cloud'){
     wx.cloud.init({
       env: config.cloud!.env,
@@ -129,18 +136,16 @@ export function createRequest(config:IRequestConfig){
     })
     requestor = createCloudRequestor(config.cloud!)
     uploader = uploadCloudFile
+    downloader = ({options})=> downloadCloudFile(options.url, options.savePath)
   }else{
     requestor = createCommonRequestor(config.common!)
     uploader = createCommonUploader(config.common!)
+    downloader = createCommonDownloader(config.common!)
   }
 
   return {
     request: <T,K extends IAnyObject = IAnyObject>(url:string,data?:K) => request<T>(url,data||{},requestor),
-    upload: (url:string, options):Promise<string> => uploader({url, options})
+    upload: (url:string, options):Promise<string> => uploader({url, options}),
+    download: (url:string, options):Promise<void> => downloader({url, options})
   }
-}
-
-export default {
-  download,
-  downloadCloudFile
 }

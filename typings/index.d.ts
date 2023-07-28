@@ -41,7 +41,6 @@ interface IAppConfig {
 type RequestType = 'cloud' | 'common'
 interface ICommonRequestOptions {
   baseUrl: string
-  method: 'POST' | 'GET'
 }
 
 interface ICloudRequestOptions {

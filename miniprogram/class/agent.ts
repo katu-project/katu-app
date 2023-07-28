@@ -1,8 +1,6 @@
 import Core from '@/class/core'
 export default abstract class Agent extends Core {
 
-  abstract uploadFile(filePath:string, uploadType:UploadFileType): Promise<string>
-
   abstract navToDocPage(docId:string): void
 
   get _docMap(){

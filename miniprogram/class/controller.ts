@@ -1,5 +1,4 @@
 import Agent from '@/class/agent'
-import api from "@/api"
 import { navigateTo, file } from '@/utils/index'
 import { editImage } from '@/utils/action'
 import { getNoticeModule, getCryptoModule, getCacheModule } from '@/module/index'
@@ -19,11 +18,6 @@ export default class Controller extends Agent {
 
   get cache(){
     return getCacheModule()
-  }
-
-  async uploadFile(filePath:string, type:UploadFileType) {
-    const uploadInfo = await api.getUploadInfo({ type })
-    return api.uploadFile(filePath, uploadInfo)
   }
 
   goToPage(page:string, params?:string, vibrate?:boolean){

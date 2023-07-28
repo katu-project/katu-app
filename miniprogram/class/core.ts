@@ -1,7 +1,8 @@
 import Base from '@/class/base'
 import Const from "@/const"
 import Config from '@/config/index'
-import { cache, file, net, crypto, checkTimeout } from "@/utils/index"
+import { cache, file, crypto, checkTimeout } from "@/utils/index"
+import api from '@/api'
 
 export default class Core extends Base {
 
@@ -106,14 +107,13 @@ export default class Core extends Base {
         }
       }
     }
-
     console.debug(`start download file:`, url)
-    if (url.startsWith(this.getConst('WX_CLOUD_STORAGE_FILE_HEAD'))) {
-      await net.downloadCloudFile(url, savePath)
-    }else{
-      await net.download(url, savePath)
-    }
-
+    await api.downloadFile({url, savePath})
     return savePath
+  }
+
+  async uploadFile(filePath:string, type:UploadFileType) {
+    const uploadInfo = await api.getUploadInfo({ type })
+    return api.uploadFile(filePath, uploadInfo)
   }
 } 
