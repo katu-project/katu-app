@@ -40,9 +40,18 @@ export default class Controller extends Agent {
   }
 
   async editImage(path:string){
-    const tempImagePath = await editImage(path)
-    if(!tempImagePath) throw Error('获取编辑图片失败')
     const tempFilePath = await this.getTempFilePath('wx-image-editor')
+    let tempImagePath = ''
+    try {
+      tempImagePath = await editImage(path)
+    } catch (error:any) {
+      if(error.errno && error.errno === 1 && error.errMsg.includes('cancel')){
+        throw null
+      }
+      console.error(error)
+      throw Error('功能暂时不可用')
+    }
+    if(!tempImagePath) throw Error('系统不支持该功能')
     await file.copyFile(tempImagePath, tempFilePath)
     return tempFilePath
   }

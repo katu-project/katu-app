@@ -109,8 +109,7 @@ Page({
         'tmpImagePath': tempFilePath
       })
     } catch (error) {
-      console.error('useWxEditor: ',error)
-      this.findCardFailed(Error('暂不支持该功能'))
+      this.findCardFailed(error)
     }
   },
 
