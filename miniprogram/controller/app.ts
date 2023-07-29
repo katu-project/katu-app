@@ -278,7 +278,7 @@ class AppManager extends Controller {
     const chooseTempFile = await chooseLocalImage()
     let userTempFile = ''
     if(chooseTempFile){
-      userTempFile = await this.getTempFilePath('chooseLocalImage')
+      userTempFile = await this.getTempFilePath(`cli-${this.currentTimestamp}`)
       await file.saveTempFile(chooseTempFile, userTempFile)
     }
     return userTempFile

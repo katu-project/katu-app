@@ -256,7 +256,7 @@ class CardManager extends Controller{
 
   async parseCardImageByInternalApi(url){
     const { detectCardByContour } = await require.async('../packages/opencv/index')
-    const tempPath = await this.getTempFilePath('cv-temp')
+    const tempPath = await this.getTempFilePath(`cv-${this.currentTimestamp}`)
     return detectCardByContour(url, tempPath)
   }
   

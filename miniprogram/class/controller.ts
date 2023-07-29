@@ -40,7 +40,6 @@ export default class Controller extends Agent {
   }
 
   async editImage(path:string){
-    const tempFilePath = await this.getTempFilePath('wx-image-editor')
     let tempImagePath = ''
     try {
       tempImagePath = await editImage(path)
@@ -52,6 +51,7 @@ export default class Controller extends Agent {
       throw Error('功能暂时不可用')
     }
     if(!tempImagePath) throw Error('系统不支持该功能')
+    const tempFilePath = await this.getTempFilePath(`wei-${this.currentTimestamp}`)
     await file.copyFile(tempImagePath, tempFilePath)
     return tempFilePath
   }
