@@ -11,9 +11,12 @@ Page({
   },
 
   onReady() {
-    this.setData({
-      'menu[4].hide': !app.isDev
-    })
+    const hideIdx = this.data.menu.findIndex(e=>e.hide !== undefined)
+    if(hideIdx !== -1){
+      this.setData({
+        [`menu[${hideIdx}].hide`]: !app.isDev
+      })
+    }
   },
 
   onShow() {

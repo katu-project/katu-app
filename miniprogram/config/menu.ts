@@ -44,14 +44,19 @@ const MenuConfig = {
       url: 'account'
     },
     {
+      icon: 'unlock',
+      title: '安全',
+      url: 'security'
+    },
+    {
       icon: 'file',
       title: '数据',
       url: 'data'
     },
     {
-      icon: 'unlock',
-      title: '安全',
-      url: 'security'
+      icon: 'explore',
+      title: '高级',
+      url: 'adv'
     },
     {
       icon: 'repair',

@@ -1,0 +1,19 @@
+<cu-custom bgColor="bg-cyan" isBack="{{true}}">
+  <view slot="backText">返回</view>
+  <view slot="content">高级</view>
+</cu-custom>
+
+<view class="cu-list menu sm-border card-menu margin-top">
+
+  <view class="cu-item">
+    <view class="content">
+    <text class="">开发者密钥</text>
+    </view>
+    <view class="action">
+      <button class="cu-btn round line-cyan light gfw" bindtap="tapToCreateToken" style="width: 150rpx">
+        获取</button>
+    </view>
+  </view>
+  <view class="padding bg-white text-grey">生成开发者密钥用于开发测试</view>
+
+</view>

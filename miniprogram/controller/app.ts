@@ -484,6 +484,10 @@ class AppManager extends Controller {
     this.clearMasterKey()
   }
 
+  async createDevToken(){
+    return api.getDevToken()
+  }
+
   async sendVerifyCode(data: {tel:string}){
     return api.sendVerifyCode(data)
   }

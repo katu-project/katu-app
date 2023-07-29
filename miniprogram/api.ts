@@ -43,6 +43,7 @@ export default {
   
   textContentSafetyCheck: (data:{text:string}) => request<{checkPass:boolean}>('app/textContentCheck', data),
 
+  getDevToken: () => request<string>('app/getDevToken'),
   // user
   updateUserConfig: (configItem:any) => request('user/updateConfig', configItem),
 
