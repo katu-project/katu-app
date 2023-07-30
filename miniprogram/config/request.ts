@@ -4,7 +4,7 @@ const RequestConfig:IRequestConfig = {
     env: 'dev-4gglcut52bffa0ff',
     apiName: 'api094'
   },
-  common: {
+  http: {
     baseUrl: ''
   }
 }

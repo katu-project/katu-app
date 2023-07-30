@@ -1,7 +1,7 @@
 import { toPromise } from './base'
 import file from './file'
 
-const createCommonRequestor = (options:ICommonRequestOptions) => {
+const createHttpRequestor = (options:IHttpRequestOptions) => {
   const apiReq = args => wx.request(args)
   apiReq.noLog = true
   const request = (url:string, data?:any) => {
@@ -78,7 +78,7 @@ async function uploadCloudFile({options:{filePath, uploadInfo}}){
   return fileID
 }
 
-function createCommonUploader(options:ICommonRequestOptions){ 
+function createHttpUploader(options:IHttpRequestOptions){ 
   return async ({url, options:{filePath, uploadInfo}}) => {
     const upload = args => wx.uploadFile(args)
     let resp,respJson
@@ -109,7 +109,7 @@ function createCommonUploader(options:ICommonRequestOptions){
   }
 }
 
-function createCommonDownloader(options:ICommonRequestOptions){ 
+function createHttpDownloader(options:IHttpRequestOptions){ 
   return async ({url, options:{url:fileId, savePath}}) => {
     const download = args => wx.downloadFile(args)
     try {
@@ -138,9 +138,9 @@ export function createRequest(config:IRequestConfig){
     uploader = uploadCloudFile
     downloader = ({options})=> downloadCloudFile(options.url, options.savePath)
   }else{
-    requestor = createCommonRequestor(config.common!)
-    uploader = createCommonUploader(config.common!)
-    downloader = createCommonDownloader(config.common!)
+    requestor = createHttpRequestor(config.http!)
+    uploader = createHttpUploader(config.http!)
+    downloader = createHttpDownloader(config.http!)
   }
 
   return {

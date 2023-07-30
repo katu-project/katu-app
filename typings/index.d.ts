@@ -38,8 +38,8 @@ interface IAppConfig {
   contentCheckHash: HashType
 }
 
-type RequestType = 'cloud' | 'common'
-interface ICommonRequestOptions {
+type RequestType = 'cloud' | 'http'
+interface IHttpRequestOptions {
   baseUrl: string
 }
 
@@ -50,7 +50,7 @@ interface ICloudRequestOptions {
 interface IRequestConfig {
   type: RequestType
   cloud?: ICloudRequestOptions
-  common?: ICommonRequestOptions
+  http?: IHttpRequestOptions
 }
 
 type UploadFileType = 'share' | 'card' | 'avatar' | 'temp'
