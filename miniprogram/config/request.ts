@@ -5,7 +5,8 @@ const RequestConfig:IRequestConfig = {
     apiName: 'api094'
   },
   http: {
-    baseUrl: ''
+    baseUrl: '',
+    token: ''
   }
 }
 

@@ -41,6 +41,7 @@ interface IAppConfig {
 type RequestType = 'cloud' | 'http'
 interface IHttpRequestOptions {
   baseUrl: string
+  token: string
 }
 
 interface ICloudRequestOptions {

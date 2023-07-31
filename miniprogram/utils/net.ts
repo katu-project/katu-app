@@ -1,31 +1,7 @@
 import { toPromise } from './base'
 import file from './file'
 
-const createHttpRequestor = (options:IHttpRequestOptions) => {
-  const apiReq = args => wx.request(args)
-  apiReq.noLog = true
-  const request = (url:string, data?:any) => {
-    return toPromise(apiReq, {
-      url: `${options.baseUrl}/${url}`,
-      data,
-      method: 'POST'
-    }, 'data')
-  }
-  return request
-}
-
-const createCloudRequestor = (options:ICloudRequestOptions) => {
-  const request = async (url:string, data?:any)=>{
-    const {result} = await wx.cloud.callFunction({ 
-                    name: options.apiName,
-                    data: { action:url, data }
-                })
-    return result
-  }
-  return request
-}
-
-const request = async <T>(action: string, data:any, requestor): Promise<T> => {
+async function request<T>(action: string, data:any, requestor): Promise<T>{
   const error = {
     code: 0,
     message: ''
@@ -60,7 +36,7 @@ const request = async <T>(action: string, data:any, requestor): Promise<T> => {
   return resp.data
 }
 
-const downloadCloudFile = async (url:string, savePath:string) => {
+async function downloadCloudFile(url:string, savePath:string){
   try {
     const { tempFilePath } = await wx.cloud.downloadFile({ fileID: url })
     await file.saveTempFile(tempFilePath, savePath)
@@ -78,6 +54,33 @@ async function uploadCloudFile({options:{filePath, uploadInfo}}){
   return fileID
 }
 
+function createCloudRequestor(options:ICloudRequestOptions){
+  const request = async (url:string, data?:any)=>{
+    const {result} = await wx.cloud.callFunction({ 
+                    name: options.apiName,
+                    data: { action:url, data }
+                })
+    return result
+  }
+  return request
+}
+
+function createHttpRequestor(options:IHttpRequestOptions){
+  const apiReq = args => wx.request(args)
+  apiReq.noLog = true
+  const request = (url:string, data?:any) => {
+    return toPromise(apiReq, {
+      url: `${options.baseUrl}/${url}`,
+      data,
+      header: {
+        Token: options.token
+      },
+      method: 'POST'
+    }, 'data')
+  }
+  return request
+}
+
 function createHttpUploader(options:IHttpRequestOptions){ 
   return async ({url, options:{filePath, uploadInfo}}) => {
     const upload = args => wx.uploadFile(args)
@@ -87,6 +90,9 @@ function createHttpUploader(options:IHttpRequestOptions){
         filePath,
         url: `${options.baseUrl}/${url}`,
         formData: uploadInfo,
+        header: {
+          Token: options.token
+        },
         name: 'file'
       }, 'data')
     } catch (error:any) {
@@ -115,7 +121,10 @@ function createHttpDownloader(options:IHttpRequestOptions){
     try {
       const { statusCode, filePath } = await toPromise<WechatMiniprogram.DownloadFileSuccessCallbackResult>(download, {
         url: `${options.baseUrl}/${url}?url=${fileId}`,
-        filePath: savePath
+        filePath: savePath,
+        header: {
+          Token: options.token
+        },
       })
       if (statusCode !== 200 || !filePath) {
         throw Error("文件下载出错[031]")
