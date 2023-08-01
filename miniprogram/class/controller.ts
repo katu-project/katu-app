@@ -21,7 +21,7 @@ export default class Controller extends Agent {
   }
 
   goToPage(page:string, params?:string, vibrate?:boolean){
-    const pagePath = `${page.startsWith('/') ? '':'/pages/'}${page}?${params}`
+    const pagePath = `${page.startsWith('/') ? '':'/pages/'}${page}${params? `?${params}`:''}`
     return navigateTo(pagePath, vibrate || false)
   }
 
