@@ -98,7 +98,7 @@ function createHttpUploader(options:IHttpRequestOptions){
     } catch (error:any) {
       if(error.errMsg){
         console.error(error)
-        throw Error('上传出错了[023]')
+        throw Error('上传出错了[021]')
       }
       throw error
     }
@@ -108,7 +108,10 @@ function createHttpUploader(options:IHttpRequestOptions){
       console.error(error)
       throw Error('上传出错了[022]')
     }
-    if(respJson.code !== 0 || !respJson.data){
+    if(respJson.code !== 0){
+      throw Error(`上传出错了[${respJson.code}]`)
+    }
+    if(!respJson.data){
       throw Error('上传出错了[021]')
     }
     return respJson.data
@@ -118,19 +121,23 @@ function createHttpUploader(options:IHttpRequestOptions){
 function createHttpDownloader(options:IHttpRequestOptions){ 
   return async ({url, options:{url:fileId, savePath}}) => {
     const download = args => wx.downloadFile(args)
+    let res
     try {
-      const { statusCode, filePath } = await toPromise<WechatMiniprogram.DownloadFileSuccessCallbackResult>(download, {
+      res = await toPromise<WechatMiniprogram.DownloadFileSuccessCallbackResult>(download, {
         url: `${options.baseUrl}/${url}?url=${fileId}`,
         filePath: savePath,
         header: {
           Token: options.token
         },
       })
-      if (statusCode !== 200 || !filePath) {
-        throw Error("文件下载出错[031]")
-      }
     } catch (error) {
       console.error(error)
+      throw Error("文件下载出错[031]")
+    }
+    if (res.statusCode !== 200) {
+      throw Error(`文件下载出错[${res.statusCode}]`)
+    }
+    if (!res.filePath) {
       throw Error("文件下载出错[032]")
     }
   }
