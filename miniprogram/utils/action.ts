@@ -10,10 +10,6 @@ async function showInfo(msg, typeIdx=3, mask=true, options={}){
   })
 }
 
-async function showSuccess(msg){
-  return showInfo(msg,0)
-}
-
 async function showError(msg){
   return showInfo(msg, 1)
 }
@@ -220,7 +216,6 @@ async function editImage(src){
 
 export {
   showInfo,
-  showSuccess,
   showChoose,
   showNotice,
   showError,

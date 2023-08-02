@@ -1,4 +1,4 @@
-import { loadData, showSuccess, navigateBack } from '@/utils/index'
+import { loadData, navigateBack } from '@/utils/index'
 import { getUserManager } from '@/controller/user'
 import { getAppManager } from '@/controller/app'
 const user = getUserManager()
@@ -61,13 +61,9 @@ Page({
       userData['avatar'] = await loadData(user.uploadAvatar, this.data.avatar, '正在上传头像')
     }
     
-    loadData(user.updateProfile, userData, '正在保存信息').then(()=>{
-      user.emit('userChange')
-      showSuccess('修改成功').then(()=>{
-        setTimeout(()=>{
-          navigateBack()
-        },500)
-      })
-    })
+    await loadData(user.updateProfile, userData, '正在保存信息')
+    user.emit('userChange')
+    await app.showNotice('修改成功')
+    navigateBack()
   }
 })

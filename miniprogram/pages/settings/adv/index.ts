@@ -32,6 +32,5 @@ Page({
         data: token
       })
     }
-    // showSuccess('缓存数据删除成功')
   }
 })

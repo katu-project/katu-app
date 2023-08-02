@@ -1,4 +1,4 @@
-import { loadData, showSuccess } from "@/utils/index"
+import { loadData } from "@/utils/index"
 import { getUserManager } from '@/controller/user'
 import { getAppManager } from "@/controller/app"
 const user = getUserManager()
@@ -27,7 +27,7 @@ Page({
       value: e.detail.value
     }
     loadData(user.applyConfig,configItem,{returnFailed: true}).then(()=>{
-      showSuccess('修改成功')
+      app.showNotice('修改成功')
     }).catch(async err=>{
       this.loadData()
       const { cancel } = await app.showChoose(err.message, {

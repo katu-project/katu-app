@@ -1,4 +1,4 @@
-import { loadData, showSuccess } from '@/utils/index'
+import { loadData } from '@/utils/index'
 import { getAppManager } from '@/controller/app'
 import { getUserManager } from '@/controller/user'
 const user = getUserManager()
@@ -82,7 +82,7 @@ Page({
     this.setData({
       list: this.data.list
     })
-    showSuccess('删除成功')
+    app.showNotice('删除成功')
     user.loadCustomTags()
     
   },
@@ -98,7 +98,7 @@ Page({
     this.setData({
       [`list[${this.data.list.length}]`]: {name: res.name, _id: res._id}
     })
-    showSuccess('创建成功')
+    await app.showNotice('创建成功')
     user.loadCustomTags()
   },
 

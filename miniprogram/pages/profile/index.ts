@@ -1,4 +1,4 @@
-import { loadData, showSuccess } from '@/utils/index'
+import { loadData } from '@/utils/index'
 import { getAppManager } from '@/controller/app'
 import { getUserManager } from '@/controller/user'
 const app = getAppManager()
@@ -37,7 +37,7 @@ Page({
   
   async tapToActiveAccount(){
     await loadData(user.activeAccount, {}, '正在激活账号')
-    showSuccess("激活成功")
+    app.showNotice("激活成功")
     this.reloadUserInfo()
     this.hideActiveNotice()
   },

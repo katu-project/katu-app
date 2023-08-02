@@ -1,4 +1,4 @@
-import { loadData, showSuccess } from '@/utils/index'
+import { loadData } from '@/utils/index'
 import { getAppManager } from '@/controller/app'
 const app = getAppManager()
 
@@ -24,6 +24,6 @@ Page({
   async tapToClearCacheData(){
     await app.showConfirm('确认清空缓存数据？')
     await loadData(app.clearCacheData)
-    showSuccess('缓存数据删除成功')
+    app.showNotice('缓存数据删除成功')
   }
 })

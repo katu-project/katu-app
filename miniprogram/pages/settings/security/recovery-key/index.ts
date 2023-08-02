@@ -1,4 +1,4 @@
-import { loadData, showSuccess, qrcode, showLoading } from "@/utils/index"
+import { loadData, qrcode, showLoading } from "@/utils/index"
 import { getAppManager } from '@/controller/app'
 import { getUserManager } from '@/controller/user'
 const app = getAppManager()
@@ -216,7 +216,7 @@ Page({
           readyExport: false
         })
         this.initCanvasContent(this._canvasCtx).then(()=>{
-          showSuccess("保存成功")
+          app.showNotice("保存成功")
         })
       },
       fail: error => {
