@@ -68,7 +68,7 @@ Page({
 
   loadTagData(){
     const useDefaultTag = user.config?.general.useDefaultTag
-    const tags = (useDefaultTag ? app.getConfig('tags') : []).concat(user.tags!)
+    const tags = (useDefaultTag ? app.getCardConfig('defaultTags') : []).concat(user.tags!)
     // 记录【其他】标签的idx
     this.otherTagIdx = tags.findIndex(e=>e.name === '其他')
     this.setData({

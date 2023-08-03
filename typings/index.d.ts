@@ -25,8 +25,6 @@ interface IAppConfig {
   devHomeDataCacheTime: number
   homeDataCacheTime: number
   noticeFetchTime: number
-  tags: ICardTag[]
-  extraFieldsKeys: ICardExtraField[]
   imageMogr2: string
   doc: {
     [id:string]: string
@@ -36,6 +34,11 @@ interface IAppConfig {
   shareInfo: IAnyObject
   cacheClearGapTime: number
   contentCheckHash: HashType
+}
+
+interface ICardConfig {
+  defaultTags: ICardTag[]
+  defaultFields: ICardExtraField[]
 }
 
 type RequestType = 'cloud' | 'http'

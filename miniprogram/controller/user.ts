@@ -183,7 +183,7 @@ export default class User extends Controller {
       throw Error("标签已存在")
     }
 
-    if(this.config?.general.useDefaultTag && this.getConfig('tags').find(tag=>tag.name === tagName)){
+    if(this.config?.general.useDefaultTag && this.getCardConfig('defaultTags').find(tag=>tag.name === tagName)){
       throw Error("已存在于内置标签\n可直接使用无需重复创建")
     }
 

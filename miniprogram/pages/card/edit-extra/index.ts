@@ -3,7 +3,7 @@ import { getAppManager } from '@/controller/app'
 import { getUserManager } from '@/controller/user'
 const app = getAppManager()
 const user = getUserManager()
-const CardExtraDataFieldsKeys = app.getConfig('extraFieldsKeys')
+const CardExtraDataFieldsKeys = app.getCardConfig('defaultFields')
 
 Page({
   data: {

@@ -7,7 +7,7 @@ const app = getAppManager()
 const user = getUserManager()
 const cardManager = getCardManager()
 
-const AppDefaultTags = app.getConfig('tags')
+const AppDefaultTags = app.getCardConfig('defaultTags')
 
 Page({
   where: {},

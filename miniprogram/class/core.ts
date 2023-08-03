@@ -14,6 +14,10 @@ export default class Core extends Base {
     return typeof key === 'object' ? this.deepCloneObject(Config.App[key]) : Config.App[key]
   }
 
+  getCardConfig<T extends keyof ICardConfig>(key:T){
+    return this.deepCloneObject(Config.Card[key])
+  }
+
   get theme(){
     return Config.Theme
   }

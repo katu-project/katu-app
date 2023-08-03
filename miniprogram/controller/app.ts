@@ -262,7 +262,7 @@ class AppManager extends Controller {
   rebuildExtraFields(extraFields: Partial<ICardExtraField>[]){
     return extraFields.map(item=>{
       const [key,cuName] = item[0].split('-')
-      let extraField = this.getConfig('extraFieldsKeys').find(e=>e.key===key)
+      let extraField = Object.assign({value:''},this.getCardConfig('defaultFields').find(e=>e.key === key))
       extraField = Object.assign({name: '未知', value: '无'},extraField)
       if(key === 'cu') extraField.name = cuName
       extraField.value = item[1]

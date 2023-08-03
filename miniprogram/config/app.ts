@@ -11,40 +11,6 @@ const AppConfig:IAppConfig = {
   devHomeDataCacheTime: 3600,
   homeDataCacheTime: 86400,
   noticeFetchTime: 60,
-  tags: [
-    { name: '储蓄卡', color:'', layout:'debit_card' },
-    { name: '信用卡', color:'', layout:'credit_card' },
-    { name: '购物卡', color:'' },
-    { name: '名片', color:'' },
-    { name: '其他', color:'' }
-  ],
-  extraFieldsKeys: [
-    {
-      key: 'cn',
-      name: '卡号',
-      xid: 1
-    },
-    {
-      key: 'cvv',
-      name: '校验码',
-      xid: 2
-    },
-    {
-      key: 'cm',
-      name: '联系方式',
-      xid: 3
-    },
-    {
-      key: 'ed',
-      name: '失效日期',
-      xid: 4
-    },
-    {
-      key: 'cu',
-      name: '自定义',
-      xid: 5
-    }
-  ],
   imageMogr2: '&imageMogr2/thumbnail/100x/rquality/80/format/png/interlace/1/strip',
   doc: {
     userUsageProtocol: 'f6e08a6462b0879e08d6b0a15725ecbb',
