@@ -18,6 +18,10 @@ export default class Core extends Base {
     return this.deepCloneObject(Config.Card[key])
   }
 
+  getDocConfig<T extends keyof IDocConfig>(key:T){
+    return Config.Doc[key]
+  }
+
   get theme(){
     return Config.Theme
   }

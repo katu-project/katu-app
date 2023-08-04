@@ -26,9 +26,6 @@ interface IAppConfig {
   homeDataCacheTime: number
   noticeFetchTime: number
   imageMogr2: string
-  doc: {
-    [id:string]: string
-  }
   smsGapTime: number
   crypto: IAppCryptoConfig
   shareInfo: IAnyObject
@@ -39,6 +36,22 @@ interface IAppConfig {
 interface ICardConfig {
   defaultTags: ICardTag[]
   defaultFields: ICardExtraField[]
+}
+
+interface IDocConfig {
+  docMap: {
+    userUsageProtocol: string
+    userPrivacyProtocol: string
+    masterKeyNotice: string
+    rememberKeyNotice: string
+    imageProcessorTip_1: string
+    imageProcessorTip_2: string
+    forgetKeyNotice: string
+    dataShareNotice: string
+    dataSaveSecurityNotice: string
+    dataCheckNotice: string
+    tagConflictHelp: string
+  }
 }
 
 type RequestType = 'cloud' | 'http'

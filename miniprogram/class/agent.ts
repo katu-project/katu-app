@@ -4,7 +4,7 @@ export default abstract class Agent extends Core {
   abstract navToDocPage(docId:string): void
 
   get _docMap(){
-    return this.getConfig('doc')
+    return this.getDocConfig('docMap')
   }
 
   async getLastSmsSendTime(){

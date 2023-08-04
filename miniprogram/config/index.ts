@@ -3,6 +3,7 @@ import Request from './request'
 import Theme from './theme'
 import Menu from './menu'
 import Card from './card'
+import Doc from './doc'
 
 export {
    App,
@@ -10,6 +11,7 @@ export {
    Theme,
    Menu,
    Card,
+   Doc
 }
 
 export default {
@@ -17,5 +19,6 @@ export default {
    Request,
    Theme,
    Menu,
-   Card
+   Card,
+   Doc
 }
