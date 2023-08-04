@@ -28,7 +28,7 @@ interface ICryptoPackage {
   spt: (plaintext: string, imagePath: string) => Promise<{image: string, extraData: string}>
 }
 
-interface IAppCryptoConfig {
+interface ICryptoConfig {
   defaultCommonCryptoVersion: CommonCryptoVersion,
   useCommonCryptoVersion: CommonCryptoVersion,
   usePackageVersion: CpkVersion

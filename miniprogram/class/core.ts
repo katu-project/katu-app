@@ -18,8 +18,16 @@ export default class Core extends Base {
     return this.deepCloneObject(Config.Card[key])
   }
 
+  getCryptoConfig<T extends keyof ICryptoConfig>(key:T){
+    return Config.Crypto[key]
+  }
+
   getDocConfig<T extends keyof IDocConfig>(key:T){
     return Config.Doc[key]
+  }
+
+  get cryptoConfig(){
+    return Config.Crypto
   }
 
   get theme(){

@@ -4,6 +4,7 @@ import Theme from './theme'
 import Menu from './menu'
 import Card from './card'
 import Doc from './doc'
+import Crypto from './crypto'
 
 export {
    App,
@@ -11,7 +12,8 @@ export {
    Theme,
    Menu,
    Card,
-   Doc
+   Doc,
+   Crypto
 }
 
 export default {
@@ -20,5 +22,6 @@ export default {
    Theme,
    Menu,
    Card,
-   Doc
+   Doc,
+   Crypto
 }

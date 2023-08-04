@@ -104,7 +104,7 @@ class AppManager extends Controller {
     this.notice.init({
       noticeFetchIntervalTime: this.getConfig('noticeFetchTime')
     })
-    this.crypto.init(this.getConfig('crypto'))
+    this.crypto.init(this.cryptoConfig)
   }
   // user section
   async setUserMasterKey(key: string){

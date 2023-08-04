@@ -73,9 +73,9 @@ const CommonCryptoVersionMap = {
 }
 
 class Crypto extends Module {
-  _config = {} as IAppCryptoConfig
+  _config = {} as ICryptoConfig
 
-  init(config:IAppCryptoConfig){
+  init(config:ICryptoConfig){
     console.debug('使用加密配置:')
     console.table(config)
     this._config = config

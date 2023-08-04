@@ -27,7 +27,6 @@ interface IAppConfig {
   noticeFetchTime: number
   imageMogr2: string
   smsGapTime: number
-  crypto: IAppCryptoConfig
   shareInfo: IAnyObject
   cacheClearGapTime: number
   contentCheckHash: HashType
