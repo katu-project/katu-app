@@ -4,6 +4,8 @@ import Config from '@/config/index'
 import { cache, file, crypto, checkTimeout } from "@/utils/index"
 import api from '@/api'
 
+type LocalCacheKeyType = keyof typeof Const.LOCAL_CACHE_KEYS
+
 export default class Core extends Base {
 
   getConst<T extends keyof typeof Const>(key:T){
@@ -42,20 +44,20 @@ export default class Core extends Base {
     return checkTimeout
   }
 
-  async getLocalData<T>(key: keyof typeof Const.LocalCacheKeyMap) {
+  async getLocalData<T>(key: LocalCacheKeyType) {
     try {
-      return await cache.getCache<T>(Const.LocalCacheKeyMap[key])
+      return await cache.getCache<T>(Const.LOCAL_CACHE_KEYS[key])
     } catch (_) {}
     return
   }
 
-  async setLocalData(key: keyof typeof Const.LocalCacheKeyMap, data) {
-    return cache.setCache(Const.LocalCacheKeyMap[key], data)
+  async setLocalData(key: LocalCacheKeyType, data) {
+    return cache.setCache(Const.LOCAL_CACHE_KEYS[key], data)
   }
 
-  async deleteLocalData(key: keyof typeof Const.LocalCacheKeyMap) {
+  async deleteLocalData(key: LocalCacheKeyType) {
     try {
-      await cache.delCache(Const.LocalCacheKeyMap[key])
+      await cache.delCache(Const.LOCAL_CACHE_KEYS[key])
     } catch (error) {
       console.error(error)
     }
@@ -67,7 +69,7 @@ export default class Core extends Base {
 
   async getImageHash(filePath: string, hash?: string) {
     const fileHexData = await file.readFile(filePath, 'hex')
-    const hashValue = crypto[hash || this.getConst('DEFAULT_IMAGE_HASH_METHOD')].call(null, fileHexData)
+    const hashValue = crypto[hash || this.getConfig('imageNameFormatHashMethod')].call(null, fileHexData)
     console.debug('getHash: ', filePath, hashValue)
     return hashValue as string
   }

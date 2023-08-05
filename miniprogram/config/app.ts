@@ -11,7 +11,6 @@ const AppConfig:IAppConfig = {
   devHomeDataCacheTime: 3600,
   homeDataCacheTime: 86400,
   noticeFetchTime: 60,
-  imageMogr2: '&imageMogr2/thumbnail/100x/rquality/80/format/png/interlace/1/strip',
   smsGapTime: 60,
   shareInfo: {
     title: '卡兔-安全好用的卡片管理助手',
@@ -19,7 +18,9 @@ const AppConfig:IAppConfig = {
     imageUrl: '/static/share.png'
   },
   cacheClearGapTime: 86400,
-  contentCheckHash: 'SHA1'
+  contentCheckHash: 'SHA1',
+  imageNameFormatHashMethod: 'MD5',
+  appEntryPagePath: 'home/index'
 }
 
 export default AppConfig

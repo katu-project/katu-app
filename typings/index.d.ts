@@ -25,11 +25,12 @@ interface IAppConfig {
   devHomeDataCacheTime: number
   homeDataCacheTime: number
   noticeFetchTime: number
-  imageMogr2: string
   smsGapTime: number
   shareInfo: IAnyObject
   cacheClearGapTime: number
   contentCheckHash: HashType
+  imageNameFormatHashMethod: HashType
+  appEntryPagePath: string
 }
 
 interface ICardConfig {

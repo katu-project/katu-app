@@ -535,7 +535,7 @@ class AppManager extends Controller {
   // 导航
   async reLaunch(path?:string){
     return wx.reLaunch({
-      url: path || `/pages/${this.getConst('APP_ENTRY_PATH')}`,
+      url: path || `/pages/${this.getConfig('appEntryPagePath')}`,
     })
   }
 
