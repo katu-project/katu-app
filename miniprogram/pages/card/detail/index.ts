@@ -1,4 +1,4 @@
-import { loadData, navigateBack, setClipboardData } from '@/utils/index'
+import { loadData } from '@/utils/index'
 import { getCardManager } from '@/controller/card'
 import { getUserManager } from '@/controller/user'
 import { getAppManager } from '@/controller/app'
@@ -58,7 +58,7 @@ Page({
   async onReady() {
     if(!this.id) {
       await app.showNotice("卡片不存在")
-      navigateBack()
+      app.navigateBack()
       return
     }
 
@@ -91,7 +91,7 @@ Page({
     } catch (error:any) {
       if(!hideLoading){
         await app.showNotice(error.message || '卡片加载错误')
-        navigateBack()
+        app.navigateBack()
       }
     }
   },
@@ -207,14 +207,14 @@ Page({
   },
 
   tapToCopyValue(e){
-    setClipboardData(e.currentTarget.dataset.value)
+    app.setClipboardData(e.currentTarget.dataset.value)
   },
 
   async tapToDeleteCard(){
     await app.showConfirm("卡片删除后不可恢复！")
     loadData(cardManager.deleteCard, this.data.card).then(()=>{
       app.emit('cardDelete', this.data.card)
-      navigateBack()
+      app.navigateBack()
     })
   },
 

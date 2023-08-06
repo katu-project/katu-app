@@ -1,4 +1,4 @@
-import { loadData, navigateBack } from '@/utils/index'
+import { loadData } from '@/utils/index'
 import { getCardManager } from '@/controller/card'
 import { getAppManager } from '@/controller/app'
 import { getUserManager } from '@/controller/user'
@@ -207,7 +207,7 @@ Page({
       app.emit('cardChange',card)
     })
     await app.showNotice('卡片数据已保存')
-    navigateBack()
+    app.navigateBack()
   },
 
   async saveFailed(error){

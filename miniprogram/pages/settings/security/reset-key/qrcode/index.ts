@@ -1,4 +1,4 @@
-import { loadData, navigateBack } from '@/utils/index'
+import { loadData } from '@/utils/index'
 import { getAppManager } from '@/controller/app'
 import { getUserManager } from '@/controller/user'
 const app = getAppManager()
@@ -77,6 +77,6 @@ Page({
     app.clearMasterKey()
     user.reloadInfo()
     await app.showNotice(`主密码重置成功`)
-    navigateBack()
+    app.navigateBack()
   },
 })

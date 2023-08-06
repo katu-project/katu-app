@@ -1,4 +1,4 @@
-import { loadData, setClipboardData } from '@/utils/index'
+import { loadData } from '@/utils/index'
 import { getAppManager } from '@/controller/app'
 import { getCardManager } from '@/controller/card'
 import { getUserManager } from '@/controller/user'
@@ -139,7 +139,7 @@ Page({
       app.showNotice(this.data.list[idx].cnText)
       return
     }
-    setClipboardData(this.data.list[idx].cn)
+    app.setClipboardData(this.data.list[idx].cn)
   },
   
   tapToCardDetail(e){

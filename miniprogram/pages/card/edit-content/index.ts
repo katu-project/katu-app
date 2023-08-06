@@ -1,5 +1,4 @@
 import { getAppManager } from '@/controller/app'
-import { navigateBack } from '@/utils/index'
 const app = getAppManager()
 
 Page({
@@ -8,6 +7,7 @@ Page({
     content: '',
     dataChange: false
   },
+  
   onLoad(options) {
     if(options.value){
       this.originValue = options.value
@@ -16,6 +16,7 @@ Page({
       })
     }
   },
+
   onBindInput(e){
     const content = e.detail.value.trim()
     this.setData({
@@ -23,8 +24,9 @@ Page({
       content
     })
   },
+
   tapToSetContent(){
     app.emit('setCardTitle',this.data.content.trim())
-    navigateBack()
+    app.navigateBack()
   }
 })

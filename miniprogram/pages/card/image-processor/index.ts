@@ -1,4 +1,4 @@
-import { loadData, navigateBack } from '@/utils/index'
+import { loadData } from '@/utils/index'
 import { getCardManager } from '@/controller/card'
 import { getAppManager } from '@/controller/app'
 const app = getAppManager()
@@ -18,7 +18,7 @@ Page({
     if(options.value){
       this.originImagePath = options.value
     }else{
-      navigateBack()
+      app.navigateBack()
     }
   },
 
@@ -45,7 +45,7 @@ Page({
     await app.knowContentCheck()
     await loadData(app.imageContentCheck,{imagePath:this.data.tmpImagePath},'内容合规检查')
     app.emit('setCardImage',this.data.tmpImagePath)
-    navigateBack()
+    app.navigateBack()
   },
 
   async selectMethod(e){

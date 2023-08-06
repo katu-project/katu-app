@@ -1,4 +1,4 @@
-import { loadData, navigateBack } from '@/utils/index'
+import { loadData } from '@/utils/index'
 import { getAppManager } from '@/controller/app'
 const app = getAppManager()
 
@@ -24,7 +24,7 @@ Page({
 
   loadData(){
     if(!this.id){
-      app.showNotice('文档不存在').then(()=> navigateBack())
+      app.showNotice('文档不存在').then(()=> app.navigateBack())
       return
     }
     

@@ -1,4 +1,4 @@
-import { loadData, navigateBack } from '@/utils/index'
+import { loadData } from '@/utils/index'
 import { getAppManager } from '@/controller/app'
 import { getUserManager } from '@/controller/user'
 const app = getAppManager()
@@ -106,6 +106,6 @@ Page({
     }else{
       app.emit('setCardExtraData', [])
     }
-    navigateBack()
+    app.navigateBack()
   }
 })

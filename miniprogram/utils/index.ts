@@ -11,7 +11,7 @@ export * from './action'
 export * as cache from './cache'
 export { UPNG as upng } from './upng'
 export * as bip39 from './bip39/index'
-export { drawQrcode as qrcode } from './qrcode/index'
+export * as qrcode from './qrcode/index'
 
 function checkTimeout(oldTime:number, gapTime:number){
   const nowTime = getCurrentTimestamp()

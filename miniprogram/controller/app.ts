@@ -1,6 +1,6 @@
 import Controller from '@/class/controller'
 import api from '@/api'
-import { chooseLocalImage, showChoose, switchTab, sleep, file } from '@/utils/index'
+import { chooseLocalImage, showChoose, setClipboardData, navigateBack, switchTab, sleep, file } from '@/utils/index'
 import { getCardManager } from './card'
 import { getUserManager } from './user'
 
@@ -533,10 +533,19 @@ class AppManager extends Controller {
   }
 
   // 导航
+  navigateBack(){
+    return navigateBack()
+  }
+
   async reLaunch(path?:string){
     return wx.reLaunch({
       url: path || `/pages/${this.getConfig('appEntryPagePath')}`,
     })
+  }
+
+  // 系统API
+  setClipboardData(data){
+    return setClipboardData(data)
   }
 
   async goToUserProfilePage(vibrate?:boolean){

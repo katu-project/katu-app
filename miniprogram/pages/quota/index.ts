@@ -98,9 +98,7 @@ Page({
       }
     }).then(({result})=>{
       const code = (result as IAnyObject).data.code
-      wx.setClipboardData({
-        data: code 
-      })
+      app.setClipboardData(code)
     })
   }
 })

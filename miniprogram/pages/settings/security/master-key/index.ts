@@ -1,4 +1,4 @@
-import { loadData, navigateBack } from '@/utils/index'
+import { loadData } from '@/utils/index'
 import { getAppManager } from '@/controller/app'
 import { getUserManager } from '@/controller/user'
 const app = getAppManager()
@@ -104,7 +104,7 @@ Page({
     user.reloadInfo()
     this.resetContent()
     app.showNotice(`主密码${this.data.setMasterKey?'更新':'设置'}成功`).then(()=>{
-      navigateBack()
+      app.navigateBack()
     })
   },
   

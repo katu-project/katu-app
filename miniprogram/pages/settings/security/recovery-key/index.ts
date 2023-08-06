@@ -109,7 +109,7 @@ Page({
     ctx.strokeStyle = 'green'
     ctx.lineWidth = 2
     ctx.strokeRect(49*rx, 79*ry, 202*rx, 202*ry)
-    qrcode({
+    qrcode.drawQrcode({
       x: 50*rx,
       y: 80*ry,
       width: 200*rx,

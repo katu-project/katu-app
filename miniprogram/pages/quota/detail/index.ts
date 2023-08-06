@@ -1,4 +1,4 @@
-import { loadData} from '@/utils/index'
+import { loadData } from '@/utils/index'
 import { getUserManager } from '@/controller/user'
 const user = getUserManager()
 

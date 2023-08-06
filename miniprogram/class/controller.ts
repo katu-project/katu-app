@@ -1,6 +1,5 @@
 import Agent from '@/class/agent'
-import { navigateTo, file } from '@/utils/index'
-import { editImage } from '@/utils/action'
+import { navigateTo, file, editImage } from '@/utils/index'
 import { getNoticeModule, getCryptoModule, getCacheModule } from '@/module/index'
 
 export default class Controller extends Agent {

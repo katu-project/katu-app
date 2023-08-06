@@ -1,4 +1,4 @@
-import { loadData, navigateBack } from '@/utils/index'
+import { loadData } from '@/utils/index'
 import { getUserManager } from '@/controller/user'
 import { getAppManager } from '@/controller/app'
 const user = getUserManager()
@@ -64,6 +64,6 @@ Page({
     await loadData(user.updateProfile, userData, '正在保存信息')
     user.emit('userChange')
     await app.showNotice('修改成功')
-    navigateBack()
+    app.navigateBack()
   }
 })

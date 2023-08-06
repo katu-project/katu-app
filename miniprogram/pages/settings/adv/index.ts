@@ -28,9 +28,7 @@ Page({
       confirmText: '复制密钥'
     })
     if(confirm){
-      wx.setClipboardData({
-        data: token
-      })
+      app.setClipboardData(token)
     }
   }
 })
