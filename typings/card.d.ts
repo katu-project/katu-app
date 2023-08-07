@@ -23,6 +23,7 @@ interface ICardTag {
   name: string
   color: string
   layout?: string
+  field?: string[]
 }
 
 interface ICardExtraField {

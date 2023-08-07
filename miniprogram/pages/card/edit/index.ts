@@ -70,7 +70,7 @@ Page({
     const useDefaultTag = user.config?.general.useDefaultTag
     const tags = (useDefaultTag ? app.getCardConfig('defaultTags') : []).concat(user.tags!)
     // 记录【其他】标签的idx
-    this.otherTagIdx = tags.findIndex(e=>e.name === '其他')
+    this.otherTagIdx = tags.findIndex(e=>e._id === 'oc')
     this.setData({
       tags
     })
@@ -342,13 +342,7 @@ Page({
 
   tapToEditExtraData(){
     const c = JSON.stringify(this.data.card.info)
-    let tag = ''
-    if(this.data.card.tags.includes('储蓄卡')){
-      tag = 'dc'
-    }
-    if(this.data.card.tags.includes('信用卡')){
-      tag = 'cc'
-    }
+    const tag = this.data.tags.find(e=>e.selected && e.field)?._id || ''
     app.goEditExtraDataPage(c,tag)
   },
 

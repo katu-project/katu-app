@@ -8,13 +8,13 @@ const CardExtraDataFieldsKeys = app.getCardConfig('defaultFields')
 Page({
   data: {
     extraFieldsKeys: CardExtraDataFieldsKeys,
-    extraFields: [] as ICardExtraField[],
-    dataChange: false
+    extraFields: []
   },
 
   onLoad(options) {
+    this.originData = options.value
     const parseExtraData = JSON.parse(options.value||'[]')
-    if(options.value){
+    if(parseExtraData.length){
       let extraFieldsKeys = this.data.extraFieldsKeys
       const extraFields = app.rebuildExtraFields(parseExtraData)
       // 移除存在的项目
@@ -25,13 +25,13 @@ Page({
         extraFieldsKeys,
         extraFields
       })
-    }
-    //不存在数据时根据tag来显示默认填写的字段
-    if(!parseExtraData.length && options.tag){
-      if(options.tag == 'dc'){
-        this.addField([0])
-      }else if(options.tag === 'cc'){
-        this.addField([0,1,3])
+    }else{
+      //不存在数据时根据tag(如果有)来显示默认填写的字段
+      if(options.tag){
+        const checkFieldTag = app.getCardConfig('defaultTags').find(tag=>tag._id === options.tag)
+        if(checkFieldTag && checkFieldTag.field){
+          this.addField(checkFieldTag.field)
+        }
       }
     }
   },
@@ -39,7 +39,6 @@ Page({
   onBindinput({currentTarget:{dataset: {idx, cu}}, detail: {value}}){
     const key = `extraFields[${idx}].${cu?'name':'value'}`
     this.setData({
-      dataChange: value ? true : false,
       [key]: value
     })
   },
@@ -47,29 +46,28 @@ Page({
   onBindchange(e){
     const idx = parseInt(e.detail.value)
     if(!this.data.extraFieldsKeys[idx]) return
-    this.addField([idx])
+    this.addField([this.data.extraFieldsKeys[idx].key])
   },
 
-  addField(ids){
+  addField(keys){
     let extraFields = this.data.extraFields
-    for (const idx of ids) {
-      const extraField = Object.assign({},this.data.extraFieldsKeys[idx])
+    for (const key of keys) {
+      const extraField = Object.assign({},this.data.extraFieldsKeys.find(e=>e.key === key))
       if(extraField.key === 'cu'){
-        extraField.name = ''
+        extraField.name = `字段 ${this.data.extraFields.filter(e=>e.key==='cu').length+1}`
       }
       extraFields = extraFields.concat(extraField).sort((a,b)=> a.xid-b.xid)
     }
     
     this.setData({
       extraFields,
-      extraFieldsKeys: this.data.extraFieldsKeys.filter((_,i)=> i === this.data.extraFieldsKeys.length-1 || !ids.includes(i))
+      extraFieldsKeys: this.data.extraFieldsKeys.filter(e => e.key === 'cu' || !keys.includes(e.key))
     })
   },
 
   onBindDateChange({currentTarget:{dataset: {idx}}, detail: {value}}){
     const key = `extraFields[${idx}].value`
     this.setData({
-      dataChange: value ? true : false,
       [key]: value
     })
   },
@@ -80,8 +78,7 @@ Page({
 
     this.data.extraFields.splice(idx,1)
     const setData = {
-      extraFields: this.data.extraFields,
-      dataChange: true
+      extraFields: this.data.extraFields
     }
     if(selectedField.key !== 'cu'){
       setData[`extraFieldsKeys`] = this.data.extraFieldsKeys.concat(CardExtraDataFieldsKeys.find(e=>e.key === selectedField.key)!).sort((a,b)=> a.xid-b.xid)
@@ -97,6 +94,12 @@ Page({
         return
       }
       const extraFields = app.condenseExtraFields(this.data.extraFields)
+
+      if(this.originData === JSON.stringify(extraFields)) {
+        app.showNotice('内容无变动')
+        return
+      }
+      
       // 未激活用户可能会进入这里，可以跳过下面检查
       if(user.isActive){
         const checkText = this.data.extraFields.map(e=>e.key === 'cu'? `${e.name}${e.value}`: e.value).join('')
