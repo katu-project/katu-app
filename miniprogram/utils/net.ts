@@ -94,7 +94,7 @@ function createHttpUploader(options:IHttpRequestOptions){
           Token: options.token
         },
         name: 'file'
-      }, 'data')
+      })
     } catch (error:any) {
       if(error.errMsg){
         console.error(error)
@@ -102,17 +102,24 @@ function createHttpUploader(options:IHttpRequestOptions){
       }
       throw error
     }
+    if(resp.statusCode !== 200){
+      if(resp.statusCode === 413){
+        throw Error(`选择的文件太大了，无法上传`)
+      }
+      throw Error(`上传出错了[N${resp.statusCode}]`)
+    }
+
     try {
-      respJson = JSON.parse(resp)
+      respJson = JSON.parse(resp.data)
     } catch (error) {
-      console.error(error)
+      console.error(resp.data)
       throw Error('上传出错了[022]')
     }
     if(respJson.code !== 0){
-      throw Error(`上传出错了[${respJson.code}]`)
+      throw Error(`上传出错了[P${respJson.code}]`)
     }
     if(!respJson.data){
-      throw Error('上传出错了[021]')
+      throw Error('上传出错了[023]')
     }
     return respJson.data
   }
