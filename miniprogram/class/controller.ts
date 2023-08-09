@@ -1,8 +1,8 @@
-import Agent from '@/class/agent'
-import { navigateTo, file, editImage } from '@/utils/index'
+import Navigation from './navigation'
+import { file, editImage } from '@/utils/index'
 import { getNoticeModule, getCryptoModule, getCacheModule } from '@/module/index'
 
-export default class Controller extends Agent {
+export default class Controller extends Navigation {
   constructor(){
     super()
   }
@@ -17,15 +17,6 @@ export default class Controller extends Agent {
 
   get cache(){
     return getCacheModule()
-  }
-
-  goToPage(page:string, params?:string, vibrate?:boolean){
-    const pagePath = `${page.startsWith('/') ? '':'/pages/'}${page}${params? `?${params}`:''}`
-    return navigateTo(pagePath, vibrate || false)
-  }
-
-  navToDocPage(id){
-    return this.goToPage('qa/detail/index',`id=${id}`)
   }
 
   async checkImageType(picPath:string){
