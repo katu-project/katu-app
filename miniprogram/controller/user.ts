@@ -198,6 +198,11 @@ export default class User extends Controller {
     return api.activeAccount({})
   }
 
+  async deleteAccount(){
+    await api.removeAccount()
+    return this.clearInfo()
+  }
+
   // simple api proxy end
 
   loadOnAppHideConfig(){

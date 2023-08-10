@@ -479,9 +479,9 @@ class AppManager extends Controller {
   }
 
   async deleteAccount(){
-    await api.removeAccount()
-    this.user.clearInfo()
-    this.clearMasterKey()
+    await this.user.deleteAccount()
+    await this.clearCacheData()
+    return this.clearMasterKey()
   }
 
   // simple api proxy

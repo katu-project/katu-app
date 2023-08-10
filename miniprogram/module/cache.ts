@@ -229,9 +229,7 @@ class Cache extends Module {
   }
   // clear all cache
   async clearAll(){
-    await this.deleteLocalData('CARD_DATA_CACHE_KEY')
-    await this.deleteLocalData('CARD_EXTRA_DATA_CACHE_KEY')
-    await this.deleteLocalData('HOME_DATA_CACHE_KEY')
+    await this.deleteAllLocalData()
   }
 }
 

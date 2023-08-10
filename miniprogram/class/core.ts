@@ -63,6 +63,12 @@ export default class Core extends Base {
     }
   }
 
+  async deleteAllLocalData() {
+    for (const key in Const.LOCAL_CACHE_KEYS) {
+      await this.deleteLocalData(key as LocalCacheKeyType)
+    }
+  }
+
   async getImageType(path: string) {
     return file.getImageType(path)
   }
