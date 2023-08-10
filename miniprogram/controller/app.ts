@@ -1,6 +1,6 @@
 import Controller from '@/class/controller'
 import api from '@/api'
-import { chooseLocalImage, showChoose, setClipboardData, sleep, file } from '@/utils/index'
+import { showChoose, setClipboardData, sleep, file } from '@/utils/index'
 import { getCardManager } from './card'
 import { getUserManager } from './user'
 
@@ -275,13 +275,7 @@ class AppManager extends Controller {
       throw Error('该客户端不支持选择图片功能')
     }
     getApp().globalData.state.inChooseLocalImage = true
-    const chooseTempFile = await chooseLocalImage()
-    let userTempFile = ''
-    if(chooseTempFile){
-      userTempFile = await this.getTempFilePath(`cli-${this.currentTimestamp}`)
-      await file.saveTempFile(chooseTempFile, userTempFile)
-    }
-    return userTempFile
+    return super.chooseLocalImage()
   }
 
   async getHomeData({forceUpdate, getCateList}:{forceUpdate?:boolean, getCateList?:boolean}):Promise<IHomeData>{

@@ -1,7 +1,7 @@
 import Base from '@/class/base'
 import Const from "@/const"
 import Config from '@/config/index'
-import { cache, file, crypto, checkTimeout } from "@/utils/index"
+import { cache, file, crypto, checkTimeout, chooseLocalImage } from "@/utils/index"
 import api from '@/api'
 
 type LocalCacheKeyType = keyof typeof Const.LOCAL_CACHE_KEYS
@@ -67,6 +67,16 @@ export default class Core extends Base {
     for (const key in Const.LOCAL_CACHE_KEYS) {
       await this.deleteLocalData(key as LocalCacheKeyType)
     }
+  }
+
+  async chooseLocalImage(){
+    const chooseTempFile = await chooseLocalImage()
+    let userTempFile = ''
+    if(chooseTempFile){
+      userTempFile = await this.getTempFilePath(`cli-${this.currentTimestamp}`)
+      await file.saveTempFile(chooseTempFile, userTempFile)
+    }
+    return userTempFile
   }
 
   async getImageType(path: string) {
