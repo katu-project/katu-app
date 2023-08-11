@@ -101,12 +101,12 @@ async function loadData<T>(func?: (args:any) => Promise<T>, params?: Object, opt
       hideLoading = options.hideLoading || false
     }
   }
-  let pfunc
+  let pfunc: (p?:any)=>unknown = ()=> sleep(2000)
+  
   if(func){
-    pfunc = async p => await func(p)
-  }else{
-    pfunc = sleep
-    params = 2000
+    pfunc = async p => {
+      return func(p)
+    } 
   }
 
   if(hideLoading){
@@ -120,11 +120,21 @@ async function loadData<T>(func?: (args:any) => Promise<T>, params?: Object, opt
 
   await sleep(300)
 
+  const timeoutCheck = new Promise(async (_,reject)=>{
+    await sleep(10000)
+    reject({
+      message: '服务超时，请重试或刷新小程序'
+    })
+  })
+
   return new Promise((resolve,reject)=>{
-    pfunc(params).then(res=>{
+    Promise.race([
+      pfunc(params),
+      timeoutCheck
+    ]).then(res=>{
       wx.hideLoading({
         complete: ()=>{
-          resolve(res)
+          resolve(res as T)
         }
       })
     }).catch(error=>{
