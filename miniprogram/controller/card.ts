@@ -260,6 +260,25 @@ class CardManager extends Controller{
     return detectCardByContour(url, tempPath)
   }
   
+  // 辅助方法
+  condenseExtraFields(extraFields: ICardExtraField[]):[string,string][]{
+    return extraFields.map(e=>{
+      if(!(e.key && e.name && e.value)) throw Error('附加数据格式错误')
+      return [e.key == 'cu'?`cu-${e.name}`:e.key,e.value!]
+    })
+  }
+
+  rebuildExtraFields(extraFields: Partial<ICardExtraField>[]){
+    return extraFields.map(item=>{
+      const [key,cuName] = item[0].split('-')
+      let extraField = Object.assign({value:''},this.getCardConfig('defaultFields').find(e=>e.key === key))
+      extraField = Object.assign({name: '未知', value: '无'},extraField)
+      if(key === 'cu') extraField.name = cuName
+      extraField.value = item[1]
+      return extraField
+    })
+  }
+
   // 获取图片渲染数据
   async getImageRenderSetData({idx,card,keyName}:{idx:number|string, card:ICard, keyName:string}){
     const cardDataKey = `${keyName}[${idx}]`

@@ -2,6 +2,7 @@ import { loadData } from "@/utils/index"
 import { getAppManager } from "@/controller/app"
 import { getCardManager } from "@/controller/card"
 const app = getAppManager()
+const cardManager = getCardManager()
 
 Page({
   shareInfo: {
@@ -49,7 +50,7 @@ Page({
         if(card.encrypted) pic._url = app.getConst('DefaultShowLockImage')
         return pic
       }),
-      [`card.info`]: app.rebuildExtraFields(card.info || []),
+      [`card.info`]: cardManager.rebuildExtraFields(card.info || []),
       endTime: Math.floor((new Date(endTime).getTime() - app.currentTimestamp) / 1000)
     })
     if(card.encrypted){
@@ -83,7 +84,7 @@ Page({
       const imageData = await getCardManager().decryptImage(image, this.shareInfo.dk)
       
       setData[`card.image[${idx}]._url`] = imageData.imagePath,
-      setData[`card.info`] = app.rebuildExtraFields(imageData.extraData)
+      setData[`card.info`] = cardManager.rebuildExtraFields(imageData.extraData)
     }   
 
     this.setData(setData)

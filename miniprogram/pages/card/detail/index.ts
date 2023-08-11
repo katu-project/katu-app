@@ -83,7 +83,7 @@ Page({
       )
       this.setData({
         card,
-        'extraData': app.rebuildExtraFields(card.info),
+        'extraData': cardManager.rebuildExtraFields(card.info),
         'showHideCardData': card.encrypted && !user.config?.general.autoShowContent && !card.image.some(e=>e._url === app.getConst('DefaultShowLockImage'))
       })
       // this.checkActionUsability()
@@ -181,7 +181,7 @@ Page({
     const setData = {
       [`card.image`]: card.image,
       [`card.info`]: card.info,
-      ['extraData']: app.rebuildExtraFields(card.info),
+      ['extraData']: cardManager.rebuildExtraFields(card.info),
       'showHideCardData': !user.config?.general.autoShowContent
     }
     this.setData(setData)

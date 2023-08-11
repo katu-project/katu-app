@@ -1,7 +1,9 @@
 import { loadData } from '@/utils/index'
 import { getAppManager } from '@/controller/app'
 import { getUserManager } from '@/controller/user'
+import { getCardManager } from '@/controller/card'
 const app = getAppManager()
+const cardManager = getCardManager()
 const user = getUserManager()
 const CardExtraDataFieldsKeys = app.getCardConfig('defaultFields')
 
@@ -16,7 +18,7 @@ Page({
     const parseExtraData = JSON.parse(options.value||'[]')
     if(parseExtraData.length){
       let extraFieldsKeys = this.data.extraFieldsKeys
-      const extraFields = app.rebuildExtraFields(parseExtraData)
+      const extraFields = cardManager.rebuildExtraFields(parseExtraData)
       // 移除存在的项目
       extraFieldsKeys = extraFieldsKeys.filter(item=>{
         return item.key === 'cu' || !extraFields.some(e=>item.key === e.key)
@@ -28,7 +30,7 @@ Page({
     }else{
       //不存在数据时根据tag(如果有)来显示默认填写的字段
       if(options.tag){
-        const checkFieldTag = app.getCardConfig('defaultTags').find(tag=>tag._id === options.tag)
+        const checkFieldTag = cardManager.getCardConfig('defaultTags').find(tag=>tag._id === options.tag)
         if(checkFieldTag && checkFieldTag.field){
           this.addField(checkFieldTag.field)
         }
@@ -93,7 +95,7 @@ Page({
         app.showNotice('内容填写有误')
         return
       }
-      const extraFields = app.condenseExtraFields(this.data.extraFields)
+      const extraFields = cardManager.condenseExtraFields(this.data.extraFields)
 
       if(this.originData === JSON.stringify(extraFields)) {
         app.showNotice('内容无变动')

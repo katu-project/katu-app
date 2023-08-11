@@ -230,7 +230,7 @@ class AppManager extends Controller {
       }
     }else{
       dk = ''
-      shareCard.info = this.rebuildExtraFields(card.info!)
+      shareCard.info = this.cardManager.rebuildExtraFields(card.info!)
       for (const image of card.image!) {
         shareCard.image!.push({
           url: image.url,
@@ -250,24 +250,6 @@ class AppManager extends Controller {
       sk,
       dk
     }
-  }
-
-  condenseExtraFields(extraFields: ICardExtraField[]):[string,string][]{
-    return extraFields.map(e=>{
-      if(!(e.key && e.name && e.value)) throw Error('附加数据格式错误')
-      return [e.key == 'cu'?`cu-${e.name}`:e.key,e.value!]
-    })
-  }
-
-  rebuildExtraFields(extraFields: Partial<ICardExtraField>[]){
-    return extraFields.map(item=>{
-      const [key,cuName] = item[0].split('-')
-      let extraField = Object.assign({value:''},this.getCardConfig('defaultFields').find(e=>e.key === key))
-      extraField = Object.assign({name: '未知', value: '无'},extraField)
-      if(key === 'cu') extraField.name = cuName
-      extraField.value = item[1]
-      return extraField
-    })
   }
 
   async chooseLocalImage(){
