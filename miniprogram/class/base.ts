@@ -20,8 +20,9 @@ export default class Base {
     return this.emitter.off
   }
 
-  get emit(){
-    return this.emitter.emit
+  emit(key:string, record?:any){
+    console.debug(`事件: ${key} 发出，携带数据: ${record||'无'}`)
+    return this.emitter.emit(key, record)
   }
 
   get currentTimestamp(){

@@ -44,9 +44,11 @@
         <text class="text-grey">选择标签</text>
       </view>
       <view class="action" style="max-width: 40vw;white-space: nowrap;overflow-x: scroll;">
-        <view class="cu-tag round bg-orange light" wx:if="{{!card.tags.length}}">未选择</view>
+        <view class="cu-tag radius bg-orange light" wx:if="{{!card.tags.length}}">未选择</view>
         <block wx:else>
-          <view class="cu-tag round bg-cyan light" wx:for="{{card.tags}}" wx:key="index" >{{item}}</view>
+          <block wx:for="{{tags}}" wx:key="_id">
+            <view class="cu-tag radius bg-{{item.color || 'cyan'}} light" hidden="{{!item.selected}}">{{item.name}}</view>
+          </block>
         </block>
       </view>
     </view>
@@ -65,7 +67,7 @@
         <text class="text-grey">附加数据</text>
       </view>
       <view class="action">
-        <text class="text-grey text-df">{{card.info.length || '无'}}</text>
+        <text class="text-grey text-df">{{card.info.length ? card.info.length+' 条' : '无'}}</text>
       </view>
     </view>
   </view>
@@ -77,17 +79,17 @@
   </button>
 </view>
 
-<view class="cu-modal bottom-modal {{ showSelectTag?'show':''}}" data-hide="1" bindtap="tapToHideSelectTag">
+<view class="cu-modal bottom-modal {{ showSelectTag?'show':''}}">
   <view class="cu-dialog">
     <view class="cu-bar bg-white">
-      <view class="action" data-hide="1" bindtap="tapToHideSelectTag">取消</view>
+      <view class="action" bindtap="tapToCancelSelectTag">取消</view>
       <view class="action text-green" style="margin-right: 30rpx;" bindtap="tapToSetTag">确定</view>
     </view>
     <view class="padding-tb flex flex-wrap">
       <view class="padding-tb-sm padding-lr-sm margin-sm light bg-{{ item.selected ? item.color||'cyan' : 'gray'}} br-14" data-value="{{index}}" bindtap="tapToSelectTag" wx:for="{{tags}}" wx:key="name">
         <text class="">{{item.name}}</text>
       </view>
-      <view class="padding-tb-sm padding-lr-sm margin-sm light bg-orange br-14" bindtap="tapToCustomTag">
+      <view class="padding-tb-sm padding-lr-sm margin-sm br-14 solids-bottom" bindtap="tapToCustomTag">
         <text class="cuIcon-add">自定义</text>
       </view>
     </view>

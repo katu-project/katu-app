@@ -14,7 +14,7 @@ Page({
     card: {
       encrypted: false,
       title: '卡片名称1',
-      tags: [] as String[],
+      tags: [],
       setLike: false,
       image: [
         { url: app.getConst('DefaultAddImage') }
@@ -43,23 +43,27 @@ Page({
     app.on('setCardImage',this.onEventSetCardImage)
     app.on('setCardTitle',this.onEventSetCardTitle)
     app.on('setCardExtraData',this.onEventSetCardExtraData)
+    app.on('tagChange', this.onEventTagChange)
   },
 
   removeAllEvents(){
     app.off('setCardImage')
     app.off('setCardTitle')
     app.off('setCardExtraData')
+    app.off('tagChange')
   },
 
   async onReady(){
-    if(this.id){
-      this.loadData()
-    }
     this.applyUserSetting()
+    this.loadTagData()
+    if(this.id){
+      await this.loadData()
+      // 处理卡片标签选中状态
+      this.renderTagState()
+    }
   },
 
   onShow() {
-    this.loadRenderData()
   },
 
   loadRenderData(){
@@ -67,8 +71,7 @@ Page({
   },
 
   loadTagData(){
-    const useDefaultTag = user.config?.general.useDefaultTag
-    const tags = (useDefaultTag ? app.getCardConfig('defaultTags') : []).concat(user.tags!)
+    const tags = (this.data.useDefaultTag ? app.getCardConfig('defaultTags') : []).concat(user.tags)
     // 记录【其他】标签的idx
     this.otherTagIdx = tags.findIndex(e=>e._id === 'oc')
     this.setData({
@@ -100,13 +103,24 @@ Page({
     this.checkDataChange()
   },
 
+  onEventTagChange(){
+    this.loadTagData()
+    this.renderTagState()
+  },
+
   applyUserSetting(){
     if(user.isActive){
-      if(user.config?.general.defaultUseEncrytion){
-        this.setData({
-          'card.encrypted': true
-        })
+      const setData = {
+        'card.encrypted': false,
+        useDefaultTag: true
       }
+      if(user.config?.general.defaultUseEncrytion){
+        setData['card.encrypted'] = true
+      }
+      if(!user.config?.general.useDefaultTag){
+        setData.useDefaultTag = false
+      }
+      this.setData(setData)
     }
   },
 
@@ -131,8 +145,6 @@ Page({
     }
     this.setData(setData)
     this.originData = JSON.parse(JSON.stringify(this.data.card))
-    // 处理标签
-    this.renderTagState()
   },
 
   renderTagState(){
@@ -143,9 +155,10 @@ Page({
       }
       return tag
     })
-    
+    const cardTags = this.data.card.tags.filter(tag=>tags.some(e=>e.name === tag))
     this.setData({
-      tags
+      tags,
+      'card.tags': cardTags
     })
   },
 
@@ -291,6 +304,18 @@ Page({
     app.goEditContentPage(this.data.card.title)
   },
 
+  tapToShowEncryptChangeNotice(){
+    if(this.id){
+      app.showNotice('更新卡片暂不支持切换加密模式')
+    }
+  },
+
+  tapToEditExtraData(){
+    const c = JSON.stringify(this.data.card.info)
+    const tag = this.data.tags.find(e=>e.selected && e.field)?._id || ''
+    app.goEditExtraDataPage(c,tag)
+  },
+
   // 标签部分
   tapToSetTag(){
     const tags = this.data.tags.filter(tag=>tag.selected).map(e=>e.name)
@@ -301,10 +326,9 @@ Page({
     this.checkDataChange()
   },
 
-  tapToShowEncryptChangeNotice(){
-    if(this.id){
-      app.showNotice('更新卡片暂不支持切换加密模式')
-    }
+  tapToCancelSelectTag(){
+    this.renderTagState()
+    return this.hideSelectTag()
   },
 
   tapToShowSelectTag(){
@@ -340,22 +364,10 @@ Page({
     app.goEditTagPage()
   },
 
-  tapToEditExtraData(){
-    const c = JSON.stringify(this.data.card.info)
-    const tag = this.data.tags.find(e=>e.selected && e.field)?._id || ''
-    app.goEditExtraDataPage(c,tag)
-  },
-
   hideSelectTag(){
     this.setData({
       showSelectTag: false
     })
-  },
-
-  tapToHideSelectTag(e){
-    if(!e.target.dataset.hide) return
-    this.renderTagState()
-    return this.hideSelectTag()
   },
 
   // 其他
@@ -372,7 +384,7 @@ Page({
     const editCard = this.data.card
     let dataChange = false
     // 名字
-    if(originCard.title !== editCard.title){
+    if(originCard?.title !== editCard?.title){
       dataChange = true
     }else
     // 标签

@@ -83,8 +83,8 @@ Page({
       list: this.data.list
     })
     app.showNotice('删除成功')
-    user.loadCustomTags()
-    
+    await user.loadCustomTags()
+    this.sendChangeEvent()
   },
 
   async tapToSaveTag(){
@@ -98,8 +98,13 @@ Page({
     this.setData({
       [`list[${this.data.list.length}]`]: {name: res.name, _id: res._id}
     })
-    await app.showNotice('创建成功')
-    user.loadCustomTags()
+    app.showNotice('创建成功')
+    await user.loadCustomTags()
+    this.sendChangeEvent()
+  },
+
+  sendChangeEvent(){
+    app.emit('tagChange')
   },
 
   tapToSelectColor(e){

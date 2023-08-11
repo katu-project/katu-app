@@ -88,7 +88,7 @@ export default class User extends Controller {
     wx.nextTick(()=>{
       setTimeout(() => {
         this.loadCustomTags()
-      }, 3000);
+      }, 1000);
     })
     this.loadOnAppHideConfig()
   }
