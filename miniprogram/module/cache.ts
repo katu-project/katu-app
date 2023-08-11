@@ -227,6 +227,18 @@ class Cache extends Module {
     } catch (_) {}
     this.setLocalData('CACHE_CLEAR_TIME', this.currentTimestamp)
   }
+
+  async clearTempDirFile(){
+    try {
+      await file.checkAccess(this.getConst('APP_TEMP_DIR'))
+      await file.rmdir(this.getConst('APP_TEMP_DIR'), true)
+    } catch (error:any) {
+      if(!error.message.startsWith('access:fail no such file or directory')){
+        console.error('clearTempDirFile:',error)
+      }
+    }
+  }
+
   // clear all cache
   async clearAll(){
     await this.deleteAllLocalData()

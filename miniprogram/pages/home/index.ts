@@ -25,7 +25,7 @@ Page({
     app.on('cardDecrypt',this.onEventCardChange)
     app.on('cardHide',this.onEventCardHide)
     await loadData(app.loadUser,{},'检查用户数据')
-    
+    app.loadGlobalTask()
     await this.loadData()
     if(!user.isActive){
       app.showActiveNotice(true, '现在激活账户可领取免费兔币')

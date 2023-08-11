@@ -16,7 +16,6 @@ class AppManager extends Controller {
   async init(){
     this.loadBaseInfo()
     this.loadGlobalEvents()
-    this.loadGlobalTask()
     await this.loadModules()
     return
   }
@@ -72,28 +71,41 @@ class AppManager extends Controller {
   }
 
   async loadGlobalTask(){
-    if(!this.user.isOk) return
+    const clearTempFileCache = async ()=> {
+      console.debug(`开始清理临时文件目录`)
+      await this.cache.clearTempDirFile()
+    }
     const clearExtraDataCache = async ()=> {
-      const cardIdxs = await api.getCardSummary('CardIdxs')
-      const localExtraDataCache = await this.cache.getExtraDatas()
-      const invalidIds = Object.keys(localExtraDataCache).filter(e=>!cardIdxs.includes(e))
-      if(invalidIds.length){
-        console.log(`删除无效附加数据本地缓存：${invalidIds.length} 条`)
-        await this.cache.deleteCardExtraData(invalidIds)
+      console.debug('开始检测是否有无效的卡片附加数据')
+      try {
+        const cardIdxs = await api.getCardSummary('CardIdxs')
+        const localExtraDataCache = await this.cache.getExtraDatas()
+        const invalidIds = Object.keys(localExtraDataCache).filter(e=>!cardIdxs.includes(e))
+        if(invalidIds.length){
+          console.debug(`删除无效附加数据本地缓存：${invalidIds.length} 条`)
+          await this.cache.deleteCardExtraData(invalidIds)
+        }
+      } catch (error) {
+        console.error('clearExtraDataCache:',error)
       }
     }
     const clearCardImageCache = async ()=> {
-      console.debug('开始检测是否清理缓存数据')
+      console.debug('开始检测是否有无效图片缓存数据')
       try {
         await this.checkCacheClearTimeout()
-        console.debug('未满足清理条件，跳过本次清理')
-      } catch (error) {
-        const imageIds = await api.getCardSummary('ImageIds')
-        this.cache.deleteCardFile(imageIds)
+      } catch (_) {
+        try {
+          const imageIds = await api.getCardSummary('ImageIds')
+          console.debug(`删除无效图片缓存数据：${imageIds.length} 条`)
+          this.cache.deleteCardFile(imageIds)
+        } catch (error) {
+          console.error('clearCardImageCache:',error)
+        }
       }
     }
     setTimeout(clearExtraDataCache, 2000)
     setTimeout(clearCardImageCache, 3000)
+    setTimeout(clearTempFileCache, 1000)
   }
 
   async loadModules(){
@@ -397,6 +409,13 @@ class AppManager extends Controller {
 
   //主密码备份/重置 结束
 
+  async deleteAccount(){
+    await this.user.deleteAccount()
+    await this.clearCacheData()
+    return this.clearMasterKey()
+  }
+  //设置页结束
+
   async imageContentCheck({imagePath}){
     const hash = await this.getImageHash(imagePath, this.getConfig('contentCheckHash'))
     const { needCheck, checkPass } = await api.getContentCheckInfo({hash})
@@ -452,12 +471,6 @@ class AppManager extends Controller {
   async showSetMasterKeyNotice(){
     await this.showConfirm("未设置主密码",'去设置')
     return this.goEditMasterKeyPage()
-  }
-
-  async deleteAccount(){
-    await this.user.deleteAccount()
-    await this.clearCacheData()
-    return this.clearMasterKey()
   }
 
   // simple api proxy
