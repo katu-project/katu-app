@@ -1,18 +1,51 @@
-<view class="cu-modal {{display?'show':''}}">
+<view class="cu-modal bottom-modal {{display ? 'show' : ''}}" data-mask="true" catchtap="tapToHideModal" catchtouchmove="{{true}}">
   <view class="cu-dialog">
-    <view class="padding-xl cu-bar bg-white flex justify-center">
-      <view class="solids-bottom" style="width: 80%;">
-        <view class="padding-bottom">
-          <text class="text-lg text-black">输入主密码</text>
+    <view class='input_main' wx:if="{{display}}">
+      <view class='input_title'>
+        <view wx:if="{{state === 'loading'}}" class="text-xxl flex-row justify-center"> 
+          <text class="cuIcon-loading text-green iconfont-spin"></text>
+          <text class="text-lg padding-left-sm">密码验证中</text>
         </view>
-        <view class="solids">
-          <input style="height: 80rpx;background:#fff" adjust-position="{{display}}" bindinput="checkKey" model:value="{{key}}" password="true"/>
+        <view wx:if="{{state === 'failed'}}" class="text-xxl flex-row justify-center"> 
+          <text class="cuIcon-roundclose text-red"></text>
+          <text class="text-lg padding-left-sm">{{result || '密码不正确'}}</text>
+        </view>
+        <view wx:if="{{state === ''}}" class="text-xxl"> 
+          <text class="cuIcon-lock text-green"></text> 
         </view>
       </view>
-    </view>
-    <view class="cu-bar bg-white">
-      <view class="action margin-0 flex-sub solid-left" bindtap="hideModal">取消</view>
-      <view class="action margin-0 flex-sub solid-left text-green" bindtap="tapToSetKey">确定</view>
+      <view class='input_tip text-left'>
+        <text>{{tips}}</text>
+      </view>
+      <view class='input_row' catchtap='getFocus'>
+        <block wx:if="{{advMode}}">
+          <view class='pwd_item adv'>
+            <text class="text adv" wx:for='{{key}}' wx:key='*this'></text>
+          </view>
+        </block>
+        <block wx:else>
+          <view class='pwd_item' wx:for='{{6}}' wx:key='item' wx:for-index='i'>
+            <text class="text" wx:if='{{key.length>i}}'></text>
+          </view>
+        </block>
+      </view>
+      <view class='mode_change solids-bottom' catchtap='tapChangeMode'>{{advMode?'数字':'混合'}}输入</view>
+      <view class='forget_pwd' wx:if="{{showSubBtn || state === 'failed' }}" catchtap='tapSubBtn'>{{subBtnText}}</view>
+      <input
+          class='input_control' 
+          password 
+          type="{{advMode?'text':'number'}}" 
+          focus='{{focus}}'
+          value="{{key}}"
+          bindinput='checkKey'
+          confirm-hold="{{advMode}}"
+          bindconfirm="advConfirm"
+          adjust-position="{{false}}"/>
+      <view class="btn-row">
+        <button class="cu-btn lg text-white bg-grey gfw cancel-btn" data-btn="true" catchtap="tapToHideModal">
+          取消
+        </button>
+      </view>
     </view>
   </view>
 </view>

@@ -1,0 +1,112 @@
+.input_main {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 70vh;
+  background-color: #fff;
+  z-index: 9999;
+  border-top-left-radius: 20rpx;
+  border-top-right-radius: 20rpx;
+}
+
+// iPhone 12 
+@media screen and (min-height: 800px) { 
+  .input_main {
+    height: 56vh;
+  }
+}
+
+.input_title {
+  width: 100%;
+  height: 90rpx;
+  line-height: 90rpx;
+  text-align: center;
+  font-size: 32rpx;
+  border-bottom: 1rpx solid #e2e2e2;
+}
+
+.input_tip {
+  min-height: 20rpx;
+  margin: 30rpx;
+  font-size: 24rpx;
+  color: #888;
+}
+
+/* 密码掩码模拟 */
+.input_row {
+  width: 690rpx;
+  margin: 0 auto;
+  height: 98rpx;
+  position: relative;
+  display: flex;
+  align-items: center;
+  border: 1rpx solid #e2e2e2;
+  border-radius: 20rpx;
+}
+
+.input_row .pwd_item {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  border-right: 1rpx solid #e2e2e2;
+  position: relative;
+}
+
+.pwd_item:nth-last-of-type(1) {
+  border-right: 0;
+}
+
+.pwd_item .text {
+  width: 30rpx;
+  height: 30rpx;
+  border-radius: 30rpx;
+  background-color: #555;
+}
+
+.input_row .pwd_item.adv {
+  overflow-x: scroll;
+}
+
+.pwd_item .text.adv{
+  margin: 0 5rpx;
+}
+
+.mode_change {
+  float: left;
+  margin: 30rpx;
+  width: 100rpx;
+  text-align: right;
+  font-size: 24rpx;
+  color: grey;
+}
+
+.forget_pwd {
+  float: right;
+  margin: 30rpx;
+  width: 100rpx;
+  text-align: right;
+  font-size: 24rpx;
+  color: #ff7800;
+}
+
+/* 文本输入框位置: 设置到左边隐藏 */
+.input_control {
+  position: relative;
+  left: -400rpx;
+  bottom: 0;
+  width: 100rpx;
+  height: 100rpx;
+}
+
+.btn-row{
+  height: 100%;
+  .cancel-btn{
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 80rpx;
+  }
+}
