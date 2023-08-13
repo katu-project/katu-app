@@ -17,6 +17,7 @@ Page({
   },
   data: {
     showInputKey: false,
+    inputKeyResult: '',
     card: {
       title: '',
       tags: [],
@@ -251,15 +252,10 @@ Page({
     })
   },
 
-  showInputKey(){
-    this.setData({
-      showInputKey: true
-    })
-  },
-
   inputKeyConfirm(e){
     const key = e.detail.value
     app.loadMasterKeyWithKey(key).then(()=>{
+      this.hideInputKey()
       if(this.chooseAction){
         if(this.chooseAction === 'edit'){
           this._tapToEditCard()
@@ -270,9 +266,26 @@ Page({
       }
     }).catch(error=>{
       console.log(error)
-      app.showNotice(error.message)
-      this.showInputKey()
+      this.setData({
+        inputKeyResult: error.message
+      })
     })
+  },
+
+  showInputKey(){
+    this.setData({
+      showInputKey: true
+    })
+  },
+
+  hideInputKey(){
+    this.setData({
+      showInputKey: false
+    })
+  },
+
+  tapToForgetKey(){
+    app.goResetKeyPage()
   },
 
   onImageShowError(e){

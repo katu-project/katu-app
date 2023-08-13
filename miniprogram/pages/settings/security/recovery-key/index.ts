@@ -9,7 +9,9 @@ Page({
   data: {
     setRecoveryKey: false,
     recoveryKeyId: '0000',
-    readyExport: false
+    readyExport: false,
+    showInputKey: false,
+    inputKeyResult: '',
   },
   
   onLoad() {
@@ -226,18 +228,31 @@ Page({
     })
   },
 
+  inputKeyConfirm(e){
+    const key = e.detail.value
+    app.loadMasterKeyWithKey(key).then(()=>{
+      this.hideInputKey()
+      this.genCert()
+    }).catch(error=>{
+      this.setData({
+        inputKeyResult: error.message
+      })
+    })
+  },
+  
   showInputKey(){
     this.setData({
       showInputKey: true
     })
   },
 
-  inputKeyConfirm(e){
-    const key = e.detail.value
-    app.loadMasterKeyWithKey(key).then(()=>{
-      this.genCert()
-    }).catch(error=>{
-      app.showNotice(error.message)
+  hideInputKey(){
+    this.setData({
+      showInputKey: false
     })
   },
+
+  tapToForgetKey(){
+    app.goResetKeyPage()
+  }
 })

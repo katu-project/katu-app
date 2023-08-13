@@ -23,6 +23,7 @@ Page({
     },
     curShowPicIdx: 0,
     showInputKey: false,
+    inputKeyResult: '',
     dataChange: false,
     tags: []
   },
@@ -230,10 +231,33 @@ Page({
   async saveFinish(){
   },
 
+  // key input section
+  inputKeyConfirm(e){
+    const key = e.detail.value
+    app.loadMasterKeyWithKey(key).then(()=>{
+      this.hideInputKey()
+      this.tapToSaveCard()
+    }).catch(error=>{
+      this.setData({
+        inputKeyResult: error.message
+      })
+    })
+  },
+
   showInputKey(){
     this.setData({
       showInputKey: true
     })
+  },
+
+  hideInputKey(){
+    this.setData({
+      showInputKey: false
+    })
+  },
+
+  tapToForgetKey(){
+    app.goResetKeyPage()
   },
 
   async tapToChoosePic(){
@@ -288,15 +312,6 @@ Page({
       'card.setLike': e.detail.value
     })
     this.checkDataChange()
-  },
-
-  inputKeyConfirm(e){
-    const key = e.detail.value
-    app.loadMasterKeyWithKey(key).then(()=>{
-      this.tapToSaveCard()
-    }).catch(error=>{
-      app.showNotice(error.message)
-    })
   },
 
   // 卡片名称

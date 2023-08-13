@@ -20,7 +20,9 @@ Page({
       ]
     } as Partial<ICard>,
     endTime: 0,
-    endTimeText: '**:**'
+    endTimeText: '**:**',
+    showInputKey: false,
+    inputKeyResult: '',
   },
   onLoad(options) {
     if(!options.sid || !options.sk){
@@ -57,6 +59,7 @@ Page({
       await this.showEncryptedImage()
     }
   },
+
   async tapToChoosePic(e){
     this.chooseIdx = e.currentTarget.dataset.index
     const image = this.data.card.image![this.chooseIdx]
@@ -65,10 +68,12 @@ Page({
     }
     this.showEncryptedImage()
   },
+
   async previewImage(idx=0){
     const pics = this.data.card.image!.filter(e=>e._url !== app.getConst('DefaultShowLockImage')).map(e=>e._url!)
     app.previewImage(pics, idx)
   },
+
   async showEncryptedImage(){    
     if(!this.shareInfo.dk){
       await app.showConfirm('未检测到密钥，无法读取数据','输入密钥')
@@ -76,6 +81,7 @@ Page({
     }
     return loadData(this.decryptImage,{},'读取加密数据')
   },
+  
   async decryptImage(){
     const setData = {}
 
@@ -89,6 +95,7 @@ Page({
 
     this.setData(setData)
   },
+
   renderTimeInfo(){
     setTimeout(()=>{
       if(this.data.endTime) {
@@ -106,14 +113,29 @@ Page({
       }
     },1000)
   },
+
+  inputKeyConfirm(e){
+    const key = e.detail.value
+    this.shareInfo.dk = key
+    this.hideInputKey()
+    setTimeout(()=>{
+      this.showEncryptedImage()
+    },300)
+  },
+
   showInputKey(){
     this.setData({
       showInputKey: true
     })
   },
-  inputKeyConfirm(e){
-    const key = e.detail.value
-    this.shareInfo.dk = key
-    this.showEncryptedImage()
+
+  hideInputKey(){
+    this.setData({
+      showInputKey: false
+    })
+  },
+
+  tapToForgetKey(){
+    app.showNotice('请联系分享人获取密码')
   }
 })

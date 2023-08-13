@@ -31,4 +31,9 @@
   </view>
 </view>
 
-<input-key bind:confirm="inputKeyConfirm" show="{{showInputKey}}" />
+<input-key 
+  bind:confirm="inputKeyConfirm"
+  bind:tapSubBtn="tapToForgetKey"
+  tips="需要验证主密码："
+  result="{{inputKeyResult}}" 
+  show="{{showInputKey}}" />
