@@ -31,8 +31,9 @@ Page({
           hash: ''
         }
       ]
-    } as Partial<ICard>,
-    extraData: [] as IAnyObject[],
+    },
+    extraData: [],
+    tagsInfo: [],
     editable: true,
     shareable: true,
     syncCheck: true,
@@ -88,6 +89,7 @@ Page({
         'showHideCardData': card.encrypted && !user.config?.general.autoShowContent && !card.image.some(e=>e._url === app.getConst('DefaultShowLockImage'))
       })
       // this.checkActionUsability()
+      this.renderTagInfo()
       this.autoShowContent()
     } catch (error:any) {
       if(!hideLoading){
@@ -95,6 +97,19 @@ Page({
         app.navigateBack()
       }
     }
+  },
+
+  renderTagInfo(){
+    const tags = (user.config?.general.useDefaultTag ? app.getCardConfig('defaultTags') : []).concat(user.tags)
+    const cardTags = this.data.card.tags.map(tag=>{
+      return {
+        name: tag,
+        color: tags.find(e=>e.name === tag)?.color || ''
+      }
+    })
+    this.setData({
+      'tagsInfo': cardTags
+    })
   },
 
   autoShowContent(){
