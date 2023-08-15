@@ -142,7 +142,8 @@ Page({
     app.setClipboardData(this.data.list[idx].cn)
   },
   
-  tapToCardDetail(e){
+  async tapToCardDetail(e){
+    await app.checkQuotaNotice()
     app.goCardDetailPage(e.currentTarget.dataset.key)
   },
 

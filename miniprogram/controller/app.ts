@@ -365,6 +365,15 @@ class AppManager extends Controller {
     return
   }
 
+  async checkQuotaNotice(msg?:string){
+    return new Promise((resolve)=>{
+      if(this.user.quota > 0){
+        return resolve("")
+      }
+      this.showNotice(msg || '无可用兔币，无法查看卡片')
+    })
+  }
+
   //数据
   //清除缓存
   async clearCacheData(){

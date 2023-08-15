@@ -24,12 +24,16 @@ Page({
     app.on('cardDelete',this.onEventCardDelete)
     app.on('cardDecrypt',this.onEventCardChange)
     app.on('cardHide',this.onEventCardHide)
-    await loadData(app.loadUser,{},'检查用户数据')
-    app.loadGlobalTask()
-    await this.loadData()
-    if(!user.isActive){
-      app.showActiveNotice(true, '现在激活账户可领取免费兔币')
-      return
+    await loadData(app.loadUser,{},'加载用户信息')
+    if(user.isOk){
+      app.loadGlobalTask()
+      await this.loadData()
+      app.checkQuotaNotice('可用兔币不足，请及时处理')
+    }else{
+      if(!user.isActive){
+        app.showActiveNotice(true, '现在激活账户可领取免费兔币')
+        return
+      }
     }
     this.loadNotice()
   },
@@ -54,7 +58,6 @@ Page({
   },
 
   async loadData(forceUpdate?:boolean){
-    if(!user.isOk) return
     const {likeList, cateList} = await loadData(app.getHomeData,{forceUpdate},'加载卡片数据')
     
     const setData = {}
@@ -262,11 +265,20 @@ Page({
     return app.goCardListPage(tag)
   },
 
-  tapToCardDetail(e){
-    return app.goCardDetailPage(e.currentTarget.dataset.item._id)
+  async tapToCardDetail(e){
+    await app.checkQuotaNotice()
+    app.goCardDetailPage(e.currentTarget.dataset.item._id)
   },
 
   onBindRefresh(){
+    if(!user.isOk){
+      setTimeout(()=>{
+        this.setData({
+          isRefresh: false
+        })
+      },300)
+      return
+    }
     this.loadData(true).then(()=>{
       this.setData({
         isRefresh: false
