@@ -85,20 +85,5 @@ Page({
     this.setData({
       showExchangeDialog: true
     })
-  },
-
-  createTestCoupon(){
-    wx.cloud.callFunction({
-      name: 'admin',
-      data: {
-        action: 'app/createQuotaCoupon',
-        data: {
-          value: parseInt(this.data.code) || 100
-        }
-      }
-    }).then(({result})=>{
-      const code = (result as IAnyObject).data.code
-      app.setClipboardData(code)
-    })
   }
 })
