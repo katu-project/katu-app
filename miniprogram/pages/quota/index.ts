@@ -39,14 +39,13 @@ Page({
 
   tapToExchange(){
     this.hideExchangeDialog()
-    loadData(user.quotaExchange,{code:this.data.code}).then(async log=>{
+    loadData(user.quotaExchange,{code:this.data.code}).then(async ()=>{
       this.setData({
-        'quota.remain': log.remainQuota,
         code: ''
       })
-      await app.showNotice('兑换成功')
+      app.showNotice('兑换成功')
+      await user.reloadInfo()
       this.loadData()
-      user.reloadInfo()
     })
   },
 
