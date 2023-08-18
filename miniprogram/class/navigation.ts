@@ -1,5 +1,5 @@
 import Agent from "./agent";
-import { navigateTo, switchTab, navigateBack } from '@/utils/index'
+import { navigateTo, switchTab, navigateBack, openPrivacyContract } from '@/utils/index'
 
 export default class Navigation extends Agent {
 
@@ -111,8 +111,12 @@ export default class Navigation extends Agent {
     return this.navToDocPage(this.navDocMap.userUsageProtocol)
   }
 
-  openUserPrivacyProtocol(){
-    return this.navToDocPage(this.navDocMap.userPrivacyProtocol)
+  async openUserPrivacyProtocol(){
+    try {
+      await openPrivacyContract()
+    } catch (error) {
+      return this.navToDocPage(this.navDocMap.userPrivacyProtocol)
+    }
   }
 
   openDataSaveSecurityNoticeDoc(){

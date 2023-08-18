@@ -75,6 +75,12 @@ async function navigateBack(options?:{delta?: number}){
   wx.navigateBack({delta})
 }
 
+export async function openPrivacyContract(){
+  const func = args => wx.openPrivacyContract(args)
+  func.noLog = true
+  return toPromise(func, {})
+}
+
 async function switchTab(page:string, vibrate?:boolean){
   vibrate && wx.vibrateShort({
     type: 'light',
@@ -84,6 +90,7 @@ async function switchTab(page:string, vibrate?:boolean){
     url: page,
   })
 }
+
 type LoadDataOptions = {
   hideLoading: boolean,
   loadingTitle: string,

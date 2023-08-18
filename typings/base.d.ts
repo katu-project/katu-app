@@ -15,6 +15,10 @@ declare namespace WechatMiniprogram {
     _error: (...args) => void
     _table: (data:any) => void
   }
+  
+  interface Wx {
+    openPrivacyContract(args:any): unknown
+  }
 }
 
 declare namespace require {
