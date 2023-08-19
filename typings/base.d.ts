@@ -18,6 +18,7 @@ declare namespace WechatMiniprogram {
   
   interface Wx {
     openPrivacyContract(args:any): unknown
+    getPrivacySetting(args:any): unknown
   }
 }
 

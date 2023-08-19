@@ -1,6 +1,6 @@
 import Controller from '@/class/controller'
 import api from '@/api'
-import { showChoose, setClipboardData, sleep, file } from '@/utils/index'
+import { showChoose, setClipboardData, sleep, file, getPrivacySetting } from '@/utils/index'
 import { getCardManager } from './card'
 import { getUserManager } from './user'
 
@@ -372,6 +372,13 @@ class AppManager extends Controller {
       }
       this.showNotice(msg || '无可用兔币，无法查看卡片')
     })
+  }
+
+  async checkUserPrivacy(){
+    try {
+      return await getPrivacySetting()
+    } catch (_) {}
+    return
   }
 
   //数据

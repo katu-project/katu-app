@@ -81,6 +81,12 @@ export async function openPrivacyContract(){
   return toPromise(func, {})
 }
 
+export async function getPrivacySetting(){
+  const func = args => wx.getPrivacySetting(args)
+  func.noLog = true
+  return toPromise<{needAuthorization:boolean,privacyContractName:string}>(func, {})
+}
+
 async function switchTab(page:string, vibrate?:boolean){
   vibrate && wx.vibrateShort({
     type: 'light',
