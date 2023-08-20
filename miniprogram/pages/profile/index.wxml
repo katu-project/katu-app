@@ -50,7 +50,8 @@
     </view>
     <view class="action flex-row-sb padding">
       <button class="cu-btn round lines-red gfw" style="width: 200rpx;" bindtap="hideActiveNotice">不同意</button>
-      <button class="cu-btn round bg-red" bindtap="tapToActiveAccount" style="width: 200rpx;font-weight: 300;">同意并继续</button>
+      <!-- <button class="cu-btn round bg-red" bindtap="tapToActiveAccount" style="width: 200rpx;font-weight: 300;">同意并继续</button> -->
+      <button class="cu-btn round bg-red" style="width: 200rpx;font-weight: 300;" id="agree-btn" open-type="agreePrivacyAuthorization" bindagreeprivacyauthorization="tapToActiveAccount">同意并继续</button>
     </view>
   </view>
 </view>

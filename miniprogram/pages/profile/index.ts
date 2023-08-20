@@ -34,13 +34,6 @@ Page({
     }
     return this.showActiveInfo()
   },
-  
-  async tapToActiveAccount(){
-    await loadData(user.activeAccount, {}, '正在激活账号')
-    app.showNotice("激活成功")
-    this.reloadUserInfo()
-    this.hideActiveNotice()
-  },
 
   loadUserInfo(){
     this.setData({
@@ -82,7 +75,18 @@ Page({
   },
 
   tapToReadDoc(e){
-    app.navToDocPage(e.currentTarget.dataset.item.id)
+    const {title,id} = e.currentTarget.dataset.item
+    if(title == 'privacy'){
+      return app.openUserPrivacyProtocol()
+    }
+    return app.navToDocPage(id)
+  },
+
+  async tapToActiveAccount(){
+    await loadData(user.activeAccount, {}, '正在激活账号')
+    app.showNotice("激活成功")
+    this.reloadUserInfo()
+    this.hideActiveNotice()
   },
 
   async showActiveInfo(){
