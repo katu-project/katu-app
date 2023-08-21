@@ -381,6 +381,10 @@ class AppManager extends Controller {
     return
   }
 
+  async getUserPrivacyNotice(){
+    return api.getUserPrivacyInfo()
+  }
+
   //数据
   //清除缓存
   async clearCacheData(){
