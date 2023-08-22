@@ -26,6 +26,9 @@
       <view class="padding-lr-xs text-xl text-gray" bindtap="tapToReloadCard"> 
         <text class="cuIcon-refresh {{syncCheck?'iconfont-spin':''}}"></text>
       </view>
+      <view class="padding-lr-xs text-xl" bindtap="showActionDialog"> 
+        <text class="cuIcon-moreandroid"></text>
+      </view>
     </view>
     <view class="padding-top-sm"></view>
     <view class="tag-list text-cyan text-xl flex align-center">
@@ -60,20 +63,6 @@
       <text class="cuIcon-copy text-gray"></text>
     </view>
   </view>
-
-  <view class="padding-top flex justify-between align-center">
-    <button class="cu-btn text-red bg-red light gfw" bindtap="tapToDeleteCard">
-      <text class="cuIcon-delete margin-right-xs"></text>
-    删除</button>
-    <view style="width: 20rpx;"></view>
-    <button class="cu-btn text-green bg-cyan light gfw" disabled="{{!editable}}" bindtap="tapToEditCard">
-      <text class="cuIcon-edit margin-right-xs"></text>
-    修改</button>
-    <view style="width: 20rpx;"></view>
-    <button class="cu-btn text-green bg-olive light gfw" disabled="{{!shareable}}"  bindtap="tapToShowShareDialog">
-      <text class="cuIcon-share margin-right-xs"></text>
-    分享</button>
-  </view>
   <view class="padding-xl"></view>
 </view>
 
@@ -94,6 +83,17 @@
     </view>
     <view class="cu-bar bg-gray">
       <view class="action margin-0 flex-sub" bindtap="hideShareDialog">取消</view>
+    </view>
+  </view>
+</view>
+
+<view class="cu-modal bottom-modal {{ showActionDialog ?'show':''}}">
+  <view class="action-dialog cu-dialog">
+    <view class="padding">
+      <view catchtap="tapToEditCard" class="item text-lg solids-bottom">修改</view>
+      <view catchtap="tapToShowShareDialog" class="item text-lg solids-bottom">分享</view>
+      <view catchtap="tapToDeleteCard" class="item text-lg solids-bottom text-red">删除</view>
+      <view catchtap="hideActionDialog" class="item text-lg text-grey">取消</view>
     </view>
   </view>
 </view>

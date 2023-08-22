@@ -58,3 +58,11 @@
     }
   }
 }
+
+.action-dialog{
+  border-top-left-radius: 40rpx !important;
+  border-top-right-radius: 40rpx !important;
+  .item{
+    padding: 26rpx
+  }
+}

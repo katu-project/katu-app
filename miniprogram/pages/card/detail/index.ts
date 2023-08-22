@@ -211,6 +211,7 @@ Page({
 
   tapToEditCard(){
     this.chooseAction = 'edit'
+    this.hideActionDialog()
     return this._tapToEditCard()
   },
 
@@ -227,6 +228,7 @@ Page({
   },
 
   async tapToDeleteCard(){
+    this.hideActionDialog()
     await app.showConfirm("卡片删除后不可恢复！")
     loadData(cardManager.deleteCard, this.data.card).then(()=>{
       app.emit('cardDelete', this.data.card)
@@ -247,6 +249,7 @@ Page({
   },
 
   async tapToShowShareDialog(){
+    this.hideActionDialog()
     if(this.data.card.encrypted){
       if(this.data.card.image?.some(pic => pic._url === app.getConst('DefaultShowLockImage') )){
         app.showNotice('请先解密卡片内容')
@@ -319,6 +322,19 @@ Page({
   hideShareDialog(){
     this.setData({
       showShareDialog: false
+    })
+  },
+
+  // action list
+  showActionDialog(){
+    this.setData({
+      showActionDialog: true
+    })
+  },
+
+  hideActionDialog(){
+    this.setData({
+      showActionDialog: false
     })
   },
 

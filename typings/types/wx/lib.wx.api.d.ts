@@ -7544,7 +7544,7 @@ wx.getSetting({
          * - 'android': Android微信;
          * - 'windows': Windows微信;
          * - 'mac': macOS微信; */
-        platform: 'ios' | 'android' | 'windows' | 'mac'
+        platform: 'ios' | 'android' | 'windows' | 'mac' | 'devtools'
         /** 需要基础库： `2.7.0`
          *
          * 在竖屏正方向下的安全区域 */
