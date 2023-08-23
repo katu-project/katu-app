@@ -231,7 +231,7 @@ class CardManager extends Controller{
 
   async syncCheck(id){
     const cacheCard = await this.cache.getCard(id)
-    const remoteCard = await api.getCard({_id:id})
+    const remoteCard = await api.getCard({_id:id}).catch(console.log)
     return JSON.stringify(cacheCard) === JSON.stringify(remoteCard)
   }
 
