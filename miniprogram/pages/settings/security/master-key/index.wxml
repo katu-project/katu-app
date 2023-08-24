@@ -2,7 +2,7 @@
   <view slot="backText">返回</view>
   <view slot="content">主密码</view>
 </cu-custom>
-<view class="page">
+<view class="page" wx:if="{{false}}">
   <view class="padding flex-col justify-center align-center">
     <view class="bg-gray margin flex justify-center align-center" style="border-radius: 50%;height: 200rpx;width: 200rpx; border: 2px dashed {{setMasterKey?'green':'red'}};">
       <image mode="aspectFit" style="height: 100rpx;width: 100rpx;" src="/static/images/key.svg"></image>
@@ -52,3 +52,74 @@
     <view wx:else class="padding"></view>
   </view>
 </view>
+
+<view>
+  <view class="section">
+    <block wx:if="{{step===0}}">
+      <view class="desc padding flex flex-direction">
+        <text class="padding-tb">主密码用于<text class="text-green text-xxl"> 保护 </text>您的数据安全</text>
+        <text class="padding-tb">遗忘主密码将导致 <text class="text-red text-xl"> 数据丢失 </text></text>
+        <text class="padding-tb text-red text-xl">请务必牢记主密码！</text>
+      </view>
+      <view class="margin-top padding flex flex-direction">
+        <button class="cu-btn bg-green lg gfw" catchtap="tapToStartSetKey">{{setMasterKey?'修改主密码':'开始设置'}}</button>
+      </view>
+    </block>
+
+    <block wx:if="{{step===1 || step===2}}">
+      <view hidden="{{step===2}}" class="animation-{{backStep?'slide-left':'slide-right'}} section_header padding-tb flex flex-direction">
+        <text class="text-green text-xxl">输入{{setMasterKey?'新的':''}}主密码</text> 
+        <text class="padding-tb">密码要求为字母、数字的组合，不少于 <text class="text-red text-xxl">8</text> 位</text>
+      </view>
+
+      <view hidden="{{step===1}}" class="animation-slide-right section_header padding-tb flex flex-direction">
+        <text class="text-green text-xxl">再次输入主密码</text> 
+        <text class="padding-tb" style="visibility: hidden;">密码要求为字母、数字的组合，不少于 <text class="text-red text-xxl">8</text> 位</text>
+      </view>
+
+      <view class="padding-tb-xs line flex-row justify-center">
+        <text class="tips_section text-orange animation-{{tips?'shake':''}}">{{tips}}</text>
+      </view>
+
+      <view class='input_row' catchtap='getFocus'>
+        <view class='pwd_item'>
+          <text class="text adv" wx:for='{{key}}' wx:key='*this'></text>
+        </view>
+      </view>
+
+      <view wx:if="{{step==2}}" class="margin-top padding flex flex-direction">
+        <button class="cu-btn gfw" catchtap="tapToBackStep">回到上一步</button>
+      </view>
+
+    </block>
+  </view>
+
+  <view wx:if="{{step===3}}" class="section animation-slide-right">
+    <view class="section_header padding-tb flex flex-direction">
+      <text class="text-green text-xxl">确认{{setMasterKey?'修改成':'使用'}}该主密码?</text> 
+      <text class="padding-tb" style="visibility: hidden;">密码要求</text>
+    </view>
+
+    <view class="margin-top padding flex flex-direction">
+      <button class="cu-btn bg-green lg gfw" catchtap="tapToSetMasterKey">确认</button>
+    </view>
+  </view>
+
+</view>
+<input
+    class='input_control' 
+    password 
+    type="text" 
+    focus="{{focus}}"
+    value="{{key}}"
+    bindinput="checkKey"
+    confirm-hold="{{true}}"
+    bindconfirm="inputConfirm"
+    adjust-position="{{false}}"/>
+
+<input-key 
+  bind:confirm="inputKeyConfirm"
+  bind:tapSubBtn=""
+  tips="输入当前主密码："
+  result="{{inputKeyResult}}" 
+  show="{{showInputKey}}" />
