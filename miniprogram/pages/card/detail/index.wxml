@@ -99,8 +99,8 @@
 </view>
 
 <input-key 
+  tips="输入密码："
   bind:confirm="inputKeyConfirm"
   bind:tapSubBtn="tapToForgetKey"
-  tips="需要验证主密码："
   result="{{inputKeyResult}}" 
   show="{{showInputKey}}" />

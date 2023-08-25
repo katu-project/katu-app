@@ -1,6 +1,6 @@
 <view class="cu-modal bottom-modal {{display ? 'show' : ''}}" data-mask="true" catchtap="tapToHideModal" catchtouchmove="{{true}}">
   <view class="cu-dialog">
-    <view class='input_main' wx:if="{{display}}">
+    <view class='input_main'>
       <view class='input_title'>
         <view wx:if="{{state === 'loading'}}" class="text-xxl flex-row justify-center"> 
           <text class="cuIcon-loading text-green iconfont-spin"></text>
@@ -18,29 +18,22 @@
         <text>{{tips}}</text>
       </view>
       <view class='input_row' catchtap='getFocus'>
-        <block wx:if="{{advMode}}">
+
+        <block wx:if="{{inputMode === 'adv'}}">
           <view class='pwd_item adv'>
             <text class="text adv" wx:for='{{key}}' wx:key='*this'></text>
           </view>
         </block>
-        <block wx:else>
+
+        <block wx:if="{{inputMode === 'mini'}}">
           <view class='pwd_item' wx:for='{{6}}' wx:key='item' wx:for-index='i'>
             <text class="text" wx:if='{{key.length>i}}'></text>
           </view>
         </block>
+
       </view>
-      <view class='mode_change solids-bottom' catchtap='tapChangeMode'>{{advMode?'数字':'混合'}}输入</view>
-      <view class='forget_pwd' wx:if="{{showSubBtn || state === 'failed' }}" catchtap='tapSubBtn'>{{subBtnText}}</view>
-      <input
-          class='input_control' 
-          password 
-          type="{{advMode?'text':'number'}}" 
-          focus='{{focus}}'
-          value="{{key}}"
-          bindinput='checkKey'
-          confirm-hold="{{advMode}}"
-          bindconfirm="advConfirm"
-          adjust-position="{{false}}"/>
+      <view class='mode_change solids-bottom' hidden="{{!changeMode}}" catchtap='tapChangeMode'>切换输入模式</view>
+      <view class='forget_pwd' wx:if="{{showSubBtn && state === 'failed' }}" catchtap='tapSubBtn'>{{subBtnText}}</view>
       <view class="btn-row">
         <button class="cu-btn lg text-white bg-grey gfw cancel-btn" data-btn="true" catchtap="tapToHideModal">
           取消
@@ -49,3 +42,14 @@
     </view>
   </view>
 </view>
+
+<input
+  class='input_control' 
+  password 
+  type="{{inputMode === 'adv'?'text':'number'}}" 
+  focus='{{focus}}'
+  value="{{key}}"
+  bindinput='checkKey'
+  confirm-hold="{{inputMode === 'adv'}}"
+  bindconfirm="advConfirm"
+  adjust-position="{{false}}"/>

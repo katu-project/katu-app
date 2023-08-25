@@ -176,9 +176,7 @@ Page({
     app.loadMasterKeyWithKey(key).then(()=>{
       this.hideInputKey()
       this.oldKey = key
-      if(user.isSetMasterKey){
-        this.tapToStartSetKey()
-      }
+      this.tapToStartSetKey()
     }).catch(error=>{
       this.setData({
         inputKeyResult: error.message

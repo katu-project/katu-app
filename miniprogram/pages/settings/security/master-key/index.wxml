@@ -118,8 +118,12 @@
     adjust-position="{{false}}"/>
 
 <input-key 
+  tips="输入主密码："
   bind:confirm="inputKeyConfirm"
-  bind:tapSubBtn=""
-  tips="输入当前主密码："
+  inputMode="adv"
+  changeMode="{{false}}"
+  showSubBtn="{{setMasterKey}}"
+  subBtnText="忘记密码"
+  bind:tapSubBtn="tapToResetKey"
   result="{{inputKeyResult}}" 
   show="{{showInputKey}}" />

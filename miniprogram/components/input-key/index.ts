@@ -12,15 +12,19 @@ Component({
     },
     showSubBtn: {
       type: Boolean,
-      value: false
-    },
-    advMode: {
-      type: Boolean,
-      value: false
+      value: true
     },
     subBtnText: {
       type: String,
       value: '忘记密码'
+    },
+    inputMode: {
+      type: String,
+      value: 'mini'
+    },
+    changeMode: {
+      type: Boolean,
+      value: true
     },
     result: {
       type: String,
@@ -31,7 +35,7 @@ Component({
   data: {
     display: false,
     key: '',
-    focus: false, //文本框焦点
+    focus: false,
     state: ''
   },
 
@@ -96,7 +100,7 @@ Component({
     },
 
     advConfirm(){
-      if(!this.data.advMode) return
+      if(this.data.inputMode !== 'adv') return
       if(this.data.state === 'loading') return
       this.setData({
         state: 'loading'
@@ -107,10 +111,10 @@ Component({
     },
 
     tapChangeMode(){
-      this.setData({ 
-        advMode: !this.data.advMode
-      })
       this.resetData()
+      this.setData({ 
+        inputMode: this.data.inputMode === 'adv' ? 'mini' : 'adv'
+      })
     },
 
     checkKey(e){
@@ -122,7 +126,7 @@ Component({
         })
         return
       }
-      if(this.data.advMode){
+      if(this.data.inputMode === 'adv'){
         this.setData({
           key: key
         })
