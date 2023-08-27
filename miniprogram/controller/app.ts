@@ -125,6 +125,20 @@ class AppManager extends Controller {
     return api.setMasterKeyInfo(masterKeyPack)
   }
 
+  async createMiniKey({masterKey, miniKey}:{masterKey: string, miniKey:string}){
+    if(!masterKey || !miniKey) throw Error('出错了！')
+    const randomHexString = await this.crypto.randomHexString(12)
+    const hexCode = this.crypto.convertToHexString(`${miniKey}${randomHexString}`)
+    const masterKeyHexCode = this.crypto.convertToHexString(masterKey, this.user.ccv)
+    const miniKeyPack = await this.crypto.createCommonKeyPack(hexCode, masterKeyHexCode)
+    const miniKeySaveData = JSON.stringify({
+      rk: randomHexString,
+      keyPack: miniKeyPack
+    })
+    const miniKeySaveDataPath = await this.getRootPath('mini.key')
+    await file.writeFile(miniKeySaveDataPath, miniKeySaveData)
+  }
+
   async updateUserMasterKey({key, newKey}){
     const hexCode = this.crypto.convertToHexString(key, this.user.ccv)
     const newHexCode = this.crypto.convertToHexString(newKey, this.user.ccv)
@@ -150,9 +164,24 @@ class AppManager extends Controller {
 
   // 用户主密码导出原始主密码
   async loadMasterKeyWithKey(key:string){
-    this.checkMasterKeyFormat(key)
-    const hexCode = this.crypto.convertToHexString(key, this.user.ccv)
     if(!this.user.masterKeyPack?.keyPack) throw Error('未设置主密码')
+    
+    let hexCode = ''
+    if(this.user.useMiniKey && key.length === 6){
+      const miniKeySaveDataPath = await this.getRootPath('mini.key')
+      let miniKeyHexCode, keyPack
+      try {
+        const keyPackJson = JSON.parse(await file.readFile<string>(miniKeySaveDataPath))
+        miniKeyHexCode = this.crypto.convertToHexString(`${key}${keyPackJson.rk}`)
+        keyPack = keyPackJson.keyPack
+      } catch (error) {
+        throw Error('快速密码不可用，请使用主密码!')
+      }
+      hexCode = await this.crypto.fetchKeyFromKeyPack(keyPack.keyPack, miniKeyHexCode)
+    }else{
+      this.checkMasterKeyFormat(key)
+      hexCode = this.crypto.convertToHexString(key, this.user.ccv)
+    }
     const masterKey = await this.crypto.fetchKeyFromKeyPack(this.user.masterKeyPack.keyPack, hexCode)
     this.setMasterKey(masterKey)
   }
@@ -164,6 +193,11 @@ class AppManager extends Controller {
   async clearMasterKey(){
     this.setMasterKey('')
     return this.cache.deleteMasterKey()
+  }
+
+  async clearMiniKey(){
+    this.setMasterKey('')
+    return this.cache.deleteMiniKey()
   }
 
   async cacheMasterKey(){

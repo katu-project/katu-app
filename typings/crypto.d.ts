@@ -5,11 +5,19 @@ type HashType = 'MD5' | 'SHA1' | 'SHA256'
 type CpkVersion = 'v0'
 
 type CommonCryptoVersion = 'v0' | 'v1'
-interface IMasterKeyPack {
+
+interface IKeyPack {
   keyPack: string
   keyId: string
   hexKeyId: string
   ccv: CommonCryptoVersion
+}
+interface IMasterKeyPack extends IKeyPack {
+  
+}
+
+interface IMiniKeyPack extends IKeyPack {
+  
 }
 
 interface IRecoveryKeyPack {

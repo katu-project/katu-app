@@ -28,6 +28,7 @@ interface IUser {
     },
     security: {
       lockOnExit: boolean
+      useMiniKey: boolean
       rememberPassword: boolean
       setRecoveryKey: boolean
     }

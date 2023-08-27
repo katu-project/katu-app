@@ -20,6 +20,7 @@
     "pages/settings/data/index",
     "pages/settings/security/index",
     "pages/settings/security/master-key/index",
+    "pages/settings/security/mini-key/index",
     "pages/settings/account/index",
     "pages/settings/general/index",
     "pages/settings/security/recovery-key/index",

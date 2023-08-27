@@ -1,0 +1,36 @@
+<cu-custom bgColor="bg-cyan" isBack="{{true}}">
+  <view slot="backText">返回</view>
+  <view slot="content">快速密码</view>
+</cu-custom>
+
+<view class="cu-list menu sm-border card-menu margin-top">
+  <view class="cu-item">
+    <view class="content">
+    <text>快速密码</text>
+    </view>
+    <view class="action">
+      <switch class="sm" bindchange="tapToUseMiniKey" checked="{{useMiniKey}}"></switch>
+    </view>
+  </view>
+  <view class="padding bg-white text-grey text-sm">启用/取消快速密码 <text class="cuIcon-question text-green" bindtap="tapToOpenDoc"></text></view>
+
+  <view class="cu-item" wx:if="">
+    <view class="content">
+    <text>多端同步</text>
+    </view>
+    <view class="action">
+      <switch class="sm" disabled="{{!useMiniKey}}" bindchange="" checked="{{syncMiniKey}}"></switch>
+    </view>
+  </view>
+  <view  wx:if="" class="padding bg-white text-grey text-sm">快速密码在各个客户端生效</view>
+</view>
+
+<input-key 
+  bind:confirm="inputKeyConfirm"
+  bind:tapSubBtn="tapToResetKey"
+  showSubBtn="{{inputKeyShowSubBtn}}"
+  changeMode="{{false}}"
+  tips="{{tips}}"
+  inputMode="{{inputMode}}"
+  result="{{inputKeyResult}}" 
+  show="{{showInputKey}}" />

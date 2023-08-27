@@ -51,6 +51,7 @@ interface IDocConfig {
     dataSaveSecurityNotice: string
     dataCheckNotice: string
     tagConflictHelp: string
+    miniKeyNotice: string
   }
 }
 

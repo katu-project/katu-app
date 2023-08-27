@@ -147,6 +147,10 @@ export default class Navigation extends Agent {
     return this.navToDocPage(this.navDocMap.masterKeyNotice)
   }
 
+  openMiniKeyNotice(){
+    return this.navToDocPage(this.navDocMap.miniKeyNotice)
+  }
+
   openForgetKeyNotice(){
     return this.navToDocPage(this.navDocMap.forgetKeyNotice)
   }

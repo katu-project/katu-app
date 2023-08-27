@@ -59,6 +59,11 @@ class Cache extends Module {
     this.deleteLocalData('MASTER_KEY_CACHE_KEY')
   }
 
+  async deleteMiniKey(){
+    const keyPath = await this.getRootPath('mini.key')
+    await file.deleteFile(keyPath).catch(console.error)
+  }
+
   // home data cache
   async getHomeData(){
     const homeDataCache = await this.getLocalData<IHomeDataCache>('HOME_DATA_CACHE_KEY')

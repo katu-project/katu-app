@@ -46,6 +46,10 @@ export default class User extends Controller {
     return this.user.setMasterKey || false
   }
 
+  get useMiniKey(){
+    return this.user.config?.security.useMiniKey
+  }
+
   get masterKeyPack(){
     return this.user.masterKeyPack
   }
@@ -147,7 +151,7 @@ export default class User extends Controller {
     this._tags = await api.getUserTag()
   }
 
-  async applyConfig(configItem:{key:string,value:string}){
+  async applyConfig(configItem:{key:string,value:string|boolean}){
     try {
       await api.updateUserConfig(configItem)
       return this.objectSetValue(this.user, configItem.key, configItem.value)

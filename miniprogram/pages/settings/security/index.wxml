@@ -16,6 +16,15 @@
     </view>
     <view class="padding bg-white text-grey text-sm">访问加密数据的唯一密钥</view>
 
+    <view class="cu-item arrow" bindtap="tapToPage" data-page="settings/security/mini-key/index">
+      <view class="content">
+        <text class="">快速密码</text>
+      </view>
+      <view class="action">
+      </view>
+    </view>
+    <view class="padding bg-white text-grey text-sm">代替复杂主密码使用</view>
+
     <view class="cu-item arrow" bindtap="tapToPage" data-page="settings/security/recovery-key/index">
       <view class="content">
         <text class="">主密码备份</text>
