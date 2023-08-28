@@ -44,12 +44,13 @@
 </view>
 
 <input
+  wx:if="{{focus}}"
   class='input_control' 
   password 
   type="{{inputMode === 'adv'?'text':'number'}}" 
   focus='{{focus}}'
   value="{{key}}"
   bindinput='checkKey'
-  confirm-hold="{{inputMode === 'adv'}}"
+  confirm-hold="{{true}}"
   bindconfirm="advConfirm"
   adjust-position="{{false}}"/>

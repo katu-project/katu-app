@@ -1,3 +1,7 @@
+import { getUserManager } from "@/controller/user";
+
+const user = getUserManager()
+
 Component({
   options: {
   },
@@ -20,7 +24,7 @@ Component({
     },
     inputMode: {
       type: String,
-      value: 'mini'
+      value: ''
     },
     changeMode: {
       type: Boolean,
@@ -42,9 +46,12 @@ Component({
   observers:{
     'show': function(v){
       if(v){
-        this.showModal(v);
+        const inputMode = this.data.inputMode ? this.data.inputMode : (user.useMiniKey ? 'mini' : 'adv')
+        this.showModal(v, inputMode);
       }else{
-        this.hideModal()
+        if(this.data.display){
+          this.hideModal()
+        }
       }
     },
     'result': function(v){
@@ -62,6 +69,7 @@ Component({
       this.setData({
         focus: false,
         key: '',
+        show: false,
         state: ''
       })
     },
@@ -73,12 +81,13 @@ Component({
       this.resetData()
     },
 
-    showModal(v){
+    showModal(v, inputMode='mini'){
       this.setData({ 
         display: v,
         key: '',
-        focus: true
+        inputMode
       })
+      this.getFocus()
     },
 
     tapSubBtn(){
@@ -94,6 +103,9 @@ Component({
     },
 
     getFocus(){
+      this.setData({ 
+        focus: false 
+      });
       this.setData({ 
         focus: true 
       });
@@ -111,8 +123,9 @@ Component({
     },
 
     tapChangeMode(){
-      this.resetData()
       this.setData({ 
+        key: '',
+        state: '',
         inputMode: this.data.inputMode === 'adv' ? 'mini' : 'adv'
       })
     },
