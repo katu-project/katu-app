@@ -98,6 +98,10 @@ export default class Core extends Base {
     return this.getFilePath(this.getConst('APP_ROOT_DIR'), fileName)
   }
 
+  async getMiniKeyPath(keyId: string) {
+    return this.getFilePath(this.getConst('APP_MINI_KEY_DIR'), keyId)
+  }
+
   async getImageFilePath(image: Pick<ICardImage, 'url'>) {
     let checkUrl = image.url
      // 分享的卡片连接是http，需要移除请求参数

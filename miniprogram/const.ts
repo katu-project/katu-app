@@ -7,6 +7,7 @@ export const DefaultShareImage = '/static/share.png'
 export const WX_CLOUD_STORAGE_FILE_HEAD = 'cloud://'
 
 export const APP_ROOT_DIR = `${wx.env.USER_DATA_PATH}/katu`
+export const APP_MINI_KEY_DIR = `${APP_ROOT_DIR}/mini-key`
 export const APP_TEMP_DIR = `${APP_ROOT_DIR}/temp`
 export const APP_DOWN_DIR = `${APP_ROOT_DIR}/down`
 export const APP_IMAGE_DIR = `${APP_ROOT_DIR}/image`
@@ -43,6 +44,7 @@ export default {
   DefaultUserAvatar,
   APP_ROOT_DIR,
   APP_TEMP_DIR,
+  APP_MINI_KEY_DIR,
   APP_DOWN_DIR,
   APP_IMAGE_DIR,
   // STANDARD_CARD_DATA,
