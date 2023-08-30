@@ -11,6 +11,7 @@ Page({
   originData: {} as ICard,
   data: {
     edit: false,
+    useDefaultTag: true,
     card: {
       encrypted: false,
       title: '卡片名称1',
@@ -111,15 +112,12 @@ Page({
 
   applyUserSetting(){
     if(user.isActive){
-      const setData = {
-        'card.encrypted': false,
-        useDefaultTag: true
-      }
+      const setData = {}
       if(user.config?.general.defaultUseEncrytion){
         setData['card.encrypted'] = true
       }
       if(!user.config?.general.useDefaultTag){
-        setData.useDefaultTag = false
+        setData['useDefaultTag'] = false
       }
       this.setData(setData)
     }
