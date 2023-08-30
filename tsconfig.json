@@ -27,7 +27,8 @@
     }
   },
   "include": [
-    "./**/*.ts"
+    "./miniprogram/**/*.ts",
+    "./typings"
   ],
   "exclude": [
     "node_modules"
