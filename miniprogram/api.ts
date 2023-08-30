@@ -73,6 +73,8 @@ export default {
 
   setMasterKeyInfo: keyPack => request('user/setMasterKey',{keyPack}),
 
+  setUserMiniKeyInfo: (data?:any) => request('user/setMiniKey',data),
+
   setRecoveryKey: keyPack => request('user/setRecoveryKey',{keyPack}),
 
   // card

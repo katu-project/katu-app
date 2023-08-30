@@ -50,8 +50,16 @@ export default class User extends Controller {
     return this.user.config?.security.useMiniKey
   }
 
+  get useSyncMiniKey(){
+    return this.user.config?.security.useSyncMiniKey
+  }
+
   get masterKeyPack(){
     return this.user.masterKeyPack
+  }
+
+  get miniKeyPack(){
+    return this.user.miniKeyPack
   }
 
   get recoveryKeyPack(){

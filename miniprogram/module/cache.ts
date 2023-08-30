@@ -60,8 +60,7 @@ class Cache extends Module {
   }
 
   async deleteMiniKey(){
-    const keyPath = await this.getRootPath('mini.key')
-    await file.deleteFile(keyPath).catch(console.error)
+    await file.rmdir(this.getConst('APP_MINI_KEY_DIR'), true).catch(console.error)
   }
 
   // home data cache

@@ -14,22 +14,22 @@
   </view>
   <view class="padding bg-white text-grey text-sm">启用/取消快速密码 <text class="cuIcon-question text-green" bindtap="tapToOpenDoc"></text></view>
 
-  <view class="cu-item" wx:if="">
+  <view class="cu-item">
     <view class="content">
     <text>多端同步</text>
     </view>
     <view class="action">
-      <switch class="sm" disabled="{{!useMiniKey}}" bindchange="" checked="{{syncMiniKey}}"></switch>
+      <switch class="sm" disabled="{{!useMiniKey}}" bindchange="tapToSetSync" checked="{{syncMiniKey}}"></switch>
     </view>
   </view>
-  <view  wx:if="" class="padding bg-white text-grey text-sm">快速密码在各个客户端生效</view>
+  <view class="padding bg-white text-grey text-sm">快速密码可以在不同客户端使用</view>
 </view>
 
 <input-key 
   bind:confirm="inputKeyConfirm"
   bind:tapSubBtn="tapToResetKey"
   showSubBtn="{{inputKeyShowSubBtn}}"
-  changeMode="{{false}}"
+  changeMode="{{changeMode}}"
   tips="{{tips}}"
   inputMode="{{inputMode}}"
   result="{{inputKeyResult}}" 

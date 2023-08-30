@@ -8,6 +8,10 @@ interface IUser {
   status: number
   setMasterKey: boolean
   masterKeyPack: IMasterKeyPack
+  miniKeyPack: {
+    syncId: string,
+    pack: string
+  },
   recoveryKeyPack: IRecoveryKeyPack
   quota: {
     remain: number
@@ -29,6 +33,7 @@ interface IUser {
     security: {
       lockOnExit: boolean
       useMiniKey: boolean
+      useSyncMiniKey: boolean
       rememberPassword: boolean
       setRecoveryKey: boolean
     }

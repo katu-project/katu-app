@@ -102,5 +102,7 @@
   tips="输入密码："
   bind:confirm="inputKeyConfirm"
   bind:tapSubBtn="tapToForgetKey"
+  changeMode="{{changeMode}}"
+  inputMode="{{inputMode}}"
   result="{{inputKeyResult}}" 
   show="{{showInputKey}}" />

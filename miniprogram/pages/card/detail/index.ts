@@ -17,7 +17,9 @@ Page({
   },
   data: {
     showInputKey: false,
+    inputMode: '',
     inputKeyResult: '',
+    changeMode: true,
     card: {
       title: '',
       tags: [],
@@ -64,6 +66,7 @@ Page({
       return
     }
 
+    await this.checkSyncMiniKey()
     await this.loadData()
     this.dataSyncCheck()
   },
@@ -116,6 +119,21 @@ Page({
     if(this.data.card.encrypted && this.data.card.image?.some(e=>e._url === app.getConst('DefaultShowLockImage'))){
       if(this.data.card.encrypted && user.config?.general.autoShowContent){
         this.showEncryptedImage()
+      }
+    }
+  },
+
+  async checkSyncMiniKey(){
+    try {
+      await app.checkMiniKey()
+    } catch (error) {
+      const { confirm } = await app.showChoose('已启用多端同步，同步快速密码？')
+      if(confirm){
+        this.syncMiniKey = true
+        this.showInputKey({
+          inputMode: 'adv',
+          changeMode: false
+        })
       }
     }
   },
@@ -176,7 +194,7 @@ Page({
     this.showEncryptedImage()
   },
 
-  async showEncryptedImage(){       
+  async showEncryptedImage(){    
     try {
       app.checkMasterKey()
     } catch (error:any) {
@@ -189,10 +207,10 @@ Page({
     }
    
     const card = await loadData(
-                      cardManager.getCard, 
-                      {id: this.id, key:app.masterKey}, 
-                      '读取卡面数据'
-                      )
+      cardManager.getCard, 
+      {id: this.id, key:app.masterKey}, 
+      '读取卡面数据'
+    )
     
     const setData = {
       [`card.image`]: card.image,
@@ -272,8 +290,13 @@ Page({
 
   inputKeyConfirm(e){
     const key = e.detail.value
-    app.loadMasterKeyWithKey(key).then(()=>{
+    app.loadMasterKeyWithKey(key).then(async ()=>{
       this.hideInputKey()
+      if(this.syncMiniKey){
+        await loadData(app.syncMiniKey)
+        await app.showNotice('快速密码同步成功')
+        this.syncMiniKey = false
+      }
       if(this.chooseAction){
         if(this.chooseAction === 'edit'){
           this._tapToEditCard()
@@ -290,9 +313,10 @@ Page({
     })
   },
 
-  showInputKey(){
+  showInputKey(options){
     this.setData({
-      showInputKey: true
+      showInputKey: true,
+      ...options
     })
   },
 
