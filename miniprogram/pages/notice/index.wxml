@@ -1,24 +1,44 @@
 <cu-custom bgColor="bg-cyan" isBack="{{true}}">
   <view slot="backText">返回</view>
-  <view slot="content">通知</view>
+  <view slot="content">消息中心</view>
 </cu-custom>
-<view class="padding-top"></view>
-<view wx:for="{{sysList}}" wx:key="_id">
-  <view class="flex-row justify-center">
-    <text class="text-gray">{{item.createTime}}</text>
-  </view>
-  <view class="cu-card dynamic">
-    <view class="cu-item shadow" style="background-color: ghostwhite;">
-      <view class="padding flex-row align-center">
-        <text class="cu-avatar round cuIcon-notification bg-cyan light"></text>
-        <text class="padding-left text-lg">{{item.title}}</text>
-      </view>
-      <view class="flex-row justify-center">
-        <view style="width: 85vw;height: 1rpx;background-color: rgb(160, 156, 156);"></view>
-      </view>
-      <view class="padding" style="color: darkslategray;">
-        <rich-text nodes="{{item.content}}"/>
-      </view>
+<view class="bg-white nav">
+  <view class="flex text-center">
+    <view class="cu-item flex-sub {{ curTab == 'sys' ? 'text-orange cur':''}}" bindtap="changeTab" data-tab="sys">
+      系统
+    </view>
+    <view class="cu-item flex-sub {{ curTab == 'user' ? 'text-orange cur':''}}" bindtap="changeTab" data-tab="user">
+      我的
     </view>
   </view>
 </view>
+<view class="padding-bottom-xs"></view>
+<scroll-view
+    scroll-y
+    refresher-enabled
+    show-scrollbar="{{false}}"
+    bindrefresherrefresh="onBindRefresh"
+    refresher-triggered="{{isRefresh}}"
+    >
+  <view style="min-height:80vh">
+    <view wx:for="{{list}}" wx:key="_id">
+      <view class="flex-row justify-center">
+        <text class="text-gray">{{item.createTime}}</text>
+      </view>
+      <view class="cu-card dynamic">
+        <view class="cu-item shadow" style="background-color: ghostwhite;">
+          <view class="padding flex-row align-center">
+            <text class="cu-avatar round cuIcon-notification bg-cyan light"></text>
+            <text class="padding-left text-lg">{{item.title}}</text>
+          </view>
+          <view class="flex-row justify-center">
+            <view style="width: 85vw;height: 1rpx;background-color: rgb(160, 156, 156);"></view>
+          </view>
+          <view class="padding" style="color: darkslategray;">
+            <rich-text nodes="{{item.content}}"/>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</scroll-view>

@@ -3,20 +3,40 @@ import { loadData } from '@/utils/index'
 const app = getAppManager()
 
 Page({
+  notices: {
+    sys: [],
+    user: []
+  },
   data: {
-    sysList: []
+    curTab: 'sys',
+    list: []
   },
-  onShow(){
-    this.loadData()
+
+  async onShow(){
+    await this.loadData()
+    this.setData({
+      list: this.notices[this.data.curTab]
+    })
   },
+
   async loadData(){
-    const notices = await loadData(app.getNotices,{})
-    notices.sys.map(e=>e.createTime = e.createTime.slice(0,10))
-    const setData = {}
-    setData['sysList'] = notices.sys
-    this.setData(setData)
+    this.notices = await loadData(app.getNotices,{})
   },
-  tapToDetail({currentTarget:{dataset:{key}}}){
-    app.navToDocPage(key)
+
+  onBindRefresh(){
+    this.loadData().then(()=>{
+      this.setData({
+        isRefresh: false,
+        list: this.notices[this.data.curTab]
+      })
+    })
+  },
+
+  changeTab(e){
+    const tab = e.currentTarget.dataset.tab
+    this.setData({
+      curTab: tab,
+      list: this.notices[tab]
+    })
   }
 })
