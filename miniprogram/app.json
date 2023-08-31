@@ -26,7 +26,6 @@
     "pages/settings/security/recovery-key/index",
     "pages/settings/security/reset-key/index",
     "pages/settings/security/reset-key/qrcode/index",
-    "pages/settings/account/bind-tel/index",
     "pages/settings/adv/index",
     "pages/share/index",
     "pages/about/contact/index",
