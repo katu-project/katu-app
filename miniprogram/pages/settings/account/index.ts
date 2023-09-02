@@ -23,7 +23,14 @@ Page({
     this.setData(setData)
   },
 
-  tapToPage({currentTarget:{dataset:{page}}}){
+  async tapToPage({currentTarget:{dataset:{page}}}){
+    if(page === 'bind-tel'){
+      const {cancel} = await app.showChoose('请在卡兔网页服务端操作',{cancelText:'查看帮助'})
+      if(cancel){
+        app.openBindTelDoc()
+      }
+      return
+    }
     app.goToPage(page)
   },
 

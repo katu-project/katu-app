@@ -52,6 +52,7 @@ interface IDocConfig {
     dataCheckNotice: string
     tagConflictHelp: string
     miniKeyNotice: string
+    bindTelNotice: string
   }
 }
 

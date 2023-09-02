@@ -11,7 +11,8 @@ const DocConfig:IDocConfig = {
     dataSaveSecurityNotice: '6d85a2b9628b54c1063d7b093f152106',
     dataCheckNotice: '534fc1e163b68f2700197d67754d9673',
     tagConflictHelp: '70d5158164b92ed10000777b1d35f76b',
-    miniKeyNotice: 'f5b547c464e781d902633d7028193320'
+    miniKeyNotice: 'f5b547c464e781d902633d7028193320',
+    bindTelNotice: '490d8cae64f0468d00029c09517bb7b6'
   }
 }
 

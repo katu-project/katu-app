@@ -158,5 +158,9 @@ export default class Navigation extends Agent {
   openTagConflictDoc(){
     return this.navToDocPage(this.navDocMap.tagConflictHelp)
   }
+
+  openBindTelDoc(){
+    return this.navToDocPage(this.navDocMap.bindTelNotice)
+  }
   // open app doc end
 }
