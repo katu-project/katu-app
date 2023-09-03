@@ -125,7 +125,7 @@ class AppManager extends Controller {
   }
   // user section
   async setUserMasterKey(key: string){
-    const hexCode = this.crypto.convertToHexString(key)
+    const hexCode = this.crypto.convertToHexString(key, this.user.ccv)
     const masterKeyPack = await this.crypto.createCommonKeyPack(hexCode)
     return api.setMasterKeyInfo(masterKeyPack)
   }
@@ -133,7 +133,7 @@ class AppManager extends Controller {
   async createMiniKey({miniKey}:{miniKey:string}){
     if(!this.userKey || !miniKey) throw Error('出错了！')
     const randomHexString = await this.crypto.randomHexString(12)
-    const hexCode = this.crypto.convertToHexString(`${miniKey}${randomHexString}`)
+    const hexCode = this.crypto.convertToHexString(`${miniKey}${randomHexString}`, this.user.ccv)
     const masterKeyHexCode = this.crypto.convertToHexString(this.userKey, this.user.ccv)
     const miniKeyPack = await this.crypto.createCommonKeyPack(hexCode, masterKeyHexCode)
     const miniKeySaveData = JSON.stringify({
@@ -219,7 +219,7 @@ class AppManager extends Controller {
       let miniKeyHexCode, keyPack
       try {
         const keyPackJson = JSON.parse(await file.readFile<string>(miniKeySaveDataPath))
-        miniKeyHexCode = this.crypto.convertToHexString(`${key}${keyPackJson.rk}`)
+        miniKeyHexCode = this.crypto.convertToHexString(`${key}${keyPackJson.rk}`, this.user.ccv)
         keyPack = keyPackJson.keyPack
       } catch (error) {
         throw Error('快速密码不可用，请使用主密码!')
