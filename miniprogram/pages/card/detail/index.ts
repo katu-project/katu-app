@@ -356,6 +356,11 @@ Page({
     })
   },
 
+  tapToHideActionDialog(e){
+    if(!e.target.dataset.close) return
+    this.hideActionDialog()
+  },
+
   hideActionDialog(){
     this.setData({
       showActionDialog: false
