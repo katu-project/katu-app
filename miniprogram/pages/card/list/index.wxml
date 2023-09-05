@@ -75,8 +75,8 @@
         <text class="cuIcon-copy text-cyan margin-right-xl" data-idx="{{index}}" bindtap="tapToCopyValue"></text>
       </view>
       <view wx:if="{{isCredit}}" class="padding-left padding-tb-xs flex-row align-center">
-          <view class="padding-right">
-            CVV : <text class="bg-gray light text-lg padding-xs radius">{{item.cvv || '???'}}</text>
+          <view class="padding-right padding-xs">
+            验证码(cvv) : <text class="text-xl radius text-block padding-left-xs" style="vertical-align: middle;">{{item.cvv || '***'}}</text>
           </view>
       </view>
     </view>
