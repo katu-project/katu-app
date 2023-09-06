@@ -4,17 +4,22 @@ const app = getAppManager()
 
 Page({
   data: {
-    list: []
+    list: [],
+    webUrl: 'https://katucloud.com/change-log'
   },
+
   onLoad() {
 
   },
+
   onReady() {
     
   },
+
   onShow() {
     this.loadData()
   },
+
   loadData(){
     loadData(app.getChangeLog).then(list=>{
       this.setData({
@@ -24,5 +29,9 @@ Page({
         })
       })
     })
+  },
+
+  tapToCopy(){
+    app.setClipboardData(this.data.webUrl)
   }
 })
