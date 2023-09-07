@@ -1,1 +1,11 @@
-/* pages/profile/edit/index.wxss */
+.user-avatar {
+    border: 1px solid rgb(158, 184, 184);
+    padding: 1rpx;
+    .image{
+        height:200rpx;
+        width:200rpx;
+    }
+}
+.nickname {
+    border-bottom: 1rpx solid darkcyan;
+}
