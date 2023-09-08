@@ -8,7 +8,7 @@
     <image class="image br-16" src="{{avatar}}" mode="aspectFit"></image>
   </view>
 
-  <button class="cu-btn line-cyan margin-top" style="width: 200rpx;" open-type="chooseAvatar" bindchooseavatar="onBindChooseAvatar">编辑头像</button>
+  <button class="cu-btn line-cyan margin-top w-200" open-type="chooseAvatar" bindchooseavatar="onBindChooseAvatar">更改头像</button>
   
   <view class="cu-form-group margin-top">
 		<view class="nickname">

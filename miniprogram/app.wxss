@@ -59,6 +59,10 @@ page {
   border-radius: 16rpx;
 }
 
+.w-200{
+  width: 200rpx !important;
+}
+
 .card {
   width: 700rpx;
   height: 440rpx;

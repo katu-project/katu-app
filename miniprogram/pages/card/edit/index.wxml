@@ -20,7 +20,7 @@
   <view class="action-list">
     <view class="flex-row-sb align-center">
       <switch class="switch-lock" disabled="{{card._id}}" bindtap="tapToShowEncryptChangeNotice" bindchange="onBindCryptModeChange" checked="{{card.encrypted}}"></switch>
-      <button class="cu-btn line-{{card.image.length==1?'cyan':'orange'}} add-card-pic margin-lr-sm" style="width: 200rpx;margin: unset;" bindtap="addCardPic">
+      <button class="cu-btn line-{{card.image.length==1?'cyan':'orange'}} add-card-pic margin-lr-sm w-200" style="margin: unset;" bindtap="addCardPic">
         <view class="text-df" style="white-space:nowrap">
           <text class="{{card.image.length==1?'cuIcon-add text-cyan':'cuIcon-move text-orange'}}">{{card.image.length==1?' 添加':' 移除'}}卡面</text>
         </view>

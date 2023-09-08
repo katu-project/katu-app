@@ -43,9 +43,9 @@
     </view>
     <view class="cu-bar bg-white justify-end">
       <view class="action">
-        <button class="cu-btn line-green text-green gfw" style="width: 200rpx;" data-key="showDialogCreateTag" bindtap="tapToHideDialog">取消</button>
+        <button class="cu-btn line-green text-green gfw w-200" data-key="showDialogCreateTag" bindtap="tapToHideDialog">取消</button>
         <view class="padding-left-sm"></view>
-        <button class="cu-btn bg-green margin-left gfw" style="width: 200rpx;" bindtap="tapToSaveTag">确定</button>
+        <button class="cu-btn bg-green margin-left gfw w-200" bindtap="tapToSaveTag">确定</button>
       </view>
     </view>
   </view>
