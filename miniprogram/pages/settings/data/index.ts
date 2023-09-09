@@ -4,23 +4,24 @@ const app = getAppManager()
 
 Page({
   data: {
-    user: app.user
-
   },
+
   onLoad() {
 
   },
+
   onReady() {
 
   },
+
   onShow() {
 
   },
+
   tapToExportData(){
-    loadData().then(()=>{
-      app.exportCardData()
-    })
+    loadData(app.exportCardData, {})
   },
+  
   async tapToClearCacheData(){
     await app.showConfirm('确认清空缓存数据？')
     await loadData(app.clearCacheData)

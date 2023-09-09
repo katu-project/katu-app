@@ -506,7 +506,7 @@ class AppManager extends Controller {
   }
 
   //数据备份
-  exportCardData(){
+  async exportCardData(){
     this.showNotice('由于平台限制\n导出数据需前往卡兔web端操作。')
   }
 
