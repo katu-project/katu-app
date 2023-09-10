@@ -59,6 +59,10 @@ page {
   border-radius: 16rpx;
 }
 
+.w-150{
+  width: 150rpx !important;
+}
+
 .w-200{
   width: 200rpx !important;
 }

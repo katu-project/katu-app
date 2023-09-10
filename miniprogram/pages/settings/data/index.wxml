@@ -10,7 +10,7 @@
     <text class="">删除缓存数据</text>
     </view>
     <view class="action">
-      <button class="cu-btn line-red light gfw" bindtap="tapToClearCacheData" style="width: 150rpx">
+      <button class="cu-btn line-red light gfw w-150" bindtap="tapToClearCacheData">
         清除</button>
     </view>
   </view>
@@ -21,7 +21,7 @@
     <text class="">导出卡片数据</text>
     </view>
     <view class="action">
-      <button class="cu-btn round line-green light gfw" bindtap="tapToExportData" style="width: 150rpx">
+      <button class="cu-btn round line-green light gfw w-150" bindtap="tapToExportData">
         <text class="cuIcon-down"></text> 导出</button>
     </view>
   </view>

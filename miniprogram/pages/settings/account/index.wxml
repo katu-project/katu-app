@@ -30,7 +30,7 @@
         <text class="text-black">删除账户</text>
       </view>
       <view class="action">
-        <button class="cu-btn round line-red light gfw" bindtap="tapToDeleteAccount" style="width: 150rpx">
+        <button class="cu-btn round line-red light gfw w-150" bindtap="tapToDeleteAccount">
           <text class="cuIcon-delete"></text> 删除</button>
       </view>
     </view>
