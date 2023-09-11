@@ -43,6 +43,18 @@ async function showChoose(title:string, content?:string, options?: WechatMinipro
   })
 }
 
+async function scanQrcode(){
+  const res = await wx.scanCode({
+    onlyFromCamera: true,
+    scanType: ['qrCode']
+  })
+  if(!res.result) throw Error('无效二维码')
+  try {
+    return JSON.parse(res.result)
+  } catch (_) {}
+  return res.result
+}
+
 async function navigateTo(page, vibrate=false){
   vibrate && wx.vibrateShort({
     type: 'light',
@@ -250,5 +262,6 @@ export {
   loadData,
   setClipboardData,
   chooseLocalImage,
-  editImage
+  editImage,
+  scanQrcode
 }
