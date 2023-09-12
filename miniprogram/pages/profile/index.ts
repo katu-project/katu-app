@@ -82,6 +82,11 @@ Page({
     return app.navToDocPage(id)
   },
 
+  async tapToScan(){
+    const {msg} = await loadData(app.scanQrcode)
+    app.showNotice(msg)
+  },
+
   async tapToActiveAccount(){
     await loadData(user.activeAccount, {}, '正在激活账号')
     app.showNotice("激活成功")

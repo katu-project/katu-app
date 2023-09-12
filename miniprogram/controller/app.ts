@@ -1,6 +1,6 @@
 import Controller from '@/class/controller'
 import api from '@/api'
-import { showChoose, setClipboardData, sleep, file, getPrivacySetting } from '@/utils/index'
+import { showChoose, setClipboardData, sleep, file, getPrivacySetting, scanQrcode } from '@/utils/index'
 import { getCardManager } from './card'
 import { getUserManager } from './user'
 
@@ -582,6 +582,20 @@ class AppManager extends Controller {
       if(checkPass) return
     }
     throw Error('文字存在不适内容')
+  }
+
+  async scanQrcode(){
+    const resultJson = await scanQrcode()
+    console.debug('scanQrcode',resultJson)
+    let msg = '未知二维码'
+    if(resultJson.type === 'login'){
+      await api.qrCodelogin({
+        loginCode: resultJson.code
+      })
+      msg = '授权登录通过'
+    }
+
+    return { msg }
   }
 
   async getActiveInfo(){

@@ -34,3 +34,8 @@
   overflow-x: hidden;
   text-overflow: ellipsis;
 }
+
+.underline {
+  text-decoration-line: underline;
+  text-underline-offset: 4rpx;
+}
