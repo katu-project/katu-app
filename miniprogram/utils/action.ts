@@ -43,11 +43,13 @@ async function showChoose(title:string, content?:string, options?: WechatMinipro
   })
 }
 
-async function scanQrcode(){
+async function scanQrcode(options?:WechatMiniprogram.ScanCodeOption){
   const res = await wx.scanCode({
     onlyFromCamera: true,
-    scanType: ['qrCode']
+    scanType: ['qrCode'],
+    ...options
   })
+  console.debug('scanQrcode',res)
   if(!res.result) throw Error('无效二维码')
   try {
     return JSON.parse(res.result)
