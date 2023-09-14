@@ -117,7 +117,7 @@ type LoadDataOptions = {
   returnFailed: boolean
 }
 
-async function loadData<T>(func?: (args:any) => Promise<T>, params?: Object, options?: Partial<LoadDataOptions> | string): Promise<T> {
+async function loadData<T>(func?: (args?:any) => Promise<T>, params?: Object, options?: Partial<LoadDataOptions> | string): Promise<T> {
   let loadingTitle = '正在处理请求', returnFailed = false, hideLoading = false
   if(options){
     if(typeof options === 'string'){
@@ -169,11 +169,18 @@ async function loadData<T>(func?: (args:any) => Promise<T>, params?: Object, opt
         complete: () => {
           if(returnFailed) return reject(error)
           if(!error.code || error.code === 1){
-            wx.showModal({
-              title: '操作错误',
-              content: error.message || error.errMsg || '未知错误',
-              showCancel: false,
-            })
+            if(error.errMsg && ['scanCode:fail cancel'].includes(error.errMsg)){
+              wx.showToast({
+                title: '操作取消',
+                icon: 'none'
+              })
+            }else{
+              wx.showModal({
+                title: '操作错误',
+                content: error.message || error.errMsg || '未知错误',
+                showCancel: false,
+              })
+            }
           }else{
             console.warn(error)
             const showContent = error.code ? `错误代码: ${error.code}` : ''
