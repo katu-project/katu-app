@@ -12,33 +12,12 @@ Page({
   },
 
   async tapToSelectQrcode(){
-    try {
-      const scan_res = await wx.scanCode({
-        onlyFromCamera: false,
-        scanType: ['qrCode']
-      })
-      const qrPack = await app.extractQrPackFromQrcode(scan_res)
-      console.log(qrPack);
-      
-      if(qrPack.i !== user.recoveryKeyPack?.qrId){
-        await app.showNotice("重置凭证ID不匹配!")
-      }else{
-        await app.showConfirm("重置凭证数据读取成功\n现在设置新密码？")
-        this.setData({
-          showInputKey: true,
-          recoveryKey: qrPack.rk
-        })
-      }
-    } catch (error:any) {
-      if(error && error.errMsg.includes('cancel')){
-        wx.showToast({
-          title: '取消选择',
-          icon: 'none'
-        })
-        return
-      }
-      app.showNotice(error.message || '未知错误')
-    }
+    const qrPack = await loadData(app.checkResetCode)
+    await app.showConfirm("重置凭证数据读取成功\n现在设置新密码？")
+    this.setData({
+      showInputKey: true,
+      recoveryKey: qrPack.rk
+    })
   },
 
   checkInput(){

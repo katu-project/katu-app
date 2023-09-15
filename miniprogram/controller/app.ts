@@ -519,13 +519,14 @@ class AppManager extends Controller {
     return api.setRecoveryKey(keyPack)
   }
 
-  async extractQrPackFromQrcode(qrcode){
-    try {
-      const qrPack = JSON.parse(qrcode.result)
-      return qrPack
-    } catch (error) {
-      throw Error("无法识别该凭证!")
+  async checkResetCode(){
+    const qrPack = await this.scanQrcode({
+      onlyFromCamera: false
+    })
+    if(qrPack && qrPack.i !== this.user.recoveryKeyPack?.qrId){
+      throw Error('重置凭证ID不匹配!')
     }
+    return qrPack
   }
 
   async resetMasterKeyWithRecoveryKey({rk, newKey}){
