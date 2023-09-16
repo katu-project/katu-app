@@ -585,20 +585,6 @@ class AppManager extends Controller {
     throw Error('文字存在不适内容')
   }
 
-  async scanQrcode(){
-    const resultJson = await scanQrcode()
-    console.debug('scanQrcode',resultJson)
-    let msg = '未知二维码'
-    if(resultJson.type === 'login'){
-      await api.qrCodelogin({
-        loginCode: resultJson.code
-      })
-      msg = '授权登录通过'
-    }
-
-    return { msg }
-  }
-
   async getActiveInfo(){
     const activeInfo = await api.getSysConfig('active')
     const { content } = await api.getDoc({_id: activeInfo.id})
