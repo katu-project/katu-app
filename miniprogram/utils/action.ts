@@ -114,11 +114,12 @@ async function switchTab(page:string, vibrate?:boolean){
 type LoadDataOptions = {
   hideLoading: boolean,
   loadingTitle: string,
-  returnFailed: boolean
+  returnFailed: boolean,
+  timeoutCheck: boolean
 }
 
 async function loadData<T>(func?: (args?:any) => Promise<T>, params?: Object, options?: Partial<LoadDataOptions> | string): Promise<T> {
-  let loadingTitle = '正在处理请求', returnFailed = false, hideLoading = false
+  let loadingTitle = '正在处理请求', returnFailed = false, hideLoading = false, timeoutCheck = true
   if(options){
     if(typeof options === 'string'){
       loadingTitle = options
@@ -126,6 +127,7 @@ async function loadData<T>(func?: (args?:any) => Promise<T>, params?: Object, op
       loadingTitle = options.loadingTitle || loadingTitle
       returnFailed = options.returnFailed || false
       hideLoading = options.hideLoading || false
+      timeoutCheck = options.timeoutCheck === undefined ? true : options.timeoutCheck
     }
   }
   let pfunc: (p?:any)=>unknown = ()=> sleep(2000)
@@ -147,17 +149,17 @@ async function loadData<T>(func?: (args?:any) => Promise<T>, params?: Object, op
 
   await sleep(300)
 
-  const timeoutCheck = new Promise(async (_,reject)=>{
+  const timeout = timeoutCheck ? new Promise(async (_,reject)=>{
     await sleep(10000)
     reject({
       message: '服务超时，请重试或刷新小程序'
     })
-  })
+  }) : new Promise(()=>{})
 
   return new Promise((resolve,reject)=>{
     Promise.race([
       pfunc(params),
-      timeoutCheck
+      timeout
     ]).then(res=>{
       wx.hideLoading({
         complete: ()=>{
