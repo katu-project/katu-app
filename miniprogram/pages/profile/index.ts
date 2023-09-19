@@ -83,8 +83,17 @@ Page({
   },
 
   async tapToScan(){
-    const {msg} = await loadData(app.scanQrcode)
-    app.showNotice(msg)
+    loadData(async ()=>{
+      const resultJson = await app.scanQrcode()
+      let msg = '未知二维码'
+      if(resultJson.type === 'login'){
+        await app.api.qrCodelogin({
+          loginCode: resultJson.code
+        })
+        msg = '授权登录通过'
+      }
+      app.showNotice(msg)
+    })
   },
 
   async tapToActiveAccount(){
