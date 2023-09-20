@@ -1,5 +1,4 @@
 import Controller from '@/class/controller'
-import api from "@/api"
 
 export default class User extends Controller {
   _user: Partial<IUser> = {}
@@ -106,7 +105,7 @@ export default class User extends Controller {
   }
   
   async loadInfo(){
-    this._user = await api.getUser()
+    this._user = await this.api.getUser()
     await this.cacheAvatar()
   }
 
@@ -136,32 +135,32 @@ export default class User extends Controller {
   }
 
   async markDocRead(params){
-    return api.markRead(params)
+    return this.api.markRead(params)
   }
 
   async getQuotaLog(params){
-    return api.getUserQuotaLog(params)
+    return this.api.getUserQuotaLog(params)
   }
 
   async updateProfile(userInfo){
-    return api.updateUserProfile(userInfo)
+    return this.api.updateUserProfile(userInfo)
   }
 
   async getQuotaLogDetail(params){
-    return api.getUserQuotaLogDetail(params)
+    return this.api.getUserQuotaLogDetail(params)
   }
 
   async quotaExchange(data){
-    return api.quotaExchange(data)
+    return this.api.quotaExchange(data)
   }
 
   async loadCustomTags(){
-    this._tags = await api.getUserTag()
+    this._tags = await this.api.getUserTag()
   }
 
   async applyConfig(configItem:{key:string,value:string|boolean}){
     try {
-      await api.updateUserConfig(configItem)
+      await this.api.updateUserConfig(configItem)
       return this.objectSetValue(this.user, configItem.key, configItem.value)
     } catch (error:any) {
       console.warn('applyConfig:',error.message)
@@ -171,15 +170,15 @@ export default class User extends Controller {
   }
 
   async bindTelNumber(data){
-    return api.bindTelNumber(data)
+    return this.api.bindTelNumber(data)
   }
 
   async removeBindTelNumber(data){
-    return api.removeBindTelNumber(data)
+    return this.api.removeBindTelNumber(data)
   }
 
   async getTags(){
-    return api.getUserTag()
+    return this.api.getUserTag()
   }
 
   // ui action 
@@ -187,7 +186,7 @@ export default class User extends Controller {
 
   // simple api proxy
   async deleteTag(_id: string){
-    return api.deleteTag({_id})
+    return this.api.deleteTag({_id})
   }
 
   async createTag(tagName:string){
@@ -199,19 +198,19 @@ export default class User extends Controller {
       throw Error("已存在于内置标签\n可直接使用无需重复创建")
     }
 
-    return api.createTag(tagName)
+    return this.api.createTag(tagName)
   }
 
   async updateTag(tag: Pick<ICardTag,'color'|'_id'>){
-    return api.updateTag(tag)
+    return this.api.updateTag(tag)
   }
 
   async activeAccount(){
-    return api.activeAccount({})
+    return this.api.activeAccount({})
   }
 
   async deleteAccount(){
-    await api.removeAccount()
+    await this.api.removeAccount()
     return this.clearInfo()
   }
 

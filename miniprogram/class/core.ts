@@ -8,6 +8,8 @@ type LocalCacheKeyType = keyof typeof Const.LOCAL_CACHE_KEYS
 
 export default class Core extends Base {
 
+  api = api
+
   getConst<T extends keyof typeof Const>(key:T){
     return Const[key]
   }
@@ -150,12 +152,12 @@ export default class Core extends Base {
       }
     }
     console.debug(`start download file:`, url)
-    await api.downloadFile({url, savePath})
+    await this.api.downloadFile({url, savePath})
     return savePath
   }
 
   async uploadFile(filePath:string, type:UploadFileType) {
-    const uploadInfo = await api.getUploadInfo({ type })
-    return api.uploadFile(filePath, uploadInfo)
+    const uploadInfo = await this.api.getUploadInfo({ type })
+    return this.api.uploadFile(filePath, uploadInfo)
   }
 } 

@@ -1,6 +1,5 @@
 import Controller from '@/class/controller'
-import api from '@/api'
-import { showChoose, setClipboardData, sleep, file, getPrivacySetting, scanQrcode } from '@/utils/index'
+import { showChoose, setClipboardData, sleep, file, getPrivacySetting } from '@/utils/index'
 import { getCardManager } from './card'
 import { getUserManager } from './user'
 
@@ -83,7 +82,7 @@ class AppManager extends Controller {
     const clearExtraDataCache = async ()=> {
       console.debug('开始检测是否有无效的卡片附加数据')
       try {
-        const cardIdxs = await api.getCardSummary('CardIdxs')
+        const cardIdxs = await this.api.getCardSummary('CardIdxs')
         const localExtraDataCache = await this.cache.getExtraDatas()
         const invalidIds = Object.keys(localExtraDataCache).filter(e=>!cardIdxs.includes(e))
         if(invalidIds.length){
@@ -100,7 +99,7 @@ class AppManager extends Controller {
         await this.checkCacheClearTimeout()
       } catch (_) {
         try {
-          const imageIds = await api.getCardSummary('ImageIds')
+          const imageIds = await this.api.getCardSummary('ImageIds')
           console.debug(`删除无效图片缓存数据：${imageIds.length} 条`)
           this.cache.deleteCardFile(imageIds)
         } catch (error) {
@@ -127,7 +126,7 @@ class AppManager extends Controller {
   async setUserMasterKey(key: string){
     const hexCode = this.crypto.convertToHexString(key, this.user.ccv)
     const masterKeyPack = await this.crypto.createCommonKeyPack(hexCode)
-    return api.setMasterKeyInfo(masterKeyPack)
+    return this.api.setMasterKeyInfo(masterKeyPack)
   }
 
   async createMiniKey({miniKey}:{miniKey:string}){
@@ -143,7 +142,7 @@ class AppManager extends Controller {
     const keyId = await this.crypto.randomHexString(8)
     const miniKeySaveDataPath = await this.getMiniKeyPath(keyId)
     await file.writeFile(miniKeySaveDataPath, miniKeySaveData)
-    return api.setUserMiniKeyInfo({
+    return this.api.setUserMiniKeyInfo({
       configItem: 'useMiniKey',
       syncId: keyId,
       value: true
@@ -152,14 +151,14 @@ class AppManager extends Controller {
 
   async closeMiniKey(){
     await this.clearMiniKey()
-    return api.setUserMiniKeyInfo({
+    return this.api.setUserMiniKeyInfo({
       configItem: 'useMiniKey',
       value: false
     })
   }
 
   async closeSyncMiniKey(){
-    return api.setUserMiniKeyInfo({
+    return this.api.setUserMiniKeyInfo({
       configItem: 'useSyncMiniKey',
       value: false
     })
@@ -176,7 +175,7 @@ class AppManager extends Controller {
     }
     const miniKeyJsonString = await file.readFile<string>(miniKeyFilePath)
     const miniKeyEncryptPack = await this.crypto.encryptString(miniKeyJsonString, masterKeyHexCode)
-    return api.setUserMiniKeyInfo({
+    return this.api.setUserMiniKeyInfo({
       configItem: 'useSyncMiniKey',
       value: true,
       miniKeyPack: {
@@ -195,7 +194,7 @@ class AppManager extends Controller {
     // 重新生成新的主密码包, 更新时使用最新的ccv
     const masterKeyPack = await this.crypto.createCommonKeyPack(newHexCode, masterKey)
     // 更新主密码包
-    return api.setMasterKeyInfo(masterKeyPack)
+    return this.api.setMasterKeyInfo(masterKeyPack)
   }
 
   // master key section
@@ -363,7 +362,7 @@ class AppManager extends Controller {
         })
       }
     }
-    const resp = await api.setShareItem({
+    const resp = await this.api.setShareItem({
       card: shareCard,
       scope,
       expiredTime,
@@ -390,7 +389,7 @@ class AppManager extends Controller {
     if(getCateList){
       homeData = {
         likeList: [],
-        cateList: await api.getCardSummary('CateList')
+        cateList: await this.api.getCardSummary('CateList')
       }
       return homeData
     }
@@ -400,7 +399,7 @@ class AppManager extends Controller {
     }
 
     if(!homeData){
-      homeData = await api.getHomeData()
+      homeData = await this.api.getHomeData()
       await this.cache.setHomeCacheData(homeData)
     }
 
@@ -418,7 +417,7 @@ class AppManager extends Controller {
         return
       }
     }
-    const notice = await api.getHotNotice()
+    const notice = await this.api.getHotNotice()
     this.notice.resetNoticeFetchTime()
     return notice
   }
@@ -494,7 +493,7 @@ class AppManager extends Controller {
   }
 
   async getUserPrivacyNotice(){
-    return api.getUserPrivacyInfo()
+    return this.api.getUserPrivacyInfo()
   }
 
   //数据
@@ -516,7 +515,7 @@ class AppManager extends Controller {
   }
 
   setRecoveryKey(keyPack){
-    return api.setRecoveryKey(keyPack)
+    return this.api.setRecoveryKey(keyPack)
   }
 
   async checkResetCode(){
@@ -537,7 +536,7 @@ class AppManager extends Controller {
     // 重新生成新的主密码包
     const masterKeyPack = await this.crypto.createCommonKeyPack(newHexCode, masterKey)
     // 更新主密码包
-    return api.setMasterKeyInfo(masterKeyPack)
+    return this.api.setMasterKeyInfo(masterKeyPack)
   }
 
   //主密码备份/重置 结束
@@ -551,12 +550,12 @@ class AppManager extends Controller {
 
   async imageContentCheck({imagePath}){
     const hash = await this.getImageHash(imagePath, this.getConfig('contentCheckHash'))
-    const { needCheck, checkPass } = await api.getContentCheckInfo({hash})
+    const { needCheck, checkPass } = await this.api.getContentCheckInfo({hash})
     if(needCheck){
       const url = await this.uploadTempFile(imagePath)
       for(let i=0;i<10;i++){
         if(i==9) throw Error("内容检测超时，请稍后重试")
-        const { checkEnd, checkPass } = await api.imageContentSafetyCheck({hash, url})
+        const { checkEnd, checkPass } = await this.api.imageContentSafetyCheck({hash, url})
         if(checkEnd){
           if(checkPass){
             return
@@ -574,10 +573,10 @@ class AppManager extends Controller {
 
   async textContentSafetyCheck(text){
     const hash = this.crypto.getStringHash(text, this.getConfig('contentCheckHash'))
-    const { needCheck, checkPass } = await api.getContentCheckInfo({hash})
+    const { needCheck, checkPass } = await this.api.getContentCheckInfo({hash})
     
     if(needCheck){
-      const { checkPass } = await api.textContentSafetyCheck({text})
+      const { checkPass } = await this.api.textContentSafetyCheck({text})
       if(checkPass) return
     }else{
       if(checkPass) return
@@ -586,8 +585,8 @@ class AppManager extends Controller {
   }
 
   async getActiveInfo(){
-    const activeInfo = await api.getSysConfig('active')
-    const { content } = await api.getDoc({_id: activeInfo.id})
+    const activeInfo = await this.api.getSysConfig('active')
+    const { content } = await this.api.getDoc({_id: activeInfo.id})
     return {
       activeInfo,
       content
@@ -608,35 +607,35 @@ class AppManager extends Controller {
 
   // simple api proxy
   async createDevToken(){
-    return api.getDevToken()
+    return this.api.getDevToken()
   }
 
   async sendVerifyCode(data: {tel:string}){
-    return api.sendVerifyCode(data)
+    return this.api.sendVerifyCode(data)
   }
 
   async getNotices(){
-    return api.getNotices()
+    return this.api.getNotices()
   }
 
   async getHotDoc(){
-    return api.getHotDoc()
+    return this.api.getHotDoc()
   }
 
   async getChangeLog(){
-    return api.getChangeLog()
+    return this.api.getChangeLog()
   }
 
   async getDoc(params){
-    return api.getDoc(params)
+    return this.api.getDoc(params)
   }
 
   async getCateDoc(params){
-    return api.getCateDoc(params)
+    return this.api.getCateDoc(params)
   }
 
   async getShareItem(params){
-    return api.getShareItem(params)
+    return this.api.getShareItem(params)
   }
 
   // 弹窗提示
