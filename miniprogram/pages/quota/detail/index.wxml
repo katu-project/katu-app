@@ -26,6 +26,20 @@
       <input placeholder-style="color:green" placeholder="{{detail.remainQuota}}" disabled></input>
     </view>
   </block>
+  <block wx:if="{{detail.type==='quota-order'}}">
+    <view class="cu-form-group">
+      <view class="title">订单号:</view>
+      <input value="{{detail.orderId}}" disabled></input>
+    </view>
+    <view class="cu-form-group">
+      <view class="title">增加兔币:</view>
+      <input 	placeholder-style="color:green" placeholder="{{detail.useQuota}}" disabled></input>
+    </view>
+    <view class="cu-form-group">
+      <view class="title">增加后可用兔币:</view>
+      <input placeholder-style="color:green" placeholder="{{detail.remainQuota}}" disabled></input>
+    </view>
+  </block>
   <block wx:if="{{detail.type==='card-cost'}}">
     <view class="cu-form-group">
       <view class="title">加密卡面:</view>
