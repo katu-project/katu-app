@@ -20,11 +20,17 @@ Page({
   onShow(){
   },
 
-  loadData(){
-    this.setData({
-      'quota.remain': user.quota
-    })
-    loadData(user.getQuotaLog).then(logs=>{
+  async loadData(reloadUser=false){
+    loadData(async ()=>{
+      if(reloadUser){
+        await user.reloadInfo()
+      }
+      this.setData({
+        'quota.remain': user.quota
+      })
+      const logs = await user.getQuotaLog({})
+      return logs
+    }).then(logs=>{
       const setData = {}
       setData['list'] = logs.map(e=>{
         e['time'] = new Date(e.createTime).toLocaleDateString(undefined,{ month: '2-digit', day: '2-digit', year: 'numeric'})
@@ -33,6 +39,15 @@ Page({
       this.setData(setData)
     })
   },
+
+  tapToReloadInfo(){
+    this.setData({
+      'quota.remain': 0,
+      list: []
+    })
+    this.loadData(true)
+  },
+
   onCodeInput(){
 
   },
