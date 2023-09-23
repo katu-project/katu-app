@@ -115,11 +115,16 @@ type LoadDataOptions = {
   hideLoading: boolean,
   loadingTitle: string,
   returnFailed: boolean,
-  timeoutCheck: boolean
+  timeoutCheck: boolean,
+  timeout: number
 }
 
 async function loadData<T>(func?: (args?:any) => Promise<T>, params?: Object, options?: Partial<LoadDataOptions> | string): Promise<T> {
-  let loadingTitle = '正在处理请求', returnFailed = false, hideLoading = false, timeoutCheck = true
+  let loadingTitle = '正在处理请求', 
+      returnFailed = false, 
+      hideLoading = false, 
+      timeoutCheck = true,
+      timeout = 0
   if(options){
     if(typeof options === 'string'){
       loadingTitle = options
@@ -128,6 +133,7 @@ async function loadData<T>(func?: (args?:any) => Promise<T>, params?: Object, op
       returnFailed = options.returnFailed || false
       hideLoading = options.hideLoading || false
       timeoutCheck = options.timeoutCheck === undefined ? true : options.timeoutCheck
+      timeout = options.timeout || 10000
     }
   }
   let pfunc: (p?:any)=>unknown = ()=> sleep(2000)
@@ -149,7 +155,7 @@ async function loadData<T>(func?: (args?:any) => Promise<T>, params?: Object, op
 
   await sleep(300)
 
-  const timeout = timeoutCheck ? new Promise(async (_,reject)=>{
+  const timeoutCheckFunc = timeoutCheck ? new Promise(async (_,reject)=>{
     await sleep(10000)
     reject({
       message: '服务超时，请重试或刷新小程序'
@@ -159,7 +165,7 @@ async function loadData<T>(func?: (args?:any) => Promise<T>, params?: Object, op
   return new Promise((resolve,reject)=>{
     Promise.race([
       pfunc(params),
-      timeout
+      timeoutCheckFunc
     ]).then(res=>{
       wx.hideLoading({
         complete: ()=>{
