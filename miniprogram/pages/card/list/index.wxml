@@ -33,7 +33,7 @@
           <view class="">
             <text class="cuIcon-lock text-gray padding-right-xs" hidden="{{!item._showEncryptIcon}}"></text>
             <text class="text-cut">{{item.title}}</text>
-            <text class="cuIcon-{{item.setLike?'favorfill':'favor'}} text-xl text-{{item.setLike?'red':'white'}}" style="padding-bottom:4rpx;padding-left:10rpx;"></text>
+            <text class="cuIcon-{{item.setLike?'favorfill':'favor'}} text-{{item.setLike?'red':'white'}} padding-left-xs"></text>
           </view>
           <view class="text-grey text-sm">
             <text class="text-cut">{{item.tags.length < 4 ? item.tags : item.tags[0]+ ',' + item.tags[1] +' ...'}}</text>
@@ -47,7 +47,6 @@
     <view wx:if="{{layout === 'debit_card'}}" class="bank-card">
       <view class="cu-card case" wx:for="{{list}}" wx:key="_id">
         <template is="commonInfo" data="{{item,index}}"/>
-     
       </view>
     </view>
 
@@ -75,8 +74,9 @@
         <text class="cuIcon-copy text-cyan margin-right-xl" data-idx="{{index}}" bindtap="tapToCopyValue"></text>
       </view>
       <view wx:if="{{isCredit}}" class="padding-left padding-tb-xs flex-row align-center">
-          <view class="padding-right padding-xs">
-            验证码(cvv) : <text class="text-xl radius text-block padding-left-xs" style="vertical-align: middle;">{{item.cvv || '***'}}</text>
+          <view class="padding-right padding-xs flex-row">
+            <text> 验证码(cvv) : </text>
+            <text class="text-xl radius text-block padding-left-xs">{{item.cvv || '***'}}</text>
           </view>
       </view>
     </view>
