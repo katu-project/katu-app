@@ -26,7 +26,7 @@
   <view style="height: 80vh">
     <view wx:if="{{layout === 'default'}}" class="cu-list menu margin-top-sm margin-bottom-xl default">
       <view class="cu-item arrow" wx:for="{{list}}" wx:key="_id" data-key="{{item._id}}" bindtap="tapToCardDetail">
-        <view class="margin-right-sm flex-col br-10" style="border: 1px solid darkcyan;">
+        <view class="margin-right-sm flex-col br-10 solids">
           <image lazy-load="true" mode="{{item._mode || 'aspectFit'}}" class="image br-16" src="{{item._url}}"></image>
         </view>
         <view class="content flex-col">
