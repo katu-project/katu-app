@@ -16,6 +16,7 @@ Page({
     key: '',
     tag: '',
     list: [],
+    tagsInfo: [],
     isRefresh: false,
     layout: 'default'
   },
@@ -51,10 +52,20 @@ Page({
 
   async loadData(){
     if(!user.isOk) return
+    this.loadTagsInfo()
     const list = await loadData(cardManager.getList, {where: this.where})
     this.originList = list
     this.setData({ list })
     this.loadCardImage()
+  },
+
+  loadTagsInfo(){
+    const tags = (user.config?.general.useDefaultTag ? app.getCardConfig('defaultTags') : []).concat(user.tags)
+    const tagsInfo = {}
+    tags.map(e=>e.color && (tagsInfo[e.name]=e.color))
+    this.setData({
+      'tagsInfo': tagsInfo
+    })
   },
 
   subscribeEvents(){

@@ -26,17 +26,19 @@
   <view style="height: 80vh">
     <view wx:if="{{layout === 'default'}}" class="cu-list menu margin-top-sm margin-bottom-xl default">
       <view class="cu-item arrow" wx:for="{{list}}" wx:key="_id" data-key="{{item._id}}" bindtap="tapToCardDetail">
+        <view class="flex-col text-lg justify-center align-center margin-right-xs">
+          <text class="cuIcon-{{item.setLike?'favorfill':'favor'}} text-{{item.setLike?'red':'gray'}}"></text>
+        </view>
         <view class="margin-right-sm flex-col br-10 solids">
           <image lazy-load="true" mode="{{item._mode || 'aspectFit'}}" class="image br-16" src="{{item._url}}"></image>
         </view>
         <view class="content flex-col">
-          <view class="">
+          <view class="text-lg margin-top-xs">
             <text class="cuIcon-lock text-gray padding-right-xs" hidden="{{!item._showEncryptIcon}}"></text>
             <text class="text-cut">{{item.title}}</text>
-            <text class="cuIcon-{{item.setLike?'favorfill':'favor'}} text-{{item.setLike?'red':'white'}} padding-left-xs"></text>
           </view>
-          <view class="text-grey text-sm">
-            <text class="text-cut">{{item.tags.length < 4 ? item.tags : item.tags[0]+ ',' + item.tags[1] +' ...'}}</text>
+          <view class="text-grey margin-tb-xs">
+            <text class="cu-tag line-{{tagsInfo[item]||'grey'}} light" wx:for="{{item.tags}}" wx:key="name">{{item}}</text>
           </view>
         </view>
         <view class="action">
