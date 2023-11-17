@@ -69,12 +69,13 @@ function createHttpRequestor(options:IHttpRequestOptions){
   const apiReq = args => wx.request(args)
   apiReq.noLog = true
   const request = (url:string, data?:any) => {
-    return toPromise(apiReq, {
+    return toPromise<{},WechatMiniprogram.RequestOption>(apiReq, {
       url: `${options.baseUrl}/${url}`,
       data,
       header: {
         Token: options.token
       },
+      timeout: 10000,
       method: 'POST'
     }, 'data')
   }

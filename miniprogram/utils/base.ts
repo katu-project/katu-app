@@ -59,7 +59,7 @@ export function getCurrentTimestamp(){
 }
 
 // wx method to promise
-export const toPromise = <T>(func, options={}, returnKey?:string): Promise<T> => {
+export const toPromise = <R, P = {}>(func:any, options?:P, returnKey?:string): Promise<R> => {
   return new Promise((resolve,reject)=>{
     func({
       ...options,
