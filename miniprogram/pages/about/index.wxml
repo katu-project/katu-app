@@ -55,5 +55,14 @@
         <button class="cu-btn bg-gray gfw" style="text-align: right;width: 160rpx;margin-right:0;padding:0" open-type="feedback">去提交</button>
       </view>
     </view>
+
+    <view class="cu-item">
+      <view class="content">
+        <text class="">小程序备案号</text>
+      </view>
+      <view class="action">
+        <text class="text-sm">粤ICP备2023001493号-2X</text>
+      </view>
+    </view>
   </view>
 </view>
