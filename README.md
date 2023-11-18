@@ -1,16 +1,17 @@
-# 卡兔微信小程序
+# 卡兔客户端微信小程序版
 
-安全好用的卡片管理工具，基于微信小程序开发
+基于微信原生小程序技术实现的卡兔客户端
 
-## 获取方式
+## 快速体验
 微信搜索小程序【卡兔APP】或者使用微信扫描下面二维码
 
-<img src="./assets/qrcode.jpg" width="200"/>
+<p align="center">
+  <img width="200" src="https://cdn.katucloud.com/assets/wx_miniapp_qrcode.jpg">
+</p>
 
-## 私有化构建
-
-此项目基于原生小程序技术开发，仓库目前只公开小程序端代码，后端接口代码暂未公开。后端接口只实现基本的卡片数据管理，请自行根据小程序端请求参数编写后端接口。如需使用官方接口请联系我。
+## 相关链接
+- [卡兔官网 katucloud.com](https://katucloud.com)
+- [开发者官网 dev.katucloud.com](https://dev.katucloud.com)
 
 ## 注意事项
-> 此仓库代码会落后线上代码数个小版本
-
+> 此仓库版本会落后线上版本
