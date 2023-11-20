@@ -58,6 +58,9 @@ export default {
   quotaExchange: (data) => request<IQuotaLog>('app/exchangeQuota', data),
   
   qrCodelogin: data => request('app/qrcodeLogin', data),
+
+  exportData: data => request('app/exportData', data),
+
   // user custom tag
   getUserTag: () => request<ICardTag[]>('tag/list', {}),
 
