@@ -12,7 +12,7 @@ Page({
   },
 
   async tapToSelectQrcode(){
-    const qrPack = await loadData(app.checkResetCode)
+    const qrPack = await loadData(app.keyManager.checkResetCode)
     await app.showConfirm("重置凭证数据读取成功\n现在设置新密码？")
     this.setData({
       showInputKey: true,
@@ -41,10 +41,10 @@ Page({
   },
 
   async setMasterKey(){
-    app.checkMasterKeyFormat(this.data.masterKey)
+    app.keyManager.checkMasterKeyFormat(this.data.masterKey)
 
     await app.showConfirm('确认使用该密码？')
-    loadData(app.resetMasterKeyWithRecoveryKey,{
+    loadData(app.keyManager.resetMasterKeyWithRecoveryKey,{
       rk: this.data.recoveryKey,
       newKey: this.data.masterKey
     }).then(()=>{
@@ -53,7 +53,7 @@ Page({
   },
 
   async finishTask(){
-    app.clearMasterKey()
+    app.keyManager.clearMasterKey()
     user.reloadInfo()
     await app.showNotice(`主密码重置成功`)
     app.navigateBack()

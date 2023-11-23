@@ -49,7 +49,7 @@ Page({
 
     if(value){
       try {
-        app.checkMasterKey()
+        app.keyManager.checkMasterKey()
       } catch (error) {
         this.showInputKey({
           inputMode: 'adv'
@@ -58,7 +58,7 @@ Page({
       }
       this.showSetMiniKeyStep(1)
     }else{
-      await loadData(app.closeMiniKey)
+      await loadData(app.keyManager.closeMiniKey)
       app.showNotice('取消成功')
       user.reloadInfo().then(this.loadData)
     }
@@ -76,7 +76,7 @@ Page({
 
     if(value){
       try {
-        app.checkMasterKey()
+        app.keyManager.checkMasterKey()
       } catch (error) {
         this.showInputKey({
           changeMode: true
@@ -85,14 +85,14 @@ Page({
       }
       this.setSyncMiniKey()
     }else{
-      await loadData(app.closeSyncMiniKey)
+      await loadData(app.keyManager.closeSyncMiniKey)
       app.showNotice('取消成功')
       user.reloadInfo().then(this.loadData)
     }
   },
 
   async setSyncMiniKey(){
-    loadData(app.setSyncMiniKey, user.miniKeyPack?.syncId).then(()=>{
+    loadData(app.keyManager.setSyncMiniKey, user.miniKeyPack?.syncId).then(()=>{
       app.showNotice('设置成功')
       user.reloadInfo().then(this.loadData)
     })
@@ -115,13 +115,13 @@ Page({
         return
       }
       this.hideInputKey()
-      await loadData(app.createMiniKey,{
+      await loadData(app.keyManager.createMiniKey,{
         miniKey: this.inputKey
       })
       app.showNotice(`快速密码设置成功`)
       user.reloadInfo().then(this.loadData)
     }else{
-      app.loadMasterKeyWithKey(key).then(()=>{
+      app.keyManager.loadMasterKeyWithKey(key).then(()=>{
         this.inputKey = ''
         this.hideInputKey()
         setTimeout(()=>{
@@ -149,7 +149,7 @@ Page({
     if(this.useKeyFor === 'setKey'){
       this.createMiniKey(key)
     }else if(this.useKeyFor === 'setSync'){
-      app.loadMasterKeyWithKey(key).then(()=>{
+      app.keyManager.loadMasterKeyWithKey(key).then(()=>{
         this.inputKey = ''
         this.hideInputKey()
         this.setSyncMiniKey()

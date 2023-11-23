@@ -186,7 +186,7 @@ Page({
         return
       }
       try {
-        app.checkMasterKey()
+        app.keyManager.checkMasterKey()
       } catch (error:any) {
         if(error.code[0] === '2'){
           this.showInputKey()
@@ -207,7 +207,7 @@ Page({
       }
     }
 
-    loadData(this.data.edit?cardManager.update:cardManager.add, {card, key: app.masterKey}, {returnFailed: true})
+    loadData(this.data.edit?cardManager.update:cardManager.add, {card, key: app.keyManager.masterKey}, {returnFailed: true})
             .then(this.saveDone)
             .catch(this.saveFailed)
             .finally(this.saveFinish)
@@ -232,7 +232,7 @@ Page({
   // key input section
   inputKeyConfirm(e){
     const key = e.detail.value
-    app.loadMasterKeyWithKey(key).then(()=>{
+    app.keyManager.loadMasterKeyWithKey(key).then(()=>{
       this.hideInputKey()
       this.tapToSaveCard()
     }).catch(error=>{

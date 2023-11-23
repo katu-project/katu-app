@@ -125,7 +125,7 @@ Page({
 
   async checkSyncMiniKey(){
     try {
-      await app.checkMiniKey()
+      await app.keyManager.checkMiniKey()
     } catch (error) {
       const { confirm } = await app.showChoose('已启用多端同步，同步快速密码？')
       if(confirm){
@@ -196,7 +196,7 @@ Page({
 
   async showEncryptedImage(){    
     try {
-      app.checkMasterKey()
+      app.keyManager.checkMasterKey()
     } catch (error:any) {
       if(error.code[0] === '2'){
         this.showInputKey()
@@ -208,7 +208,7 @@ Page({
    
     const card = await loadData(
       cardManager.getCard, 
-      {id: this.id, key:app.masterKey}, 
+      {id: this.id, key:app.keyManager.masterKey}, 
       '读取卡面数据'
     )
     
@@ -290,10 +290,10 @@ Page({
 
   inputKeyConfirm(e){
     const key = e.detail.value
-    app.loadMasterKeyWithKey(key).then(async ()=>{
+    app.keyManager.loadMasterKeyWithKey(key).then(async ()=>{
       this.hideInputKey()
       if(this.syncMiniKey){
-        await loadData(app.syncMiniKey)
+        await loadData(app.keyManager.syncMiniKey)
         await app.showNotice('快速密码同步成功')
         this.syncMiniKey = false
       }

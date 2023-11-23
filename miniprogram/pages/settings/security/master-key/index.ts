@@ -56,8 +56,8 @@ Page({
       throw Error('请先设置主密码')
     }
     const params = { key, newKey }
-    app.checkMasterKeyFormat(newKey)
-    loadData(app.updateUserMasterKey,params).then(()=>{
+    app.keyManager.checkMasterKeyFormat(newKey)
+    loadData(app.keyManager.updateUserMasterKey,params).then(()=>{
       this.finishTask()
     })
   },
@@ -67,14 +67,14 @@ Page({
       app.showNotice('已设置过主密码')
       return
     }
-    app.checkMasterKeyFormat(key)
-    loadData(app.setUserMasterKey,key).then(()=>{
+    app.keyManager.checkMasterKeyFormat(key)
+    loadData(app.keyManager.setUserMasterKey,key).then(()=>{
       this.finishTask()
     })
   },
 
   async finishTask(){
-    app.clearMasterKey()
+    app.keyManager.clearMasterKey()
     await app.showNotice(`主密码${user.isSetMasterKey?'更新':'设置'}成功`)
     user.reloadInfo()
     app.navigateBack()
@@ -173,7 +173,7 @@ Page({
 
   inputKeyConfirm(e){
     const key = e.detail.value
-    app.loadMasterKeyWithKey(key).then(()=>{
+    app.keyManager.loadMasterKeyWithKey(key).then(()=>{
       this.hideInputKey()
       this.oldKey = key
       this.tapToStartSetKey()

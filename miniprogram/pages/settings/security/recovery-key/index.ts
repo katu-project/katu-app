@@ -177,10 +177,10 @@ Page({
 
   async genCert(){
     await showLoading('请稍等')
-    const { keyPack, qrPack } = await app.generateRecoveryKey()
+    const { keyPack, qrPack } = await app.keyManager.generateRecoveryKey()
     const canvasCtx = await this.initCanvas()
     await this.drawRecoveryKey(canvasCtx, qrPack)
-    await loadData(app.setRecoveryKey, keyPack)
+    await loadData(app.keyManager.setRecoveryKey, keyPack)
     user.reloadInfo()
 
     this.setData({
@@ -196,7 +196,7 @@ Page({
       await app.showConfirm("生成新凭证会使已有凭证失效",'仍然继续')
     }
     try {
-      app.checkMasterKey()
+      app.keyManager.checkMasterKey()
     } catch (error:any) {
       if(error.code[0] === '2'){
         this.showInputKey()
@@ -230,7 +230,7 @@ Page({
 
   inputKeyConfirm(e){
     const key = e.detail.value
-    app.loadMasterKeyWithKey(key).then(()=>{
+    app.keyManager.loadMasterKeyWithKey(key).then(()=>{
       this.hideInputKey()
       this.genCert()
     }).catch(error=>{

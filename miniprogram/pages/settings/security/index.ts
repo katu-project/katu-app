@@ -34,7 +34,7 @@ Page({
     loadData(user.applyConfig,configItem,{returnFailed: true}).then(()=>{
       app.showNotice('修改成功')
       if(configItem.key === 'config_security_rememberPassword' && configItem.value === false){
-        app.clearMasterKey()
+        app.keyManager.clearMasterKey()
       }
       user.reloadInfo().then(this.loadData)
     }).catch(err=>{
