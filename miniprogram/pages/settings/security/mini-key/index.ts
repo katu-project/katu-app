@@ -58,7 +58,7 @@ Page({
       }
       this.showSetMiniKeyStep(1)
     }else{
-      await loadData(app.keyManager.closeMiniKey)
+      await loadData(app.miniKeyManager.closeMiniKey)
       app.showNotice('取消成功')
       user.reloadInfo().then(this.loadData)
     }
@@ -85,14 +85,14 @@ Page({
       }
       this.setSyncMiniKey()
     }else{
-      await loadData(app.keyManager.closeSyncMiniKey)
+      await loadData(app.miniKeyManager.closeSyncMiniKey)
       app.showNotice('取消成功')
       user.reloadInfo().then(this.loadData)
     }
   },
 
   async setSyncMiniKey(){
-    loadData(app.keyManager.setSyncMiniKey, user.miniKeyPack?.syncId).then(()=>{
+    loadData(app.miniKeyManager.setSyncMiniKey, user.miniKeyPack?.syncId).then(()=>{
       app.showNotice('设置成功')
       user.reloadInfo().then(this.loadData)
     })
@@ -115,7 +115,7 @@ Page({
         return
       }
       this.hideInputKey()
-      await loadData(app.keyManager.createMiniKey,{
+      await loadData(app.miniKeyManager.createMiniKey,{
         miniKey: this.inputKey
       })
       app.showNotice(`快速密码设置成功`)

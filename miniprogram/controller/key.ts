@@ -33,62 +33,6 @@ class KeyManager extends Core {
     return this.api.setMasterKeyInfo(masterKeyPack)
   }
 
-  async createMiniKey({miniKey}:{miniKey:string}){
-    if(!this._userKey || !miniKey) throw Error('出错了！')
-    const randomHexString = await this.crypto.randomHexString(12)
-    const hexCode = this.crypto.convertToHexString(`${miniKey}${randomHexString}`, this.user.ccv)
-    const masterKeyHexCode = this.crypto.convertToHexString(this._userKey, this.user.ccv)
-    const miniKeyPack = await this.crypto.createCommonKeyPack(hexCode, masterKeyHexCode)
-    const miniKeySaveData = JSON.stringify({
-      rk: randomHexString,
-      keyPack: miniKeyPack
-    })
-    const keyId = await this.crypto.randomHexString(8)
-    const miniKeySaveDataPath = await this.getMiniKeyPath(keyId)
-    await file.writeFile(miniKeySaveDataPath, miniKeySaveData)
-    return this.api.setUserMiniKeyInfo({
-      configItem: 'useMiniKey',
-      syncId: keyId,
-      value: true
-    })
-  }
-
-  async closeMiniKey(){
-    await this.clearMiniKey()
-    return this.api.setUserMiniKeyInfo({
-      configItem: 'useMiniKey',
-      value: false
-    })
-  }
-
-  async closeSyncMiniKey(){
-    return this.api.setUserMiniKeyInfo({
-      configItem: 'useSyncMiniKey',
-      value: false
-    })
-  }
-
-  async setSyncMiniKey(kid:string){
-    if(!this._userKey) throw Error('出错了！')
-    const masterKeyHexCode = this.crypto.convertToHexString(this._userKey, this.user.ccv)
-    const miniKeyFilePath = await this.getMiniKeyPath(kid)
-    try {
-      await file.checkAccess(miniKeyFilePath)
-    } catch (error:any) {
-      throw Error('创建和同步需要在相同客户端')
-    }
-    const miniKeyJsonString = await file.readFile<string>(miniKeyFilePath)
-    const miniKeyEncryptPack = await this.crypto.encryptString(miniKeyJsonString, masterKeyHexCode)
-    return this.api.setUserMiniKeyInfo({
-      configItem: 'useSyncMiniKey',
-      value: true,
-      miniKeyPack: {
-        syncId: kid,
-        pack: miniKeyEncryptPack
-      }
-    })
-  }
-
   async updateUserMasterKey({key, newKey}){
     const hexCode = this.crypto.convertToHexString(key, this.user.ccv)
     const newHexCode = this.crypto.convertToHexString(newKey, this.user.ccv)
@@ -143,41 +87,6 @@ class KeyManager extends Core {
   async clearMasterKey(){
     this.setMasterKey('')
     return this.cache.deleteMasterKey()
-  }
-
-  async clearMiniKey(){
-    this.setMasterKey('')
-    return this.cache.deleteMiniKey()
-  }
-
-  async checkMiniKey(){
-    if(!this.user.useMiniKey || !this.user.useSyncMiniKey) return
-    if(!this.user.miniKeyPack?.syncId) return
-    const miniKeyFilePath = await this.getMiniKeyPath(this.user.miniKeyPack.syncId)
-    try {
-      await file.checkAccess(miniKeyFilePath)
-    } catch (error:any) {
-      throw Error('快速密码未同步')
-    }
-    console.debug('快速密码同步正常')
-  }
-
-  async syncMiniKey(){
-    if(!this.user.miniKeyPack?.syncId || !this.user.miniKeyPack?.pack){
-      throw Error('无法同步快速密码')
-    }
-    const masterKeyHexCode = this.crypto.convertToHexString(this._userKey, this.user.ccv)
-    const miniKeyPackJsonString = await this.crypto.decryptString(this.user.miniKeyPack.pack, masterKeyHexCode)
-    let miniKeyPack
-    try {
-      miniKeyPack = JSON.parse(miniKeyPackJsonString)
-    } catch (_) {}
-    if(!miniKeyPack || !miniKeyPack.rk || !miniKeyPack.keyPack){
-      throw Error('同步失败')
-    }
-    const miniKeyFilePath = await this.getMiniKeyPath(this.user.miniKeyPack.syncId)
-    await file.writeFile(miniKeyFilePath, miniKeyPackJsonString)
-    console.debug('快速密码同步成功')
   }
 
   async cacheMasterKey(){
@@ -253,10 +162,108 @@ class KeyManager extends Core {
   }
 }
 
+class MiniKeyManager extends KeyManager {
+  async createMiniKey({miniKey}:{miniKey:string}){
+    if(!this._userKey || !miniKey) throw Error('出错了！')
+    const randomHexString = await this.crypto.randomHexString(12)
+    const hexCode = this.crypto.convertToHexString(`${miniKey}${randomHexString}`, this.user.ccv)
+    const masterKeyHexCode = this.crypto.convertToHexString(this._userKey, this.user.ccv)
+    const miniKeyPack = await this.crypto.createCommonKeyPack(hexCode, masterKeyHexCode)
+    const miniKeySaveData = JSON.stringify({
+      rk: randomHexString,
+      keyPack: miniKeyPack
+    })
+    const keyId = await this.crypto.randomHexString(8)
+    const miniKeySaveDataPath = await this.getMiniKeyPath(keyId)
+    await file.writeFile(miniKeySaveDataPath, miniKeySaveData)
+    return this.api.setUserMiniKeyInfo({
+      configItem: 'useMiniKey',
+      syncId: keyId,
+      value: true
+    })
+  }
+
+  async closeMiniKey(){
+    await this.clearMiniKey()
+    return this.api.setUserMiniKeyInfo({
+      configItem: 'useMiniKey',
+      value: false
+    })
+  }
+
+  async closeSyncMiniKey(){
+    return this.api.setUserMiniKeyInfo({
+      configItem: 'useSyncMiniKey',
+      value: false
+    })
+  }
+
+  async setSyncMiniKey(kid:string){
+    if(!this._userKey) throw Error('出错了！')
+    const masterKeyHexCode = this.crypto.convertToHexString(this._userKey, this.user.ccv)
+    const miniKeyFilePath = await this.getMiniKeyPath(kid)
+    try {
+      await file.checkAccess(miniKeyFilePath)
+    } catch (error:any) {
+      throw Error('创建和同步需要在相同客户端')
+    }
+    const miniKeyJsonString = await file.readFile<string>(miniKeyFilePath)
+    const miniKeyEncryptPack = await this.crypto.encryptString(miniKeyJsonString, masterKeyHexCode)
+    return this.api.setUserMiniKeyInfo({
+      configItem: 'useSyncMiniKey',
+      value: true,
+      miniKeyPack: {
+        syncId: kid,
+        pack: miniKeyEncryptPack
+      }
+    })
+  }
+
+  async clearMiniKey(){
+    this.setMasterKey('')
+    return this.cache.deleteMiniKey()
+  }
+
+  async checkMiniKey(){
+    if(!this.user.useMiniKey || !this.user.useSyncMiniKey) return
+    if(!this.user.miniKeyPack?.syncId) return
+    const miniKeyFilePath = await this.getMiniKeyPath(this.user.miniKeyPack.syncId)
+    try {
+      await file.checkAccess(miniKeyFilePath)
+    } catch (error:any) {
+      throw Error('快速密码未同步')
+    }
+    console.debug('快速密码同步正常')
+  }
+
+  async syncMiniKey(){
+    if(!this.user.miniKeyPack?.syncId || !this.user.miniKeyPack?.pack){
+      throw Error('无法同步快速密码')
+    }
+    const masterKeyHexCode = this.crypto.convertToHexString(this._userKey, this.user.ccv)
+    const miniKeyPackJsonString = await this.crypto.decryptString(this.user.miniKeyPack.pack, masterKeyHexCode)
+    let miniKeyPack
+    try {
+      miniKeyPack = JSON.parse(miniKeyPackJsonString)
+    } catch (_) {}
+    if(!miniKeyPack || !miniKeyPack.rk || !miniKeyPack.keyPack){
+      throw Error('同步失败')
+    }
+    const miniKeyFilePath = await this.getMiniKeyPath(this.user.miniKeyPack.syncId)
+    await file.writeFile(miniKeyFilePath, miniKeyPackJsonString)
+    console.debug('快速密码同步成功')
+  }
+}
+
 function getKeyManager(){
   return KeyManager.getInstance<KeyManager>()
 }
 
+function getMiniKeyManager(){
+  return MiniKeyManager.getInstance<MiniKeyManager>()
+}
+
 export {
-    getKeyManager
+    getKeyManager,
+    getMiniKeyManager
 }
