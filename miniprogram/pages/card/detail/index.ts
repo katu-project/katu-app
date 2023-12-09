@@ -125,7 +125,7 @@ Page({
 
   async checkSyncMiniKey(){
     try {
-      await app.miniKeyManager.checkMiniKey()
+      await app.miniKeyManager.checkState()
     } catch (error) {
       const { confirm } = await app.showChoose('已启用多端同步，同步快速密码？')
       if(confirm){
@@ -293,7 +293,7 @@ Page({
     app.keyManager.loadMasterKeyWithKey(key).then(async ()=>{
       this.hideInputKey()
       if(this.syncMiniKey){
-        await loadData(app.miniKeyManager.syncMiniKey)
+        await loadData(app.miniKeyManager.sync)
         await app.showNotice('快速密码同步成功')
         this.syncMiniKey = false
       }

@@ -58,7 +58,7 @@ Page({
       }
       this.showSetMiniKeyStep(1)
     }else{
-      await loadData(app.miniKeyManager.closeMiniKey)
+      await loadData(app.miniKeyManager.disable)
       app.showNotice('取消成功')
       user.reloadInfo().then(this.loadData)
     }
@@ -85,14 +85,14 @@ Page({
       }
       this.setSyncMiniKey()
     }else{
-      await loadData(app.miniKeyManager.closeSyncMiniKey)
+      await loadData(app.miniKeyManager.disableSync)
       app.showNotice('取消成功')
       user.reloadInfo().then(this.loadData)
     }
   },
 
   async setSyncMiniKey(){
-    loadData(app.miniKeyManager.setSyncMiniKey, user.miniKeyPack?.syncId).then(()=>{
+    loadData(app.miniKeyManager.enableSync, user.miniKeyPack?.syncId).then(()=>{
       app.showNotice('设置成功')
       user.reloadInfo().then(this.loadData)
     })

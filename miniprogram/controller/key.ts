@@ -183,22 +183,22 @@ class MiniKeyManager extends KeyManager {
     })
   }
 
-  async closeMiniKey(){
-    await this.clearMiniKey()
+  async disable(){
+    await this.cache.deleteMiniKey()
     return this.api.setUserMiniKeyInfo({
       configItem: 'useMiniKey',
       value: false
     })
   }
 
-  async closeSyncMiniKey(){
+  async disableSync(){
     return this.api.setUserMiniKeyInfo({
       configItem: 'useSyncMiniKey',
       value: false
     })
   }
 
-  async setSyncMiniKey(kid:string){
+  async enableSync(kid:string){
     if(!this._userKey) throw Error('出错了！')
     const masterKeyHexCode = this.crypto.convertToHexString(this._userKey, this.user.ccv)
     const miniKeyFilePath = await this.getMiniKeyPath(kid)
@@ -219,12 +219,7 @@ class MiniKeyManager extends KeyManager {
     })
   }
 
-  async clearMiniKey(){
-    this.setMasterKey('')
-    return this.cache.deleteMiniKey()
-  }
-
-  async checkMiniKey(){
+  async checkState(){
     if(!this.user.useMiniKey || !this.user.useSyncMiniKey) return
     if(!this.user.miniKeyPack?.syncId) return
     const miniKeyFilePath = await this.getMiniKeyPath(this.user.miniKeyPack.syncId)
@@ -236,7 +231,7 @@ class MiniKeyManager extends KeyManager {
     console.debug('快速密码同步正常')
   }
 
-  async syncMiniKey(){
+  async sync(){
     if(!this.user.miniKeyPack?.syncId || !this.user.miniKeyPack?.pack){
       throw Error('无法同步快速密码')
     }
