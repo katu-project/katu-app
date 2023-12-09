@@ -232,7 +232,7 @@ Page({
   // key input section
   inputKeyConfirm(e){
     const key = e.detail.value
-    app.masterKeyManager.loadMasterKeyWithKey(key).then(()=>{
+    app.masterKeyManager.loadWithKey(key).then(()=>{
       this.hideInputKey()
       this.tapToSaveCard()
     }).catch(error=>{

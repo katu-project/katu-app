@@ -131,28 +131,32 @@ class MiniKeyManager extends KeyManager {
 }
 
 class MasterKeyManager extends KeyManager{
-  async setUserMasterKey(key: string){
+
+  setValue(key:string){
+    this._masterKey = key
+  }
+
+  async create(key: string){
     const hexCode = this.crypto.convertToHexString(key, this.user.ccv)
     const masterKeyPack = await this.crypto.createCommonKeyPack(hexCode)
     return this.api.setMasterKeyInfo(masterKeyPack)
   }
 
-  async updateUserMasterKey({key, newKey}){
+  async update({key, newKey}){
     const hexCode = this.crypto.convertToHexString(key, this.user.ccv)
     const newHexCode = this.crypto.convertToHexString(newKey, this.user.ccv)
-    if(!this.user.masterKeyPack?.keyPack) throw Error('未设置主密码')
     // 获取主密码
-    const masterKey = await this.crypto.fetchKeyFromKeyPack(this.user.masterKeyPack.keyPack, hexCode)
-    // 重新生成新的主密码包, 更新时使用最新的ccv
+    const masterKey = await this.crypto.fetchKeyFromKeyPack(this.user.masterKeyPack!.keyPack, hexCode)
+    // 重新生成新的主密码包, 更新时使用最新的 ccv
     const masterKeyPack = await this.crypto.createCommonKeyPack(newHexCode, masterKey)
     // 更新主密码包
     return this.api.setMasterKeyInfo(masterKeyPack)
   }
 
-  async loadMasterKey(){
+  async load(){
     const masterKey = await this.cache.getMasterKey()
     if(masterKey){
-      this.setMasterKey(masterKey)
+      this.setValue(masterKey)
       console.log("本地缓存的主密码加载成功")
     }else{
       console.warn("未发现本地缓存的主密码")
@@ -160,7 +164,7 @@ class MasterKeyManager extends KeyManager{
   }
 
   // 用户主密码导出原始主密码
-  async loadMasterKeyWithKey(key:string){
+  async loadWithKey(key:string){
     if(!this.user.masterKeyPack?.keyPack) throw Error('未设置主密码')
     
     let hexCode = ''
@@ -181,19 +185,15 @@ class MasterKeyManager extends KeyManager{
     }
     const masterKey = await this.crypto.fetchKeyFromKeyPack(this.user.masterKeyPack.keyPack, hexCode)
     this._userKey = key
-    this.setMasterKey(masterKey)
+    this.setValue(masterKey)
   }
 
-  setMasterKey(key:string){
-    this._masterKey = key
-  }
-
-  async clearMasterKey(){
-    this.setMasterKey('')
+  async clear(){
+    this.setValue('')
     return this.cache.deleteMasterKey()
   }
 
-  async cacheMasterKey(){
+  async setCache(){
     if(!this.masterKey) return
     return this.cache.setMasterKey(this.masterKey)
   }

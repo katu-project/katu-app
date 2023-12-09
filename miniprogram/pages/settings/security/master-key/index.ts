@@ -57,7 +57,7 @@ Page({
     }
     const params = { key, newKey }
     app.masterKeyManager.checkMasterKeyFormat(newKey)
-    loadData(app.masterKeyManager.updateUserMasterKey,params).then(()=>{
+    loadData(app.masterKeyManager.update, params).then(()=>{
       this.finishTask()
     })
   },
@@ -68,13 +68,13 @@ Page({
       return
     }
     app.masterKeyManager.checkMasterKeyFormat(key)
-    loadData(app.masterKeyManager.setUserMasterKey,key).then(()=>{
+    loadData(app.masterKeyManager.create, key).then(()=>{
       this.finishTask()
     })
   },
 
   async finishTask(){
-    app.masterKeyManager.clearMasterKey()
+    app.masterKeyManager.clear()
     await app.showNotice(`主密码${user.isSetMasterKey?'更新':'设置'}成功`)
     user.reloadInfo()
     app.navigateBack()
@@ -173,7 +173,7 @@ Page({
 
   inputKeyConfirm(e){
     const key = e.detail.value
-    app.masterKeyManager.loadMasterKeyWithKey(key).then(()=>{
+    app.masterKeyManager.loadWithKey(key).then(()=>{
       this.hideInputKey()
       this.oldKey = key
       this.tapToStartSetKey()

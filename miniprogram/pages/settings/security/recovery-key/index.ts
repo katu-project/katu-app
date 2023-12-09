@@ -230,7 +230,7 @@ Page({
 
   inputKeyConfirm(e){
     const key = e.detail.value
-    app.masterKeyManager.loadMasterKeyWithKey(key).then(()=>{
+    app.masterKeyManager.loadWithKey(key).then(()=>{
       this.hideInputKey()
       this.genCert()
     }).catch(error=>{

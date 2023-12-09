@@ -59,7 +59,7 @@ class AppManager extends Controller {
     await this.user.init()
     if(this.user.isSetMasterKey && this.user.rememberPassword){
       console.log("用户启用记住密码，尝试加载主密码")
-      this.masterKeyManager.loadMasterKey()
+      this.masterKeyManager.load()
     }
   }
 
@@ -73,8 +73,8 @@ class AppManager extends Controller {
   }
 
   loadGlobalEvents(){
-    this.on('CacheMasterKey', this.masterKeyManager.cacheMasterKey)
-    this.on('ClearMasterKey', this.masterKeyManager.clearMasterKey)
+    this.on('CacheMasterKey', this.masterKeyManager.setCache)
+    this.on('ClearMasterKey', this.masterKeyManager.clear)
   }
 
   async loadGlobalTask(){
@@ -316,7 +316,7 @@ class AppManager extends Controller {
   async deleteAccount(){
     await this.user.deleteAccount()
     await this.clearCacheData()
-    return this.masterKeyManager.clearMasterKey()
+    return this.masterKeyManager.clear()
   }
   //设置页结束
 

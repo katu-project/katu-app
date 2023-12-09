@@ -121,7 +121,7 @@ Page({
       app.showNotice(`快速密码设置成功`)
       user.reloadInfo().then(this.loadData)
     }else{
-      app.masterKeyManager.loadMasterKeyWithKey(key).then(()=>{
+      app.masterKeyManager.loadWithKey(key).then(()=>{
         this.inputKey = ''
         this.hideInputKey()
         setTimeout(()=>{
@@ -149,7 +149,7 @@ Page({
     if(this.useKeyFor === 'setKey'){
       this.createMiniKey(key)
     }else if(this.useKeyFor === 'setSync'){
-      app.masterKeyManager.loadMasterKeyWithKey(key).then(()=>{
+      app.masterKeyManager.loadWithKey(key).then(()=>{
         this.inputKey = ''
         this.hideInputKey()
         this.setSyncMiniKey()

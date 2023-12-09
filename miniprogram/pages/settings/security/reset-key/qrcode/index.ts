@@ -53,7 +53,7 @@ Page({
   },
 
   async finishTask(){
-    app.masterKeyManager.clearMasterKey()
+    app.masterKeyManager.clear()
     user.reloadInfo()
     await app.showNotice(`主密码重置成功`)
     app.navigateBack()

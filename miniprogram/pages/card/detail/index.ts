@@ -290,7 +290,7 @@ Page({
 
   inputKeyConfirm(e){
     const key = e.detail.value
-    app.masterKeyManager.loadMasterKeyWithKey(key).then(async ()=>{
+    app.masterKeyManager.loadWithKey(key).then(async ()=>{
       this.hideInputKey()
       if(this.syncMiniKey){
         await loadData(app.miniKeyManager.sync)
