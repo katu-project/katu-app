@@ -196,7 +196,7 @@ Page({
       await app.showConfirm("生成新凭证会使已有凭证失效",'仍然继续')
     }
     try {
-      app.keyManager.checkMasterKey()
+      app.masterKeyManager.checkMasterKey()
     } catch (error:any) {
       if(error.code[0] === '2'){
         this.showInputKey()
@@ -230,7 +230,7 @@ Page({
 
   inputKeyConfirm(e){
     const key = e.detail.value
-    app.keyManager.loadMasterKeyWithKey(key).then(()=>{
+    app.masterKeyManager.loadMasterKeyWithKey(key).then(()=>{
       this.hideInputKey()
       this.genCert()
     }).catch(error=>{

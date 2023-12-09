@@ -2,7 +2,7 @@ import Controller from '@/class/controller'
 import { showChoose, setClipboardData, sleep, file, getPrivacySetting } from '@/utils/index'
 import { getCardManager } from './card'
 import { getUserManager } from './user'
-import { getKeyManager, getMiniKeyManager } from './key'
+import { getKeyManager, getMiniKeyManager, getMasterKeyManager } from './key'
 
 class AppManager extends Controller {
   AppInfo = wx.getAccountInfoSync()
@@ -43,6 +43,10 @@ class AppManager extends Controller {
     return getKeyManager()
   }
 
+  get masterKeyManager(){
+    return getMasterKeyManager()
+  }
+  
   get miniKeyManager(){
     return getMiniKeyManager()
   }
@@ -55,7 +59,7 @@ class AppManager extends Controller {
     await this.user.init()
     if(this.user.isSetMasterKey && this.user.rememberPassword){
       console.log("用户启用记住密码，尝试加载主密码")
-      this.keyManager.loadMasterKey()
+      this.masterKeyManager.loadMasterKey()
     }
   }
 
@@ -69,8 +73,8 @@ class AppManager extends Controller {
   }
 
   loadGlobalEvents(){
-    this.on('CacheMasterKey', this.keyManager.cacheMasterKey)
-    this.on('ClearMasterKey', this.keyManager.clearMasterKey)
+    this.on('CacheMasterKey', this.masterKeyManager.cacheMasterKey)
+    this.on('ClearMasterKey', this.masterKeyManager.clearMasterKey)
   }
 
   async loadGlobalTask(){
@@ -312,7 +316,7 @@ class AppManager extends Controller {
   async deleteAccount(){
     await this.user.deleteAccount()
     await this.clearCacheData()
-    return this.keyManager.clearMasterKey()
+    return this.masterKeyManager.clearMasterKey()
   }
   //设置页结束
 

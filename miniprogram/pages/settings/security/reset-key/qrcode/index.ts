@@ -41,10 +41,10 @@ Page({
   },
 
   async setMasterKey(){
-    app.keyManager.checkMasterKeyFormat(this.data.masterKey)
+    app.masterKeyManager.checkMasterKeyFormat(this.data.masterKey)
 
     await app.showConfirm('确认使用该密码？')
-    loadData(app.keyManager.resetMasterKeyWithRecoveryKey,{
+    loadData(app.masterKeyManager.resetMasterKeyWithRecoveryKey,{
       rk: this.data.recoveryKey,
       newKey: this.data.masterKey
     }).then(()=>{
@@ -53,7 +53,7 @@ Page({
   },
 
   async finishTask(){
-    app.keyManager.clearMasterKey()
+    app.masterKeyManager.clearMasterKey()
     user.reloadInfo()
     await app.showNotice(`主密码重置成功`)
     app.navigateBack()

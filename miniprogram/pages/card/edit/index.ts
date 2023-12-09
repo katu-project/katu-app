@@ -186,7 +186,7 @@ Page({
         return
       }
       try {
-        app.keyManager.checkMasterKey()
+        app.masterKeyManager.checkMasterKey()
       } catch (error:any) {
         if(error.code[0] === '2'){
           this.showInputKey()
@@ -232,7 +232,7 @@ Page({
   // key input section
   inputKeyConfirm(e){
     const key = e.detail.value
-    app.keyManager.loadMasterKeyWithKey(key).then(()=>{
+    app.masterKeyManager.loadMasterKeyWithKey(key).then(()=>{
       this.hideInputKey()
       this.tapToSaveCard()
     }).catch(error=>{

@@ -49,7 +49,7 @@ Page({
 
     if(value){
       try {
-        app.keyManager.checkMasterKey()
+        app.masterKeyManager.checkMasterKey()
       } catch (error) {
         this.showInputKey({
           inputMode: 'adv'
@@ -76,7 +76,7 @@ Page({
 
     if(value){
       try {
-        app.keyManager.checkMasterKey()
+        app.masterKeyManager.checkMasterKey()
       } catch (error) {
         this.showInputKey({
           changeMode: true
@@ -121,7 +121,7 @@ Page({
       app.showNotice(`快速密码设置成功`)
       user.reloadInfo().then(this.loadData)
     }else{
-      app.keyManager.loadMasterKeyWithKey(key).then(()=>{
+      app.masterKeyManager.loadMasterKeyWithKey(key).then(()=>{
         this.inputKey = ''
         this.hideInputKey()
         setTimeout(()=>{
@@ -149,7 +149,7 @@ Page({
     if(this.useKeyFor === 'setKey'){
       this.createMiniKey(key)
     }else if(this.useKeyFor === 'setSync'){
-      app.keyManager.loadMasterKeyWithKey(key).then(()=>{
+      app.masterKeyManager.loadMasterKeyWithKey(key).then(()=>{
         this.inputKey = ''
         this.hideInputKey()
         this.setSyncMiniKey()

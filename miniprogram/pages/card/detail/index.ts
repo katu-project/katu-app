@@ -196,7 +196,7 @@ Page({
 
   async showEncryptedImage(){    
     try {
-      app.keyManager.checkMasterKey()
+      app.masterKeyManager.checkMasterKey()
     } catch (error:any) {
       if(error.code[0] === '2'){
         this.showInputKey()
@@ -290,7 +290,7 @@ Page({
 
   inputKeyConfirm(e){
     const key = e.detail.value
-    app.keyManager.loadMasterKeyWithKey(key).then(async ()=>{
+    app.masterKeyManager.loadMasterKeyWithKey(key).then(async ()=>{
       this.hideInputKey()
       if(this.syncMiniKey){
         await loadData(app.miniKeyManager.sync)
