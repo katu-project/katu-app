@@ -2,6 +2,7 @@ import Module from "@/class/module"
 import { getCpk, getCpkFromFile } from "./pkv/index"
 import { bip39, convert, crypto, file } from "@/utils/index"
 
+const CommonError = "内部参数错误"
 const ConvertUserKeyError = '密码转化出错'
 const CalculateKeyIdError = '获取密码ID出错'
 const KatuCryptoFormatter = {
@@ -212,16 +213,22 @@ class Crypto extends Module {
     }
   }
 
-  verifyKeyId(key:string, keyPack:IMasterKeyPack, ccv){
-    if(this.calculateKeyId(key, ccv) !== keyPack.keyId) throw Error("密码ID未通过验证")
+  verifyKeyId(key:string, keyPack:IMasterKeyPack){
+    if(this.calculateKeyId(key, keyPack.ccv) !== keyPack.keyId) throw Error("密码ID未通过验证")
   }
 
+  // dkey 原始密码
+  // key 生成的密码
   async createCommonKeyPack(dkey: string, key?: string){
+    // 选择当前使用的 ccv 版本
     const ccv = this.config.useCommonCryptoVersion
     if(!key){
-      const commonKeyConfig = CommonCryptoVersionMap[ccv].commonKey
-      key = await crypto[commonKeyConfig.method].call(null, commonKeyConfig.length) as string
+      const { method, length } = CommonCryptoVersionMap[ccv].commonKey
+      if(!crypto[method]) throw Error(CommonError)
+      key = await crypto[method].call(null, length) as string
     }
+    // 输入的原始密码统一使用 ccv 里配置的 hash 方法转化一遍
+    dkey = this.convertToHexString(dkey, ccv)
     const keyPack:IMasterKeyPack = {
       keyPack: this.encryptString(key, dkey),
       hexKeyId: this.calculateKeyId(dkey, ccv),
@@ -231,8 +238,9 @@ class Crypto extends Module {
     return keyPack
   }
 
-  async fetchKeyFromKeyPack(keyPack:string, dkey:string){
-    const key = this.decryptString(keyPack, dkey)
+  async fetchKeyFromKeyPack(keyPack:IKeyPack, dkey:string){
+    dkey = this.convertToHexString(dkey, keyPack.ccv)
+    const key = this.decryptString(keyPack.keyPack, dkey)
     if(!key) throw Error("密码有误")
     return key
   }

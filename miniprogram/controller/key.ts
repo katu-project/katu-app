@@ -46,11 +46,12 @@ class ResetKeyManager extends KeyManager {
 
 class MiniKeyManager extends KeyManager {
   async createMiniKey({miniKey}:{miniKey:string}){
-    if(!this._userKey || !miniKey) throw Error('出错了！')
+    if(!miniKey) throw Error('快速密码不能为空')
+    if(!this.masterKey) throw Error('读取主密码错误')
     const randomHexString = await this.crypto.randomHexString(12)
-    const hexCode = this.crypto.convertToHexString(`${miniKey}${randomHexString}`, this.user.ccv)
-    const masterKeyHexCode = this.crypto.convertToHexString(this._userKey, this.user.ccv)
-    const miniKeyPack = await this.crypto.createCommonKeyPack(hexCode, masterKeyHexCode)
+    const mixMiniKey = `${miniKey}${randomHexString}`
+    const miniKeyPack = await this.crypto.createCommonKeyPack(mixMiniKey, this.masterKey)
+    // 该数据存在本地    
     const miniKeySaveData = JSON.stringify({
       rk: randomHexString,
       keyPack: miniKeyPack
@@ -81,8 +82,7 @@ class MiniKeyManager extends KeyManager {
   }
 
   async enableSync(kid:string){
-    if(!this._userKey) throw Error('出错了！')
-    const masterKeyHexCode = this.crypto.convertToHexString(this._userKey, this.user.ccv)
+    if(!this.masterKey) throw Error('读取主密码错误')
     const miniKeyFilePath = await this.getMiniKeyPath(kid)
     try {
       await file.checkAccess(miniKeyFilePath)
@@ -90,7 +90,7 @@ class MiniKeyManager extends KeyManager {
       throw Error('创建和同步需要在相同客户端')
     }
     const miniKeyJsonString = await file.readFile<string>(miniKeyFilePath)
-    const miniKeyEncryptPack = await this.crypto.encryptString(miniKeyJsonString, masterKeyHexCode)
+    const miniKeyEncryptPack = await this.crypto.encryptString(miniKeyJsonString, this.masterKey)
     return this.api.setUserMiniKeyInfo({
       configItem: 'useSyncMiniKey',
       value: true,
@@ -117,8 +117,7 @@ class MiniKeyManager extends KeyManager {
     if(!this.user.miniKeyPack?.syncId || !this.user.miniKeyPack?.pack){
       throw Error('无法同步快速密码')
     }
-    const masterKeyHexCode = this.crypto.convertToHexString(this._userKey, this.user.ccv)
-    const miniKeyPackJsonString = await this.crypto.decryptString(this.user.miniKeyPack.pack, masterKeyHexCode)
+    const miniKeyPackJsonString = await this.crypto.decryptString(this.user.miniKeyPack.pack, this.masterKey)
     let miniKeyPack
     try {
       miniKeyPack = JSON.parse(miniKeyPackJsonString)
@@ -139,18 +138,15 @@ class MasterKeyManager extends KeyManager{
   }
 
   async create(key: string){
-    const hexCode = this.crypto.convertToHexString(key, this.user.ccv)
-    const masterKeyPack = await this.crypto.createCommonKeyPack(hexCode)
+    const masterKeyPack = await this.crypto.createCommonKeyPack(key)
     return this.api.setMasterKeyInfo(masterKeyPack)
   }
 
   async update({key, newKey}){
-    const hexCode = this.crypto.convertToHexString(key, this.user.ccv)
-    const newHexCode = this.crypto.convertToHexString(newKey, this.user.ccv)
-    // 获取主密码
-    const masterKey = await this.crypto.fetchKeyFromKeyPack(this.user.masterKeyPack!.keyPack, hexCode)
+    // 获取目前使用的主密码
+    const masterKey = await this.crypto.fetchKeyFromKeyPack(this.user.masterKeyPack!, key)
     // 重新生成新的主密码包, 更新时使用最新的 ccv
-    const masterKeyPack = await this.crypto.createCommonKeyPack(newHexCode, masterKey)
+    const masterKeyPack = await this.crypto.createCommonKeyPack(newKey, masterKey)
     // 更新主密码包
     return this.api.setMasterKeyInfo(masterKeyPack)
   }
@@ -169,23 +165,22 @@ class MasterKeyManager extends KeyManager{
   async loadWithKey(key:string){
     if(!this.user.masterKeyPack?.keyPack) throw Error('未设置主密码')
     
-    let hexCode = ''
+    let masterKey = ''
     if(this.user.useMiniKey && key.length === 6){
       const miniKeySaveDataPath = await this.getMiniKeyPath(this.user.miniKeyPack?.syncId!)
-      let miniKeyHexCode, keyPack
+      let mixMiniKey, keyPack
       try {
         const keyPackJson = JSON.parse(await file.readFile<string>(miniKeySaveDataPath))
-        miniKeyHexCode = this.crypto.convertToHexString(`${key}${keyPackJson.rk}`, this.user.ccv)
+        mixMiniKey = `${key}${keyPackJson.rk}`
         keyPack = keyPackJson.keyPack
       } catch (error) {
         throw Error('快速密码不可用，请使用主密码!')
       }
-      hexCode = await this.crypto.fetchKeyFromKeyPack(keyPack.keyPack, miniKeyHexCode)
+      masterKey = await this.crypto.fetchKeyFromKeyPack(keyPack, mixMiniKey)
     }else{
       this.checkMasterKeyFormat(key)
-      hexCode = this.crypto.convertToHexString(key, this.user.ccv)
+      masterKey = await this.crypto.fetchKeyFromKeyPack(this.user.masterKeyPack, key)
     }
-    const masterKey = await this.crypto.fetchKeyFromKeyPack(this.user.masterKeyPack.keyPack, hexCode)
     this._userKey = key
     this.setValue(masterKey)
   }
@@ -224,7 +219,7 @@ class MasterKeyManager extends KeyManager{
     }
 
     try {
-      this.crypto.verifyKeyId(this.masterKey, this.user.masterKeyPack!, this.user.ccv)
+      this.crypto.verifyKeyId(this.masterKey, this.user.masterKeyPack!)
     } catch (err) {
       error.code = '22'
       error.message = '主密码不匹配'
@@ -242,9 +237,8 @@ class MasterKeyManager extends KeyManager{
     this.checkMasterKeyFormat(newKey)
     if(!this.user.recoveryKeyPack) throw Error("没有设置备份主密码")
     const masterKey = this.crypto.extractKeyFromRecoveryKeyPack(this.user.recoveryKeyPack, rk)
-    const newHexCode = this.crypto.convertToHexString(newKey, this.user.ccv)
     // 重新生成新的主密码包
-    const masterKeyPack = await this.crypto.createCommonKeyPack(newHexCode, masterKey)
+    const masterKeyPack = await this.crypto.createCommonKeyPack(newKey, masterKey)
     // 更新主密码包
     return this.api.setMasterKeyInfo(masterKeyPack)
   }
