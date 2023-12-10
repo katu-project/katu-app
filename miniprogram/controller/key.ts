@@ -22,16 +22,18 @@ class KeyManager extends Core {
   get masterKey(){
     return this._masterKey
   }
+}
 
-  async generateRecoveryKey(){
+class ResetKeyManager extends KeyManager {
+  async create(){
     return this.crypto.createRecoveryKey(this.masterKey, this.user.ccv)
   }
 
-  setRecoveryKey(keyPack){
+  save(keyPack){
     return this.api.setRecoveryKey(keyPack)
   }
 
-  async checkResetCode(){
+  async checkState(){
     const qrPack = await this.scanQrcode({
       onlyFromCamera: false
     })
@@ -248,10 +250,6 @@ class MasterKeyManager extends KeyManager{
   }
 }
 
-function getKeyManager(){
-  return KeyManager.getInstance<KeyManager>()
-}
-
 function getMiniKeyManager(){
   return MiniKeyManager.getInstance<MiniKeyManager>()
 }
@@ -260,8 +258,12 @@ function getMasterKeyManager(){
   return MasterKeyManager.getInstance<MasterKeyManager>()
 }
 
+function getResetKeyManager(){
+  return ResetKeyManager.getInstance<ResetKeyManager>()
+}
+
 export {
-    getKeyManager,
     getMiniKeyManager,
-    getMasterKeyManager
+    getMasterKeyManager,
+    getResetKeyManager
 }

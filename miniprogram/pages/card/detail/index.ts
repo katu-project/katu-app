@@ -208,7 +208,7 @@ Page({
    
     const card = await loadData(
       cardManager.getCard, 
-      {id: this.id, key:app.keyManager.masterKey}, 
+      {id: this.id, key:app.masterKeyManager.masterKey}, 
       '读取卡面数据'
     )
     

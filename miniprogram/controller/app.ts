@@ -2,7 +2,7 @@ import Controller from '@/class/controller'
 import { showChoose, setClipboardData, sleep, file, getPrivacySetting } from '@/utils/index'
 import { getCardManager } from './card'
 import { getUserManager } from './user'
-import { getKeyManager, getMiniKeyManager, getMasterKeyManager } from './key'
+import { getMiniKeyManager, getMasterKeyManager, getResetKeyManager } from './key'
 
 class AppManager extends Controller {
   AppInfo = wx.getAccountInfoSync()
@@ -39,16 +39,16 @@ class AppManager extends Controller {
     return getCardManager()
   }
 
-  get keyManager(){
-    return getKeyManager()
-  }
-
   get masterKeyManager(){
     return getMasterKeyManager()
   }
   
   get miniKeyManager(){
     return getMiniKeyManager()
+  }
+
+  get resetKeyManager(){
+    return getResetKeyManager()
   }
 
   get shareInfo(){

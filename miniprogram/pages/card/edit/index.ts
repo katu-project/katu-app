@@ -207,7 +207,7 @@ Page({
       }
     }
 
-    loadData(this.data.edit?cardManager.update:cardManager.add, {card, key: app.keyManager.masterKey}, {returnFailed: true})
+    loadData(this.data.edit?cardManager.update:cardManager.add, {card, key: app.masterKeyManager.masterKey}, {returnFailed: true})
             .then(this.saveDone)
             .catch(this.saveFailed)
             .finally(this.saveFinish)

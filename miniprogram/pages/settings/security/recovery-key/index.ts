@@ -177,10 +177,10 @@ Page({
 
   async genCert(){
     await showLoading('请稍等')
-    const { keyPack, qrPack } = await app.keyManager.generateRecoveryKey()
+    const { keyPack, qrPack } = await app.resetKeyManager.create()
     const canvasCtx = await this.initCanvas()
     await this.drawRecoveryKey(canvasCtx, qrPack)
-    await loadData(app.keyManager.setRecoveryKey, keyPack)
+    await loadData(app.resetKeyManager.save, keyPack)
     user.reloadInfo()
 
     this.setData({
