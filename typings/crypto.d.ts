@@ -1,4 +1,4 @@
-type KeyPair = {key:string, salt:string}
+type KeyPair = { key: string, salt: string }
 
 type HashType = 'MD5' | 'SHA1' | 'SHA256'
 
@@ -20,11 +20,12 @@ interface IMiniKeyPack extends IKeyPack {
   
 }
 
-interface IRecoveryKeyPack {
+interface IResetKeyPack {
   createTime: string
   keyId: string
   pack: string
   qrId: string
+  ccv: CommonCryptoVersion
 }
 interface ICryptoPackage {
   ver: CpkVersion
@@ -33,7 +34,7 @@ interface ICryptoPackage {
   cpt: (imagePath: string, extraData: string) => Promise<string>
   cmd: (salt: string, extraData: string[][]) => Promise<string>
   eed: (imagePath: string) => Promise<string>
-  spt: (plaintext: string, imagePath: string) => Promise<{image: string, extraData: string}>
+  spt: (plaintext: string, imagePath: string) => Promise<{ image: string, extraData: string }>
 }
 
 interface ICryptoConfig {

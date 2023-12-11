@@ -245,31 +245,34 @@ class Crypto extends Module {
     return key
   }
 
-  generateRecoveryKey(){
+  createBip39Key(){
     const words = bip39.generateMnemonic()
     return bip39.mnemonicToEntropy(words)
   }
 
-  async createRecoveryKeyContent(){
+  async createResetKeyContent(){
     const qrId = await this.randomHexString(2)
     return {
       id: qrId.toUpperCase(),
       time: new Date().toLocaleDateString(),
-      rk: this.generateRecoveryKey()
+      rk: this.createBip39Key()
     }
   }
 
-  async createRecoveryKeyPack(rkContent, dkey, ccv){
-    const keyPack: IRecoveryKeyPack = {
+  // todo: 在后面使用重置码重置主密码时，可以检测重置码是否有效【ccv 用于选择合适的id算法】
+  async createResetKeyPack(rkContent, dkey){
+    const ccv = this.config.useCommonCryptoVersion
+    const keyPack: IResetKeyPack = {
       qrId: rkContent.id,
       createTime: rkContent.time,
       keyId: this.calculateKeyId(rkContent.rk, ccv),
-      pack: this.encryptString(dkey, rkContent.rk)
+      pack: this.encryptString(dkey, rkContent.rk),
+      ccv
     }
     return keyPack
   }
 
-  async createRecoveryKeyQrCodePack(rkContent){
+  async createResetKeyQrCodePack(rkContent){
     const qrPack = {
       i: rkContent.id,
       t: rkContent.time,
@@ -278,17 +281,17 @@ class Crypto extends Module {
     return qrPack
   }
 
-  async createRecoveryKey(masterKey:string, ccv){
-    const rkContent = await this.createRecoveryKeyContent()
-    const keyPack = await this.createRecoveryKeyPack(rkContent, masterKey, ccv)
-    const qrPack = await this.createRecoveryKeyQrCodePack(rkContent)
+  async createResetKey(masterKey:string){
+    const rkContent = await this.createResetKeyContent()
+    const keyPack = await this.createResetKeyPack(rkContent, masterKey)
+    const qrPack = await this.createResetKeyQrCodePack(rkContent)
     return {
       keyPack,
       qrPack
     }
   }
 
-  extractKeyFromRecoveryKeyPack(keyPack, rk){
+  extractKeyFromResetKeyPack(keyPack, rk){
     const masterKey = this.decryptString(keyPack.pack, rk)
     if(!masterKey) throw Error("密码有误")
     return masterKey

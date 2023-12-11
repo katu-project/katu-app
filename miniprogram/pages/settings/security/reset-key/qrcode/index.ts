@@ -44,7 +44,7 @@ Page({
     app.masterKeyManager.checkMasterKeyFormat(this.data.masterKey)
 
     await app.showConfirm('确认使用该密码？')
-    loadData(app.masterKeyManager.resetMasterKeyWithRecoveryKey,{
+    loadData(app.masterKeyManager.resetMasterKeyWithResetKey,{
       rk: this.data.recoveryKey,
       newKey: this.data.masterKey
     }).then(()=>{

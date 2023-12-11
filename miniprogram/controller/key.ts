@@ -26,7 +26,7 @@ class KeyManager extends Core {
 
 class ResetKeyManager extends KeyManager {
   async create(masterKey:string){
-    return this.crypto.createRecoveryKey(masterKey, this.user.ccv)
+    return this.crypto.createResetKey(masterKey)
   }
 
   save(keyPack){
@@ -233,10 +233,10 @@ class MasterKeyManager extends KeyManager{
     if(!clearKey || clearKey.length < 6) throw Error("格式错误")
   }
 
-  async resetMasterKeyWithRecoveryKey({rk, newKey}){
+  async resetMasterKeyWithResetKey({rk, newKey}){
     this.checkMasterKeyFormat(newKey)
     if(!this.user.recoveryKeyPack) throw Error("没有设置备份主密码")
-    const masterKey = this.crypto.extractKeyFromRecoveryKeyPack(this.user.recoveryKeyPack, rk)
+    const masterKey = this.crypto.extractKeyFromResetKeyPack(this.user.recoveryKeyPack, rk)
     // 重新生成新的主密码包
     const masterKeyPack = await this.crypto.createCommonKeyPack(newKey, masterKey)
     // 更新主密码包

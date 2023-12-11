@@ -12,7 +12,7 @@ interface IUser {
     syncId: string,
     pack: string
   },
-  recoveryKeyPack: IRecoveryKeyPack
+  recoveryKeyPack: IResetKeyPack
   quota: {
     remain: number
   }
