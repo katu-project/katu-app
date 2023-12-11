@@ -38,7 +38,6 @@ interface ICryptoPackage {
 }
 
 interface ICryptoConfig {
-  defaultCommonCryptoVersion: CommonCryptoVersion,
   useCommonCryptoVersion: CommonCryptoVersion,
   usePackageVersion: CpkVersion
 }
