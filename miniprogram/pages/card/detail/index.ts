@@ -293,7 +293,7 @@ Page({
     app.masterKeyManager.loadWithKey(key).then(async ()=>{
       this.hideInputKey()
       if(this.syncMiniKey){
-        await loadData(app.miniKeyManager.sync)
+        await loadData(app.miniKeyManager.sync, app.masterKeyManager.masterKey)
         await app.showNotice('快速密码同步成功')
         this.syncMiniKey = false
       }

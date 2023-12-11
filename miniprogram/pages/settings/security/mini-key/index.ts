@@ -92,7 +92,10 @@ Page({
   },
 
   async setSyncMiniKey(){
-    loadData(app.miniKeyManager.enableSync, user.miniKeyPack?.syncId).then(()=>{
+    loadData(app.miniKeyManager.enableSync, {
+      kid: user.miniKeyPack?.syncId,
+      masterKey: app.masterKeyManager.masterKey
+    }).then(()=>{
       app.showNotice('设置成功')
       user.reloadInfo().then(this.loadData)
     })
@@ -116,7 +119,8 @@ Page({
       }
       this.hideInputKey()
       await loadData(app.miniKeyManager.createMiniKey,{
-        miniKey: this.inputKey
+        miniKey: this.inputKey,
+        masterKey: app.masterKeyManager.masterKey
       })
       app.showNotice(`快速密码设置成功`)
       user.reloadInfo().then(this.loadData)

@@ -177,7 +177,7 @@ Page({
 
   async genCert(){
     await showLoading('请稍等')
-    const { keyPack, qrPack } = await app.resetKeyManager.create()
+    const { keyPack, qrPack } = await app.resetKeyManager.create(app.masterKeyManager.masterKey)
     const canvasCtx = await this.initCanvas()
     await this.drawRecoveryKey(canvasCtx, qrPack)
     await loadData(app.resetKeyManager.save, keyPack)

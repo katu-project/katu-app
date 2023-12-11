@@ -25,8 +25,8 @@ class KeyManager extends Core {
 }
 
 class ResetKeyManager extends KeyManager {
-  async create(){
-    return this.crypto.createRecoveryKey(this.masterKey, this.user.ccv)
+  async create(masterKey:string){
+    return this.crypto.createRecoveryKey(masterKey, this.user.ccv)
   }
 
   save(keyPack){
@@ -45,12 +45,12 @@ class ResetKeyManager extends KeyManager {
 }
 
 class MiniKeyManager extends KeyManager {
-  async createMiniKey({miniKey}:{miniKey:string}){
+  async createMiniKey({miniKey, masterKey}:{miniKey:string, masterKey:string}){
     if(!miniKey) throw Error('快速密码不能为空')
-    if(!this.masterKey) throw Error('读取主密码错误')
+    if(!masterKey) throw Error('读取主密码错误')
     const randomHexString = await this.crypto.randomHexString(12)
     const mixMiniKey = `${miniKey}${randomHexString}`
-    const miniKeyPack = await this.crypto.createCommonKeyPack(mixMiniKey, this.masterKey)
+    const miniKeyPack = await this.crypto.createCommonKeyPack(mixMiniKey, masterKey)
     // 该数据存在本地    
     const miniKeySaveData = JSON.stringify({
       rk: randomHexString,
@@ -81,8 +81,8 @@ class MiniKeyManager extends KeyManager {
     })
   }
 
-  async enableSync(kid:string){
-    if(!this.masterKey) throw Error('读取主密码错误')
+  async enableSync({kid,masterKey}:{kid:string, masterKey:string}){
+    if(!masterKey) throw Error('读取主密码错误')
     const miniKeyFilePath = await this.getMiniKeyPath(kid)
     try {
       await file.checkAccess(miniKeyFilePath)
@@ -90,7 +90,7 @@ class MiniKeyManager extends KeyManager {
       throw Error('创建和同步需要在相同客户端')
     }
     const miniKeyJsonString = await file.readFile<string>(miniKeyFilePath)
-    const miniKeyEncryptPack = await this.crypto.encryptString(miniKeyJsonString, this.masterKey)
+    const miniKeyEncryptPack = await this.crypto.encryptString(miniKeyJsonString, masterKey)
     return this.api.setUserMiniKeyInfo({
       configItem: 'useSyncMiniKey',
       value: true,
@@ -113,11 +113,11 @@ class MiniKeyManager extends KeyManager {
     console.debug('快速密码同步正常')
   }
 
-  async sync(){
+  async sync(masterKey:string){
     if(!this.user.miniKeyPack?.syncId || !this.user.miniKeyPack?.pack){
       throw Error('无法同步快速密码')
     }
-    const miniKeyPackJsonString = await this.crypto.decryptString(this.user.miniKeyPack.pack, this.masterKey)
+    const miniKeyPackJsonString = await this.crypto.decryptString(this.user.miniKeyPack.pack, masterKey)
     let miniKeyPack
     try {
       miniKeyPack = JSON.parse(miniKeyPackJsonString)
