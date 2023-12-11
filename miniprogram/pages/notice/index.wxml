@@ -35,7 +35,7 @@
             <view style="width: 85vw;height: 1rpx;background-color: rgb(160, 156, 156);"></view>
           </view>
           <view class="padding" style="color: darkslategray;">
-            <rich-text nodes="{{item.content}}"/>
+            <rich-text user-select="{{true}}" nodes="{{item.content}}"/>
           </view>
         </view>
       </view>
