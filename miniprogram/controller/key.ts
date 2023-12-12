@@ -4,9 +4,6 @@ import { file } from '@/utils/index'
 import { getUserManager } from './user'
 
 class KeyManager extends Core {
-  _masterKey: string = '' // app 主密码
-  _userKey: string = '' // 用户原始密码
-
   get crypto(){
     return getCryptoModule()
   }
@@ -19,9 +16,6 @@ class KeyManager extends Core {
     return getUserManager()
   }
 
-  get masterKey(){
-    return this._masterKey
-  }
 }
 
 class ResetKeyManager extends KeyManager {
@@ -137,6 +131,12 @@ class MiniKeyManager extends KeyManager {
 }
 
 class MasterKeyManager extends KeyManager{
+  _userKey: string = '' // 用户原始密码
+  _masterKey: string = '' // app 主密码
+
+  get masterKey(){
+    return this._masterKey
+  }
 
   setValue(key:string){
     this._masterKey = key
@@ -203,37 +203,42 @@ class MasterKeyManager extends KeyManager{
     return this.cache.setMasterKey(this.masterKey)
   }
 
-  checkMasterKey(){
-    const error = {
+  check(){
+    const state = {
       code: '',
+      needKey: false,
       message: ''
     }
     if(!this.user.isSetMasterKey){
-      error.code = '10'
-      error.message = '还未设置主密码'
-      throw error
+      state.code = '10'
+      state.message = '还未设置主密码'
+      return state
     }
 
     if(!this.user.rememberPassword && !this.masterKey){
-      error.code = '21'
-      error.message = '请输入主密码'
-      throw error
+      state.code = '21'
+      state.needKey = true
+      state.message = '请输入主密码'
+      return state
     }
 
     if(!this.masterKey) {
-      error.code = '20'
-      error.message = '请输入主密码'
-      throw error
+      state.code = '20'
+      state.needKey = true
+      state.message = '请输入主密码'
+      return state
     }
 
     try {
       this.crypto.verifyKeyId(this.masterKey, this.user.masterKeyPack!)
     } catch (err) {
-      error.code = '22'
-      error.message = '主密码不匹配'
-      throw error
+      state.code = '22'
+      state.needKey = true
+      state.message = '密码错误'
+      return state
     }
 
+    return
   }
 
   checkMasterKeyFormat(key:string){

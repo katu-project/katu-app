@@ -195,13 +195,13 @@ Page({
     if(this.data.setRecoveryKey){
       await app.showConfirm("生成新凭证会使已有凭证失效",'仍然继续')
     }
-    try {
-      app.masterKeyManager.checkMasterKey()
-    } catch (error:any) {
-      if(error.code[0] === '2'){
+
+    const state = app.masterKeyManager.check()
+    if(state){
+      if(state.needKey){
         this.showInputKey()
       }else{
-        app.showNotice(`主密码错误: ${error.message}`)
+        app.showNotice(state.message)
       }
       return
     }

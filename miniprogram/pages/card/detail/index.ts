@@ -195,13 +195,12 @@ Page({
   },
 
   async showEncryptedImage(){    
-    try {
-      app.masterKeyManager.checkMasterKey()
-    } catch (error:any) {
-      if(error.code[0] === '2'){
+    const state = app.masterKeyManager.check()
+    if(state){
+      if(state.needKey){
         this.showInputKey()
       }else{
-        app.showNotice(`解密卡片出错: ${error.message}`)
+        app.showNotice(state.message)
       }
       return
     }

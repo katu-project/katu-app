@@ -48,12 +48,15 @@ Page({
     if(cancel) return
 
     if(value){
-      try {
-        app.masterKeyManager.checkMasterKey()
-      } catch (error) {
-        this.showInputKey({
-          inputMode: 'adv'
-        })
+      const state = app.masterKeyManager.check()
+      if(state){
+        if(state.needKey){
+          this.showInputKey({
+            inputMode: 'adv'
+          })
+        }else{
+          app.showNotice(state.message)
+        }
         return
       }
       this.showSetMiniKeyStep(1)
@@ -75,12 +78,15 @@ Page({
     if(cancel) return
 
     if(value){
-      try {
-        app.masterKeyManager.checkMasterKey()
-      } catch (error) {
-        this.showInputKey({
-          changeMode: true
-        })
+      const state = app.masterKeyManager.check()
+      if(state){
+        if(state.needKey){
+          this.showInputKey({
+            changeMode: true
+          })
+        }else{
+          app.showNotice(state.message)
+        }
         return
       }
       this.setSyncMiniKey()

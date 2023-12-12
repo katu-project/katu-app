@@ -185,13 +185,12 @@ Page({
         await app.showSetMasterKeyNotice()
         return
       }
-      try {
-        app.masterKeyManager.checkMasterKey()
-      } catch (error:any) {
-        if(error.code[0] === '2'){
+      const state = app.masterKeyManager.check()
+      if(state){
+        if(state.needKey){
           this.showInputKey()
         }else{
-          this.saveFailed(error)
+          this.saveFailed(state)
         }
         return
       }
