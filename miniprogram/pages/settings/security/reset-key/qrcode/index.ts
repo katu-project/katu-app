@@ -44,9 +44,12 @@ Page({
     app.masterKeyManager.checkMasterKeyFormat(this.data.masterKey)
 
     await app.showConfirm('确认使用该密码？')
-    loadData(app.masterKeyManager.resetMasterKeyWithResetKey,{
-      rk: this.data.recoveryKey,
-      newKey: this.data.masterKey
+    loadData(async ()=>{
+      const originMasterKey = await app.resetKeyManager.fetchKeyFromResetKey(this.data.recoveryKey)
+      await app.masterKeyManager.update({
+        originKey: originMasterKey,
+        newKey: this.data.masterKey
+      })
     }).then(()=>{
       this.finishTask()
     })

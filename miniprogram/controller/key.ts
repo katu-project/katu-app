@@ -33,6 +33,11 @@ class ResetKeyManager extends KeyManager {
     return this.api.setRecoveryKey(keyPack)
   }
 
+  async fetchKeyFromResetKey(rk){
+    if(!this.user.recoveryKeyPack) throw Error("没有设置备份主密码")
+    return this.crypto.extractKeyFromResetKeyPack(this.user.recoveryKeyPack, rk)
+  }
+
   async checkState(){
     const qrPack = await this.scanQrcode({
       onlyFromCamera: false
@@ -142,11 +147,14 @@ class MasterKeyManager extends KeyManager{
     return this.api.setMasterKeyInfo(masterKeyPack)
   }
 
-  async update({key, newKey}){
-    // 获取目前使用的主密码
-    const masterKey = await this.crypto.fetchKeyFromKeyPack(this.user.masterKeyPack!, key)
+  async update({key, newKey, originKey}:{key?:string, newKey, originKey?:string}){
+    if(key && originKey) throw Error('内部错误')
+    if(key){
+      // 获取目前使用的主密码
+      originKey = await this.crypto.fetchKeyFromKeyPack(this.user.masterKeyPack!, key)
+    }
     // 重新生成新的主密码包, 更新时使用最新的 ccv
-    const masterKeyPack = await this.crypto.createCommonKeyPack(newKey, masterKey)
+    const masterKeyPack = await this.crypto.createCommonKeyPack(newKey, originKey)
     // 更新主密码包
     return this.api.setMasterKeyInfo(masterKeyPack)
   }
@@ -231,16 +239,6 @@ class MasterKeyManager extends KeyManager{
   checkMasterKeyFormat(key:string){
     const clearKey = key.replace(/\s/g, '')
     if(!clearKey || clearKey.length < 6) throw Error("格式错误")
-  }
-
-  async resetMasterKeyWithResetKey({rk, newKey}){
-    this.checkMasterKeyFormat(newKey)
-    if(!this.user.recoveryKeyPack) throw Error("没有设置备份主密码")
-    const masterKey = this.crypto.extractKeyFromResetKeyPack(this.user.recoveryKeyPack, rk)
-    // 重新生成新的主密码包
-    const masterKeyPack = await this.crypto.createCommonKeyPack(newKey, masterKey)
-    // 更新主密码包
-    return this.api.setMasterKeyInfo(masterKeyPack)
   }
 }
 
