@@ -35,6 +35,8 @@ export const ONCE_NOTICE_KEYS = {
   DATA_CHECK: "DATA_CHECK"
 }
 
+export const MINI_KEY_LENGTH = 6
+
 export default {
   DefaultShowImage,
   DefaultShowLockImage,
@@ -50,5 +52,6 @@ export default {
   // STANDARD_CARD_DATA,
   WX_CLOUD_STORAGE_FILE_HEAD,
   LOCAL_CACHE_KEYS,
-  ONCE_NOTICE_KEYS
+  ONCE_NOTICE_KEYS,
+  MINI_KEY_LENGTH
 }

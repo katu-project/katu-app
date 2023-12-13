@@ -174,7 +174,7 @@ class MasterKeyManager extends KeyManager{
     if(!this.user.masterKeyPack?.keyPack) throw Error('未设置主密码')
     
     let masterKey = ''
-    if(this.user.useMiniKey && key.length === 6){
+    if(this.user.useMiniKey && key.length === this.getConst('MINI_KEY_LENGTH')){
       const miniKeySaveDataPath = await this.getMiniKeyPath(this.user.miniKeyPack?.syncId!)
       let mixMiniKey, keyPack
       try {
