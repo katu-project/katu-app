@@ -247,20 +247,14 @@ class MasterKeyManager extends KeyManager{
   }
 }
 
-function getMiniKeyManager(){
+export function getMiniKeyManager(){
   return MiniKeyManager.getInstance<MiniKeyManager>()
 }
 
-function getMasterKeyManager(){
+export function getMasterKeyManager(){
   return MasterKeyManager.getInstance<MasterKeyManager>()
 }
 
-function getResetKeyManager(){
+export function getResetKeyManager(){
   return ResetKeyManager.getInstance<ResetKeyManager>()
-}
-
-export {
-    getMiniKeyManager,
-    getMasterKeyManager,
-    getResetKeyManager
 }
