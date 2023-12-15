@@ -1,10 +1,10 @@
 project.private.config.json
-node_modules
 miniprogram_npm
 /minitest
-/miniprogram/components/we-cropper
 /miniprogram/packages/debug
 /scripts
+/api
+
 
 .DS_Store
-/api
+node_modules
