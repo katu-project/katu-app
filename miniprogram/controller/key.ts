@@ -32,14 +32,10 @@ class ResetKeyManager extends KeyManager {
     return this.crypto.extractKeyFromResetKeyPack(this.user.recoveryKeyPack, rk)
   }
 
-  async checkState(){
-    const qrPack = await this.scanQrcode({
-      onlyFromCamera: false
-    })
-    if(qrPack && qrPack.i !== this.user.recoveryKeyPack?.qrId){
-      throw Error('重置凭证ID不匹配!')
+  async checkState(qrPack){
+    if(!qrPack || qrPack.i !== this.user.recoveryKeyPack?.qrId){
+      throw Error('凭证ID不匹配!')
     }
-    return qrPack
   }
 }
 
