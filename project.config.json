@@ -1,6 +1,5 @@
 {
   "miniprogramRoot": "miniprogram/",
-  "cloudfunctionRoot": "cloud/",
   "setting": {
     "urlCheck": true,
     "es6": true,
@@ -47,8 +46,7 @@
   },
   "appid": "",
   "projectname": "卡兔APP",
-  "libVersion": "2.14.1",
-  "cloudfunctionTemplateRoot": "cloudfunctionTemplate/",
+  "libVersion": "3.0.0",
   "condition": {},
   "srcMiniprogramRoot": "miniprogram/",
   "compileType": "miniprogram",
