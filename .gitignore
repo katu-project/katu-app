@@ -3,7 +3,7 @@ miniprogram_npm
 /minitest
 /miniprogram/packages/debug
 /scripts
-/api
+/cloud
 
 
 .DS_Store
