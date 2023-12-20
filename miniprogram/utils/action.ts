@@ -115,16 +115,14 @@ type LoadDataOptions = {
   hideLoading: boolean,
   loadingTitle: string,
   returnFailed: boolean,
-  timeoutCheck: boolean,
   timeout: number
 }
 
 async function loadData<T>(func?: (args?:any) => Promise<T>, params?: Object, options?: Partial<LoadDataOptions> | string): Promise<T> {
   let loadingTitle = '正在处理请求', 
-      returnFailed = false, 
-      hideLoading = false, 
-      timeoutCheck = true,
-      timeout = 0
+      returnFailed = false,
+      hideLoading = false,
+      timeout = 10000
   if(options){
     if(typeof options === 'string'){
       loadingTitle = options
@@ -132,7 +130,6 @@ async function loadData<T>(func?: (args?:any) => Promise<T>, params?: Object, op
       loadingTitle = options.loadingTitle || loadingTitle
       returnFailed = options.returnFailed || false
       hideLoading = options.hideLoading || false
-      timeoutCheck = options.timeoutCheck === undefined ? true : options.timeoutCheck
       timeout = options.timeout || 10000
     }
   }
@@ -155,12 +152,12 @@ async function loadData<T>(func?: (args?:any) => Promise<T>, params?: Object, op
 
   await sleep(300)
 
-  const timeoutCheckFunc = timeoutCheck ? new Promise(async (_,reject)=>{
-    await sleep(10000)
+  const timeoutCheckFunc = timeout !== -1 ? new Promise(async (_,reject)=>{
+    await sleep(timeout)
     reject({
       message: '服务超时，请重试或刷新小程序'
     })
-  }) : new Promise(()=>{})
+  }) : Promise.resolve()
 
   return new Promise((resolve,reject)=>{
     Promise.race([
