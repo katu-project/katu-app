@@ -14,7 +14,7 @@ Page({
   async tapToSelectQrcode(){
     const qrPack = await loadData(app.scanQrcode, {
       onlyFromCamera: false
-    })
+    }, { timeout: -1 })
     await loadData(app.resetKeyManager.checkState, qrPack)
     await app.showConfirm("重置凭证数据读取成功\n开始设置新密码？")
     this.setData({

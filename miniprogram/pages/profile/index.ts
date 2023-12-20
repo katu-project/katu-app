@@ -83,7 +83,7 @@ Page({
   },
 
   async tapToScan(){
-    const resultJson = await loadData(app.scanQrcode,{},{ timeoutCheck: false })
+    const resultJson = await loadData(app.scanQrcode,{},{ timeout: -1 })
     loadData(async ()=>{
       let msg = '未知二维码'
       if(resultJson.type === 'login'){
