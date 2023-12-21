@@ -175,7 +175,56 @@ async function loadData<T>(func?: (args?:any) => Promise<T>, params?: Object, op
       wx.hideLoading({
         complete: () => {
           if(returnFailed) return reject(error)
-          if(!error.code || error.code === 1){
+          if(Object.hasOwnProperty ? Object.hasOwnProperty.call(error,'code'): error.code){ // 业务错误代码
+            if(error.code === 1){ // 普通业务错误代码
+              wx.showModal({
+                title: '操作错误',
+                content: error.message || '未知错误',
+                showCancel: false,
+              })
+            }else{ // 特殊业务错误代码
+              console.warn(error)
+              const showContent = `错误代码: ${error.code}`
+              const showModalOption: WechatMiniprogram.ShowModalOption = {
+                title: `服务错误`,
+                content: `${error.message || '请稍后重试'}\n${showContent}`,
+                confirmText: '联系客服',
+                showCancel: false,
+                success: ({confirm})=>{
+                  if(!confirm) return
+                  wx.redirectTo({
+                    url: '/pages/about/contact/index',
+                  })
+                },
+                fail: ()=>{
+                  wx.reLaunch({
+                    url: '/pages/home/index',
+                  })
+                }
+              }
+              // 400以上是用户账户相关问题
+              if(error.code.toString().startsWith('4')){
+                showModalOption.title = '账户状态异常'
+              }
+              // 500以上是应用程序出错
+              if(error.code.toString().startsWith('5')){
+                showModalOption.title = '服务异常'
+                showModalOption.content = '很抱歉，服务暂时不可用'
+                showModalOption.showCancel = true
+              }
+  
+              if(!showModalOption.success){
+                showModalOption.success = ({confirm})=>{
+                  if(!confirm) return
+                  wx.reLaunch({
+                    url: '/pages/home/index',
+                  })
+                }
+              }
+  
+              wx.showModal(showModalOption)
+            }
+          }else{ // 小程序内部错误
             if(error.errMsg && ['scanCode:fail cancel'].includes(error.errMsg)){
               wx.showToast({
                 title: '操作取消',
@@ -184,52 +233,11 @@ async function loadData<T>(func?: (args?:any) => Promise<T>, params?: Object, op
             }else{
               wx.showModal({
                 title: '操作错误',
-                content: error.message || error.errMsg || '未知错误',
+                content: error.errMsg || error.message || error,
                 showCancel: false,
               })
             }
-          }else{
-            console.warn(error)
-            const showContent = error.code ? `错误代码: ${error.code}` : ''
-            const showModalOption: WechatMiniprogram.ShowModalOption = {
-              title: `服务错误`,
-              content: `${error.message || '请稍后重试'}\n${showContent}`,
-              confirmText: '联系客服',
-              showCancel: false,
-              success: ({confirm})=>{
-                if(!confirm) return
-                wx.redirectTo({
-                  url: '/pages/about/contact/index',
-                })
-              },
-              fail: ()=>{
-                wx.reLaunch({
-                  url: '/pages/home/index',
-                })
-              }
-            }
-            // 400以上是用户账户相关问题
-            if(error.code.toString().startsWith('4')){
-              showModalOption.title = '账户状态异常'
-            }
-            // 500以上是应用程序出错
-            if(error.code.toString().startsWith('5')){
-              showModalOption.title = '服务异常'
-              showModalOption.content = '很抱歉，服务暂时不可用'
-              showModalOption.showCancel = true
-            }
-
-            if(!showModalOption.success){
-              showModalOption.success = ({confirm})=>{
-                if(!confirm) return
-                wx.reLaunch({
-                  url: '/pages/home/index',
-                })
-              }
-            }
-
-            wx.showModal(showModalOption)
-          }
+          } 
         }
       })
     })
