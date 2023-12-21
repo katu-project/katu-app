@@ -152,17 +152,19 @@ async function loadData<T>(func?: (args?:any) => Promise<T>, params?: Object, op
 
   await sleep(300)
 
-  const timeoutCheckFunc = timeout !== -1 ? new Promise(async (_,reject)=>{
-    await sleep(timeout)
-    reject({
-      message: '服务超时，请重试或刷新小程序'
-    })
-  }) : Promise.resolve()
+  const timeoutCheck = new Promise(async (_,reject)=>{
+    if(timeout > 0){
+      await sleep(timeout)
+      reject({
+        message: '服务超时，请重试或刷新小程序'
+      })
+    }
+  })
 
   return new Promise((resolve,reject)=>{
     Promise.race([
       pfunc(params),
-      timeoutCheckFunc
+      timeoutCheck
     ]).then(res=>{
       wx.hideLoading({
         complete: ()=>{
