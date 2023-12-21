@@ -44,17 +44,26 @@ async function showChoose(title:string, content?:string, options?: WechatMinipro
 }
 
 async function scanQrcode(options?:WechatMiniprogram.ScanCodeOption){
-  const res = await wx.scanCode({
-    onlyFromCamera: true,
-    scanType: ['qrCode'],
-    ...options
-  })
-  console.debug('scanQrcode',res)
-  if(!res.result) throw Error('无效二维码')
+  let scanRes
   try {
-    return JSON.parse(res.result)
+    const res = await wx.scanCode({
+      onlyFromCamera: true,
+      scanType: ['qrCode'],
+      ...options
+    })
+    scanRes = res.result
+  } catch (error:any) {
+    if(['scanCode:fail cancel'].includes(error.errMsg)){
+      throw error
+    }
+    throw Error('无效二维码')
+  }
+  console.debug('scanQrcode',scanRes)
+  if(!scanRes) throw Error('无效二维码')
+  try {
+    return JSON.parse(scanRes)
   } catch (_) {}
-  return res.result
+  return scanRes
 }
 
 async function navigateTo(page, vibrate=false){
