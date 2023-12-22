@@ -59,7 +59,7 @@ interface IDocConfig {
 
 type RequestType = 'cloud' | 'http'
 interface IHttpRequestOptions {
-  baseUrl: string
+  api: string
   token: string
 }
 

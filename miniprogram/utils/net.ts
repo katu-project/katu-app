@@ -70,7 +70,7 @@ function createHttpRequestor(options:IHttpRequestOptions){
   apiReq.noLog = true
   const request = (url:string, data?:any) => {
     return toPromise<{},WechatMiniprogram.RequestOption>(apiReq, {
-      url: `${options.baseUrl}/${url}`,
+      url: `${options.api}/${url}`,
       data,
       header: {
         Token: options.token
@@ -89,7 +89,7 @@ function createHttpUploader(options:IHttpRequestOptions){
     try {
       resp = await toPromise<string>(upload, {
         filePath,
-        url: `${options.baseUrl}/${url}`,
+        url: `${options.api}/${url}`,
         formData: uploadInfo,
         header: {
           Token: options.token
@@ -132,7 +132,7 @@ function createHttpDownloader(options:IHttpRequestOptions){
     let res
     try {
       res = await toPromise<WechatMiniprogram.DownloadFileSuccessCallbackResult>(download, {
-        url: `${options.baseUrl}/${url}?url=${fileId}`,
+        url: `${options.api}/${url}?url=${fileId}`,
         filePath: savePath,
         header: {
           Token: options.token
