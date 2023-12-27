@@ -126,6 +126,20 @@ class AppManager extends Controller {
     this.crypto.init(this.cryptoConfig)
   }
 
+  async checkLastLogin(){
+    const currentUid = this.user.uid
+    const lastLoginUser = await this.cache.getLocalData<string>('LAST_LOGIN_UID')
+    if(!lastLoginUser){
+      await this.cache.setLocalData('LAST_LOGIN_UID', currentUid)
+      return
+    }
+    if(lastLoginUser !== currentUid){
+      await this.cache.setLocalData('LAST_LOGIN_UID', currentUid)
+      console.debug('清除上次登录用户缓存数据')
+      await this.cache.deleteHomeData()
+    }
+  }
+
   async previewImage(pics: string[], idx?:number){
     getApp().globalData.state.inPreviewPic = true
     wx.previewImage({

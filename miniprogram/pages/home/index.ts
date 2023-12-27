@@ -25,6 +25,8 @@ Page({
     app.on('cardDecrypt',this.onEventCardChange)
     app.on('cardHide',this.onEventCardHide)
     await loadData(app.loadUser,{},'加载用户信息')
+    // 检测切换账号行为，清理缓存数据
+    await app.checkLastLogin()
     if(user.isOk){
       app.loadGlobalTask()
       await this.loadData()
@@ -96,19 +98,12 @@ Page({
     
     const setData = {}
 
-    if(cateList.length){
-      setData['cateList'] = cateList
-    }else{
-      setData['cateList'] = []
-    }
+    setData['cateList'] = cateList
 
-    if(likeList.length){
-      setData['likeList'] = likeList.map(card=>{
-        card._url = app.getConst(card.encrypted ? 'DefaultShowLockImage' : 'DefaultShowImage')
-        return card
-      })
-    }
-
+    setData['likeList'] = likeList.map(card=>{
+      card._url = app.getConst(card.encrypted ? 'DefaultShowLockImage' : 'DefaultShowImage')
+      return card
+    })
     this.setData(setData)
     
     if(likeList.length){
