@@ -214,6 +214,10 @@ async function loadData<T>(func?: (args?:any) => Promise<T>, params?: Object, op
               // 400以上是用户账户相关问题
               if(error.code.toString().startsWith('4')){
                 showModalOption.title = '账户状态异常'
+                if(error.code == 401){
+                  showModalOption.title = 'Token 验证失败'
+                  showModalOption.content = '请使用正确的访问凭证'
+                }
               }
               // 500以上是应用程序出错
               if(error.code.toString().startsWith('5')){
