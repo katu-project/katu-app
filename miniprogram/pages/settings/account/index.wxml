@@ -7,7 +7,8 @@
   <view class="cu-list menu sm-border card-menu margin-top">
     <view class="cu-item">
       <view class="content">
-        <text class="text-black">账号 ID</text>
+        <text class="text-black">账号 ID </text>
+        <text class="cuIcon-question text-yellow" catchtap="tapToPage" data-page="uid-info"></text>
       </view>
       <view class="action">
         <text class="text-green text-lg padding-right-sm">{{userId}}</text>
@@ -23,7 +24,17 @@
         <text class="text-{{userTel?'green':'orange'}}">{{userTel||'未绑定'}}</text>
       </view>
     </view>
-    <view class="padding bg-white text-grey text-sm">用于接收消息通知，用户验证等</view>
+    <view class="padding bg-white text-grey text-sm">用于接收消息通知，账户验证等操作</view>
+
+    <view class="cu-item arrow" style="padding-right: 70rpx;" bindtap="tapToPage" data-page="bind-email">
+      <view class="content">
+        <text class="text-black">电子邮箱</text>
+      </view>
+      <view class="action">
+        <text class="text-{{userEmail?'green':'orange'}}">{{userEmail||'未绑定'}}</text>
+      </view>
+    </view>
+    <view class="padding bg-white text-grey text-sm">用于接收消息通知，账户验证等操作</view>
 
     <view class="cu-item">
       <view class="content">

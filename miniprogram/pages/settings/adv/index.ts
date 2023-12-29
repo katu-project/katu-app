@@ -21,7 +21,7 @@ Page({
   },
 
   async tapToCreateToken(){
-    await app.showConfirm('生成新密钥将导致旧密钥失效')
+    await app.showConfirm('确认获取新的 API 密钥?')
     const token = await loadData(app.createDevToken)
     const showTokenText = `${token.slice(0,5)}****${token.slice(-5)}`
     const { confirm } = await app.showChoose(`新密钥已生成:\n${showTokenText}`,{

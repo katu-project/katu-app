@@ -162,5 +162,9 @@ export default class Navigation extends Agent {
   openBindTelDoc(){
     return this.navToDocPage(this.navDocMap.bindTelNotice)
   }
+
+  openUidInfoDoc(){
+    return this.navToDocPage(this.navDocMap.uidInfo)
+  }
   // open app doc end
 }

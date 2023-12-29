@@ -8,6 +8,7 @@ Page({
   data: {
     userId: '',
     userTel: '',
+    userEmail: ''
   },
 
   onShow(){
@@ -20,15 +21,21 @@ Page({
       setData['userId'] = user.uid
     }
     setData['userTel'] = user.tel ? user.tel.replace(/^(\d{3}).*(\d{4})$/,'$1****$2') : ''
+    setData['userEmail'] = user.email || ''
+
     this.setData(setData)
   },
 
   async tapToPage({currentTarget:{dataset:{page}}}){
-    if(page === 'bind-tel'){
+    if(['bind-tel','bind-email'].includes(page) ){
       const {cancel} = await app.showChoose('请在卡兔网页服务端操作',{cancelText:'查看帮助'})
       if(cancel){
         app.openBindTelDoc()
       }
+      return
+    }
+    if(page === 'uid-info'){
+      app.openUidInfoDoc()
       return
     }
     app.goToPage(page)

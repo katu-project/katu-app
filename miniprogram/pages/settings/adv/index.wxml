@@ -7,13 +7,13 @@
 
   <view class="cu-item">
     <view class="content">
-    <text class="">开发者密钥</text>
+    <text class="">卡兔 API 密钥</text>
     </view>
     <view class="action">
       <button class="cu-btn round line-cyan light gfw w-150" bindtap="tapToCreateToken">
         获取</button>
     </view>
   </view>
-  <view class="padding bg-white text-grey">生成开发者密钥用于开发测试</view>
+  <view class="padding bg-white text-grey">为开发者用户提供的访问凭证</view>
 
 </view>
