@@ -58,10 +58,10 @@
 
     <view class="cu-item">
       <view class="content">
-        <text class="">小程序备案号</text>
+        <text class="">备案号</text>
       </view>
       <view class="action">
-        <text class="text-sm">粤ICP备2023001493号-2X</text>
+        <text class="text-sm text-grey">粤ICP备2023001493号</text>
       </view>
     </view>
   </view>
