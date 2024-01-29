@@ -1,26 +1,38 @@
 import { file } from '@/utils/index'
 import v0 from './v0'
+// cpk 包标志位长度，不能变动
+const PACKAGE_SIGN_LENGTH = 8
 
-const PACKAGE_VER_LENGTH = 8
-const CPKMarkMap: {[v:string]:CpkVersion} = {
-    [v0.mid]: v0.ver
+/**
+ * 取 sign 前4位字符转换成数字 0000 -> 0 0001 -> 1 0011 -> 11
+ * @param sign 
+ * @returns 
+ */
+function signToImportKey(sign:string){
+    return 'v' + parseInt(sign.slice(0,4)).toString()
 }
 
-const CPKMap: {[k in CpkVersion]:ICryptoPackage} = {
-    v0
-}
-
-export function getCpk(ver:CpkVersion){
-    return CPKMap[ver]
+export function getCpk(ver: string): ICryptoPackage{
+    if(ver === 'v0') return v0
+    const npmCpk = `@katucloud/cpk@v${ver}`
+    try {
+        const cpk = require(npmCpk)
+        console.log(cpk)
+        return cpk
+    } catch (error) {
+        console.log(error)
+        throw Error('内部错误102')
+    }
 }
 
 export async function getCpkFromFile(filePath:string){
     const fileSize = await file.getFileSize(filePath)
-    const versionMark = await file.readFileByPosition<string>({
+    const cpkSign = await file.readFileByPosition<string>({
       filePath,
       encoding: 'hex',
-      position: fileSize - PACKAGE_VER_LENGTH
+      position: fileSize - PACKAGE_SIGN_LENGTH
     })
-    if(!CPKMarkMap[versionMark]) throw Error(`未知加密版本: ${versionMark}`)
-    return getCpk(CPKMarkMap[versionMark])
+    const cpk = signToImportKey(cpkSign)
+    console.debug('load cpk :', cpk)
+    return getCpk(cpk)
 }

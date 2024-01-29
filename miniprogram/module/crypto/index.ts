@@ -117,10 +117,12 @@ class Crypto extends Module {
 
   async encryptImage({keyPair:{key, salt}, imagePath, extraData, savePath}: IEncryptImageOptions){
     const cpk = getCpk(this.config.usePackageVersion)
+    // 附加数据对象 -> JSON 字符串 -> Hex 字符串
     const edh = this.packExtraData(extraData)
-    const plaintext = await cpk.cpt(imagePath, edh)
+    const imageHex = await file.readFile<string>(imagePath, 'hex')
+    const plaintext = await cpk.cpt(imageHex, edh)
     const encryptedData = this.encryptText(plaintext, key, cpk.dea)
-    const encryptedPackage = encryptedData + await cpk.cmd(salt, extraData)
+    const encryptedPackage = encryptedData + await cpk.cmd(salt, edh.length)
     console.debug(`加密版本: ${cpk.ver}`)
     this.printDebugInfo({key, salt, extraData, edh, plaintext, encryptedData, encryptedPackage})
     await file.writeFile(savePath, encryptedPackage, 'hex')
@@ -137,10 +139,11 @@ class Crypto extends Module {
     }
     const cpk = await getCpkFromFile(imagePath)
 
-    const encryptedData = await cpk.eed(imagePath)
+    const packageHex = await file.readFile<string>(imagePath, 'hex')
+    const encryptedData = await cpk.eed(packageHex)
     const plaintext = await this.decryptText(encryptedData, key, cpk.dea)
     if(!plaintext) throw Error("解密错误")
-    const { image, extraData } = await cpk.spt(plaintext, imagePath)
+    const { image, extraData } = await cpk.spt(plaintext, packageHex)
     // 检测并解密附加数据
     try {
       decryptedImage.extraData = this.unpackExtraData(extraData)

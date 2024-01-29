@@ -2,8 +2,6 @@ type KeyPair = { key: string, salt: string }
 
 type HashType = 'MD5' | 'SHA1' | 'SHA256'
 
-type CpkVersion = 'v0'
-
 type CommonCryptoVersion = 'v0' | 'v1'
 
 interface IKeyPack {
@@ -28,18 +26,17 @@ interface IResetKeyPack {
   ccv: CommonCryptoVersion
 }
 interface ICryptoPackage {
-  ver: CpkVersion
-  mid: string
+  ver: string
   dea: any
   cpt: (imagePath: string, extraData: string) => Promise<string>
-  cmd: (salt: string, extraData: string[][]) => Promise<string>
+  cmd: (salt: string, edhl:number) => Promise<string>
   eed: (imagePath: string) => Promise<string>
   spt: (plaintext: string, imagePath: string) => Promise<{ image: string, extraData: string }>
 }
 
 interface ICryptoConfig {
   useCommonCryptoVersion: CommonCryptoVersion,
-  usePackageVersion: CpkVersion
+  usePackageVersion: string
 }
 
 interface IEncryptImageOptions {
