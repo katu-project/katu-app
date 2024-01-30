@@ -9,7 +9,11 @@ Component({
     bgColor: {
       type: String,
       default: ''
-    }, 
+    },
+    backColor: {
+      type: String,
+      default: ''
+    },
     isCustom: {
       type: Boolean,
       default: false
@@ -32,7 +36,7 @@ Component({
     BackPage() {
       wx.navigateBack({
         delta: 1
-      }).catch(e=>{
+      }).catch(()=>{
         this.toHome()
       })
     },
