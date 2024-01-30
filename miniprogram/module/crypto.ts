@@ -1,10 +1,13 @@
 import Module from "@/class/module"
-import { getCpk, getCpkFromFile } from "./pkv/index"
+import { getCpk, getPackageCpk } from '@katucloud/cpk'
 import { bip39, convert, crypto, file } from "@/utils/index"
 
 const CommonError = "内部参数错误"
 const ConvertUserKeyError = '密码转化出错'
 const CalculateKeyIdError = '获取密码ID出错'
+// cpk 包标志位长度，不能变动
+const PACKAGE_SIGN_LENGTH = 8
+
 const KatuCryptoFormatter = {
   stringify: function(cipherParams) {
     const KatuMark = [0x9527,0x4396]
@@ -123,7 +126,7 @@ class Crypto extends Module {
     const plaintext = await cpk.cpt(imageHex, edh)
     const encryptedData = this.encryptText(plaintext, key, cpk.dea)
     const encryptedPackage = encryptedData + await cpk.cmd(salt, edh.length)
-    console.debug(`加密版本: ${cpk.ver}`)
+    console.debug(`cpk 版本: ${cpk.ver}`)
     this.printDebugInfo({key, salt, extraData, edh, plaintext, encryptedData, encryptedPackage})
     await file.writeFile(savePath, encryptedPackage, 'hex')
     return {
@@ -137,9 +140,8 @@ class Crypto extends Module {
       savePath,
       extraData: []
     }
-    const cpk = await getCpkFromFile(imagePath)
-
     const packageHex = await file.readFile<string>(imagePath, 'hex')
+    const cpk = await getPackageCpk(packageHex, PACKAGE_SIGN_LENGTH)
     const encryptedData = await cpk.eed(packageHex)
     const plaintext = await this.decryptText(encryptedData, key, cpk.dea)
     if(!plaintext) throw Error("解密错误")

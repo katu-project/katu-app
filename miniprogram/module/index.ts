@@ -1,3 +1,3 @@
 export { getNoticeModule } from './notice'
-export { getCryptoModule } from './crypto/index'
+export { getCryptoModule } from './crypto'
 export { getCacheModule } from './cache'
