@@ -31,7 +31,8 @@
     "pages/about/contact/index",
     "pages/quota/index",
     "pages/quota/detail/index",
-    "pages/notice/index"
+    "pages/notice/index",
+    "pages/auth/index"
   ],
   "subPackages": [
     {

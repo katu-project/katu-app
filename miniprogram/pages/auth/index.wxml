@@ -1,0 +1,45 @@
+<cu-custom isBack="{{true}}" backColor="text-white">
+  <view class="text-white" slot="backText"></view>
+</cu-custom>
+<view class="home-bg"></view>
+
+<view class="page flex-col">
+  <view class="flex-row justify-center">
+    <image class="topLogo" mode="aspectFit" src="/static/logo-t.svg"></image>
+  </view>
+
+  <view style="margin-top:40%">
+    <!-- #if MP -->
+    <button class="cu-btn block line-cyan lg gfw round shadow" style="background: rgba(224, 255, 255, 0.5)" catchtap="tapToSignup" hover-class="none">
+      <text class="text-black">快速注册</text>
+    </button>
+    <!-- #elif NATIVE -->
+    <button class="cu-btn block line-cyan lg gfw round shadow" hover-class="none" catchtap="tapToLogin">
+      <text class="text-black">微信小程序登陆</text>
+    </button>
+    <!-- #endif -->
+  </view>
+
+  <view style="flex:1"></view>
+</view>
+
+<view class="cu-modal {{showActiveInfo?'show':''}}">
+  <view class="cu-dialog bg-white br-16" style="width: 75vw;">
+    <view class="cu-bar justify-end">
+      <view class="content text-black">温馨提示</view>
+    </view>
+    <view class="padding margin-lr" style="height: 30vh; text-align: left;">
+      <rich-text style="flex:1" nodes="{{activeInfo.notice||'内容加载中...'}}"></rich-text>
+      <view class="padding">
+        <view class="padding-top" wx:for="{{activeInfo.protocols}}" wx:key="index" data-item="{{item}}" bindtap="tapToReadDoc">
+          <text class="cuIcon-title"></text> 阅读《<text class="text-red">{{item.name}}</text>》
+        </view> 
+      </view>
+    </view>
+    <view class="action flex-row-sb padding">
+      <button class="cu-btn round lines-red gfw w-200" bindtap="hideActiveNotice">不同意</button>
+      <!-- <button class="cu-btn round bg-red" bindtap="tapToActiveAccount" style="width: 200rpx;font-weight: 300;">同意并继续</button> -->
+      <button class="cu-btn round bg-red w-200" style="font-weight: 300;" id="agree-btn" open-type="agreePrivacyAuthorization" bindagreeprivacyauthorization="tapToActiveAccount">同意并继续</button>
+    </view>
+  </view>
+</view>
