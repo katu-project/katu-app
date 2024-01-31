@@ -14,14 +14,15 @@ async function showError(msg){
   return showInfo(msg, 1)
 }
 
-async function showLoading(msg, duration=500){
+async function showLoading(msg, duration=500):Promise<()=>Promise<any>>{
   return new Promise((resolve)=>{
     wx.showLoading({
       title: msg,
     })
+    if(duration === -1) return resolve(()=>wx.hideLoading())
     sleep(duration).then(()=>{
       wx.hideLoading()
-      resolve('')
+      resolve(()=>Promise.resolve())
     })
   })
 }
