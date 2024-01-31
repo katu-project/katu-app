@@ -24,6 +24,8 @@ Page({
     app.on('cardDelete',this.onEventCardDelete)
     app.on('cardDecrypt',this.onEventCardChange)
     app.on('cardHide',this.onEventCardHide)
+    app.on('loginChange',this.onEventLoginChange)
+
     await loadData(app.loadUser,{},'加载用户信息')
     // 检测切换账号行为，清理缓存数据
     await app.checkLastLogin()
@@ -93,8 +95,15 @@ Page({
     })
   },
 
-  async loadData(forceUpdate?:boolean){
-    const {likeList, cateList} = await loadData(app.getHomeData,{forceUpdate},'加载卡片数据')
+  async loadData(forceUpdate?:boolean, hideLoading?:boolean){
+    const {likeList, cateList} = await loadData(
+      app.getHomeData,
+      {
+        forceUpdate
+      },
+      hideLoading ? {
+        hideLoading
+      } : '加载卡片数据')
     
     const setData = {}
 
@@ -108,6 +117,17 @@ Page({
     
     if(likeList.length){
       this.renderLikeCardImage()
+    }
+  },
+
+  async onEventLoginChange(login){
+    if(login){
+      this.loadData(true,true)
+    }else{
+      this.setData({
+        cateList: [],
+        likeList: []
+      })
     }
   },
   // 修改名称，图片，喜爱

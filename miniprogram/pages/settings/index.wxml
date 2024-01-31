@@ -12,5 +12,12 @@
         </view>
       </view>
     </block>
+    <!-- #if NATIVE -->
+    <view class="cu-item item margin-top-lg" catchtap="tapToLogout">
+      <view class="content text-center">
+        <text class="">退出登录</text>
+      </view>
+    </view>
+    <!-- #endif -->
   </view>
 </view>
