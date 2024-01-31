@@ -7,13 +7,13 @@ const user = getUserManager()
 Page({
   data: {
     user: {} as Partial<IUser>,
-    activeInfo: {},
     menus: app.menu.profile,
     DefaultUserAvatar: app.getConst('DefaultUserAvatar')
   },
 
   onLoad() {
     app.on('userChange',this.onEventUserChange)
+    app.on('loginChange', this.onEventLoginChange)
     this.loadUserInfo()
   },
 
@@ -22,17 +22,13 @@ Page({
 
   onShow() {
     this.getTabBar().setData({selected: 2})
-    if(getApp().globalData.showActive){
-      getApp().globalData.showActive = false
-      this.showActiveInfo()
-    }
   },
 
   tapUser(){
     if(user.isActive) {
       return this.tapToEditInfo()
     }
-    return this.showActiveInfo()
+    app.goToPage('auth/index')
   },
 
   loadUserInfo(){
@@ -46,40 +42,40 @@ Page({
     })
   },
 
-  reloadUserInfo(){
-    user.reloadInfo().then(()=>{
-      this.loadUserInfo()
-    })
-  },
-
   tapToEditInfo(){
     if(!user.isActive) return
     app.goProfileEditPage()
   },
 
   onEventUserChange(){
-    console.log('onEventUserChange')
     this.setData({
       'user.avatarUrl': app.getConst('DefaultUserAvatar')
     })
-    this.reloadUserInfo()
+    user.reloadInfo().then(()=>{
+      this.loadUserInfo()
+    })
+  },
+
+  async onEventLoginChange(login){
+    if(login){
+      user.reloadInfo().then(()=>{
+        this.loadUserInfo()
+      })
+    }else{
+      this.setData({
+        user: {}
+      })
+      user.reloadInfo()
+    }
   },
 
   async tapToItem(e){
     const item = e.currentTarget.dataset.item
     if(item.needActive && !user.isActive){
-      await app.showActiveNotice(false)
-      return this.showActiveInfo()
+      app.showMiniNotice('登录后可用')
+      return
     }
     return app.goToPage(item.url)
-  },
-
-  tapToReadDoc(e){
-    const {title,id} = e.currentTarget.dataset.item
-    if(title == 'privacy'){
-      return app.openUserPrivacyProtocol()
-    }
-    return app.navToDocPage(id)
   },
 
   async tapToScan(){
@@ -93,35 +89,6 @@ Page({
         msg = '授权登录通过'
       }
       app.showNotice(msg)
-    })
-  },
-
-  async tapToActiveAccount(){
-    await loadData(user.activeAccount, {}, '正在激活账号')
-    app.showNotice("激活成功")
-    this.reloadUserInfo()
-    this.hideActiveNotice()
-  },
-
-  async showActiveInfo(){
-    await this.loadActiveData()
-    this.setData({
-      showActiveInfo: true
-    })
-  },
-
-  hideActiveNotice(){
-    this.setData({
-      showActiveInfo: false
-    })
-  },
-  
-  async loadActiveData(){
-    if(this.data.activeInfo.id) return
-    const { activeInfo, content } = await loadData(app.getActiveInfo)
-    this.setData({
-      activeInfo,
-      'activeInfo.notice': content
     })
   }
 })
