@@ -2,6 +2,12 @@ interface String {
   replaceAll(pattern: any, replacement: string) : string;
 }
 
+interface functionDefaultOptions {
+  success?: (res: any) => void
+  fail?: (err: any) => void
+  complete?: () => void
+}
+
 declare namespace WechatMiniprogram {
   interface Console {
     time: (title:string)=>unknown
@@ -17,6 +23,9 @@ declare namespace WechatMiniprogram {
   }
   
   interface Wx {
+    checkIdentitySession(args?: functionDefaultOptions): unknown
+    weixinMiniProgramLogin(args?: functionDefaultOptions): unknown
+    logout(args?: functionDefaultOptions): unknown
     openPrivacyContract(args:any): unknown
     getPrivacySetting(args:any): unknown
   }

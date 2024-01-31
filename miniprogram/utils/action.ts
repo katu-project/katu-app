@@ -287,6 +287,27 @@ async function editImage(src){
   return toPromise<string>(editImage, args, 'tempFilePath')
 }
 
+async function checkIdentitySession(){
+  const checkSession = args => wx.checkIdentitySession(args)
+  checkSession.noLog = true
+  const args = {}
+  return toPromise<any>(checkSession, args)
+}
+
+async function weixinMiniProgramLogin(){
+  const weixinMiniProgramLogin = args => wx.weixinMiniProgramLogin(args)
+  weixinMiniProgramLogin.noLog = true
+  const args = {}
+  return toPromise<any>(weixinMiniProgramLogin, args)
+}
+
+async function weixinLogout(){
+  const weixinLogout = args => wx.logout(args)
+  weixinLogout.noLog = true
+  const args = {}
+  return toPromise<any>(weixinLogout, args)
+}
+
 export {
   showInfo,
   showChoose,
@@ -301,5 +322,8 @@ export {
   setClipboardData,
   chooseLocalImage,
   editImage,
-  scanQrcode
+  scanQrcode,
+  checkIdentitySession,
+  weixinMiniProgramLogin,
+  weixinLogout
 }
