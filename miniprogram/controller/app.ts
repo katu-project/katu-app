@@ -1,5 +1,5 @@
 import Controller from '@/class/controller'
-import { showChoose, setClipboardData, sleep, file, getPrivacySetting } from '@/utils/index'
+import { showChoose, setClipboardData, sleep, file, getPrivacySetting, showNotice } from '@/utils/index'
 import { getCardManager } from './card'
 import { getUserManager } from './user'
 import { getMiniKeyManager, getMasterKeyManager, getResetKeyManager } from './key'
@@ -425,6 +425,11 @@ class AppManager extends Controller {
   }
 
   // 弹窗提示
+
+  showMiniNotice(msg){
+    return showNotice(msg)
+  }
+
   showNotice(msg:string, options?:any){
     return showChoose('温馨提示',msg, { showCancel: false, ...options})
   }
