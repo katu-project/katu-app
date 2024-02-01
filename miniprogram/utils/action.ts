@@ -308,6 +308,13 @@ async function weixinLogout(){
   return toPromise<any>(weixinLogout, args)
 }
 
+async function hasWechatInstall(){
+  const hasWechatInstall = args => wx.miniapp.hasWechatInstall(args)
+  hasWechatInstall.noLog = true
+  const args = {}
+  return toPromise<any>(hasWechatInstall, args)
+}
+
 export {
   showInfo,
   showChoose,
@@ -325,5 +332,6 @@ export {
   scanQrcode,
   checkIdentitySession,
   weixinMiniProgramLogin,
-  weixinLogout
+  weixinLogout,
+  hasWechatInstall
 }
