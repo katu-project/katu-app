@@ -21,6 +21,9 @@
     refresher-triggered="{{isRefresh}}"
     >
   <view style="min-height:80vh">
+    <view class="text-center margin-top" wx:if="{{list.length==0}}">
+      <text class="text-gray">暂无消息</text>
+    </view>
     <view wx:for="{{list}}" wx:key="_id">
       <view class="flex-row justify-center">
         <text class="text-gray">{{item.createTime}}</text>
