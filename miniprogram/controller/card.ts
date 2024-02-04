@@ -154,7 +154,7 @@ class CardManager extends Controller{
   }
 
   // 渲染层业务接口
-  async getCard({id, ignoreCache, key}):Promise<ICard>{
+  async getCard({id, ignoreCache, key}:{id, ignoreCache?:boolean, key?:string}):Promise<ICard>{
     let card:ICard|undefined
     if(!ignoreCache){
       card = await this.cache.getCard(id)

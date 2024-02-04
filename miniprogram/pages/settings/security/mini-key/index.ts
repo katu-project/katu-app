@@ -98,6 +98,10 @@ Page({
   },
 
   async setSyncMiniKey(){
+    if(!user.miniKeyPack?.syncId) {
+      app.showNotice('启用同步出错')
+      return
+    }
     loadData(app.miniKeyManager.enableSync, {
       kid: user.miniKeyPack?.syncId,
       masterKey: app.masterKeyManager.masterKey

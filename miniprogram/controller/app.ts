@@ -55,7 +55,7 @@ class AppManager extends Controller {
     return this.getConfig('shareInfo')
   }
 
-  async loadUser(){
+  async loadUser(_:any){
     await this.user.init()
     if(this.user.isSetMasterKey && this.user.rememberPassword){
       console.log("用户启用记住密码，尝试加载主密码")
@@ -310,7 +310,7 @@ class AppManager extends Controller {
     return
   }
 
-  async getUserPrivacyNotice(){
+  async getUserPrivacyNotice(_:any){
     return this.api.getUserPrivacyInfo()
   }
 
@@ -400,7 +400,7 @@ class AppManager extends Controller {
     return this.api.sendVerifyCode(data)
   }
 
-  async getNotices(){
+  async getNotices(_:any){
     return this.api.getNotices()
   }
 

@@ -128,7 +128,12 @@ type LoadDataOptions = {
   timeout: number
 }
 
-async function loadData<T>(func?: (args?:any) => Promise<T>, params?: Object, options?: Partial<LoadDataOptions> | string): Promise<T> {
+async function loadData<T extends AnyFunction>(
+  func?: T,
+  params?: Parameters<T>[0],
+  options?: Partial<LoadDataOptions> | string
+  ): Promise<Awaited<ReturnType<T>>>
+  {
   let loadingTitle = '正在处理请求', 
       returnFailed = false,
       hideLoading = false,
@@ -171,14 +176,14 @@ async function loadData<T>(func?: (args?:any) => Promise<T>, params?: Object, op
     }
   })
 
-  return new Promise((resolve,reject)=>{
+  return new Promise<Awaited<ReturnType<T>>>((resolve,reject)=>{
     Promise.race([
       pfunc(params),
       timeoutCheck
     ]).then(res=>{
       wx.hideLoading({
         complete: ()=>{
-          resolve(res as T)
+          resolve(res as ReturnType<T>)
         }
       })
     }).catch(error=>{

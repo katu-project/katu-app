@@ -201,7 +201,7 @@ export default class User extends Controller {
     return this.api.updateTag(tag)
   }
 
-  async activeAccount(){
+  async activeAccount(_:any){
     return this.api.activeAccount({})
   }
 
