@@ -46,7 +46,7 @@
       </view>
       <view class="action"></view>
     </view>
-
+    <!-- #if MP -->
     <view class="cu-item">
       <view class="content">
         <text class="">使用反馈</text>
@@ -64,5 +64,6 @@
         <text class="text-sm text-grey">粤ICP备2023001493号</text>
       </view>
     </view>
+    <!-- #endif -->
   </view>
 </view>

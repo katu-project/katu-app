@@ -30,10 +30,12 @@
     </view>
   </view>
 
+  <!-- #if MP -->
   <view class="flex flex-col align-center padding-xl">
     <button class="cu-btn block line-cyan lg gfw" open-type="contact" hover-class="none">
       <text class="cuIcon-service padding-right-sm"></text> 我的客服
     </button>
   </view>
+  <!-- #endif -->
   <view style="flex:1"></view>
 </view>
