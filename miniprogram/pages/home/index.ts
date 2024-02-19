@@ -44,7 +44,10 @@ Page({
       }
     }else{
       if(!user.isActive){
-        app.showActiveNotice(true, '现在激活账户可领取免费兔币')
+        const neverLogin = await app.checkNeverLogin()
+        if(neverLogin){
+          app.showActiveNotice(true, '现在激活账户可领取免费兔币')
+        }
         return
       }
     }

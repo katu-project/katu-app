@@ -142,6 +142,7 @@ class AppManager extends Controller {
 
   async checkLastLogin(){
     const currentUid = this.user.uid
+    if(!currentUid) return
     const lastLoginUser = await this.cache.getLocalData<string>('LAST_LOGIN_UID')
     if(!lastLoginUser){
       await this.cache.setLocalData('LAST_LOGIN_UID', currentUid)
@@ -152,6 +153,11 @@ class AppManager extends Controller {
       console.debug('清除上次登录用户缓存数据')
       await this.cache.deleteHomeData()
     }
+  }
+
+  async checkNeverLogin(){
+    const loginUserId = await this.cache.getLocalData<string>('LAST_LOGIN_UID')
+    return !loginUserId
   }
 
   async previewImage(pics: string[], idx?:number){
