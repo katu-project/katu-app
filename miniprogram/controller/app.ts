@@ -8,8 +8,18 @@ class AppManager extends Controller {
   AppInfo = wx.getAccountInfoSync()
   DeviceInfo: Partial<WechatMiniprogram.SystemInfo> = {}
 
+  isApp = false
+  isMp = true
+
   constructor(){
     super()
+    // #if NATIVE
+    this.isMp = false
+    this.isApp = true
+    // #elif MP
+    this.isMp = true
+    this.isApp = false
+    // #endif
   }
 
   async init(){
@@ -56,6 +66,10 @@ class AppManager extends Controller {
   }
 
   async loadUser(_:any){
+    if(this.isApp){
+      const token = await this.getLocalData('KATU_APP_TOKEN')
+      if(!token) return
+    }
     await this.user.init()
     if(this.user.isSetMasterKey && this.user.rememberPassword){
       console.log("用户启用记住密码，尝试加载主密码")
