@@ -198,7 +198,7 @@ async function loadData<T extends AnyFunction>(
                 showCancel: false,
               })
             }else{ // 特殊业务错误代码
-              console.warn(error)
+              console.warn(error, func)
               const showContent = `错误代码: ${error.code}`
               const showModalOption: WechatMiniprogram.ShowModalOption = {
                 title: `服务错误`,
@@ -221,8 +221,16 @@ async function loadData<T extends AnyFunction>(
               if(error.code.toString().startsWith('4')){
                 showModalOption.title = '账户状态异常'
                 if(error.code == 401){
-                  showModalOption.title = 'Token 验证失败'
-                  showModalOption.content = '请使用正确的访问凭证'
+                  showModalOption.title = '请求错误'
+                  showModalOption.content = '登录失效，请重新登录'
+                  showModalOption.showCancel = true
+                  showModalOption.confirmText = '去登录'
+                  showModalOption.success = ({confirm})=>{
+                    if(!confirm) return
+                    wx.navigateTo({
+                      url: '/pages/auth/index',
+                    })
+                  }
                 }
               }
               // 500以上是应用程序出错
