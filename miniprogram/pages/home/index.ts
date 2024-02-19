@@ -126,7 +126,10 @@ Page({
     }else{
       this.setData({
         cateList: [],
-        likeList: []
+        likeList: [],
+        notice: {
+          content: ''
+        }
       })
     }
   },

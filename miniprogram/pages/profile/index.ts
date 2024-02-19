@@ -65,7 +65,6 @@ Page({
       this.setData({
         user: {}
       })
-      user.reloadInfo()
     }
   },
 

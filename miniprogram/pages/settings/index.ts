@@ -1,5 +1,5 @@
 import { getAppManager } from '@/controller/app'
-import { showLoading, weixinLogout } from '@/utils/index'
+import { showLoading } from '@/utils/index'
 
 const app = getAppManager()
 
@@ -32,9 +32,7 @@ Page({
 
   async tapToLogout(){
     await app.showConfirm('退出登录将清除用户本地数据')
-    
-    await weixinLogout().catch(console.log)
-    
+    await app.deleteLocalData('KATU_APP_TOKEN')
     app.emit('loginChange', false)
     await showLoading('正在退出', 2000)
     await app.showNotice('已退出登录')
