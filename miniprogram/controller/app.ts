@@ -392,8 +392,8 @@ class AppManager extends Controller {
   }
 
   // simple api proxy
-  async createDevToken(){
-    return this.api.getDevToken()
+  async createApiToken(){
+    return this.api.getApiToken()
   }
 
   async sendVerifyCode(data: {tel:string}){
