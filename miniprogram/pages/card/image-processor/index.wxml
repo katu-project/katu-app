@@ -16,10 +16,12 @@
       <view class="title">使用原图</view>
       <radio class="radio" value="0" checked="{{selectedMethod==0}}"></radio>
     </view>
+    <!-- #if MP -->
     <view class="cu-form-group">
       <view class="title">手动裁剪</view>
       <radio class="radio" value="3" checked="{{selectedMethod==3}}"></radio>
     </view>
+    <!-- #endif -->
     <view class="cu-form-group">
       <view class="title">使用内置库 
         <text class="cuIcon-info lg text-green" bindtap="tapToShowInternalApiNotice"></text>

@@ -33,12 +33,15 @@ Page({
       app.loadGlobalTask()
       await this.loadData()
       app.checkQuotaNotice('可用兔币不足，请及时处理')
-      app.checkUserPrivacy().then((res)=>{
-        console.debug('getPrivacySetting:',res)
-        if(res && res.needAuthorization){
-          this.loadShowUserPrivacy(res.privacyContractName)
-        }
-      })
+      
+      if(app.isMp){
+        app.checkUserPrivacy().then((res)=>{
+          console.debug('getPrivacySetting:',res)
+          if(res && res.needAuthorization){
+            this.loadShowUserPrivacy(res.privacyContractName)
+          }
+        })
+      }
     }else{
       if(!user.isActive){
         app.showActiveNotice(true, '现在激活账户可领取免费兔币')
