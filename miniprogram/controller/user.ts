@@ -110,7 +110,7 @@ export default class User extends Controller {
   }
 
   async clearInfo(){
-    return this.reloadInfo() // 获取默认用户数据
+    this._user = {}
   }
 
   async cacheAvatar(){

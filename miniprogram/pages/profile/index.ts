@@ -65,6 +65,7 @@ Page({
       this.setData({
         user: {}
       })
+      user.clearInfo()
     }
   },
 
