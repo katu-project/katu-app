@@ -94,16 +94,24 @@ function createHttpUploader(options:IHttpRequestOptions){
   return async ({url, options:{filePath, uploadInfo}}) => {
     const upload = args => wx.uploadFile(args)
     let resp,respJson
+
+    const args = {
+      filePath,
+      url: `${options.api}/${url}`,
+      formData: uploadInfo,
+      header: {
+        Token: options.token
+      },
+      name: 'file'
+    }
+
+    // #if NATIVE
+    const token = await getCache<string>('KATU_APP_TOKEN').catch(console.debug)
+    args.header!.Token = token || ''
+    // #endif
+
     try {
-      resp = await toPromise<string>(upload, {
-        filePath,
-        url: `${options.api}/${url}`,
-        formData: uploadInfo,
-        header: {
-          Token: options.token
-        },
-        name: 'file'
-      })
+      resp = await toPromise<string>(upload, args)
     } catch (error:any) {
       if(error.errMsg){
         console.error(error)
@@ -115,7 +123,7 @@ function createHttpUploader(options:IHttpRequestOptions){
       if(resp.statusCode === 413){
         throw Error(`选择的文件太大了，无法上传`)
       }
-      throw Error(`上传出错了[N${resp.statusCode}]`)
+      throw Error(`上传出错了[${resp.statusCode}]`)
     }
 
     try {
@@ -138,14 +146,21 @@ function createHttpDownloader(options:IHttpRequestOptions){
   return async ({url, options:{url:fileId, savePath}}) => {
     const download = args => wx.downloadFile(args)
     let res
+
+    const args = {
+      url: `${options.api}/${url}?url=${fileId}`,
+      header: {
+        Token: options.token
+      },
+    }
+
+    // #if NATIVE
+    const token = await getCache<string>('KATU_APP_TOKEN').catch(console.debug)
+    args.header!.Token = token || ''
+    // #endif
+    
     try {
-      res = await toPromise<WechatMiniprogram.DownloadFileSuccessCallbackResult>(download, {
-        url: `${options.api}/${url}?url=${fileId}`,
-        filePath: savePath,
-        header: {
-          Token: options.token
-        },
-      })
+      res = await toPromise<WechatMiniprogram.DownloadFileSuccessCallbackResult>(download, args)
     } catch (error) {
       console.error(error)
       throw Error("文件下载出错[031]")
@@ -153,9 +168,10 @@ function createHttpDownloader(options:IHttpRequestOptions){
     if (res.statusCode !== 200) {
       throw Error(`文件下载出错[${res.statusCode}]`)
     }
-    if (!res.filePath) {
+    if (!res.tempFilePath) {
       throw Error("文件下载出错[032]")
     }
+    await file.saveTempFile(res.tempFilePath, savePath)
   }
 }
 
