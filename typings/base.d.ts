@@ -23,7 +23,11 @@ declare namespace WechatMiniprogram {
   }
   
   interface Wx {
+    miniapp: {
+      hasWechatInstall(args?: functionDefaultOptions): unknown
+    }
     checkIdentitySession(args?: functionDefaultOptions): unknown
+    appleLogin(args?:functionDefaultOptions): unknown
     weixinMiniProgramLogin(args?: functionDefaultOptions): unknown
     logout(args?: functionDefaultOptions): unknown
     openPrivacyContract(args:any): unknown

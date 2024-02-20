@@ -7,18 +7,55 @@
   <view class="flex-row justify-center">
     <image class="topLogo" mode="aspectFit" src="/static/logo-t.svg"></image>
   </view>
-
-  <view style="margin-top:40%">
-    <!-- #if MP -->
-    <button class="cu-btn block line-cyan lg gfw round shadow" style="background: rgba(224, 255, 255, 0.5)" catchtap="tapToSignup" hover-class="none">
+  
+  <!-- #if MP -->
+  <view style="margin-top:30%">
+    <button class="cu-btn block line-cyan lg gfw round shadow" style="background: rgba(224, 255, 255, 0.5)" catchtap="tapToSignup">
       <text class="text-black">快速注册</text>
     </button>
-    <!-- #elif NATIVE -->
-    <button class="cu-btn block line-cyan lg gfw round shadow" hover-class="none" catchtap="tapToLogin">
-      <text class="text-black">微信小程序登陆</text>
-    </button>
-    <!-- #endif -->
   </view>
+
+  <!-- #elif NATIVE -->
+  <view style="margin-top:10%" class="margin-lr">
+    <form>
+      <view class="cu-form-group" style="background-color: unset;">
+        <view class="title">Email :</view>
+        <input value="{{emailLogin.email}}" bindinput="onInput" disabled="{{emailLogin.sendCode}}" data-key="email"></input>
+      </view>
+      <view class="cu-form-group" style="background-color: unset;">
+        <view class="title">验证码:</view>
+        <input value="{{emailLogin.code}}" bindinput="onInput" data-key="code"></input>
+        <button disabled="{{emailLogin.email.length<6 || emailLogin.sendCode}}" catchtap="tapToSendEmailCode" class="cu-btn bg-green round shadow" style="width:30vw">
+          {{emailLogin.sendCode ? '已发送' : '发送验证码'}}
+        </button>
+      </view>
+      <view class="cu-form-group" style="background-color: unset;">
+        <button catchtap="tapToEmailLogin" class="cu-btn block bg-cyan gfw lg margin-top-xl">
+          <text class="text-white">登录</text>
+        </button>
+      </view>
+    </form>
+    <view class="margin-top-xl text-sm flex-col align-center">
+      <view>
+        <view class="flex-row align-center animation-{{showTocAnima_1?'shake':''}}">
+          <radio catchtap="tapToc" data-key="toc_1" checked="{{toc_1}}" value="toc_1" style="transform: scale(0.6);"></radio>
+          <text>我已阅读并同意 <text class="text-green" bindtap="tapToReadTos">用户协议</text> 和 <text class="text-green" bindtap="tapToReadPrivacy">隐私政策</text></text>
+        </view>
+        <view catchtap="tapToc" data-key="toc_2" class="flex-row align-center animation-{{showTocAnima_2?'shake':''}}">
+          <radio checked="{{toc_2}}" value="toc_2" style="transform: scale(0.6);"></radio>
+          <text>未注册邮箱将自动注册成为卡兔会员</text>
+        </view>
+      </view>
+    </view>
+    <view class="text-center" catchtap="tapToShowLoginDialog">
+      <view class="padding solid-bottom margin-bottom"></view>
+      <span class="text-sm text-grey">
+        其他登录方式
+        <text class="cuIcon-right"></text>
+      </span>
+    </view>
+  </view>
+  <!-- #endif -->
 
   <view style="flex:1"></view>
 </view>
@@ -43,3 +80,25 @@
     </view>
   </view>
 </view>
+
+<page-container 
+  show="{{showOtherLogin}}"
+  round
+  custom-style="height: 30%;"
+  overlay
+  overlay-style="background-color: rgba(0, 0, 0, 0.7); filter: blur(1px);"
+  custom-style="background-color: rgba(48, 57, 57, 1)"
+  position="bottom"
+  close-on-slide-down="{{false}}"
+>
+  <view class="margin-xl">
+    <view class="cu-btn block bg-white lg gfw round shadow margin-bottom" data-key="apple" catchtap="tapToOtherLogin">
+      <text class="text-black">Apple ID 登录</text>
+    </view>
+    
+    <view class="cu-btn block bg-white lg gfw round shadow margin-bottom" data-key="mp" catchtap="tapToOtherLogin">
+      <text class="text-black">微信小程序 登录</text>
+    </view>
+
+  </view>
+</page-container>

@@ -35,6 +35,12 @@ export default {
 
   activeAccount: (data:any) => request('app/active', data),
 
+  getTokenByCode: (code:string) => request('app/code2token', {code}),
+
+  activeAccountWithEmail: (data:{code:string, verifyId:string}) => request<{token:string}>('app/loginWithEmail', data),
+
+  sendEmailVerifyCode: (data:{email:string}) => request<{verifyId:string}>('app/sendEmailVerifyCode', data),
+
   removeAccount: () => request('app/removeAccount'),
 
   captureCard: fileID => request<{fileID: string}>('app/capture', {fileId: fileID}),

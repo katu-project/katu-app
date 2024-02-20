@@ -1,4 +1,5 @@
 import { toPromise } from './base'
+import { getCache } from './cache'
 import file from './file'
 
 async function request<T>(action: string, data:any, requestor): Promise<T>{
@@ -13,7 +14,7 @@ async function request<T>(action: string, data:any, requestor): Promise<T>{
   try {
     resp = await requestor(action, data)
   } catch (err:any) {
-    error.message = err.message
+    error.message = err.message || err.errMsg || err.toString()
     error.code = 600 // 云函数报错
     wxLog.debug(error)
     throw error
@@ -68,16 +69,23 @@ function createCloudRequestor(options:ICloudRequestOptions){
 function createHttpRequestor(options:IHttpRequestOptions){
   const apiReq = args => wx.request(args)
   apiReq.noLog = true
-  const request = (url:string, data?:any) => {
-    return toPromise<{},WechatMiniprogram.RequestOption>(apiReq, {
+  const request = async (url:string, data?:any) => {
+    const args:WechatMiniprogram.RequestOption = {
       url: `${options.api}/${url}`,
       data,
       header: {
-        Token: options.token
+        Token: options.token || '',
+        origin: 'http'
       },
       timeout: 10000,
       method: 'POST'
-    }, 'data')
+    }
+
+    // #if NATIVE
+    const token = await getCache<string>('KATU_APP_TOKEN').catch(console.debug)
+    args.header!.Token = token || ''
+    // #endif
+    return toPromise(apiReq, args, 'data')
   }
   return request
 }
@@ -151,8 +159,14 @@ function createHttpDownloader(options:IHttpRequestOptions){
   }
 }
 
-export function createRequest(config:IRequestConfig){
+export function createRequest(config){
   let requestor, uploader, downloader
+
+  // #if NATIVE
+  config.type = 'http'
+  config.http.token = ''
+  // #endif
+
   if(config.type === 'cloud'){
     wx.cloud.init({
       env: config.cloud!.env,

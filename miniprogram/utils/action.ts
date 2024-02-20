@@ -311,7 +311,14 @@ async function weixinMiniProgramLogin(){
   const weixinMiniProgramLogin = args => wx.weixinMiniProgramLogin(args)
   weixinMiniProgramLogin.noLog = true
   const args = {}
-  return toPromise<any>(weixinMiniProgramLogin, args)
+  return toPromise<string>(weixinMiniProgramLogin, args, 'code')
+}
+
+export async function appleLogin(){
+  const appleLogin = args => wx.appleLogin(args)
+  appleLogin.noLog = true
+  const args = {}
+  return toPromise<string>(appleLogin, args, 'code')
 }
 
 async function weixinLogout(){
@@ -325,7 +332,7 @@ async function hasWechatInstall(){
   const hasWechatInstall = args => wx.miniapp.hasWechatInstall(args)
   hasWechatInstall.noLog = true
   const args = {}
-  return toPromise<any>(hasWechatInstall, args)
+  return toPromise<boolean>(hasWechatInstall, args, 'hasWechatInstall')
 }
 
 export {
