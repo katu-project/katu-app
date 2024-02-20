@@ -159,13 +159,8 @@ function createHttpDownloader(options:IHttpRequestOptions){
   }
 }
 
-export function createRequest(config){
+export function createRequest(config:IRequestConfig){
   let requestor, uploader, downloader
-
-  // #if NATIVE
-  config.type = 'http'
-  config.http.token = ''
-  // #endif
 
   if(config.type === 'cloud'){
     wx.cloud.init({
