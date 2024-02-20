@@ -42,6 +42,15 @@ Page({
     })
   },
   
+  // app only
+  async tapToChooseAvatar(){
+    const avatarUrl = await app.chooseLocalImage()
+    this.setData({
+      avatar: avatarUrl,
+      dataChange: true
+    })
+  },
+  
   async tapToSaveUserInfo(){
     const nickName = this.data.name
     if(nickName === this.originData.name && this.data.avatar === this.originData.avatar) {
