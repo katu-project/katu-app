@@ -42,7 +42,7 @@
     "minifyWXML": true,
     "useStaticServer": true,
     "ignoreUploadUnusedFiles": true,
-    "condition": false
+    "condition": true
   },
   "appid": "",
   "projectname": "卡兔APP",
@@ -58,5 +58,9 @@
     "tabIndent": "insertSpaces",
     "tabSize": 2
   },
-  "description": "卡兔APP小程序源码"
+  "description": "卡兔APP小程序源码",
+  "projectArchitecture": "multiPlatform",
+  "simulatorPluginLibVersion": {
+    "wxext14566970e7e9f62": "3.0.2-9"
+  }
 }
