@@ -104,8 +104,10 @@ Page({
       
       // 未激活用户可能会进入这里，可以跳过下面检查
       if(user.isActive){
-        const checkText = this.data.extraFields.map(e=>e.key === 'cu'? `${e.name}${e.value}`: e.value).join('')
-        await loadData(app.textContentSafetyCheck,checkText,'内容合规检查')
+        if(app.isMp){
+          const checkText = this.data.extraFields.map(e=>e.key === 'cu'? `${e.name}${e.value}`: e.value).join('')
+          await loadData(app.textContentSafetyCheck,checkText,'内容合规检查')
+        }
       }
       app.emit('setCardExtraData', extraFields)
     }else{
