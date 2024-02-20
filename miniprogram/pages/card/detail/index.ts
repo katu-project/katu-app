@@ -46,7 +46,9 @@ Page({
     if(options.id){
       this.id = options.id
     }
-    wx.hideShareMenu()
+    if(app.isMp){
+      wx.hideShareMenu()
+    }
     this.removeAllEvent()
     app.on('cardChange',this.onEventCardChange)
   },
