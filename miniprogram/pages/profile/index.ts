@@ -1,4 +1,4 @@
-import { loadData } from '@/utils/index'
+import { hasWechatInstall, loadData } from '@/utils/index'
 import { getAppManager } from '@/controller/app'
 import { getUserManager } from '@/controller/user'
 const app = getAppManager()
@@ -90,5 +90,14 @@ Page({
       }
       app.showNotice(msg)
     })
+  },
+
+  async tapToOpenService(){
+    const hasInstall = await hasWechatInstall().catch(console.warn)
+    if(!hasInstall){
+      app.showMiniNotice('未安装微信')
+      return
+    }
+    app.openCustomerService()
   }
 })

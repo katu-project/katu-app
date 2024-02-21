@@ -10,15 +10,21 @@
       </view>
       <view class="action">
         <view class="flex align-center" style="width:30vw">
-          <button class="cu-btn block line-cyan gfw text-xl" open-type="contact" hover-class="none">
-            <text class="cuIcon-service"></text>
-          </button>
+          <!-- #if MP -->
+            <button class="cu-btn block line-cyan gfw text-xl" open-type="contact" hover-class="none">
+              <text class="cuIcon-service"></text>
+            </button>
+          <!-- #elif NATIVE -->
+            <button class="cu-btn block line-cyan gfw text-xl" catchtap="tapToOpenService" hover-class="none">
+              <text class="cuIcon-service"></text>
+            </button>
+          <!-- #endif -->
         </view>
       </view>
     </view>
     <view class="cu-item">
       <view class="content">
-        <text class="">电子邮箱</text>
+        <text class="">客服邮箱</text>
       </view>
       <view class="action">
         <text user-select="{{true}}">{{email}}</text>

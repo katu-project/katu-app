@@ -24,6 +24,12 @@ declare namespace WechatMiniprogram {
   
   interface Wx {
     miniapp: {
+      launchMiniProgram(args: {
+        userName: string,
+        path?: string,
+        miniprogramType?: number
+      } & functionDefaultOptions): unknown
+      openCustomerServiceChat(args: {corpId:string,url:string} & functionDefaultOptions): unknown
       hasWechatInstall(args?: functionDefaultOptions): unknown
     }
     checkIdentitySession(args?: functionDefaultOptions): unknown

@@ -171,6 +171,26 @@ class AppManager extends Controller {
     return !loginUserId
   }
 
+  openCustomerService(){
+    // 二次跳转
+    wx.miniapp.launchMiniProgram({
+      userName: 'gh_be19db4e969f',
+      path: 'pages/about/contact/index?openService=1',
+      miniprogramType: 0,
+      success: console.log,
+      fail: console.log
+    })
+    
+    // 微信客服服务，需要开放平台认证
+    // return wx.miniapp.openCustomerServiceChat({
+    //   corpId: 'ww33f3ccab4cbd777c',
+    //   url: 'https://work.weixin.qq.com/kfid/kfc1cb144db771291df',
+    //   success: console.log,
+    //   fail: console.log,
+    //   complete: console.log
+    // })
+  }
+
   async previewImage(pics: string[], idx?:number){
     getApp().globalData.state.inPreviewPic = true
     wx.previewImage({
