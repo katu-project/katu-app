@@ -14,30 +14,28 @@ class Cache extends Module {
   }
 
   // user cache
-  async getUserAvatar(url:string){
-    try {
-      const cachePath = await this.getUserAvatarCachePath(url)
-      await file.checkAccess(cachePath)
-      console.log('使用缓存头像数据')
-      return cachePath
-    } catch (_) {
-      console.error('无有效缓存头像数据')
-    }
-    return ''
-  }
-
   async setUserAvatar(url:string){
-    console.debug('开始缓存用户头像')
-    try {
-      await file.rmdir(this.config.userAvatarDir, true)
-    } catch (_) {}
+    const cachePath = await this.getUserAvatarCachePath(url)
+    const cacheFile = await file.checkAccess(cachePath).catch(_=>{
+      console.warn('无有效缓存头像数据')
+    })
+   
+    if(cacheFile){
+      console.log('使用缓存头像数据')
+    }else{
+      console.debug('开始缓存用户头像')
+      try {
+        await file.rmdir(this.config.userAvatarDir, true)
+      } catch (_) {}
 
-    try {
-      const cachePath = await this.getUserAvatarCachePath(url)
-      await this.downloadFile({url, savePath: cachePath})
-    } catch (error) {
-      console.error('缓存头像下载错误:',error)
+      try {
+        const cachePath = await this.getUserAvatarCachePath(url)
+        await this.downloadFile({url, savePath: cachePath})
+      } catch (error) {
+        console.error('缓存头像下载错误:',error)
+      }
     }
+    return cachePath
   }
 
   async getUserAvatarCachePath(url){

@@ -115,13 +115,8 @@ export default class User extends Controller {
 
   async cacheAvatar(){
     // 缓存avatar
-    if(!this._user.avatarUrl) return
-
-    const cacheAvatarPath = await this.cache.getUserAvatar(this._user.avatarUrl)
-    if(!cacheAvatarPath){
-      await this.cache.setUserAvatar(this._user.avatarUrl)
-    }
-    this._avatar = cacheAvatarPath
+    if(!this._user.avatarUrl) return  
+    this._avatar = await this.cache.setUserAvatar(this._user.avatarUrl)
   }
 
   async checkQuota(){
