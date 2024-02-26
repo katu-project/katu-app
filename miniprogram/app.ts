@@ -10,14 +10,19 @@ App({
         let custom = wx.getMenuButtonBoundingClientRect();
         this.globalData.Custom = custom;  
         this.globalData.CustomBar = custom.bottom + custom.top - info.statusBarHeight;
-
         app.init(info)
       }
     })
   },
+
   onUnhandledRejection(e){
-    console.log('app onUnhandledRejection: ',e);
+    console.error('app onUnhandledRejection: ', e);
   },
+
+  onError(e){
+    console.error('App on err', e)
+  },
+  
   globalData: {
     StatusBar: 0,
     CustomBar: 0,
