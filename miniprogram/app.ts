@@ -13,18 +13,6 @@ App({
       }
     })
     app.init()
-    this.checkUpdate()
-  },
-  checkUpdate(){
-    const updateManager = wx.getUpdateManager()
-    updateManager.onCheckForUpdate(function({hasUpdate}){
-      console.log({hasUpdate})
-      if(!hasUpdate) return
-      updateManager.onUpdateReady(async ()=>{
-        await app.showConfirm('发现新版本，现在更新？')
-        updateManager.applyUpdate()
-      })
-    })
   },
   onUnhandledRejection(e){
     console.log('app onUnhandledRejection: ',e);

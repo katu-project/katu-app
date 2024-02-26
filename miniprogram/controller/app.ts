@@ -26,6 +26,7 @@ class AppManager extends Controller {
     this.loadBaseInfo()
     this.loadGlobalEvents()
     await this.loadModules()
+    this.checkUpdate()
     return
   }
 
@@ -63,6 +64,23 @@ class AppManager extends Controller {
 
   get shareInfo(){
     return this.getConfig('shareInfo')
+  }
+
+  checkUpdate(){
+    console.log('检查更新')
+    if(this.isMp){
+      const updateManager = wx.getUpdateManager()
+      updateManager.onCheckForUpdate(({hasUpdate})=>{
+        console.log({hasUpdate})
+        if(!hasUpdate) return
+        updateManager.onUpdateReady(async ()=>{
+          await this.showConfirm('发现新版本，现在更新？')
+          updateManager.applyUpdate()
+        })
+      })
+    }else{
+      // todo update check on other platform
+    }
   }
 
   async loadUser(_:any){
