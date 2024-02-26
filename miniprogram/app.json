@@ -32,7 +32,8 @@
     "pages/quota/index",
     "pages/quota/detail/index",
     "pages/notice/index",
-    "pages/auth/index"
+    "pages/auth/index",
+    "pages/settings/adv/dev/index"
   ],
   "subPackages": [
     {

@@ -13,6 +13,12 @@ const time = () => {
 const AppInfo = wx.getAccountInfoSync()
 const isDev = AppInfo.miniProgram.envVersion === 'develop'
 const forceDebug = wx.getStorageSync('KATU_DEBUG')
+const fs = wx.getFileSystemManager()
+
+fs.openSync({
+  filePath: `${wx.env.USER_DATA_PATH}/err.log`,
+  flag: 'a+'
+})
 
 console._log = console.log
 console._warn = console.warn
@@ -72,6 +78,16 @@ console.debug = (...args)=>{
 }
 
 console.error = (...args)=>{
+  const log = JSON.stringify({
+    time: new Date(),
+    data: args
+  }, null, 4)
+
+  fs.appendFile({
+    filePath: `${wx.env.USER_DATA_PATH}/err.log`,
+    data: log+'\n'
+  })
+
   if(forceDebug){
     console._error(...args)
   }else 

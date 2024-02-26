@@ -16,4 +16,14 @@
   </view>
   <view class="padding bg-white text-grey">为开发者用户提供的访问凭证</view>
 
+  <view class="cu-item arrow" bindtap="tapToPage" data-page="settings/adv/dev/index">
+    <view class="content">
+    <text class="">开发者</text>
+    </view>
+    <view class="action">
+    </view>
+  </view>
+  <view class="padding bg-white text-grey"></view>
+
+
 </view>

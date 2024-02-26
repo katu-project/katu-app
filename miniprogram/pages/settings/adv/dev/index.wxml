@@ -1,0 +1,36 @@
+<cu-custom bgColor="bg-cyan" isBack="{{true}}">
+  <view slot="backText">返回</view>
+  <view slot="content">开发者</view>
+</cu-custom>
+
+<view class="cu-list menu sm-border card-menu margin-top">
+  <view class="cu-item arrow" catchtap="tapToOpenLog">
+    <view class="content">
+    <text>查看日志</text>
+    </view>
+    <view class="action">
+    </view>
+  </view>
+  <view class="padding bg-white text-grey text-sm"></view>
+
+</view>
+
+<page-container 
+  show="{{showText}}"
+  round
+  z-index="10000"
+  custom-style="height: 80%;"
+  overlay
+  overlay-style="background-color: rgba(0, 0, 0, 0.7); filter: blur(1px);"
+  custom-style=""
+  position="bottom"
+  close-on-slide-down="{{false}}"
+>
+  <view class="margin-xl" style="min-height:60vh">
+    <scroll-view scroll-y="{{true}}" style="height:60vh">
+      <text space="ensp" user-select>
+        {{text}}
+      </text>
+    </scroll-view>
+  </view>
+</page-container>

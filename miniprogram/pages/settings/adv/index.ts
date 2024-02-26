@@ -20,6 +20,10 @@ Page({
 
   },
 
+  tapToPage({currentTarget:{dataset:{page}}}){
+    app.goToPage(page)
+  },
+
   async tapToCreateToken(){
     await app.showConfirm('确认获取新的 API 密钥?')
     const token = await loadData(app.createApiToken)
