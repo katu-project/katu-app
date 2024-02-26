@@ -239,6 +239,20 @@ async function loadData<T extends AnyFunction>(
                 showModalOption.content = '很抱歉，服务暂时不可用'
                 showModalOption.showCancel = true
               }
+
+              // 600是 api 底层请求错误
+              if(error.code.toString().startsWith('6')){
+                showModalOption.title = '服务异常'
+                showModalOption.content = '请检查网络后重试'
+                showModalOption.showCancel = true
+                showModalOption.confirmText = '重启应用'
+                showModalOption.success = ({confirm})=>{
+                  if(!confirm) return
+                  wx.restartMiniProgram({
+                    path: '/pages/home/index'
+                  })
+                }
+              }
   
               if(!showModalOption.success){
                 showModalOption.success = ({confirm})=>{

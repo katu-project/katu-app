@@ -32,6 +32,7 @@ declare namespace WechatMiniprogram {
       openCustomerServiceChat(args: {corpId:string,url:string} & functionDefaultOptions): unknown
       hasWechatInstall(args?: functionDefaultOptions): unknown
     }
+    restartMiniProgram(args?: {path:string} & functionDefaultOptions): unknown
     checkIdentitySession(args?: functionDefaultOptions): unknown
     appleLogin(args?:functionDefaultOptions): unknown
     weixinMiniProgramLogin(args?: functionDefaultOptions): unknown
