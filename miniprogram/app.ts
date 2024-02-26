@@ -5,14 +5,15 @@ const app = getAppManager()
 App({
   onLaunch: function () {
     wx.getSystemInfo({
-      success: e => {
-        this.globalData.StatusBar = e.statusBarHeight;
+      success: info => {
+        this.globalData.StatusBar = info.statusBarHeight;
         let custom = wx.getMenuButtonBoundingClientRect();
         this.globalData.Custom = custom;  
-        this.globalData.CustomBar = custom.bottom + custom.top - e.statusBarHeight;
+        this.globalData.CustomBar = custom.bottom + custom.top - info.statusBarHeight;
+
+        app.init(info)
       }
     })
-    app.init()
   },
   onUnhandledRejection(e){
     console.log('app onUnhandledRejection: ',e);

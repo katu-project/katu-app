@@ -22,16 +22,20 @@ class AppManager extends Controller {
     // #endif
   }
 
-  async init(){
-    this.loadBaseInfo()
+  async init(systemInfo){
+    this.setBaseInfo(systemInfo)
     this.loadGlobalEvents()
-    await this.loadModules()
+    this.loadModules()
     this.checkUpdate()
     return
   }
 
   get version(){
-    return this.AppInfo.miniProgram.version || 'develop'
+    let version = this.AppInfo.miniProgram.version
+    if(this.isApp){
+      version = this.DeviceInfo.host?.['appVersion']
+    }
+    return version || 'develop'
   }
 
   get isDev(){
@@ -106,13 +110,9 @@ class AppManager extends Controller {
     }
   }
 
-  loadBaseInfo(){
-    wx.getSystemInfoAsync({
-      success: info => {
-        this.DeviceInfo = info
-        console.debug(info)
-      }
-    })
+  setBaseInfo(systemInfo){
+    this.DeviceInfo = systemInfo
+    console.debug(systemInfo,this.AppInfo)
   }
 
   loadGlobalEvents(){
