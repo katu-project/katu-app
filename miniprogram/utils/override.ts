@@ -15,9 +15,20 @@ const isDev = AppInfo.miniProgram.envVersion === 'develop'
 const forceDebug = wx.getStorageSync('KATU_DEBUG')
 const fs = wx.getFileSystemManager()
 
-fs.openSync({
-  filePath: `${wx.env.USER_DATA_PATH}/err.log`,
-  flag: 'a+'
+// 单独使用 fs.open 在首次安装并启动app时会报错
+const logFile = `${wx.env.USER_DATA_PATH}/err.log`
+fs.access({
+  path: logFile,
+  fail: () => {
+    fs.open({
+      filePath: logFile,
+      flag: 'as',
+      fail: console.log,
+      success: ()=>{
+        console.log('创建日志文件 ok')
+      }
+    })
+  }
 })
 
 console._log = console.log
