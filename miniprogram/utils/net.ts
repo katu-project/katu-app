@@ -7,8 +7,7 @@ async function request<T>(action: string, data:any, requestor): Promise<T>{
     code: 0,
     message: ''
   }
-  const wxLog = wx.getLogManager({level:1})
-
+  
   let resp
 
   try {
@@ -16,21 +15,21 @@ async function request<T>(action: string, data:any, requestor): Promise<T>{
   } catch (err:any) {
     error.message = err.message || err.errMsg || err.toString()
     error.code = 600 // 云函数报错
-    wxLog.debug(error)
+    console.error(error)
     throw error
   }
 
   if(typeof resp !== 'object'){
     error.message = '基础请求响应错误: '+ JSON.stringify(resp)
     error.code = 500 // 1 业务报错 其他 系统错误
-    wxLog.debug(error)
+    console.error(error)
     throw error
   }
 
   if(resp.code !== 0){
     error.message = resp.msg
     error.code = resp.code // 1 业务报错 其他 系统错误
-    if(resp.code != 1) wxLog.debug(error)
+    if(resp.code != 1) console.error(error)
     throw error
   }
 
