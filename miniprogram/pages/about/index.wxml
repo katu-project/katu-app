@@ -5,9 +5,9 @@
 
 <view class="">
   <view class="padding-top-xl flex-col justify-center align-center">
-    <image mode="aspectFit" class="margin-bottom-xl w-200" style="border-radius: 10%;opacity: 0.9;height: 200rpx;" src="{{logo}}"></image>
+    <image mode="aspectFit" bindtap="showDebugLog" bindlongpress="enableDebug" class="margin-bottom-xl w-200" style="border-radius: 10%;opacity: 0.9;height: 200rpx;" src="{{logo}}"></image>
     <text class="text-xxl text-shadow text-cyan">卡兔</text>
-    <text class="padding text-grey">安全好用的卡片管理小程序</text>
+    <text class="padding text-grey">安全好用的卡片管理工具</text>
   </view>
   <view class="cu-list menu sm-border card-menu margin-top">
     <view class="cu-item">

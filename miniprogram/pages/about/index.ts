@@ -1,4 +1,5 @@
 import { getAppManager } from '@/controller/app'
+import { file } from '@/utils/index'
 const app = getAppManager()
 
 Page({
@@ -39,5 +40,20 @@ Page({
     }else{
       app.openUserPrivacyProtocol()
     }
+  },
+
+  enableDebug(){
+    const debug = !wx.getAppBaseInfo().enableDebug
+    console.error('enableDebug:', debug)
+    wx.setEnableDebug({
+      enableDebug: debug
+    })
+  },
+
+  async showDebugLog(){
+    console._log('showDebugLog')
+    const logfile = `${wx.env.USER_DATA_PATH}/err.log`
+    const text = await file.readFile(logfile)
+    console._log(text)
   }
 })

@@ -171,7 +171,7 @@ async function loadData<T extends AnyFunction>(
     if(timeout > 0){
       await sleep(timeout)
       reject({
-        message: '服务超时，请重试或刷新小程序'
+        message: '服务超时，请稍后再试'
       })
     }
   })
