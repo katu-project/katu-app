@@ -189,7 +189,6 @@ async function loadData<T extends AnyFunction>(
     }).catch(error=>{
       wx.hideLoading({
         complete: () => {
-          if(returnFailed) return reject(error)
           if(Object.hasOwnProperty ? Object.hasOwnProperty.call(error,'code'): error.code){ // 业务错误代码
             if(error.code === 1){ // 普通业务错误代码
               wx.showModal({
@@ -197,6 +196,7 @@ async function loadData<T extends AnyFunction>(
                 content: error.message || '未知错误',
                 showCancel: false,
               })
+              if(returnFailed) return reject(error)
             }else{ // 特殊业务错误代码
               console.warn(error, func)
               const showContent = `错误代码: ${error.code}`
