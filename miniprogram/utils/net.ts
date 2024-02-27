@@ -7,7 +7,7 @@ async function request<T>(action: string, data:any, requestor): Promise<T>{
     code: 0,
     message: ''
   }
-  
+
   let resp
 
   try {
@@ -99,7 +99,8 @@ function createHttpUploader(options:IHttpRequestOptions){
       url: `${options.api}/${url}`,
       formData: uploadInfo,
       header: {
-        Token: options.token
+        Token: options.token,
+        origin: 'http'
       },
       name: 'file'
     }
@@ -144,12 +145,13 @@ function createHttpUploader(options:IHttpRequestOptions){
 function createHttpDownloader(options:IHttpRequestOptions){ 
   return async ({url, options:{url:fileId, savePath}}) => {
     const download = args => wx.downloadFile(args)
-    let res
+    let res:WechatMiniprogram.DownloadFileSuccessCallbackResult
 
-    const args = {
+    const args: WechatMiniprogram.DownloadFileOption = {
       url: `${options.api}/${url}?url=${fileId}`,
       header: {
-        Token: options.token
+        Token: options.token,
+        origin: 'http'
       },
     }
 
@@ -159,7 +161,7 @@ function createHttpDownloader(options:IHttpRequestOptions){
     // #endif
     
     try {
-      res = await toPromise<WechatMiniprogram.DownloadFileSuccessCallbackResult>(download, args)
+      res = await toPromise(download, args)
     } catch (error) {
       console.error(error)
       throw Error("文件下载出错[031]")
