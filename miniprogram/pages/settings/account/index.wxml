@@ -36,6 +36,16 @@
     </view>
     <view class="padding bg-white text-grey text-sm">用于接收消息通知，账户验证等操作</view>
 
+    <view class="cu-item arrow" style="padding-right: 70rpx;" bindtap="tapToPage" data-page="settings/account/otherLogin/index">
+      <view class="content">
+        <text class="text-black">第三方登录</text>
+      </view>
+      <view class="action">
+      </view>
+    </view>
+    <view class="padding bg-white text-grey text-sm">管理第三方账号登录</view>
+
+
     <view class="cu-item">
       <view class="content">
         <text class="text-black">删除账户</text>

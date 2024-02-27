@@ -31,6 +31,28 @@ interface IUser {
 
     },
     security: {
+      logins: {
+        github: {
+          enable: false,
+          id: '',
+          name: ''
+        },
+        google: {
+          enable: false,
+          id: '',
+          name: ''
+        },
+        apple: {
+          enable: false,
+          id: '',
+          name: ''
+        },
+        mp: {
+          enable: false,
+          id: '',
+          name: ''
+        }
+      },
       lockOnExit: boolean
       useMiniKey: boolean
       useSyncMiniKey: boolean

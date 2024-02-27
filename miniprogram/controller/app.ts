@@ -110,6 +110,14 @@ class AppManager extends Controller {
     }
   }
 
+  async bindOtherLoginByCode(code:string){
+    return this.api.bindOtherLogin(code)
+  }
+
+  async unbindOtherLogin(type:string){
+    return this.api.unbindOtherLogin(type)
+  }
+
   setBaseInfo(systemInfo){
     this.DeviceInfo = systemInfo
     console.debug(systemInfo,this.AppInfo)

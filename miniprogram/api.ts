@@ -37,6 +37,10 @@ export default {
 
   getTokenByCode: (code:string) => request('app/code2token', {code}),
 
+  bindOtherLogin: (code:string)=> request('app/bindOtherAccount', {code}),
+
+  unbindOtherLogin: (type:string)=> request('app/unbindOtherAccount', {type}),
+
   activeAccountWithEmail: (data:{code:string, verifyId:string}) => request<{token:string}>('app/loginWithEmail', data),
 
   sendEmailVerifyCode: (data:{email:string}) => request<{verifyId:string}>('app/sendEmailVerifyCode', data),
