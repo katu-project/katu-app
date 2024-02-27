@@ -242,14 +242,14 @@ async function loadData<T extends AnyFunction>(
 
               // 600是 api 底层请求错误
               if(error.code.toString().startsWith('6')){
-                showModalOption.title = '服务异常'
-                showModalOption.content = '请检查网络后重试'
+                showModalOption.title = '网络环境异常'
+                showModalOption.content = '请检查应用网络设置后重试'
                 showModalOption.showCancel = true
-                showModalOption.confirmText = '重启应用'
+                showModalOption.confirmText = '查看设置'
                 showModalOption.success = ({confirm})=>{
                   if(!confirm) return
-                  wx.restartMiniProgram({
-                    path: '/pages/home/index'
+                  wx.openAppAuthorizeSetting({
+                    fail: console.error
                   })
                 }
               }
