@@ -121,6 +121,11 @@ class Cache extends Module {
     return this.setLocalData('CARD_DATA_CACHE_KEY',cards)
   }
 
+  async deleteAllCard(){
+    await this.deleteLocalData('CARD_DATA_CACHE_KEY')
+    await this.deleteLocalData('CARD_EXTRA_DATA_CACHE_KEY')
+  }
+
   // card image cache
   async setCardImage(image:ICardImage, isEncrypt:boolean){
     console.debug('setCardImage cache:', image.hash)
@@ -241,7 +246,6 @@ class Cache extends Module {
     }
   }
 
-  // clear all cache
   async clearAll(){
     await this.deleteAllLocalData()
   }

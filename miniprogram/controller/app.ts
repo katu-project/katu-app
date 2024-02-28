@@ -405,7 +405,8 @@ class AppManager extends Controller {
   //清除缓存
   async clearCacheData(){
     await file.rmdir(this.getConst('APP_ROOT_DIR'), true)
-    await this.cache.clearAll()
+    await this.cache.deleteAllCard()
+    await this.cache.deleteHomeData()
     return 
   }
 
