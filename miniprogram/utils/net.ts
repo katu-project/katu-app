@@ -2,7 +2,7 @@ import { toPromise } from './base'
 import { getCache } from './cache'
 import file from './file'
 
-async function request<T>(action: string, data:any, requestor): Promise<T>{
+async function request<T>(action: string, data:any, requestor, options): Promise<T>{
   const error = {
     code: 0,
     message: ''
@@ -11,7 +11,7 @@ async function request<T>(action: string, data:any, requestor): Promise<T>{
   let resp
 
   try {
-    resp = await requestor(action, data)
+    resp = await requestor(action, data, options)
   } catch (err:any) {
     error.message = err.message || err.errMsg || err.toString()
     error.code = 600 // 云函数报错
@@ -22,14 +22,14 @@ async function request<T>(action: string, data:any, requestor): Promise<T>{
   if(typeof resp !== 'object'){
     error.message = '基础请求响应错误: '+ JSON.stringify(resp)
     error.code = 500 // 1 业务报错 其他 系统错误
-    console.error(error)
+    console.error(action, error)
     throw error
   }
 
   if(resp.code !== 0){
     error.message = resp.msg
     error.code = resp.code // 1 业务报错 其他 系统错误
-    if(resp.code != 1) console.error(error)
+    if(resp.code != 1) console.error(action, error)
     throw error
   }
 
@@ -68,7 +68,7 @@ function createCloudRequestor(options:ICloudRequestOptions){
 function createHttpRequestor(options:IHttpRequestOptions){
   const apiReq = args => wx.request(args)
   apiReq.noLog = true
-  const request = async (url:string, data?:any) => {
+  const request = async (url:string, data?:any, reqOptions?:AnyObject) => {
     const args:WechatMiniprogram.RequestOption = {
       url: `${options.api}/${url}`,
       data,
@@ -77,7 +77,7 @@ function createHttpRequestor(options:IHttpRequestOptions){
         origin: 'http'
       },
       timeout: 10000,
-      method: 'POST'
+      method: reqOptions?.method || 'POST'
     }
 
     // #if NATIVE
@@ -194,7 +194,7 @@ export function createRequest(config:IRequestConfig){
   }
 
   return {
-    request: <T,K extends IAnyObject = IAnyObject>(url:string,data?:K) => request<T>(url,data||{},requestor),
+    request: <T,K extends IAnyObject = IAnyObject>(url:string,data?:K, options?:AnyObject) => request<T>(url,data||{},requestor, options),
     upload: (url:string, options):Promise<string> => uploader({url, options}),
     download: (url:string, options):Promise<void> => downloader({url, options})
   }
