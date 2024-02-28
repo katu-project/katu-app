@@ -26,6 +26,7 @@ class AppManager extends Controller {
     this.setBaseInfo(systemInfo)
     this.loadGlobalEvents()
     this.loadModules()
+    this.firstOpenTask()
     this.checkUpdate()
     return
   }
@@ -84,6 +85,15 @@ class AppManager extends Controller {
       })
     }else{
       // todo update check on other platform
+    }
+  }
+
+  firstOpenTask(){
+    if(this.isApp){
+      // iOS app 首次安装后第一个网络请求会失败,所以先发送一个测试请求
+      this.api.appStatus().catch(e=>{
+        console.error('app hook req:',e)
+      })
     }
   }
 

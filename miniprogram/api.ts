@@ -9,6 +9,9 @@ export default {
 
   uploadFile: (filePath:string, uploadInfo) => upload('app/upload', {filePath, uploadInfo}),
   // sys
+
+  appStatus: () => request('app/status'),
+
   getSysConfig: <T extends keyof ISysConfig>(name: T) => request<filterSysConfigItem<T>>('app/config', {name}),
 
   getChangeLog: () => request<IChangeLog[]>('app/changeLog'),
