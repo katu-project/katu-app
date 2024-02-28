@@ -1,4 +1,4 @@
-import { appleLogin, hasWechatInstall, loadData, weixinMiniProgramLogin } from '@/utils/index'
+import { appleLogin, hasWechatInstall, loadData, showLoading, weixinMiniProgramLogin } from '@/utils/index'
 import { getAppManager } from '@/controller/app'
 import { getUserManager } from '@/controller/user'
 const app = getAppManager()
@@ -91,15 +91,22 @@ Page({
   },
 
   async goAppleLogin(){
+    const hideLoading = await showLoading('等待授权', -1, false)
     try {
       const code = await appleLogin()
+      await hideLoading()
       await loadData(app.loadUserByCode, code, '获取用户信息')
       app.emit('loginChange', true)
       await app.showNotice("Apple 授权成功")
       app.navigateBack()
     } catch (err:any) {
+      await hideLoading()
       console.log('appleLogin:', err)
-      app.showNotice(err.message||'授权失败')
+      if(err.message){
+        await app.showNotice(err.message)
+      }else{
+        await app.showMiniNotice('授权失败')
+      }
     }
   },
 

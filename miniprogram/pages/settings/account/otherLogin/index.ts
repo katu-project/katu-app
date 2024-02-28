@@ -35,7 +35,7 @@ Page({
     }
     if(enable){
       let code = ''
-      const hideLoading = await showLoading('等待授权', -1)
+      const hideLoading = await showLoading('等待授权', -1, false)
       try {
         if(type === 'apple') code = await appleLogin()
         if(type === 'mp') {
