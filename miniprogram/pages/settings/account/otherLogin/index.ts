@@ -64,9 +64,11 @@ Page({
       loadData(app.bindOtherLoginByCode, code, {
         loadingTitle: '正在绑定账户',
         returnFailed: true
-      }).then(()=>{
+      }).then(async ()=>{
         app.showNotice("绑定成功")
+        await user.reloadInfo()
       }).catch(()=>{
+      }).finally(()=>{
         this.renderData()
       })
     }else{
@@ -75,11 +77,16 @@ Page({
         await this.renderData()
         return
       }else{
-        await loadData(app.unbindOtherLogin, type)
-        app.showNotice("已取消绑定")
+        loadData(app.unbindOtherLogin, type, {
+          returnFailed: true
+        }).then(async ()=>{
+          app.showNotice("已取消绑定")
+          await user.reloadInfo()
+        }).catch(()=>{
+        }).finally(()=>{
+          this.renderData()
+        })
       }
     }
-    await user.reloadInfo()
-    await this.renderData()
   }
 })
