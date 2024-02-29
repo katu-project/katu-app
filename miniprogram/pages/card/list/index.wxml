@@ -35,9 +35,9 @@
         <view class="content flex-col">
           <view class="text-lg margin-top-xs">
             <text class="cuIcon-lock text-gray padding-right-xs" hidden="{{!item._showEncryptIcon}}"></text>
-            <text class="text-cut">{{item.title}}</text>
+            <text class="text-cut text-xl">{{item.title}}</text>
           </view>
-          <view class="text-grey margin-tb-xs">
+          <view class="text-grey margin-tb-xs tags">
             <text class="cu-tag line-{{tagsInfo[item]||'grey'}} light" wx:for="{{item.tags}}" wx:key="name">{{item}}</text>
           </view>
         </view>
