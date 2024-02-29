@@ -19,7 +19,7 @@
   <view style="margin-top:10%" class="margin-lr">
     <form>
       <view class="cu-form-group" style="background-color: unset;">
-        <view class="title">Email :</view>
+        <view class="title">E-mail :</view>
         <input value="{{emailLogin.email}}" bindinput="onInput" disabled="{{emailLogin.sendCode}}" data-key="email"></input>
       </view>
       <view class="cu-form-group" style="background-color: unset;">
@@ -31,7 +31,7 @@
       </view>
       <view class="cu-form-group" style="background-color: unset;">
         <button catchtap="tapToEmailLogin" class="cu-btn block bg-cyan gfw lg margin-top-xl">
-          <text class="text-white">登录</text>
+          <text class="text-white">登录/注册</text>
         </button>
       </view>
     </form>

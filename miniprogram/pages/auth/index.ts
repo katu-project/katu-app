@@ -97,7 +97,7 @@ Page({
       await hideLoading()
       await loadData(app.loadUserByCode, code, '获取用户信息')
       app.emit('loginChange', true)
-      await app.showNotice("Apple 授权成功")
+      await app.showNotice("Apple ID 授权成功")
       app.navigateBack()
     } catch (err:any) {
       await hideLoading()
@@ -120,7 +120,7 @@ Page({
       const code = await weixinMiniProgramLogin()
       await loadData(app.loadUserByCode, code, '获取用户信息')
       app.emit('loginChange', true)
-      await app.showNotice("小程序授权成功")
+      await app.showNotice("小程序 授权成功")
       app.navigateBack()
     } catch (err:any) {
       console.log('weixinMiniProgramLogin:', err)

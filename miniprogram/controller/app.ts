@@ -468,7 +468,7 @@ class AppManager extends Controller {
   }
 
   async showActiveNotice(goActivePage:boolean, title?:string){
-    await this.showConfirm(title || "账户未激活，无法进行该操作。",'现在激活')
+    await this.showConfirm(title || "未登录，无法进行该操作。",'去登录')
     if(!goActivePage) return
     return this.goToUserProfilePage()
   }
