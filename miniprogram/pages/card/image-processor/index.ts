@@ -90,8 +90,9 @@ Page({
   },
 
   async useRemoteApi(src){
-    const confirm = await this.showRemoteApiNotice()
-    if(!confirm){
+    const { confirm } = await app.showChoose('确认使用外部服务处理图片？')
+    if(!confirm) {
+      this.findCardFailed()
       return
     }
     const imageUrl = await loadData(cardManager.parseCardImageByRemoteApi, src ,{returnFailed: true}).catch(error=>{
@@ -126,12 +127,26 @@ Page({
   },
 
   async tapToShowInternalApiNotice(){
-    await app.showConfirm('这些小技巧能提高卡片识别率！', '去查看')
-    app.openInternalApiNotice()
+    const {cancel} = await app.showChoose(
+      "使用卡兔内置的图片处理库",
+      {
+        showCancel: true, 
+        cancelText: '查看详情'
+      }
+    )
+    if(cancel){
+      app.openInternalApiNotice()
+    }
   },
 
-  async showRemoteApiNotice(){
-    const {confirm, cancel} = await app.showChoose("外部接口由第三方提供!\n敏感数据请谨慎使用。",{showCancel:true, cancelText: '去查看'})
+  async tapToShowRemoteApiNotice(){
+    const {confirm, cancel} = await app.showChoose(
+      "外部接口由第三方提供!\n请谨慎使用。",
+      {
+        showCancel: true, 
+        cancelText: '查看详情'
+      }
+    )
     if(cancel) {
       app.openRemoteApiNotice()
       this.setData({
@@ -139,9 +154,5 @@ Page({
       })
     }
     return confirm
-  },
-
-  tapToShowRemoteApiNotice(){
-    this.showRemoteApiNotice()
   }
 })
