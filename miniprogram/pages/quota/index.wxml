@@ -39,16 +39,10 @@
   <view class="cu-dialog">
     <view class="cu-bar bg-white justify-end">
       <view class="content">输入兑换码</view>
-      <view class="action" bindtap="tapToHideExchangeDialog">
-        <text class="cuIcon-close text-red"></text>
-      </view>
     </view>
-    <view class="padding-tb-xl padding-lr-lg flex-col justify-between" style="height: 120px;">
+    <view class="padding-tb-xl padding-lr-lg flex-col justify-between" style="height: 80px;">
       <view class="solids">
         <input type="text" style="height: 60rpx;background:#fff" bindinput="onCodeInput" model:value="{{code}}" value="{{code}}"/>
-      </view>
-      <view class="padding-top-sm">
-        <text class="text-sm">输入格式: <text class="text-gray">xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx</text></text>
       </view>
     </view>
     <view class="cu-bar bg-white">
