@@ -8,6 +8,7 @@ Page({
   data: {
     activeInfo: {},
     showOtherLogin: false,
+    showMpLogin: false,
     emailLogin:{
       email: '',
       code: '',
@@ -16,7 +17,13 @@ Page({
     }
   },
 
-  onLoad() {
+  async onLoad() {
+    const hasInstall = await hasWechatInstall().catch(console.warn)
+    if(hasInstall){
+      this.setData({
+        showMpLogin: true
+      })
+    }
   },
 
   onReady() {
@@ -111,11 +118,6 @@ Page({
   },
 
   async goMpLogin(){
-    const hasInstall = await hasWechatInstall().catch(console.warn)
-    if(!hasInstall){
-      app.showMiniNotice('未安装微信')
-      return
-    }
     try {
       const code = await weixinMiniProgramLogin()
       await loadData(app.loadUserByCode, code, '获取用户信息')

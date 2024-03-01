@@ -96,7 +96,7 @@
       <text class="text-black">Apple ID 登录</text>
     </view>
     
-    <view class="cu-btn block bg-white lg gfw round shadow margin-bottom" data-key="mp" catchtap="tapToOtherLogin">
+    <view wx:if="{{showMpLogin}}" class="cu-btn block bg-white lg gfw round shadow margin-bottom" data-key="mp" catchtap="tapToOtherLogin">
       <text class="text-black">微信小程序 登录</text>
     </view>
 
