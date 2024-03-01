@@ -44,7 +44,7 @@ export default {
 
   unbindOtherLogin: (type:string)=> request('app/unbindOtherAccount', {type}),
 
-  activeAccountWithEmail: (data:{code:string, verifyId:string}) => request<{token:string}>('app/loginWithEmail', data),
+  activeAccountWithEmail: (data:{email:string, code:string, verifyId:string}) => request<{token:string}>('app/loginWithEmail', data),
 
   sendEmailVerifyCode: (data:{email:string}) => request<{verifyId:string}>('app/sendEmailVerifyCode', data),
 

@@ -143,12 +143,15 @@ Page({
   },
 
   async tapToEmailLogin(){
-    if(!this.data.emailLogin.code || !this.data.emailLogin.verifyId){
+    if(!this.data.emailLogin.email || !this.data.emailLogin.code){
       app.showMiniNotice('输入有误')
       return
     }
+
+    if(!this.checkToc()) return
     
     const { token } = await loadData(app.api.activeAccountWithEmail,{
+      email: this.data.emailLogin.email,
       code: this.data.emailLogin.code,
       verifyId: this.data.emailLogin.verifyId
     })
