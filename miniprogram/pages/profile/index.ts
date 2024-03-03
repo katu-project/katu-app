@@ -8,6 +8,7 @@ Page({
   data: {
     user: {} as Partial<IUser>,
     menus: app.menu.profile,
+    showCustomerService: true,
     DefaultUserAvatar: app.getConst('DefaultUserAvatar')
   },
 
@@ -17,7 +18,15 @@ Page({
     this.loadUserInfo()
   },
 
-  onReady() {
+  async onReady() {
+    if(app.isApp){
+      const hasInstall = await hasWechatInstall().catch(console.warn)
+      if(!hasInstall){
+        this.setData({
+          showCustomerService: false
+        })
+      }
+    }
   },
 
   onShow() {
@@ -93,11 +102,6 @@ Page({
   },
 
   async tapToOpenService(){
-    const hasInstall = await hasWechatInstall().catch(console.warn)
-    if(!hasInstall){
-      app.showMiniNotice('未安装微信')
-      return
-    }
     app.openCustomerService()
   }
 })

@@ -18,11 +18,13 @@ Page({
   },
 
   async onLoad() {
-    const hasInstall = await hasWechatInstall().catch(console.warn)
-    if(hasInstall){
-      this.setData({
-        showMpLogin: true
-      })
+    if(app.isApp){
+      const hasInstall = await hasWechatInstall().catch(console.warn)
+      if(hasInstall){
+        this.setData({
+          showMpLogin: true
+        })
+      }
     }
   },
 

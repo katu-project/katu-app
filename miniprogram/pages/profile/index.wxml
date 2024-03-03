@@ -36,7 +36,7 @@
       <text class="cuIcon-service padding-right-sm"></text> 我的客服
     </button>
     <!-- #elif NATIVE -->
-    <button class="cu-btn block line-cyan lg gfw" catchtap="tapToOpenService" hover-class="none">
+    <button wx:if="{{showCustomerService}}" class="cu-btn block line-cyan lg gfw" catchtap="tapToOpenService" hover-class="none">
       <text class="cuIcon-service padding-right-sm"></text> 我的客服
     </button>
     <!-- #endif -->
