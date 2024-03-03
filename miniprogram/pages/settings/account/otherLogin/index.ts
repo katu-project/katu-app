@@ -1,6 +1,6 @@
 import { getAppManager } from "@/controller/app"
 import { getUserManager } from "@/controller/user"
-import { appleLogin, hasWechatInstall, loadData, showLoading, weixinMiniProgramLogin } from "@/utils/index"
+import { appleLogin, loadData, showLoading, weixinMiniProgramLogin } from "@/utils/index"
 const app = getAppManager()
 const user = getUserManager()
 
@@ -39,7 +39,7 @@ Page({
       try {
         if(type === 'apple') code = await appleLogin()
         if(type === 'mp') {
-          const hasInstall = await hasWechatInstall().catch(console.warn)
+          const hasInstall = await app.hasInstallWechat()
           if(!hasInstall){
             throw Error('未安装微信')
           }

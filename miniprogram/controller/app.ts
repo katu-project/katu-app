@@ -1,5 +1,5 @@
 import Controller from '@/class/controller'
-import { showChoose, setClipboardData, sleep, file, getPrivacySetting, showNotice } from '@/utils/index'
+import { showChoose, setClipboardData, sleep, file, getPrivacySetting, showNotice, hasWechatInstall } from '@/utils/index'
 import { getCardManager } from './card'
 import { getUserManager } from './user'
 import { getMiniKeyManager, getMasterKeyManager, getResetKeyManager } from './key'
@@ -225,6 +225,15 @@ class AppManager extends Controller {
     //   fail: console.log,
     //   complete: console.log
     // })
+  }
+
+  async hasInstallWechat(){
+    if(!this.isApp) return false
+    try {
+      return await hasWechatInstall()
+    } catch (error) {
+      return false
+    }
   }
 
   async previewImage(pics: string[], idx?:number){

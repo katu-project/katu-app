@@ -1,4 +1,4 @@
-import { appleLogin, hasWechatInstall, loadData, showLoading, weixinMiniProgramLogin } from '@/utils/index'
+import { appleLogin, loadData, showLoading, weixinMiniProgramLogin } from '@/utils/index'
 import { getAppManager } from '@/controller/app'
 import { getUserManager } from '@/controller/user'
 const app = getAppManager()
@@ -8,7 +8,7 @@ Page({
   data: {
     activeInfo: {},
     showOtherLogin: false,
-    showMpLogin: false,
+    showMpLogin: true,
     emailLogin:{
       email: '',
       code: '',
@@ -18,14 +18,13 @@ Page({
   },
 
   async onLoad() {
-    if(app.isApp){
-      const hasInstall = await hasWechatInstall().catch(console.warn)
-      if(hasInstall){
+    app.hasInstallWechat().then(hasInstall=>{
+      if(!hasInstall){
         this.setData({
-          showMpLogin: true
+          showMpLogin: false
         })
       }
-    }
+    })
   },
 
   onReady() {

@@ -1,5 +1,4 @@
 import { getAppManager } from '@/controller/app'
-import { hasWechatInstall } from '@/utils/index'
 const app = getAppManager()
 
 Page({
@@ -13,14 +12,13 @@ Page({
     }
   },
   async onReady() {
-    if(app.isApp){
-      const hasInstall = await hasWechatInstall().catch(console.warn)
+    app.hasInstallWechat().then(hasInstall=>{
       if(!hasInstall){
         this.setData({
           showCustomerService: false
         })
-      }  
-    }
+      }
+    })
   },
   onShow() {
 
