@@ -7,12 +7,21 @@ const app = getAppManager()
 Page({
   data: {
     list: [],
+    showExchange: false,
     quota: {
       remain: 0
     },
     code: ''
   },
   
+  onLoad(){
+    if(app.isMp){
+      this.setData({
+        showExchange: true
+      })
+    }
+  },
+
   onReady(){
     this.loadData()
   },

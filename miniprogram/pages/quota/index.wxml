@@ -13,7 +13,7 @@
 <view class="padding flex-row solid-bottom justify-center">
   <text class="text-xsl text-{{quota.remain>0?'green':'red'}} block">{{quota.remain}}</text>
 </view>
-<view class="padding flex-row">
+<view class="padding flex-row" wx:if="{{showExchange}}">
   <button class="cu-btn gfw bg-cyan" bindtap="tapToShowExchangeDialog">兑换兔币</button>
 </view>
 <view class="padding solid-bottom text-lg">
