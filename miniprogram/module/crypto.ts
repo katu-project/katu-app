@@ -4,6 +4,7 @@ import { bip39, convert, crypto, file } from "@/utils/index"
 
 const CommonError = "内部参数错误"
 const ConvertUserKeyError = '密码转化出错'
+const MethodNotExistError = '方法不存在'
 const CalculateKeyIdError = '获取密码ID出错'
 // cpk 包标志位长度，不能变动
 const PACKAGE_SIGN_LENGTH = 8
@@ -131,12 +132,13 @@ class Crypto extends Module {
     const plaintext = await cpk.cpt(imageHex, edh)
     const encryptedData = this.encryptText(plaintext, key, cpk.dea)
     const encryptedPackage = encryptedData + await cpk.cmd(salt, edh.length)
-    console.debug(`cpk 版本: ${cpk.ver}`)
+    console.debug(`cpk 版本: ${cpk.ver}, ccv 版本: ${this.ccv}`)
     this.printDebugInfo({key, salt, extraData, edh, plaintext, encryptedData, encryptedPackage})
     await file.writeFile(savePath, encryptedPackage, 'hex')
     return {
-      imageSecretKey: salt,
-      imagePath: savePath
+      path: savePath,
+      ccv: this.ccv,
+      keySalt: salt,
     }
   }
 
@@ -159,7 +161,7 @@ class Crypto extends Module {
       throw Error("附加数据读取出错")
     }
 
-    console.debug(`解密版本: ${cpk.ver}`)
+    console.debug(`解密版本: ${cpk.ver}, ccv 版本: ${this.ccv}`)
     this.printDebugInfo({key, image, edh:extraData, extraData:decryptedImage.extraData, plaintext, encryptedData})
     
     await file.writeFile(decryptedImage.savePath, image, 'hex')
@@ -186,11 +188,13 @@ class Crypto extends Module {
     return crypto.random(byteLength)
   }
 
-  async createCommonKeyPair(key:string, salt?:string){
-    const { method, options, saltLength } = CommonCryptoVersionMap[this.ccv].keyPair
+  async createCommonKeyPair({key, salt, ccv}: CommonKeyPairOptions): Promise<IKeyPair>{
+    const { method, options, saltLength } = CommonCryptoVersionMap[ccv || this.ccv].keyPair
+    if(!crypto[method] || typeof crypto[method] !== 'function') throw Error(MethodNotExistError)
     try {
       options.salt = salt || await this.randomHexString(saltLength)
-      return crypto[method].call(null, key, options)
+      const keyPair = await crypto[method].call(null, key, options)
+      return keyPair
     } catch (error) {
       console.error(error)
       throw Error('keyPair create error')

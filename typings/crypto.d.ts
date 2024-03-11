@@ -1,4 +1,7 @@
-type KeyPair = { key: string, salt: string }
+interface IKeyPair { 
+  key: string
+  salt: string 
+}
 
 type HashType = 'MD5' | 'SHA1' | 'SHA256'
 
@@ -39,8 +42,14 @@ interface ICryptoConfig {
   usePackageVersion: string
 }
 
+interface CommonKeyPairOptions {
+  key: string
+  salt?: string
+  ccv?: string
+}
+
 interface IEncryptImageOptions {
-  keyPair: KeyPair 
+  keyPair: IKeyPair 
   imagePath: string
   savePath: string
   extraData: string[][]
@@ -49,7 +58,7 @@ interface IEncryptImageOptions {
 interface IDecryptImageOptions {
   imagePath: string
   savePath: string
-  keyPair: KeyPair 
+  keyPair: IKeyPair 
 }
 
 type Pbkdf2Options = {

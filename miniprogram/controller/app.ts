@@ -259,10 +259,11 @@ class AppManager extends Controller {
     if(card.encrypted){
       for (const pic of card.image!) {
         if(!pic._url || !await file.checkAccess(pic._url)) throw Error("分享生成错误")
-        const image = {url: pic._url, salt: '', hash: pic.hash}
+        const image = {url: pic._url, salt: '', hash: pic.hash, ccv:''}
         const encrytedPic = await this.cardManager.encryptImage(image, card.info, dk)
-        image.url = await this.uploadShareFile(encrytedPic.imagePath)
-        image.salt = encrytedPic.imageSecretKey
+        image.url = await this.uploadShareFile(encrytedPic.path)
+        image.salt = encrytedPic.keySalt
+        image.ccv = encrytedPic.ccv
         shareCard.image!.push(image)
       }
     }else{
@@ -272,7 +273,8 @@ class AppManager extends Controller {
         shareCard.image!.push({
           url: image.url,
           salt: '',
-          hash: image.hash
+          hash: image.hash,
+          ccv: ''
         })
       }
     }

@@ -14,6 +14,7 @@ interface ICardImage {
   hash: string
   url: string
   salt: string
+  ccv: string
 
   _url?: string
 }

@@ -13,7 +13,7 @@ class CardManager extends Controller{
     const newImages:ICardImage[] = []
     for (const idx in images) {
       const pic = images[idx]
-      const image = {url: '', salt:'', hash: ''}
+      const image = {url: '', salt:'', hash: '', ccv: ''}
       const originPicUrl = pic._url
       if(originPicUrl){
         if(pic.url === originPicUrl){
@@ -47,7 +47,7 @@ class CardManager extends Controller{
     const newImages:ICardImage[] = []
     for (const idx in images) {
       const pic = images[idx]
-      const image = {url:'',salt:'',hash:''}
+      const image = {url:'',salt:'',hash:'', ccv:''}
       const originPicUrl = pic._url
       image.hash = await this.getImageHash(pic.url)
 
@@ -59,9 +59,10 @@ class CardManager extends Controller{
         console.log(originPicUrl? `检测到卡面${idx}/附加数据修改，重新加密上传` : `检测到新增卡面${idx}，重新保存卡片数据`)
         await this.checkImageType(pic.url)
         image.url = pic.url
-        const encrytedPic = await this.encryptImage(image, extraData, key)
-        image.url = await this.uploadCardFile(encrytedPic.imagePath)
-        image.salt = encrytedPic.imageSecretKey
+        const encrytedImage = await this.encryptImage(image, extraData, key)
+        image.url = await this.uploadCardFile(encrytedImage.path)
+        image.salt = encrytedImage.keySalt
+        image.ccv = encrytedImage.ccv
       }
       newImages.push(image)
     }
@@ -90,13 +91,14 @@ class CardManager extends Controller{
   async add({card, key}){
     const cardModel = this._createCardDefaultData(card)
     for (const pic of card.image) {
-      const image: ICardImage = { url: pic.url, hash: '', salt: ''}
+      const image: ICardImage = { url: pic.url, hash: '', salt: '', ccv: ''}
       await this.checkImageType(image.url)
       image.hash = await this.getImageHash(image.url)
       if(cardModel.encrypted){
         const encrytedImage = await this.encryptImage(image, cardModel.info, key)
-        image.url = await this.uploadCardFile(encrytedImage.imagePath)
-        image.salt = encrytedImage.imageSecretKey
+        image.url = await this.uploadCardFile(encrytedImage.path)
+        image.salt = encrytedImage.keySalt
+        image.ccv = encrytedImage.ccv
       }else{
         image.url = await this.uploadCardFile(image.url)
       }
@@ -121,9 +123,11 @@ class CardManager extends Controller{
     return cardModel
   }
 
-  async encryptImage(image:ICardImage, extraData, key){
+  async encryptImage(image:ICardImage, extraData, key:string){
     if(!key) throw Error('密码不能为空')
-    const keyPair = await this.crypto.createCommonKeyPair(key)
+    const keyPair = await this.crypto.createCommonKeyPair({
+      key
+    })
     const savePath = await this.getTempFilePath(image.hash)
     const options = {
       keyPair,
@@ -136,7 +140,11 @@ class CardManager extends Controller{
 
   async decryptImage(image:ICardImage, key:string){
     if(!key) throw Error('密码不能为空')
-    const keyPair = await this.crypto.createCommonKeyPair(key, image.salt)
+    const keyPair = await this.crypto.createCommonKeyPair({
+      key,
+      salt: image.salt,
+      ccv: image.ccv
+    })
     const savePath = await this.getImageFilePath(image)
     const imagePath = await this.downloadImage(image)
     const decryptedImage = await this.crypto.decryptImage({imagePath, savePath, keyPair})
