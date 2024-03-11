@@ -131,7 +131,11 @@ class Crypto extends Module {
     const imageHex = await file.readFile<string>(imagePath, 'hex')
     const plaintext = await cpk.cpt(imageHex, edh)
     const encryptedData = this.encryptText(plaintext, key, cpk.dea)
-    const encryptedPackage = encryptedData + await cpk.cmd(salt, edh.length)
+    const encryptedPackage = encryptedData + await cpk.cmd({
+      salt,
+      edhl: edh.length,
+      ccv: this.ccv
+    })
     console.debug(`cpk 版本: ${cpk.ver}, ccv 版本: ${this.ccv}`)
     this.printDebugInfo({key, salt, extraData, edh, plaintext, encryptedData, encryptedPackage})
     await file.writeFile(savePath, encryptedPackage, 'hex')

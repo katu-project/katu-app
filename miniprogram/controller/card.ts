@@ -147,7 +147,11 @@ class CardManager extends Controller{
     })
     const savePath = await this.getImageFilePath(image)
     const imagePath = await this.downloadImage(image)
-    const decryptedImage = await this.crypto.decryptImage({imagePath, savePath, keyPair})
+    const decryptedImage = await this.crypto.decryptImage({
+      imagePath,
+      savePath,
+      keyPair
+    })
     return {
       imagePath: decryptedImage.savePath,
       extraData: decryptedImage.extraData
