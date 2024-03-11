@@ -90,6 +90,11 @@ class Crypto extends Module {
     return this._config
   }
 
+  // 当前默认使用的 ccv 版本
+  get ccv(){
+    return this.config.useCommonCryptoVersion
+  }
+
   getStringHash(str:string, method:HashType){
     return crypto[method](str) as string
   }
@@ -182,7 +187,7 @@ class Crypto extends Module {
   }
 
   async createCommonKeyPair(key:string, salt?:string){
-    const { method, options, saltLength } = CommonCryptoVersionMap[this.config.useCommonCryptoVersion].keyPair
+    const { method, options, saltLength } = CommonCryptoVersionMap[this.ccv].keyPair
     try {
       options.salt = salt || await this.randomHexString(saltLength)
       return crypto[method].call(null, key, options)
@@ -193,7 +198,7 @@ class Crypto extends Module {
   }
 
   convertToHexString(key:string, ccv?: CommonCryptoVersion){
-    const {method, length} = CommonCryptoVersionMap[ccv || this.config.useCommonCryptoVersion].keyConvert
+    const {method, length} = CommonCryptoVersionMap[ccv || this.ccv].keyConvert
     try {
       if(!crypto[method] || typeof crypto[method] !== 'function') throw Error(ConvertUserKeyError)
       const hexCode:string = crypto[method].call(null,key)
@@ -225,20 +230,18 @@ class Crypto extends Module {
   // dkey 原始密码
   // key 生成的密码
   async createCommonKeyPack(dkey: string, key?: string){
-    // 选择当前使用的 ccv 版本
-    const ccv = this.config.useCommonCryptoVersion
     if(!key){
-      const { method, length } = CommonCryptoVersionMap[ccv].commonKey
+      const { method, length } = CommonCryptoVersionMap[this.ccv].commonKey
       if(!crypto[method]) throw Error(CommonError)
       key = await crypto[method].call(null, length) as string
     }
     // 输入的原始密码统一使用 ccv 里配置的 hash 方法转化一遍
-    dkey = this.convertToHexString(dkey, ccv)
+    dkey = this.convertToHexString(dkey, this.ccv)
     const keyPack:IMasterKeyPack = {
       keyPack: this.encryptString(key, dkey),
-      hexKeyId: this.calculateKeyId(dkey, ccv),
-      keyId: this.calculateKeyId(key, ccv),
-      ccv
+      hexKeyId: this.calculateKeyId(dkey, this.ccv),
+      keyId: this.calculateKeyId(key, this.ccv),
+      ccv: this.ccv
     }
     return keyPack
   }
@@ -266,13 +269,12 @@ class Crypto extends Module {
 
   // todo: 在后面使用重置码重置主密码时，可以检测重置码是否有效【ccv 用于选择合适的id算法】
   async createResetKeyPack(rkContent, dkey){
-    const ccv = this.config.useCommonCryptoVersion
     const keyPack: IResetKeyPack = {
       qrId: rkContent.id,
       createTime: rkContent.time,
-      keyId: this.calculateKeyId(rkContent.rk, ccv),
+      keyId: this.calculateKeyId(rkContent.rk, this.ccv),
       pack: this.encryptString(dkey, rkContent.rk),
-      ccv
+      ccv: this.ccv
     }
     return keyPack
   }
