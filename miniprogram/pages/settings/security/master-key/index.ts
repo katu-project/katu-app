@@ -36,18 +36,14 @@ Page({
   },
 
   async tapToSetMasterKey(){
-    if(user.isSetMasterKey){  
-      try {
+    try {
+      if(user.isSetMasterKey){  
         await this.updateMasterKey(this.oldKey, this.inputKey)
-      } catch (error:any) {
-        app.showNotice(error.message)
-      }
-    }else{
-      try {
+      }else{
         await this.setMasterKey(this.inputKey)
-      } catch (error:any) {
-        app.showNotice(error.message)
       }
+    } catch (error:any) {
+      app.showNotice(error.message)
     }
   },
 
@@ -75,8 +71,8 @@ Page({
 
   async finishTask(){
     app.masterKeyManager.clear()
+    await user.reloadInfo()
     await app.showNotice(`主密码${user.isSetMasterKey?'更新':'设置'}成功`)
-    user.reloadInfo()
     app.navigateBack()
   },
 

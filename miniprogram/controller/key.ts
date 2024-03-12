@@ -143,7 +143,7 @@ class MasterKeyManager extends KeyManager{
     return this.api.setMasterKeyInfo(masterKeyPack)
   }
 
-  async update({key, newKey, originKey}:{key?:string, newKey, originKey?:string}){
+  async update({key, newKey, originKey}:{key?:string, newKey:string, originKey?:string}){
     if(key && originKey) throw Error('内部错误')
     if(key){
       // 获取目前使用的主密码
