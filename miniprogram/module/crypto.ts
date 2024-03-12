@@ -3,8 +3,7 @@ import { getCpk, getPackageCpk } from '@katucloud/cpk'
 import { bip39, convert, crypto, file } from "@/utils/index"
 
 const CommonError = "内部参数错误"
-const ConvertUserKeyError = '密码转化出错'
-const MethodNotExistError = '方法不存在'
+const ConvertUserKeyError = '密码转换处理失败'
 const CalculateKeyIdError = '获取密码ID出错'
 
 const KatuCryptoFormatter = {
@@ -123,6 +122,7 @@ class Crypto extends Module {
   }
 
   async encryptImage({keyPair:{key, salt}, imagePath, extraData, savePath}: IEncryptImageOptions){
+    const ccv = this.ccv
     const cpk = getCpk(this.config.usePackageVersion)
     // 附加数据对象 -> JSON 字符串 -> Hex 字符串
     const edh = this.packExtraData(extraData)
@@ -132,19 +132,20 @@ class Crypto extends Module {
     const encryptedPackage = encryptedData + await cpk.cmd({
       salt,
       edhl: edh.length,
-      ccv: this.ccv
+      ccv
     })
-    console.debug(`cpk 版本: ${cpk.ver}, ccv 版本: ${this.ccv}`)
+    console.debug(`cpk 版本: ${cpk.ver}, ccv 版本: ${ccv}`)
     this.printDebugInfo({key, salt, extraData, edh, plaintext, encryptedData, encryptedPackage})
     await file.writeFile(savePath, encryptedPackage, 'hex')
     return {
       path: savePath,
-      ccv: this.ccv,
+      ccv,
       keySalt: salt,
     }
   }
 
   async decryptImage({imagePath, savePath, keyPair:{key}}:IDecryptImageOptions){
+    const ccv = this.ccv
     const decryptedImage:{savePath: string, extraData: any[]} = {
       savePath,
       extraData: []
@@ -163,7 +164,7 @@ class Crypto extends Module {
       throw Error("附加数据读取出错")
     }
 
-    console.debug(`解密版本: ${cpk.ver}, ccv 版本: ${this.ccv}`)
+    console.debug(`解密版本: ${cpk.ver}, ccv 版本: ${ccv}`)
     this.printDebugInfo({key, image, edh:extraData, extraData:decryptedImage.extraData, plaintext, encryptedData})
     
     await file.writeFile(decryptedImage.savePath, image, 'hex')
@@ -192,39 +193,39 @@ class Crypto extends Module {
 
   async createCommonKeyPair({key, salt, ccv}: CommonKeyPairOptions): Promise<IKeyPair>{
     const { method, options, saltLength } = CommonCryptoVersionMap[ccv || this.ccv].keyPair
-    if(!crypto[method] || typeof crypto[method] !== 'function') throw Error(MethodNotExistError)
     try {
+      if(!crypto[method] || typeof crypto[method] !== 'function') throw Error(`无此方法: ${method}`)
       options.salt = salt || await this.randomHexString(saltLength)
       const keyPair = await crypto[method].call(null, key, options)
       return keyPair
-    } catch (error) {
-      console.error(error)
-      throw Error('keyPair create error')
+    } catch (error:any) {
+      console.error('createCommonKeyPair: ' + error.message || error)
+      throw Error('创建密码对错误')
     }
   }
 
   convertToHexString(key:string, ccv?: string){
     const {method, length} = CommonCryptoVersionMap[ccv || this.ccv].keyConvert
     try {
-      if(!crypto[method] || typeof crypto[method] !== 'function') throw Error(ConvertUserKeyError)
+    if(!crypto[method] || typeof crypto[method] !== 'function') throw Error(`无此方法: ${method}`)
       const hexCode:string = crypto[method].call(null,key)
-      if(!hexCode) throw Error(ConvertUserKeyError)
+      if(!hexCode) throw Error(`${method} 返回值无效`)
       return length ? hexCode.slice(0,length) : hexCode
-    } catch (error) {
-      console.error(error)
+    } catch (error:any) {
+      console.error('convertToHexString: ' + error.message || error)
       throw Error(ConvertUserKeyError)
     }
   }
 
-  calculateKeyId(key:string, ccv){
-    const {method, length} = CommonCryptoVersionMap[ccv].calculateKeyId
+  calculateKeyId(key:string, ccv?: string){
+    const {method, length} = CommonCryptoVersionMap[ccv || this.ccv].calculateKeyId
     try {
-      if(!crypto[method] || typeof crypto[method] !== 'function') throw Error(CalculateKeyIdError)
+      if(!crypto[method] || typeof crypto[method] !== 'function') throw Error(`无此方法: ${method}`)
       const hexCode:string = crypto[method].call(null,key)
-      if(!hexCode) throw Error(CalculateKeyIdError)
+      if(!hexCode) throw Error(`${method} 返回值无效`)
       return length ? hexCode.slice(0,length) : hexCode
-    } catch (error) {
-      console.error(error)
+    } catch (error:any) {
+      console.error('calculateKeyId: ' + error.message || error)
       throw Error(CalculateKeyIdError)
     }
   }
@@ -233,28 +234,39 @@ class Crypto extends Module {
     if(this.calculateKeyId(key, keyPack.ccv) !== keyPack.keyId) throw Error("密码ID未通过验证")
   }
 
-  // dkey 原始密码
-  // key 生成的密码
-  async createCommonKeyPack(dkey: string, key?: string){
-    if(!key){
-      const { method, length } = CommonCryptoVersionMap[this.ccv].commonKey
-      if(!crypto[method]) throw Error(CommonError)
-      key = await crypto[method].call(null, length) as string
+  /**
+   * 生成/更新主密码包
+   * @param userOriginKey 用户设置的密码
+   * @param masterKey 应用主密码
+   * @returns
+   */
+  async createCommonKeyPack(userOriginKey: string, masterKey?: string){
+    const ccv = this.ccv
+    if(!masterKey){
+      const { method, length } = CommonCryptoVersionMap[ccv].commonKey
+      if(!crypto[method] || typeof crypto[method] !== 'function') throw Error(CommonError)
+      masterKey = await crypto[method].call(null, length) as string
     }
     // 输入的原始密码统一使用 ccv 里配置的 hash 方法转化一遍
-    dkey = this.convertToHexString(dkey, this.ccv)
+    const userKey = this.convertToHexString(userOriginKey)
     const keyPack:IMasterKeyPack = {
-      keyPack: this.encryptString(key, dkey),
-      hexKeyId: this.calculateKeyId(dkey, this.ccv),
-      keyId: this.calculateKeyId(key, this.ccv),
-      ccv: this.ccv
+      keyPack: this.encryptString(masterKey, userKey),
+      hexKeyId: this.calculateKeyId(userKey),
+      keyId: this.calculateKeyId(masterKey),
+      ccv
     }
     return keyPack
   }
 
-  async fetchKeyFromKeyPack(keyPack:IKeyPack, dkey:string){
-    dkey = this.convertToHexString(dkey, keyPack.ccv)
-    const key = this.decryptString(keyPack.keyPack, dkey)
+  /**
+   * 使用用户设置的密码从密码包中提取应用主密码
+   * @param keyPack 
+   * @param userOriginKey 
+   * @returns 
+   */
+  async fetchKeyFromKeyPack(keyPack:IKeyPack, userOriginKey:string){
+    const userKey = this.convertToHexString(userOriginKey, keyPack.ccv)
+    const key = this.decryptString(keyPack.keyPack, userKey)
     if(!key) throw Error("密码有误")
     return key
   }
@@ -275,12 +287,13 @@ class Crypto extends Module {
 
   // todo: 在后面使用重置码重置主密码时，可以检测重置码是否有效【ccv 用于选择合适的id算法】
   async createResetKeyPack(rkContent, dkey){
+    const ccv = this.ccv
     const keyPack: IResetKeyPack = {
       qrId: rkContent.id,
       createTime: rkContent.time,
-      keyId: this.calculateKeyId(rkContent.rk, this.ccv),
+      keyId: this.calculateKeyId(rkContent.rk, ccv),
       pack: this.encryptString(dkey, rkContent.rk),
-      ccv: this.ccv
+      ccv
     }
     return keyPack
   }
