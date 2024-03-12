@@ -6,8 +6,6 @@ const CommonError = "内部参数错误"
 const ConvertUserKeyError = '密码转化出错'
 const MethodNotExistError = '方法不存在'
 const CalculateKeyIdError = '获取密码ID出错'
-// cpk 包标志位长度，不能变动
-const PACKAGE_SIGN_LENGTH = 8
 
 const KatuCryptoFormatter = {
   stringify: function(cipherParams) {
@@ -152,7 +150,7 @@ class Crypto extends Module {
       extraData: []
     }
     const packageHex = await file.readFile<string>(imagePath, 'hex')
-    const cpk = await getPackageCpk(packageHex, PACKAGE_SIGN_LENGTH)
+    const cpk = await getPackageCpk(packageHex)
     const encryptedData = await cpk.eed(packageHex)
     const plaintext = await this.decryptText(encryptedData, key, cpk.dea)
     if(!plaintext) throw Error("解密错误")
