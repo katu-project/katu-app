@@ -69,7 +69,7 @@ const CommonCryptoVersionMap = {
         keySize: 4,
         iterations: 5000
       },
-      saltLength: 8
+      saltLength: 16
     }
   }
 }
@@ -187,15 +187,16 @@ class Crypto extends Module {
     return ed
   }
 
-  randomHexString(byteLength:number){
-    return crypto.random(byteLength)
+  randomHex(length:number){
+    if(length === 0 || length%2 !== 0) throw Error(CommonError)
+    return crypto.random(length/2)
   }
 
   async createCommonKeyPair({key, salt, ccv}: CommonKeyPairOptions): Promise<IKeyPair>{
     const { method, options, saltLength } = CommonCryptoVersionMap[ccv || this.ccv].keyPair
     try {
       if(!crypto[method] || typeof crypto[method] !== 'function') throw Error(`无此方法: ${method}`)
-      options.salt = salt || await this.randomHexString(saltLength)
+      options.salt = salt || await this.randomHex(saltLength)
       const keyPair = await crypto[method].call(null, key, options)
       return keyPair
     } catch (error:any) {
@@ -276,7 +277,7 @@ class Crypto extends Module {
       const words = bip39.generateMnemonic()
       return bip39.mnemonicToEntropy(words)
     }
-    
+
     // 预设功能: 在后面使用重置码重置主密码时，可以检测重置码是否有效【ccv 用于选择合适的id算法】
     const createResetKeyPack = async (rkContent, dkey) => {
       const ccv = this.ccv
@@ -291,7 +292,7 @@ class Crypto extends Module {
     }
 
     const createResetKeyContent = async () => {
-      const qrId = await this.randomHexString(2)
+      const qrId = await this.randomHex(4)
       return {
         id: qrId.toUpperCase(),
         time: new Date().toLocaleDateString(),
@@ -317,7 +318,7 @@ class Crypto extends Module {
     }
   }
 
-  extractKeyFromResetKeyPack(keyPack, rk){
+  extractKeyFromResetKeyPack(keyPack:IResetKeyPack, rk:string){
     const masterKey = this.decryptString(keyPack.pack, rk)
     if(!masterKey) throw Error("密码有误")
     return masterKey

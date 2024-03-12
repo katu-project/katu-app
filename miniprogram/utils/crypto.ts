@@ -14,9 +14,9 @@ export function createCipherParams(params){
   return CryptoJS.lib.CipherParams.create(params)
 }
 
-export async function random(bytesLength: number){
+export async function random(bytesLength:number){
   if(!bytesLength) {
-    throw Error("random bytesLength error")
+    throw Error("random value length error")
   }
   let randomHexSring = ''
   try {
@@ -29,10 +29,6 @@ export async function random(bytesLength: number){
     randomHexSring = CryptoJS.lib.WordArray.random(bytesLength).toString()
   }
   return randomHexSring
-}
-
-export async function randomBytesHexString(len: number){
-  return random(len)
 }
 
 export const AES_256_CBC = {
@@ -94,7 +90,6 @@ export function decryptString(string, code){
 
 export default {
   random,
-  randomBytesHexString,
   MD5,
   SHA1,
   SHA256,

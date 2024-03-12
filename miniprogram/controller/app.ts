@@ -248,9 +248,9 @@ class AppManager extends Controller {
     scope = scope?.length ? scope : []
     expiredTime = expiredTime || 3600
     // sk 3 bytes share key
-    let sk = await this.crypto.randomHexString(3)
+    let sk = await this.crypto.randomHex(6)
     // dk 16 bytes data key
-    let dk = await this.crypto.randomHexString(16)
+    let dk = await this.crypto.randomHex(32)
     const shareCard: Partial<ICard> = {
       encrypted: card.encrypted,
       image: [],

@@ -43,7 +43,7 @@ class MiniKeyManager extends KeyManager {
   async createMiniKey({miniKey, masterKey}:{miniKey:string, masterKey:string}){
     if(!miniKey) throw Error('快速密码不能为空')
     if(!masterKey) throw Error('读取主密码错误')
-    const randomHexString = await this.crypto.randomHexString(12)
+    const randomHexString = await this.crypto.randomHex(24)
     const mixMiniKey = `${miniKey}${randomHexString}`
     const miniKeyPack = await this.crypto.createCommonKeyPack(mixMiniKey, masterKey)
     // 该数据存在本地    
@@ -51,7 +51,7 @@ class MiniKeyManager extends KeyManager {
       rk: randomHexString,
       keyPack: miniKeyPack
     })
-    const keyId = await this.crypto.randomHexString(8)
+    const keyId = await this.crypto.randomHex(16)
     const miniKeySaveDataPath = await this.getMiniKeyPath(keyId)
     await file.writeFile(miniKeySaveDataPath, miniKeySaveData)
     return this.api.setUserMiniKeyInfo({
