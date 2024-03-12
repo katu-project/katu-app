@@ -271,46 +271,46 @@ class Crypto extends Module {
     return key
   }
 
-  createBip39Key(){
-    const words = bip39.generateMnemonic()
-    return bip39.mnemonicToEntropy(words)
-  }
-
-  async createResetKeyContent(){
-    const qrId = await this.randomHexString(2)
-    return {
-      id: qrId.toUpperCase(),
-      time: new Date().toLocaleDateString(),
-      rk: this.createBip39Key()
-    }
-  }
-
-  // todo: 在后面使用重置码重置主密码时，可以检测重置码是否有效【ccv 用于选择合适的id算法】
-  async createResetKeyPack(rkContent, dkey){
-    const ccv = this.ccv
-    const keyPack: IResetKeyPack = {
-      qrId: rkContent.id,
-      createTime: rkContent.time,
-      keyId: this.calculateKeyId(rkContent.rk, ccv),
-      pack: this.encryptString(dkey, rkContent.rk),
-      ccv
-    }
-    return keyPack
-  }
-
-  async createResetKeyQrCodePack(rkContent){
-    const qrPack = {
-      i: rkContent.id,
-      t: rkContent.time,
-      rk: rkContent.rk
-    }
-    return qrPack
-  }
-
   async createResetKey(masterKey:string){
-    const rkContent = await this.createResetKeyContent()
-    const keyPack = await this.createResetKeyPack(rkContent, masterKey)
-    const qrPack = await this.createResetKeyQrCodePack(rkContent)
+    const createBip39Key = () => {
+      const words = bip39.generateMnemonic()
+      return bip39.mnemonicToEntropy(words)
+    }
+    
+    // 预设功能: 在后面使用重置码重置主密码时，可以检测重置码是否有效【ccv 用于选择合适的id算法】
+    const createResetKeyPack = async (rkContent, dkey) => {
+      const ccv = this.ccv
+      const keyPack: IResetKeyPack = {
+        qrId: rkContent.id,
+        createTime: rkContent.time,
+        keyId: this.calculateKeyId(rkContent.rk, ccv),
+        pack: this.encryptString(dkey, rkContent.rk),
+        ccv
+      }
+      return keyPack
+    }
+
+    const createResetKeyContent = async () => {
+      const qrId = await this.randomHexString(2)
+      return {
+        id: qrId.toUpperCase(),
+        time: new Date().toLocaleDateString(),
+        rk: createBip39Key()
+      }
+    }
+
+    const createResetKeyQrCodePack = async (rkContent) => {
+      const qrPack = {
+        i: rkContent.id,
+        t: rkContent.time,
+        rk: rkContent.rk
+      }
+      return qrPack
+    }
+
+    const rkContent = await createResetKeyContent()
+    const keyPack = await createResetKeyPack(rkContent, masterKey)
+    const qrPack = await createResetKeyQrCodePack(rkContent)
     return {
       keyPack,
       qrPack
