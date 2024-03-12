@@ -203,7 +203,7 @@ class Crypto extends Module {
     }
   }
 
-  convertToHexString(key:string, ccv?: CommonCryptoVersion){
+  convertToHexString(key:string, ccv?: string){
     const {method, length} = CommonCryptoVersionMap[ccv || this.ccv].keyConvert
     try {
       if(!crypto[method] || typeof crypto[method] !== 'function') throw Error(ConvertUserKeyError)
