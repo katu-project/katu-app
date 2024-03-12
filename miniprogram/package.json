@@ -9,7 +9,7 @@
   "author": "",
   "license": "GPL-3.0-or-later",
   "dependencies": {
-    "@katucloud/cpk": "^1.1.0",
+    "@katucloud/cpk": "^1.1.1",
     "crypto-js": "3.3.0",
     "js-base64": "^3.7.2",
     "lodash.clonedeep": "^4.5.0",
