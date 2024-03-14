@@ -31,6 +31,8 @@ export async function random(bytesLength:number){
   return randomHexSring
 }
 
+export const RANDOM = random
+
 export const AES_256_CBC = {
   encrypt: function(plaintext:string, key:string, options){
     const cfg = {
