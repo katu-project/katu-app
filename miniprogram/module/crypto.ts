@@ -101,6 +101,22 @@ class Crypto extends Module {
     }
   }
 
+  getCpk(cpk?:string){
+    if(cpk) {
+      try {
+        getCpk(cpk)
+      } catch (error) {
+        console.error('未知cpk:' + cpk)
+        throw Error(CommonError)
+      }
+    }
+    cpk = cpk || this.config.usePackageVersion
+    return {
+      cpk,
+      item: getCpk(cpk)
+    }
+  }
+
   getStringHash(str:string, method:HashType){
     return crypto[method](str) as string
   }
@@ -131,7 +147,7 @@ class Crypto extends Module {
 
   async encryptImage({keyPair:{key, salt}, imagePath, extraData, savePath}: IEncryptImageOptions){
     const { ccv } = this.getCcv()
-    const cpk = getCpk(this.config.usePackageVersion)
+    const { item:cpk } = this.getCpk(this.config.usePackageVersion)
     // 附加数据对象 -> JSON 字符串 -> Hex 字符串
     const edh = this.packExtraData(extraData)
     const imageHex = await file.readFile<string>(imagePath, 'hex')
