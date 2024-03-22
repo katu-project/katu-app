@@ -74,7 +74,7 @@ function createHttpRequestor(options:IHttpRequestOptions){
       data,
       header: {
         Token: options.token || '',
-        origin: 'http'
+        'x-origin': 'http'
       },
       timeout: 10000,
       method: reqOptions?.method || 'POST'
@@ -100,7 +100,7 @@ function createHttpUploader(options:IHttpRequestOptions){
       formData: uploadInfo,
       header: {
         Token: options.token,
-        origin: 'http'
+        'x-origin': 'http'
       },
       name: 'file'
     }
@@ -151,7 +151,7 @@ function createHttpDownloader(options:IHttpRequestOptions){
       url: `${options.api}/${url}?url=${fileId}`,
       header: {
         Token: options.token,
-        origin: 'http'
+        'x-origin': 'http'
       },
     }
 
