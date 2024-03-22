@@ -69,10 +69,6 @@ export default class User extends Controller {
     return this._avatar || this.user.avatarUrl
   }
 
-  get openid(){
-    return this.user.openid
-  }
-
   get tel(){
     return this.user.contact?.tel
   }

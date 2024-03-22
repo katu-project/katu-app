@@ -42,11 +42,11 @@
   </block>
   <block wx:if="{{detail.type==='card-cost'}}">
     <view class="cu-form-group">
-      <view class="title">加密卡面:</view>
+      <view class="title">加密卡片:</view>
       <input value="{{detail.encryptedImageCount}}" disabled></input>
     </view>
     <view class="cu-form-group">
-      <view class="title">普通卡面:</view>
+      <view class="title">普通卡片:</view>
       <input value="{{detail.unencryptedImageCount}}" disabled></input>
     </view>
     <view class="cu-form-group">
