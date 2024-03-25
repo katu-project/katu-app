@@ -4,8 +4,8 @@ const app = getAppManager()
 
 Page({
   data: {
-    user: app.user
-
+    user: app.user,
+    showDevItem: false
   },
 
   onLoad() {
@@ -34,5 +34,11 @@ Page({
     if(confirm){
       app.setClipboardData(token)
     }
+  },
+
+  tapToShowDevItem(){
+    this.setData({
+      showDevItem: true
+    })
   }
 })
