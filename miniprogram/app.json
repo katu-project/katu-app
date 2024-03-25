@@ -34,7 +34,8 @@
     "pages/notice/index",
     "pages/auth/index",
     "pages/settings/adv/dev/index",
-    "pages/settings/account/otherLogin/index"
+    "pages/settings/account/otherLogin/index",
+    "pages/settings/adv/info/index"
   ],
   "subPackages": [
     {
