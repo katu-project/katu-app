@@ -228,6 +228,7 @@ class AppManager extends Controller {
   }
 
   async hasInstallWechat(){
+    if(this.isMp) return true
     if(!this.isApp) return false
     try {
       return await hasWechatInstall()
