@@ -21,8 +21,9 @@ Page({
     inputKeyResult: '',
     changeMode: true,
     card: {
+      _id: '',
       title: '',
-      tags: [],
+      tags: [] as string[],
       setLike: false,
       encrypted: false,
       image: [
@@ -30,12 +31,13 @@ Page({
           _url: app.getConst('DefaultShowImage'),
           url: '',
           salt: '',
-          hash: ''
-        }
+          hash: '',
+          ccv: ''
+        } as ICardImage
       ]
     },
-    extraData: [],
-    tagsInfo: [],
+    extraData: [] as AnyObject[],
+    tagsInfo: [] as AnyObject[],
     editable: true,
     shareable: true,
     syncCheck: true,
@@ -73,8 +75,8 @@ Page({
     this.dataSyncCheck()
   },
 
-  async loadData(options){
-    const {ignoreCache, showText, hideLoading} = options || {}
+  async loadData(options?:{ hideLoading: boolean, ignoreCache: boolean, showText:string }){
+    const { ignoreCache, showText, hideLoading } = options || {}
     try {
       const card = await loadData(
         cardManager.getCard, 

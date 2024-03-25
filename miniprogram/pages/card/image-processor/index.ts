@@ -116,7 +116,7 @@ Page({
     }
   },
 
-  findCardFailed(error){
+  findCardFailed(error?: any){
     if(error) {
       console.error(error)
       app.showNotice(error.message)

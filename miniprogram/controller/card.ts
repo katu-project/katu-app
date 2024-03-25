@@ -226,13 +226,13 @@ class CardManager extends Controller{
     this.cache.setCardExtraData(card._id, localCard.info)
   }
 
-  async deleteCard(card: ICard){
+  async deleteCard(card: Pick<ICard,'_id'|'image'>){
     await this.cache.deleteCard(card._id)
     await this.cache.deleteCardImage(card)
     return this.api.deleteCard({_id: card._id})
   }
 
-  async deleteCardImageCache(card: ICard){
+  async deleteCardImageCache(card: Pick<ICard,'_id'|'image'>){
     return this.cache.deleteCardImage(card)
   }
 

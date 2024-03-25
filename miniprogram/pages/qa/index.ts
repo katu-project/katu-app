@@ -5,8 +5,8 @@ const QaTypeCate = app.menu.qa
 
 Page({
   data: {
-    qaCate: [],
-    list: [],
+    qaCate: [] as typeof QaTypeCate,
+    list: [] as AnyObject[],
     isLoading: true
   },
 

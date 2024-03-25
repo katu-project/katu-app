@@ -181,7 +181,7 @@ Page({
     })
   },
 
-  showInputKey(options){
+  showInputKey(options?: {inputMode?:string, changeMode?:boolean}){
     this.setData({
       showInputKey: true,
       ...options

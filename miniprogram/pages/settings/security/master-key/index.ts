@@ -8,6 +8,7 @@ Page({
   oldKey: '',
   inputKey: '',
   data: {
+    key: '',
     setMasterKey: false,
     step: 0,
     focus: false,

@@ -8,14 +8,14 @@ const user = getUserManager()
 
 Page({
   data: {
-    cateList: [],
-    likeList: [],
+    cateList: [] as AnyObject[],
+    likeList: [] as AnyObject[],
     notice: {
       _id: '',
       content: '暂无新消息',
       updateTime: '',
       auto_show: false
-    },
+    } as AnyObject,
     isRefresh: false
   },
 
@@ -224,7 +224,7 @@ Page({
     }else{
       const advSetData = app.createAdvSetData(this.setData.bind(this), this.data.likeList.length)
       for (const idx in this.data.likeList) {
-        const card = this.data.likeList[idx]
+        const card = this.data.likeList[idx] as ICard
         cardManager.getImageRenderSetData({idx, card, keyName: 'likeList'})
                    .then(advSetData)
       }
@@ -292,7 +292,7 @@ Page({
     })
   },
 
-  tapToMarkRead: debounce(async function({currentTarget:{dataset:{key}}}){
+  tapToMarkRead: debounce(async function(this,{currentTarget:{dataset:{key}}}: any){
     await user.markDocRead(key)
     this.setData({
       'notice._id': ''

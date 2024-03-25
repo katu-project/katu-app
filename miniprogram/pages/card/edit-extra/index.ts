@@ -8,9 +8,10 @@ const user = getUserManager()
 const CardExtraDataFieldsKeys = app.getCardConfig('defaultFields')
 
 Page({
+  originData: '' as string|undefined,
   data: {
     extraFieldsKeys: CardExtraDataFieldsKeys,
-    extraFields: []
+    extraFields: [] as AnyObject[]
   },
 
   onLoad(options) {
@@ -95,7 +96,7 @@ Page({
         app.showNotice('内容填写有误')
         return
       }
-      const extraFields = cardManager.condenseExtraFields(this.data.extraFields)
+      const extraFields = cardManager.condenseExtraFields(this.data.extraFields as ICardExtraField[])
 
       if(this.originData === JSON.stringify(extraFields)) {
         app.showNotice('内容无变动')

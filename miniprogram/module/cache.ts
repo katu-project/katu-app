@@ -148,7 +148,7 @@ class Cache extends Module {
     }
   }
 
-  async deleteCardImage(card: ICard){
+  async deleteCardImage(card: Pick<ICard,'_id'|'image'>){
     await this.deleteCardExtraData(card._id)
     for (const image of card.image) {
       try {

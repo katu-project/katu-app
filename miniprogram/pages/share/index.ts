@@ -79,7 +79,7 @@ Page({
       await app.showConfirm('未检测到密钥，无法读取数据','输入密钥')
       return this.showInputKey()
     }
-    return loadData(this.decryptImage,{},'读取加密数据')
+    return loadData(this.decryptImage, undefined,'读取加密数据')
   },
   
   async decryptImage(){

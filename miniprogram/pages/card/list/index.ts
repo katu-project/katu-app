@@ -10,13 +10,13 @@ const cardManager = getCardManager()
 const AppDefaultTags = app.getCardConfig('defaultTags')
 
 Page({
-  where: {},
-  originList: [],
+  where: {} as AnyObject,
+  originList: [] as AnyObject[],
   data: {
     key: '',
     tag: '',
-    list: [],
-    tagsInfo: [],
+    list: [] as AnyObject[],
+    tagsInfo: {} as AnyObject,
     isRefresh: false,
     layout: 'default'
   },
@@ -64,7 +64,7 @@ Page({
     const tagsInfo = {}
     tags.map(e=>e.color && (tagsInfo[e.name]=e.color))
     this.setData({
-      'tagsInfo': tagsInfo
+      tagsInfo: tagsInfo
     })
   },
 
@@ -111,7 +111,7 @@ Page({
 
   onEventCardHide(id){
     const idx = this.data.list.findIndex(e=>e._id === id)
-    const findCard = this.data.list[idx]
+    const findCard = this.data.list[idx] as ICard
     console.log('list page: onEventCardHide:', id, findCard.title)
     if(findCard){
       this.loadCardImage(findCard, idx)
@@ -125,7 +125,7 @@ Page({
     }else{
       const advSetData = app.createAdvSetData(this.setData.bind(this), this.data.list.length)
       for (const idx in this.data.list) {
-        const card = this.data.list[idx]
+        const card = this.data.list[idx] as ICard
         cardManager.getImageRenderSetData({idx, card, keyName:'list'})
                    .then(advSetData)
       }

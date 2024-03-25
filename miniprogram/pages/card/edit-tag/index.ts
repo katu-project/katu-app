@@ -8,7 +8,7 @@ const DefaultThemeColors = app.theme.DefaultColors
 
 Page({
   data: {
-    list: [],
+    list: [] as AnyObject[],
     tempTagName: '',
     selectedTagIdx: -1,
     tempTagColor: '',
@@ -119,9 +119,9 @@ Page({
   tapToSetColor(){
     const selectedColor = this.data.tempTagColor
     if(selectedColor && selectedColor !== this.data.list[this.data.selectedTagIdx].color) {
-      const tag = this.data.list[this.data.selectedTagIdx]
+      const tag = this.data.list[this.data.selectedTagIdx] as ICardTag
       tag.color = selectedColor
-      loadData(user.updateTag,tag).then(()=>{
+      loadData(user.updateTag, tag).then(()=>{
         this.setData({
           [`list[${this.data.selectedTagIdx}].color`]: tag.color,
         })

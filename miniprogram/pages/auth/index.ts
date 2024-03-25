@@ -6,7 +6,9 @@ const user = getUserManager()
 
 Page({
   data: {
-    activeInfo: {},
+    activeInfo: {
+      id: ''
+    },
     showOtherLogin: false,
     showMpLogin: true,
     emailLogin:{
@@ -14,7 +16,9 @@ Page({
       code: '',
       sendCode: false,
       verifyId: ''
-    }
+    },
+    toc_1: '',
+    toc_2: ''
   },
 
   async onLoad() {
@@ -96,6 +100,7 @@ Page({
     })
     if(type === 'apple') return this.goAppleLogin()
     if(type === 'mp') return this.goMpLogin()
+    return
   },
 
   async goAppleLogin(){

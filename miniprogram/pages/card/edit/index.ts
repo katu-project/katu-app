@@ -9,24 +9,25 @@ const user = getUserManager()
 Page({
   id: '',
   originData: {} as ICard,
+  otherTagIdx: -1,
   data: {
     edit: false,
     useDefaultTag: true,
     card: {
       encrypted: false,
       title: '卡片名称1',
-      tags: [],
+      tags: [] as string[],
       setLike: false,
       image: [
         { url: app.getConst('DefaultAddImage') }
       ],
-      info: []
+      info: [] as AnyArray[]
     },
     curShowPicIdx: 0,
     showInputKey: false,
     inputKeyResult: '',
     dataChange: false,
-    tags: []
+    tags: [] as AnyObject[]
   },
 
   onLoad(options){
@@ -206,15 +207,18 @@ Page({
       }
     }
 
-    loadData(this.data.edit?cardManager.update:cardManager.add, {card, key: app.masterKeyManager.masterKey}, {returnFailed: true})
-            .then(this.saveDone)
-            .catch(this.saveFailed)
-            .finally(this.saveFinish)
+    loadData(this.data.edit ? cardManager.update : cardManager.add, {
+      card: card as ICard, 
+      key: app.masterKeyManager.masterKey
+    }, { returnFailed: true })
+      .then(this.saveDone)
+      .catch(this.saveFailed)
+      .finally(this.saveFinish)
   },
 
   async saveDone(card){ 
     console.debug(`提前缓存${this.data.edit?'修改':'新增'}卡片`)
-    cardManager.cacheCard(card, this.data.card).then(()=>{
+    cardManager.cacheCard(card, this.data.card as ICard).then(()=>{
       app.emit('cardChange',card)
     })
     await app.showNotice('卡片数据已保存')

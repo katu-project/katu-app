@@ -4,8 +4,8 @@ const app = getAppManager()
 
 Page({
   notices: {
-    sys: [],
-    user: []
+    sys: [] as INotice[],
+    user: [] as INotice[],
   },
   data: {
     curTab: 'sys',

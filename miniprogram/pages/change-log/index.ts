@@ -4,7 +4,7 @@ const app = getAppManager()
 
 Page({
   data: {
-    list: [],
+    list: [] as AnyObject[],
     webUrl: 'https://katucloud.com/change-log'
   },
 
