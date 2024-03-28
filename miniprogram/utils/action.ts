@@ -123,9 +123,10 @@ async function switchTab(page:string, vibrate?:boolean){
 }
 
 type LoadDataOptions = {
-  hideLoading: boolean,
-  loadingTitle: string,
-  returnFailed: boolean,
+  hideLoading: boolean
+  loadingTitle: string
+  returnFailed: boolean
+  failedContent: string | undefined
   timeout: number
 }
 
@@ -138,6 +139,7 @@ async function loadData<T extends AnyFunction>(
   let loadingTitle = '正在处理请求', 
       returnFailed = false,
       hideLoading = false,
+      failedContent,
       timeout = 10000
   if(options){
     if(typeof options === 'string'){
@@ -146,6 +148,7 @@ async function loadData<T extends AnyFunction>(
       loadingTitle = options.loadingTitle || loadingTitle
       returnFailed = options.returnFailed || false
       hideLoading = options.hideLoading || false
+      failedContent = options.failedContent
       timeout = options.timeout || 10000
     }
   }
@@ -194,7 +197,7 @@ async function loadData<T extends AnyFunction>(
             if(error.code === 1){ // 普通业务错误代码
               wx.showModal({
                 title: '操作错误',
-                content: error.message || '未知错误',
+                content: failedContent || error.message || '未知错误',
                 showCancel: false,
               })
               if(returnFailed) return reject(error)
