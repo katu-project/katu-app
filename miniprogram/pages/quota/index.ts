@@ -19,9 +19,11 @@ Page({
   },
   
   onLoad(){
-    wx.miniapp.IAP.addTransactionObserver(app.observers.IapTransactionObserver)
-    app.on('AppleOrderPayDone', this.onEventPayDone)
-    app.on('AppleOrderPayCancel', this.onEventPayCancel)
+    if(app.isApp){
+      wx.miniapp.IAP.addTransactionObserver(app.observers.IapTransactionObserver)
+      app.on('AppleOrderPayDone', this.onEventPayDone)
+      app.on('AppleOrderPayCancel', this.onEventPayCancel)
+    }
   },
 
   onReady(){
@@ -29,9 +31,11 @@ Page({
   },
 
   onUnload(){
-    app.off('AppleOrderPayDone')
-    app.off('AppleOrderPayCancel')
-    wx.miniapp.IAP.removeTransactionObserver(app.observers.IapTransactionObserver)
+    if(app.isApp){
+      app.off('AppleOrderPayDone')
+      app.off('AppleOrderPayCancel')
+      wx.miniapp.IAP.removeTransactionObserver(app.observers.IapTransactionObserver)
+    }
   },
 
   onEventPayDone(transaction){
