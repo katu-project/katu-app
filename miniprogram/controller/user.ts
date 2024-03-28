@@ -156,6 +156,13 @@ export default class User extends Controller {
     }
   }
 
+  async updateQuota(transaction){
+    return this.api.updateUserQuota({
+      type: 'quota',
+      transaction
+    })
+  }
+
   async bindTelNumber(data){
     return this.api.bindTelNumber(data)
   }

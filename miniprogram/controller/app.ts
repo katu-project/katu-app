@@ -71,6 +71,28 @@ class AppManager extends Controller {
     return this.getConfig('shareInfo')
   }
 
+  get observers(){
+    return {
+      IapTransactionObserver: {
+        updatedTransactions: (args:updatedTransactionsRes) => {
+          if(!args.transactions.length) return
+          const transaction = args.transactions[0]
+          console.debug('支付状态变动:', transaction.payment.applicationUsername, transaction.transactionIdentifier || transaction.tempTransactionIdentifier, transaction.transactionState)
+          switch (transaction.transactionState) {
+            case 'SKPaymentTransactionStatePurchased':
+              this.emit('AppleOrderPayDone', transaction)
+              break;
+            case 'SKPaymentTransactionStateFailed':
+              this.emit('AppleOrderPayCancel')
+              break
+            default:
+              break;
+          }
+        }
+      }
+    }
+  }
+
   checkUpdate(){
     console.log('检查更新')
     if(this.isMp){
@@ -411,6 +433,21 @@ class AppManager extends Controller {
 
   async getUserPrivacyNotice(_:any){
     return this.api.getUserPrivacyInfo()
+  }
+
+  async getIapItems(){
+    const iapItems:{key:string,label:string}[] = []
+    try {
+      const items = await this.api.getIapItems()
+      items.map(e=>iapItems.push(e))
+    } catch (error) {
+      console.error('getIapItems:',error)
+      iapItems.push({
+        key: 'katu_coin_1000',
+        label: '购买 1000 个兔币'
+      })
+    }
+    return iapItems
   }
 
   //数据

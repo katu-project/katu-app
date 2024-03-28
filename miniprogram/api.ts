@@ -16,6 +16,8 @@ export default {
 
   getChangeLog: () => request<IChangeLog[]>('app/changeLog'),
 
+  getIapItems: () => request<{key:string,label:string}[]>('app/iap/list'),
+
   getHotNotice: (data?:any) => request<INotice>('notice/hot', data),
 
   getNotices: (data?:any) => request<{sys:INotice[],user:INotice[]}>('notice/list', data),
@@ -63,6 +65,8 @@ export default {
   updateUserConfig: (configItem:any) => request('user/updateConfig', configItem),
 
   updateUserProfile: (data:any) => request('user/updateProfile', data),
+  
+  updateUserQuota: (data:any) => request('app/iap', data),
 
   getUserQuotaLog: (data) => request<IQuotaLog[]>('quota/list', data),
 
