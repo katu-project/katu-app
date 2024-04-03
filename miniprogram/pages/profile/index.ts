@@ -13,8 +13,7 @@ Page({
   },
 
   onLoad() {
-    app.on('userChange',this.onEventUserChange)
-    app.on('loginChange', this.onEventLoginChange)
+    this.loadEvent()
     this.loadUserInfo()
   },
 
@@ -30,6 +29,11 @@ Page({
 
   onShow() {
     this.getTabBar().setData({selected: 2})
+  },
+
+  loadEvent(){
+    app.on('userChange',this.onEventUserChange)
+    app.on('loginChange', this.onEventLoginChange)
   },
 
   tapUser(){

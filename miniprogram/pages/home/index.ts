@@ -20,11 +20,7 @@ Page({
   },
 
   async onLoad() {
-    app.on('cardChange',this.onEventCardChange)
-    app.on('cardDelete',this.onEventCardDelete)
-    app.on('cardDecrypt',this.onEventCardChange)
-    app.on('cardHide',this.onEventCardHide)
-    app.on('loginChange',this.onEventLoginChange)
+    this.loadEvent()
 
     await loadData(app.loadUser,{},'加载用户信息')
     // 检测切换账号行为，清理缓存数据
@@ -55,10 +51,19 @@ Page({
   },
 
   onUnload(){
-    this.removeAllEvent()
+    this.removeEvent()
   },
 
-  removeAllEvent(){
+  loadEvent(){
+    app.on('cardChange',this.onEventCardChange)
+    app.on('cardDelete',this.onEventCardDelete)
+    app.on('cardDecrypt',this.onEventCardChange)
+    app.on('cardHide',this.onEventCardHide)
+    
+    app.on('loginChange',this.onEventLoginChange)
+  },
+
+  removeEvent(){
     app.off('cardChange',this.onEventCardChange)
     app.off('cardDelete',this.onEventCardDelete)
     app.off('cardDecrypt',this.onEventCardChange)
