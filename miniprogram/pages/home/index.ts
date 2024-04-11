@@ -21,13 +21,12 @@ Page({
 
   async onLoad() {
     this.loadEvent()
-
-    await loadData(app.loadUser,{},'加载用户信息')
+    this.loadData(false,true)
+    await loadData(app.loadUser,undefined,'加载用户信息')
     // 检测切换账号行为，清理缓存数据
     await app.checkLastLogin()
     if(user.isOk){
       app.loadGlobalTask()
-      await this.loadData()
       app.checkQuotaNotice('可用兔币不足，请及时处理')
       
       if(app.isMp){

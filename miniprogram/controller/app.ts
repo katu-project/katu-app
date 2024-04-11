@@ -119,7 +119,7 @@ class AppManager extends Controller {
     }
   }
 
-  async loadUser(_:any){
+  async loadUser(){
     if(this.isApp){
       const token = await this.getLocalData('KATU_APP_TOKEN')
       if(!token) return
