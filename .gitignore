@@ -6,5 +6,10 @@ miniprogram_npm
 /cloud
 
 
+/miniapp/
+/i18n/
+/project.miniapp.json
+/miniprogram/app.miniapp.json
+
 .DS_Store
 node_modules
