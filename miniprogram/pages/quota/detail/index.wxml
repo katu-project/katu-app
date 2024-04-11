@@ -12,6 +12,18 @@
     <view class="title">{{detail.timeName}}:</view>
     <input value="{{detail.time}}" disabled></input>
   </view>
+
+  <block wx:if="{{detail.type==='gift'}}">
+    <view class="cu-form-group">
+      <view class="title">增加兔币:</view>
+      <input 	placeholder-style="color:green" placeholder="{{detail.useQuota}}" disabled></input>
+    </view>
+    <view class="cu-form-group">
+      <view class="title">增加后可用兔币:</view>
+      <input placeholder-style="color:green" placeholder="{{detail.remainQuota}}" disabled></input>
+    </view>
+  </block>
+
   <block wx:if="{{detail.type==='coupon-exchange'}}">
     <view class="cu-form-group">
       <view class="title">兑换密码:</view>
@@ -26,6 +38,7 @@
       <input placeholder-style="color:green" placeholder="{{detail.remainQuota}}" disabled></input>
     </view>
   </block>
+
   <block wx:if="{{detail.type==='quota-order' || detail.type === 'iap'}}">
     <view class="cu-form-group">
       <view class="title">订单号:</view>
@@ -40,6 +53,7 @@
       <input placeholder-style="color:green" placeholder="{{detail.remainQuota}}" disabled></input>
     </view>
   </block>
+
   <block wx:if="{{detail.type==='card-cost'}}">
     <view class="cu-form-group">
       <view class="title">加密卡片:</view>

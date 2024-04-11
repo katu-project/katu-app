@@ -10,7 +10,7 @@ Page({
   payHideLoading: ()=>{},
 
   data: {
-    list: [],
+    list: [] as AnyObject[],
     quota: {
       remain: 0
     },
@@ -70,12 +70,9 @@ Page({
         const logs = await user.getQuotaLog({})
         return logs
       }).then(logs=>{
-        const setData = {}
-        setData['list'] = logs.map(e=>{
-          e['time'] = new Date(e.createTime).toLocaleDateString(undefined,{ month: '2-digit', day: '2-digit', year: 'numeric'})
-          return e
+        this.setData({
+          list: logs
         })
-        this.setData(setData)
       })
     }
 
