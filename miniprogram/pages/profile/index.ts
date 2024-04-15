@@ -14,10 +14,10 @@ Page({
 
   onLoad() {
     this.loadEvent()
-    this.loadUserInfo()
   },
 
   async onReady() {
+    app.emit('userLoad')
     app.hasInstallWechat().then(hasInstall=>{
       if(!hasInstall){
         this.setData({
@@ -32,7 +32,7 @@ Page({
   },
 
   loadEvent(){
-    app.on('userChange',this.onEventUserChange)
+    app.on('userLoad',this.onEventUserLoad)
     app.on('loginChange', this.onEventLoginChange)
   },
 
@@ -43,7 +43,18 @@ Page({
     app.goToPage('auth/index')
   },
 
-  loadUserInfo(){
+  tapToEditInfo(){
+    if(!user.isActive) return
+    app.goProfileEditPage()
+  },
+
+  async onEventUserLoad(reload){
+    this.setData({
+      'user.avatarUrl': app.getConst('DefaultUserAvatar')
+    })
+    if(reload){
+      await user.reloadInfo()
+    }
     this.setData({
       user: {
         nickName: user.nickName,
@@ -54,25 +65,9 @@ Page({
     })
   },
 
-  tapToEditInfo(){
-    if(!user.isActive) return
-    app.goProfileEditPage()
-  },
-
-  onEventUserChange(){
-    this.setData({
-      'user.avatarUrl': app.getConst('DefaultUserAvatar')
-    })
-    user.reloadInfo().then(()=>{
-      this.loadUserInfo()
-    })
-  },
-
   async onEventLoginChange(login){
     if(login){
-      user.reloadInfo().then(()=>{
-        this.loadUserInfo()
-      })
+      user.emit('userLoad',true)
     }else{
       this.setData({
         user: {}

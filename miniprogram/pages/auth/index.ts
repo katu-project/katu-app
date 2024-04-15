@@ -45,7 +45,7 @@ Page({
   async tapToActiveAccount(){
     this.hideActiveNotice()
     await loadData(user.activeAccount, {}, '正在创建账号')
-    user.emit('userChange')
+    user.emit('userLoad', true)
     await app.showNotice("账户已激活，可以体验完整功能")
     app.navigateBack()
   },

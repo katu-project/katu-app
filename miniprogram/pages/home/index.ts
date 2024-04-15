@@ -23,6 +23,8 @@ Page({
     this.loadEvent()
     this.loadData(false,true)
     await loadData(app.loadUser,undefined,'加载用户信息')
+    app.emit('userLoad')
+
     // 检测切换账号行为，清理缓存数据
     await app.checkLastLogin()
     if(user.isOk){
