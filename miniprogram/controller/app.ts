@@ -209,19 +209,25 @@ class AppManager extends Controller {
     this.crypto.init(this.cryptoConfig)
   }
 
-  async checkLastLogin(){
-    const currentUid = this.user.uid
-    if(!currentUid) return
+  async saveCurrentUserCode(userCode){
+    if(!userCode) return
     const lastLoginUser = await this.cache.getLocalData<string>('LAST_LOGIN_UID')
     if(!lastLoginUser){
-      await this.cache.setLocalData('LAST_LOGIN_UID', currentUid)
+      await this.cache.setLocalData('LAST_LOGIN_UID', userCode)
       return
     }
-    if(lastLoginUser !== currentUid){
-      await this.cache.setLocalData('LAST_LOGIN_UID', currentUid)
-      console.debug('清除上次登录用户缓存数据')
-      await this.cache.deleteHomeData()
+    if(lastLoginUser !== userCode){
+      await this.cache.setLocalData('LAST_LOGIN_UID', userCode)
     }
+  }
+
+  async checkLikeCardNeedSync(){
+    const {likeList} = await this.getHomeData({forceUpdate: false})
+    const remoteLikeList = await this.api.getCardSummary('LikeCardIdxs')
+    console.debug('checkLikeCardNeedSync', likeList.length, remoteLikeList.length)
+    // todo: 现在只对数量检查，需要考虑数量相同id不同的情况
+    if(remoteLikeList.length && remoteLikeList.length !== likeList.length) return true
+    return false
   }
 
   async checkNeverLogin(){
@@ -335,13 +341,14 @@ class AppManager extends Controller {
 
     if(!forceUpdate){
       homeData = await this.cache.getHomeData()
+      return homeData || {
+        likeList: [],
+        cateList: []
+      }
     }
 
-    if(!homeData){
-      homeData = await this.api.getHomeData()
-      await this.cache.setHomeCacheData(homeData)
-    }
-
+    homeData = await this.api.getHomeData()
+    await this.cache.setHomeCacheData(homeData)
     return homeData
   }
 

@@ -45,6 +45,7 @@ interface ICardSummary {
   CateList: CateItem[]
   CardIdxs: string[]
   ImageIds: string[]
+  LikeCardIdxs: string[]
 }
 
 interface IHomeData {

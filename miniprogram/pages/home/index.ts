@@ -24,13 +24,15 @@ Page({
     this.loadData(false,true)
     await loadData(app.loadUser,undefined,'加载用户信息')
     app.emit('userLoad')
-
-    // 检测切换账号行为，清理缓存数据
-    await app.checkLastLogin()
+    await app.saveCurrentUserCode(user.uid)
     if(user.isOk){
       app.loadGlobalTask()
       app.checkQuotaNotice('可用兔币不足，请及时处理')
-      
+      app.checkLikeCardNeedSync().then(sync=>{
+        if(sync){
+          this.loadData(true)
+        }
+      })
       if(app.isMp){
         app.checkUserPrivacy().then((res)=>{
           console.debug('getPrivacySetting:',res)
