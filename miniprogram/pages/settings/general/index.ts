@@ -26,16 +26,19 @@ Page({
       key: e.currentTarget.dataset.key,
       value: e.detail.value
     }
-    loadData(user.applyConfig,configItem,{returnFailed: true}).then(()=>{
-      app.showNotice('修改成功')
-    }).catch(async err=>{
-      this.loadData()
-      const { cancel } = await app.showChoose(err.message, {
-        cancelText: '查看详情'
-      })
-      if(cancel){
-        app.openTagConflictDoc()
+    const loadDataOptions = {
+      returnFailed: true
+    }
+    if(configItem.key === 'config_general_useDefaultTag'){
+      loadDataOptions['failedNoticeCancel'] = {
+        text: '查看详情',
+        action: app.openTagConflictDoc
       }
+    }
+    loadData(user.applyConfig,configItem,loadDataOptions).then(()=>{
+      app.showMiniNotice('修改成功')
+    }).catch(()=>{
+      this.loadData()
     })
   }
 })
