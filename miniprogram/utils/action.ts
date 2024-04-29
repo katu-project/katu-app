@@ -127,6 +127,10 @@ type LoadDataOptions = {
   loadingTitle: string
   returnFailed: boolean
   failedContent: string | undefined
+  failedNoticeCancel: {
+    text: string
+    action: ()=>any
+  }
   timeout: number
 }
 
@@ -140,7 +144,8 @@ async function loadData<T extends AnyFunction>(
       returnFailed = false,
       hideLoading = false,
       failedContent,
-      timeout = 10000
+      timeout = 10000,
+      failedNoticeCancel: LoadDataOptions['failedNoticeCancel'] | undefined
   if(options){
     if(typeof options === 'string'){
       loadingTitle = options
@@ -150,6 +155,7 @@ async function loadData<T extends AnyFunction>(
       hideLoading = options.hideLoading || false
       failedContent = options.failedContent
       timeout = options.timeout || 10000
+      failedNoticeCancel = options.failedNoticeCancel
     }
   }
   let pfunc: (p?:any)=>unknown = ()=> sleep(2000)
@@ -198,7 +204,13 @@ async function loadData<T extends AnyFunction>(
               wx.showModal({
                 title: '操作错误',
                 content: failedContent || error.message || '未知错误',
-                showCancel: false,
+                showCancel: failedNoticeCancel ? true : false,
+                cancelText: failedNoticeCancel?.text,
+                success: res=>{
+                  if(failedNoticeCancel && res.cancel){
+                    failedNoticeCancel.action()
+                  }
+                }
               })
               if(returnFailed) return reject(error)
             }else{ // 特殊业务错误代码
