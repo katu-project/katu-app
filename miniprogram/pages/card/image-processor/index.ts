@@ -79,8 +79,8 @@ Page({
   },
 
   async useInternalApi(src){
-    const imageUrl = await loadData(cardManager.parseCardImageByInternalApi, src, {returnFailed: true}).catch(error=>{
-      this.findCardFailed(error)
+    const imageUrl = await loadData(cardManager.parseCardImageByInternalApi, src, {returnFailed: true}).catch(()=>{
+      this.resetAction()
     })
     if(imageUrl) {
       this.setData({
@@ -92,11 +92,11 @@ Page({
   async useRemoteApi(src){
     const { confirm } = await app.showChoose('确认使用外部服务处理图片？')
     if(!confirm) {
-      this.findCardFailed()
+      this.resetAction()
       return
     }
-    const imageUrl = await loadData(cardManager.parseCardImageByRemoteApi, src ,{returnFailed: true}).catch(error=>{
-      this.findCardFailed(error)
+    const imageUrl = await loadData(cardManager.parseCardImageByRemoteApi, src ,{returnFailed: true}).catch(()=>{
+      this.resetAction()
     })
     if(imageUrl){
       this.setData({
@@ -112,11 +112,11 @@ Page({
         'tmpImagePath': tempFilePath
       })
     } catch (error) {
-      this.findCardFailed(error)
+      this.resetAction(error)
     }
   },
 
-  findCardFailed(error?: any){
+  resetAction(error?: any){
     if(error) {
       console.error(error)
       app.showNotice(error.message)
