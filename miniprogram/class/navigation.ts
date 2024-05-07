@@ -1,5 +1,5 @@
 import Agent from "./agent";
-import { navigateTo, switchTab, navigateBack, openPrivacyContract } from '@/utils/index'
+import { navigateTo, navigateBack, openPrivacyContract } from '@/utils/index'
 
 export default class Navigation extends Agent {
 
@@ -24,11 +24,7 @@ export default class Navigation extends Agent {
   }
 
   async goToUserProfilePage(vibrate?:boolean){
-    return switchTab('/pages/profile/index', vibrate)
-  }
-
-  async goToHomePage(vibrate?:boolean){
-    return switchTab('/pages/home/index', vibrate)
+    return this.goToPage('profile/index', '', vibrate)
   }
 
   // edit page nav

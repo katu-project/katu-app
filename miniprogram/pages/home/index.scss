@@ -23,7 +23,7 @@
 }
 
 .like-list {
-  height: 67vh;
+  height: 100vh;
   .item {
     background: rgba(53, 80, 80, 0.6);
     padding: 10rpx;
@@ -46,14 +46,8 @@
   }
 }
 
-@media screen and (min-height: 800px){
-  .like-list{
-    height: 67vh; // iphone 12 likelist 正好一屏8个
-  }
-}
-
 .cate-list {
-  height: 68vh;
+  height: 100vh;
   .item {
     background: rgba(60, 90, 95, 0.6);
     padding: 20rpx;
@@ -89,4 +83,58 @@
     top: 2.5vw;
     right: 2vw;
   }
+}
+
+.profile-icon {
+  height: 10vw;
+  width: 10vw;
+  border-radius: 50% 0 0 50%;
+  border: 1rpx solid white;
+  background-color: rgba(255,255,255,0.9);
+  box-shadow:0px 10px 20px -10px black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  right: -30rpx;
+}
+
+.menu {
+  position: fixed;
+  bottom: 20rpx;
+  left: 50%;
+  transform: translate(-50%);
+  border-radius: 50%;
+  background: rgb(109, 230, 230);
+  box-shadow: 2px 2px 10px lightcyan;
+  .icon{
+    &.plus {
+      width: 50px;
+      height: 50px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    &.plus {
+      .svg{
+        width: 30px;
+        height: 30px;
+      }
+    }
+  }
+}
+
+@media screen and (min-height: 800px){
+  .menu{
+    bottom: 40rpx;
+  }
+}
+
+.bottom-line {
+  height: 6rpx;
+  opacity: 0.8;
+  position: fixed;
+  width: 100vw;
+  background-color: whitesmoke;
+  bottom: 0;
 }

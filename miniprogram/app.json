@@ -71,22 +71,6 @@
     "@/class/*": "/class/*",
     "@/components/*": "/components/*"
   },
-  "tabBar": {
-    "color": "#000000",
-    "selectedColor": "#ff0000",
-    "backgroundColor": "#ff0000",
-    "list": [
-      {
-        "text": "",
-        "pagePath": "pages/home/index"
-      },
-      {
-        "text": "",
-        "pagePath": "pages/profile/index"
-      }
-    ],
-    "custom": true
-  },
   "miniApp": {
     "useAuthorizePage": true
   }

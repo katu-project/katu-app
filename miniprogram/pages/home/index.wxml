@@ -9,8 +9,11 @@
       <image class="right-item" mode="aspectFit" src="/static/images/bell.svg"></image>
       <view wx:if="{{notice._id}}" class="dot"></view>
     </view>
-    <view class="notice margin" bindtap="tapToSearch">
+    <view class="notice margin-tb margin-left" bindtap="tapToSearch">
       <image class="right-item" mode="aspectFit" src="/static/images/search.svg"></image>
+    </view>
+    <view class="profile-icon margin-bottom" bindtap="tapToProfile">
+      <text class="text-xxl"><text class="cuIcon-profile text-grey"></text></text>
     </view>
   </view>
 </view>
@@ -23,6 +26,8 @@
   scroll-x
   enable-flex
   enhanced
+  data-view="Main"
+  binddragstart="onBinddragstart"
   show-scrollbar="{{false}}"
   paging-enabled>
   <view style="width: 200vw;" class="flex-row">
@@ -34,6 +39,13 @@
     </view>
   </view>
 </scroll-view>
+
+<view class="menu" hidden="{{hideMenu}}" bindtap="tapToMenu">
+  <view class="icon plus">
+    <image class="svg" mode="aspectFit" src="/static/images/tab-add.svg"></image>
+  </view>
+</view>
+<view class="bottom-line"></view>
 
 <view class="cu-modal {{showNotice?'show':''}}">
   <view class="cu-dialog bg-white" style="width: 75vw;">
@@ -64,6 +76,9 @@
     refresher-enabled
     show-scrollbar="{{false}}"
     data-view="Like"
+    enhanced
+    bindscroll="bindscroll"
+    binddragstart="onBinddragstart"
     bindrefresherrefresh="onBindRefresh"
     refresher-triggered="{{isRefresh}}"
     >
@@ -85,6 +100,9 @@
     refresher-enabled
     show-scrollbar="{{false}}"
     data-view="Cate"
+    enhanced
+    bindscroll="bindscroll"
+    binddragstart="onBinddragstart"
     bindrefresherrefresh="onBindRefresh"
     refresher-triggered="{{isRefresh}}"
     >

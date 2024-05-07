@@ -16,7 +16,8 @@ Page({
       updateTime: '',
       auto_show: false
     } as AnyObject,
-    isRefresh: false
+    isRefresh: false,
+    hideMenu: false
   },
 
   async onLoad() {
@@ -74,7 +75,6 @@ Page({
   },
 
   async onShow() {
-    this.setTabState()
     this.loadNotice()
   },
 
@@ -358,10 +358,6 @@ Page({
     })
   },
 
-  setTabState(){
-    this.getTabBar().setData({selected: 0})
-  },
-
   onShareAppMessage(){
     return app.shareInfo
   },
@@ -370,5 +366,28 @@ Page({
     this.setData({
       [name]: false
     })
-  }
+  },
+
+  bindscroll: debounce(async function(this){
+    this.setData({
+      hideMenu: false
+    })
+  },1000),
+
+  onBinddragstart(){
+    if(!this.data.hideMenu){
+      this.setData({
+        hideMenu: true
+      })
+    }
+    this.bindscroll()
+  },
+
+  tapToMenu(){
+    app.goCardEditPage('', true)
+  },
+
+  tapToProfile(){
+    return app.goToUserProfilePage()
+  },
 })

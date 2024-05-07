@@ -1,4 +1,4 @@
-<cu-custom></cu-custom>
+<cu-custom isBack="{{true}}" backColor="text-white"></cu-custom>
 <view class="home-bg"></view>
 
 <view class="page flex-col">
