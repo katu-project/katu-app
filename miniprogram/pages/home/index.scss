@@ -23,7 +23,7 @@
 }
 
 .like-list {
-  height: 100vh;
+  height: calc(100vh - 300rpx);
   .item {
     background: rgba(53, 80, 80, 0.6);
     padding: 10rpx;
@@ -47,7 +47,7 @@
 }
 
 .cate-list {
-  height: 100vh;
+  height: calc(100vh - 300rpx);
   .item {
     background: rgba(60, 90, 95, 0.6);
     padding: 20rpx;

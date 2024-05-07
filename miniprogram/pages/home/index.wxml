@@ -115,6 +115,8 @@
           <text class="text-white text-lg padding-left margin-right-sm" style="flex:1">{{item.name}}</text>
         </view>
       </block>
+      <view wx:if="{{cateList.length}}" class="margin" style="height: 128rpx;width:1px;"></view>
+
       <view class="flex-col justify-center align-center" style="width: 100%;height: 50vh;" wx:if="{{!cateList.length}}">
         <text class="text-xl text-white">暂无数据</text>
         <text class="text-grey padding">点击下方按钮开始创建卡片数据吧</text>
