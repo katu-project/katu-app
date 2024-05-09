@@ -1,4 +1,4 @@
-import { loadData, debounce } from '@/utils/index'
+import { loadData, lodash } from '@/utils/index'
 import { getAppManager } from '@/controller/app'
 import { getUserManager } from '@/controller/user'
 import { getCardManager } from '@/controller/card'
@@ -300,7 +300,7 @@ Page({
     })
   },
 
-  tapToMarkRead: debounce(async function(this,{currentTarget:{dataset:{key}}}: any){
+  tapToMarkRead: lodash.debounce(async function(this,{currentTarget:{dataset:{key}}}: any){
     await user.markDocRead(key)
     this.setData({
       'notice._id': ''
@@ -368,7 +368,7 @@ Page({
     })
   },
 
-  bindscroll: debounce(async function(this){
+  bindscroll: lodash.debounce(async function(this){
     this.setData({
       showMenu: true
     })

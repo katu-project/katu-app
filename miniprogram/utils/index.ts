@@ -1,5 +1,7 @@
 import debounce from 'lodash.debounce'
 import clonedeep from 'lodash.clonedeep'
+import before from 'lodash.before'
+import after from 'lodash.after'
 import { getCurrentTimestamp } from './base'
 
 export { selfish, objectSetValue, mergeDeep, sleep, getCurrentTimestamp } from './base'
@@ -22,8 +24,14 @@ function checkTimeout(oldTime:number, gapTime:number){
   return -remainSecond
 }
 
-export {
+const lodash = {
   debounce,
-  clonedeep,
+  before,
+  after,
+  clonedeep
+}
+
+export {
+  lodash,
   checkTimeout
 }

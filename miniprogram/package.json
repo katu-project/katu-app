@@ -12,9 +12,17 @@
     "@katucloud/cpk": "^1.1.1",
     "crypto-js": "3.3.0",
     "js-base64": "^3.7.2",
+    "lodash.after": "^4.0.4",
+    "lodash.before": "^4.0.4",
     "lodash.clonedeep": "^4.5.0",
     "lodash.debounce": "^4.0.8",
     "mitt": "^3.0.0",
     "pako": "^2.0.4"
+  },
+  "devDependencies": {
+    "@types/lodash.after": "^4.0.9",
+    "@types/lodash.before": "^4.0.9",
+    "@types/lodash.clonedeep": "^4.5.9",
+    "@types/lodash.debounce": "^4.0.9"
   }
 }

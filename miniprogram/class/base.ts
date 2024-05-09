@@ -1,4 +1,4 @@
-import { selfish, file, objectSetValue, clonedeep, getCurrentTimestamp } from "@/utils/index"
+import { selfish, file, objectSetValue, lodash, getCurrentTimestamp } from "@/utils/index"
 import mitt from 'mitt'
 const emitter = mitt()
 
@@ -46,6 +46,6 @@ export default class Base {
   }
 
   deepCloneObject<T>(args:T):T{
-    return clonedeep(args)
+    return lodash.clonedeep(args)
   }
 }
