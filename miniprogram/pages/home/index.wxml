@@ -27,7 +27,7 @@
   enable-flex
   enhanced
   data-view="Main"
-  binddragstart="onBinddragstart"
+  binddragstart=""
   show-scrollbar="{{false}}"
   paging-enabled>
   <view style="width: 200vw;" class="flex-row">
@@ -40,7 +40,7 @@
   </view>
 </scroll-view>
 
-<view class="menu" hidden="{{hideMenu}}" bindtap="tapToMenu">
+<view class="menu {{showMenu?'show':'hide'}}" bindtap="tapToMenu">
   <view class="icon plus">
     <image class="svg" mode="aspectFit" src="/static/images/tab-add.svg"></image>
   </view>
@@ -78,7 +78,8 @@
     data-view="Like"
     enhanced
     bindscroll="bindscroll"
-    binddragstart="onBinddragstart"
+    binddragstart=""
+    binddragend="onBinddragend"
     bindrefresherrefresh="onBindRefresh"
     refresher-triggered="{{isRefresh}}"
     >
@@ -102,7 +103,8 @@
     data-view="Cate"
     enhanced
     bindscroll="bindscroll"
-    binddragstart="onBinddragstart"
+    binddragstart=""
+    binddragend="onBinddragend"
     bindrefresherrefresh="onBindRefresh"
     refresher-triggered="{{isRefresh}}"
     >

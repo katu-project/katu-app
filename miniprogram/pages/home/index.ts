@@ -17,7 +17,7 @@ Page({
       auto_show: false
     } as AnyObject,
     isRefresh: false,
-    hideMenu: false
+    showMenu: true
   },
 
   async onLoad() {
@@ -307,7 +307,7 @@ Page({
     })
     this.hideModal('showNotice')
     this.loadNotice(true)
-  },1000,{leading: true, trailing: false}),
+  },5000,{leading: true, trailing: false}),
  
   tapToHideModal(e){
     this.hideModal(e.currentTarget.dataset.name)
@@ -370,17 +370,18 @@ Page({
 
   bindscroll: debounce(async function(this){
     this.setData({
-      hideMenu: false
+      showMenu: true
     })
-  },1000),
+  },1500),
 
-  onBinddragstart(){
-    if(!this.data.hideMenu){
+  onBinddragend(e){
+    if(!this.data.showMenu) return
+    if(!e.detail.velocity) return
+    if(e.detail.velocity.y<0 || e.detail.velocity.y>0.5){
       this.setData({
-        hideMenu: true
+        showMenu: false
       })
     }
-    this.bindscroll()
   },
 
   tapToMenu(){

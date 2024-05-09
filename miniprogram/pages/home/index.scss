@@ -106,7 +106,7 @@
   transform: translate(-50%);
   border-radius: 50%;
   background: rgb(109, 230, 230);
-  box-shadow: 2px 2px 10px lightcyan;
+  box-shadow: 2px 2px 10px lightcyan; 
   .icon{
     &.plus {
       width: 50px;
@@ -121,6 +121,14 @@
         height: 30px;
       }
     }
+  }
+
+  &.show{
+    animation: slideInUp 0.5s forwards; /* 按钮从底部往上出现的动画 */
+  }
+
+  &.hide{
+    animation: slideOutDown 0.5s forwards;
   }
 }
 
@@ -137,4 +145,26 @@
   width: 100vw;
   background-color: whitesmoke;
   bottom: 0;
+}
+
+@keyframes slideInUp {
+  from {
+      bottom: -50px; /* 初始位置在底部 */
+      opacity: 0; /* 初始透明度为0 */
+  }
+  to {
+      bottom: 20px; /* 最终位置略高于底部 */
+      opacity: 1; /* 最终完全显示按钮 */
+  }
+}
+
+@keyframes slideOutDown {
+  from {
+      bottom: 20px; /* 初始位置略高于底部 */
+      opacity: 1; /* 初始完全显示按钮 */
+  }
+  to {
+      bottom: -50px; /* 最终位置在底部以下 */
+      opacity: 0; /* 最终透明度为0，隐藏按钮 */
+  }
 }
