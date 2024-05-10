@@ -190,113 +190,113 @@ async function loadData<T extends AnyFunction>(
     Promise.race([
       pfunc(params),
       timeoutCheck
-    ]).then(res=>{
-      wx.hideLoading({
-        complete: ()=>{
-          resolve(res as ReturnType<T>)
-        }
-      })
-    }).catch(error=>{
-      wx.hideLoading({
-        complete: () => {
-          if(Object.hasOwnProperty ? Object.hasOwnProperty.call(error,'code'): error.code){ // 业务错误代码
-            if(error.code === 1){ // 普通业务错误代码
-              wx.showModal({
-                title: '操作错误',
-                content: failedContent || error.message || '未知错误',
-                showCancel: failedNoticeCancel ? true : false,
-                cancelText: failedNoticeCancel?.text,
-                success: res=>{
-                  if(failedNoticeCancel && res.cancel){
-                    failedNoticeCancel.action()
-                  }
-                }
+    ])
+    .then(async res=>{
+      if(!hideLoading){
+        await wx.hideLoading()
+      }
+      return resolve(res as ReturnType<T>)
+    })
+    .catch(async error=>{
+      if(!hideLoading){
+        await wx.hideLoading()
+      }
+      if(Object.hasOwnProperty ? Object.hasOwnProperty.call(error,'code'): error.code){ // 业务错误代码
+        if(error.code === 1){ // 普通业务错误代码
+          wx.showModal({
+            title: '操作错误',
+            content: failedContent || error.message || '未知错误',
+            showCancel: failedNoticeCancel ? true : false,
+            cancelText: failedNoticeCancel?.text,
+            success: res=>{
+              if(failedNoticeCancel && res.cancel){
+                failedNoticeCancel.action()
+              }
+            }
+          })
+          if(returnFailed) return reject(error)
+        }else{ // 特殊业务错误代码
+          console.warn(error, func)
+          const showContent = `错误代码: ${error.code}`
+          const showModalOption: WechatMiniprogram.ShowModalOption = {
+            title: `服务错误`,
+            content: `${error.message || '请稍后重试'}\n${showContent}`,
+            confirmText: '联系客服',
+            showCancel: false,
+            success: ({confirm})=>{
+              if(!confirm) return
+              wx.redirectTo({
+                url: '/pages/about/contact/index',
               })
-              if(returnFailed) return reject(error)
-            }else{ // 特殊业务错误代码
-              console.warn(error, func)
-              const showContent = `错误代码: ${error.code}`
-              const showModalOption: WechatMiniprogram.ShowModalOption = {
-                title: `服务错误`,
-                content: `${error.message || '请稍后重试'}\n${showContent}`,
-                confirmText: '联系客服',
-                showCancel: false,
-                success: ({confirm})=>{
-                  if(!confirm) return
-                  wx.redirectTo({
-                    url: '/pages/about/contact/index',
-                  })
-                },
-                fail: ()=>{
-                  wx.reLaunch({
-                    url: '/pages/home/index',
-                  })
-                }
+            },
+            fail: ()=>{
+              wx.reLaunch({
+                url: '/pages/home/index',
+              })
+            }
+          }
+          // 400以上是用户账户相关问题
+          if(error.code.toString().startsWith('4')){
+            showModalOption.title = '账户状态异常'
+            if(error.code == 401){
+              showModalOption.title = '请求错误'
+              showModalOption.content = '登录失效，请重新登录'
+              showModalOption.showCancel = true
+              showModalOption.confirmText = '去登录'
+              showModalOption.success = ({confirm})=>{
+                if(!confirm) return
+                wx.navigateTo({
+                  url: '/pages/auth/index',
+                })
               }
-              // 400以上是用户账户相关问题
-              if(error.code.toString().startsWith('4')){
-                showModalOption.title = '账户状态异常'
-                if(error.code == 401){
-                  showModalOption.title = '请求错误'
-                  showModalOption.content = '登录失效，请重新登录'
-                  showModalOption.showCancel = true
-                  showModalOption.confirmText = '去登录'
-                  showModalOption.success = ({confirm})=>{
-                    if(!confirm) return
-                    wx.navigateTo({
-                      url: '/pages/auth/index',
-                    })
-                  }
-                }
-              }
-              // 500以上是应用程序出错
-              if(error.code.toString().startsWith('5')){
-                showModalOption.title = '服务异常'
-                showModalOption.content = '很抱歉，服务暂时不可用'
-                showModalOption.showCancel = true
-              }
+            }
+          }
+          // 500以上是应用程序出错
+          if(error.code.toString().startsWith('5')){
+            showModalOption.title = '服务异常'
+            showModalOption.content = '很抱歉，服务暂时不可用'
+            showModalOption.showCancel = true
+          }
 
-              // 600是 api 底层请求错误
-              if(error.code.toString().startsWith('6')){
-                showModalOption.title = '网络环境异常'
-                showModalOption.content = '请检查应用网络设置后重试'
-                showModalOption.showCancel = true
-                showModalOption.confirmText = '查看设置'
-                showModalOption.success = ({confirm})=>{
-                  if(!confirm) return
-                  wx.openAppAuthorizeSetting({
-                    fail: console.error
-                  })
-                }
-              }
-  
-              if(!showModalOption.success){
-                showModalOption.success = ({confirm})=>{
-                  if(!confirm) return
-                  wx.reLaunch({
-                    url: '/pages/home/index',
-                  })
-                }
-              }
-  
-              wx.showModal(showModalOption)
-            }
-          }else{ // 小程序内部错误
-            if(error.errMsg && ['scanCode:fail cancel'].includes(error.errMsg)){
-              wx.showToast({
-                title: '操作取消',
-                icon: 'none'
-              })
-            }else{
-              wx.showModal({
-                title: '操作错误',
-                content: error.errMsg || error.message || error,
-                showCancel: false,
+          // 600是 api 底层请求错误
+          if(error.code.toString().startsWith('6')){
+            showModalOption.title = '网络环境异常'
+            showModalOption.content = '请检查应用网络设置后重试'
+            showModalOption.showCancel = true
+            showModalOption.confirmText = '查看设置'
+            showModalOption.success = ({confirm})=>{
+              if(!confirm) return
+              wx.openAppAuthorizeSetting({
+                fail: console.error
               })
             }
-          } 
+          }
+
+          if(!showModalOption.success){
+            showModalOption.success = ({confirm})=>{
+              if(!confirm) return
+              wx.reLaunch({
+                url: '/pages/home/index',
+              })
+            }
+          }
+
+          wx.showModal(showModalOption)
         }
-      })
+      }else{ // 小程序内部错误
+        if(error.errMsg && ['scanCode:fail cancel'].includes(error.errMsg)){
+          wx.showToast({
+            title: '操作取消',
+            icon: 'none'
+          })
+        }else{
+          wx.showModal({
+            title: '操作错误',
+            content: error.errMsg || error.message || error,
+            showCancel: false,
+          })
+        }
+      } 
     })
   })
 }
