@@ -12,27 +12,45 @@ Page({
     DefaultUserAvatar: app.getConst('DefaultUserAvatar')
   },
 
-  onLoad() {
-    this.loadEvent()
+  onLoad(){
+    this.loadEvent('on')
   },
 
-  async onReady() {
-    app.emit('userLoad')
-    app.hasInstallWechat().then(hasInstall=>{
-      if(!hasInstall){
-        this.setData({
-          showCustomerService: false
-        })
-      }
-    })
+  onUnload(){
+    this.loadEvent('off')
+  },
+
+  async onReady(){
+    this.renderUserData()
+    this.checkAndShowUserSerivce()
   },
 
   onShow() {
   },
 
-  loadEvent(){
-    app.on('userLoad',this.onEventUserLoad)
-    app.on('loginChange', this.onEventLoginChange)
+  loadEvent(action:'on'|'off'){
+    Reflect.apply(app[action], app, ['userLoad',this.onEventUserLoad])
+    Reflect.apply(app[action], app, ['loginChange',this.onEventLoginChange])
+  },
+
+  renderUserData(){
+    this.setData({
+      user: {
+        nickName: user.nickName,
+        avatarUrl: user.avatar,
+        isActive: user.isActive,
+        identifyCode: user.uid
+      }
+    })
+  },
+
+  async checkAndShowUserSerivce(){
+    const hasInstall = await app.hasInstallWechat()
+    if(!hasInstall){
+      this.setData({
+        showCustomerService: false
+      })
+    }
   },
 
   tapUser(){
@@ -54,14 +72,7 @@ Page({
     if(reload){
       await user.reloadInfo()
     }
-    this.setData({
-      user: {
-        nickName: user.nickName,
-        avatarUrl: user.avatar,
-        isActive: user.isActive,
-        identifyCode: user.uid
-      }
-    })
+    this.renderUserData()
   },
 
   async onEventLoginChange(login){
