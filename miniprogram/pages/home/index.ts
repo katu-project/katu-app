@@ -21,12 +21,11 @@ Page({
   },
 
   async onLoad() {
-    this.loadEvent()
+    this.loadEvent('on')
     this.loadData(false,true)
     await loadData(app.loadUser,undefined,'加载用户信息')
-    app.emit('userLoad')
-    await app.saveCurrentUserCode(user.uid)
     if(user.isOk){
+      await app.saveCurrentUserCode(user.uid)
       app.loadGlobalTask()
       app.checkQuotaNotice('可用兔币不足，请及时处理')
       app.checkLikeCardNeedSync().then(sync=>{
@@ -55,23 +54,7 @@ Page({
   },
 
   onUnload(){
-    this.removeEvent()
-  },
-
-  loadEvent(){
-    app.on('cardChange',this.onEventCardChange)
-    app.on('cardDelete',this.onEventCardDelete)
-    app.on('cardDecrypt',this.onEventCardChange)
-    app.on('cardHide',this.onEventCardHide)
-    
-    app.on('loginChange',this.onEventLoginChange)
-  },
-
-  removeEvent(){
-    app.off('cardChange',this.onEventCardChange)
-    app.off('cardDelete',this.onEventCardDelete)
-    app.off('cardDecrypt',this.onEventCardChange)
-    app.off('cardHide',this.onEventCardHide)
+    this.loadEvent('off')
   },
 
   async onShow() {
@@ -81,6 +64,14 @@ Page({
   async onReady() {
   },
 
+  loadEvent(action:'on'|'off'){
+    Reflect.apply(app[action], app, ['cardChange',this.onEventCardChange])
+    Reflect.apply(app[action], app, ['cardDelete',this.onEventCardDelete])
+    Reflect.apply(app[action], app, ['cardDecrypt',this.onEventCardChange])
+    Reflect.apply(app[action], app, ['cardHide',this.onEventCardHide])
+    Reflect.apply(app[action], app, ['loginChange',this.onEventLoginChange])
+  },
+  
   loadShowUserPrivacy(privacyContractName){
     loadData(app.getUserPrivacyNotice,{},{returnFailed:true}).then(privacy=>{
       if(privacy){

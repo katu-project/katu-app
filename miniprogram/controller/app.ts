@@ -211,14 +211,7 @@ class AppManager extends Controller {
 
   async saveCurrentUserCode(userCode){
     if(!userCode) return
-    const lastLoginUser = await this.cache.getLocalData<string>('LAST_LOGIN_UID')
-    if(!lastLoginUser){
-      await this.cache.setLocalData('LAST_LOGIN_UID', userCode)
-      return
-    }
-    if(lastLoginUser !== userCode){
-      await this.cache.setLocalData('LAST_LOGIN_UID', userCode)
-    }
+    return this.cache.setLocalData('LAST_LOGIN_UID', userCode)
   }
 
   async checkLikeCardNeedSync(){
