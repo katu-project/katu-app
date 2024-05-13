@@ -47,9 +47,9 @@
         </view>
       </view>
     </view>
-    <view class="text-center" catchtap="tapToShowLoginDialog">
+    <view class="text-center">
       <view class="padding solid-bottom margin-bottom"></view>
-      <span class="text-sm text-grey">
+      <span class="text-sm text-grey margin" catchtap="tapToShowLoginDialog">
         其他登录方式
         <text class="cuIcon-right"></text>
       </span>
