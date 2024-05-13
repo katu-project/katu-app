@@ -65,7 +65,14 @@ Page({
   },
 
   loadEvent(action:'on'|'off'){
-    const clearData = ()=>{
+    const removeLikeListCard = (idx:number)=>{
+      this.data.likeList.splice(idx,1)
+      this.setData({
+        likeList: this.data.likeList
+      })
+    }
+
+    const removeHomeData = ()=>{
       this.setData({
         cateList: [],
         likeList: [],
@@ -75,12 +82,70 @@ Page({
       })
     }
 
-    Reflect.apply(app[action], app, ['cardChange',this.onEventCardChange])
-    Reflect.apply(app[action], app, ['cardDelete',this.onEventCardDelete])
-    Reflect.apply(app[action], app, ['cardDecrypt',this.onEventCardChange])
-    Reflect.apply(app[action], app, ['cardHide',this.onEventCardHide])
-    Reflect.apply(app[action], app, ['loginChange',this.onEventLoginChange])
-    Reflect.apply(app[action], app, ['cacheDelete',clearData])
+    const onEventClearData = ()=>{
+      removeHomeData()
+    }
+
+    const onEventLoginChange = (login)=>{
+      if(login){
+        this.loadData(true,true)
+      }else{
+        removeHomeData()
+      }
+    }
+
+    const onEventCardHide = (id)=>{
+      const idx = this.data.likeList.findIndex(e=>e._id === id)
+      const findCard = this.data.likeList[idx]
+      console.log('home page: onEventCardHide:', id, findCard.title)
+      if(findCard){
+        const setData = {}
+        setData[`likeList[${idx}]._url`] = app.getConst('DefaultShowLockImage')
+        setData[`likeList[${idx}]._showEncryptIcon`] = false
+        this.setData(setData)
+      }
+    }
+
+    // 修改名称，图片，喜爱
+    // 新增卡片
+    const onEventCardChange = (card)=>{
+      const idx = this.data.likeList.findIndex(e=>e._id === card._id)
+      const findCard = this.data.likeList[idx]
+      console.log('home page: onEventCardChange:', card._id, card.title)
+      if(findCard){
+        if(card.setLike){
+          this.renderLikeCard(card)
+          this.renderLikeCardImage(card)
+        }else{
+          removeLikeListCard(idx)
+        }
+      }else{
+        if(card.setLike){ // 新增like状态卡片
+          this.renderLikeCard(card)
+          this.renderLikeCardImage(card)
+        }
+      }
+      this.renderCateList(card)
+      app.deleteHomeDataCache()
+    }
+
+    const onEventCardDelete = (card)=>{
+      const idx = this.data.likeList.findIndex(e=>e._id === card._id)
+      if(idx !== -1){
+        removeLikeListCard(idx)
+        console.log('静默移除卡片：',card._id)
+      }
+      // 更新cataList数据
+      this.renderCateList(card, true)
+      app.deleteHomeDataCache()
+    }
+
+    Reflect.apply(app[action], app, ['cardChange',onEventCardChange])
+    Reflect.apply(app[action], app, ['cardDelete',onEventCardDelete])
+    Reflect.apply(app[action], app, ['cardDecrypt',onEventCardChange])
+    Reflect.apply(app[action], app, ['cardHide',onEventCardHide])
+    Reflect.apply(app[action], app, ['loginChange',onEventLoginChange])
+    Reflect.apply(app[action], app, ['cacheDelete',onEventClearData])
   },
   
   loadShowUserPrivacy(privacyContractName){
@@ -134,65 +199,6 @@ Page({
     if(likeList.length){
       this.renderLikeCardImage()
     }
-  },
-
-  async onEventLoginChange(login){
-    if(login){
-      this.loadData(true,true)
-    }else{
-      this.setData({
-        cateList: [],
-        likeList: [],
-        notice: {
-          content: ''
-        }
-      })
-    }
-  },
-  // 修改名称，图片，喜爱
-  // 新增卡片
-  async onEventCardChange(card){
-    const idx = this.data.likeList.findIndex(e=>e._id === card._id)
-    const findCard = this.data.likeList[idx]
-    console.log('home page: onEventCardChange:', card._id, card.title)
-    if(findCard){
-      if(card.setLike){
-        this.renderLikeCard(card)
-        this.renderLikeCardImage(card)
-      }else{
-        this._removeLikeListCard(idx)
-      }
-    }else{
-      if(card.setLike){ // 新增like状态卡片
-        this.renderLikeCard(card)
-        this.renderLikeCardImage(card)
-      }
-    }
-    this.renderCateList(card)
-    app.deleteHomeDataCache()
-  },
-
-  onEventCardHide(id){
-    const idx = this.data.likeList.findIndex(e=>e._id === id)
-    const findCard = this.data.likeList[idx]
-    console.log('home page: onEventCardHide:', id, findCard.title)
-    if(findCard){
-      const setData = {}
-      setData[`likeList[${idx}]._url`] = app.getConst('DefaultShowLockImage')
-      setData[`likeList[${idx}]._showEncryptIcon`] = false
-      this.setData(setData)
-    }
-  },
-
-  onEventCardDelete(card){
-    const idx = this.data.likeList.findIndex(e=>e._id === card._id)
-    if(idx !== -1){
-      this._removeLikeListCard(idx)
-      console.log('静默移除卡片：',card._id)
-    }
-    // 更新cataList数据
-    this.renderCateList(card, true)
-    app.deleteHomeDataCache()
   },
 
   renderLikeCard(card:ICard){
@@ -293,13 +299,6 @@ Page({
         this.tapToShowNotice()
       }
     }).catch(console.warn)
-  },
-
-  _removeLikeListCard(idx:number){
-    this.data.likeList.splice(idx,1)
-    this.setData({
-      likeList: this.data.likeList
-    })
   },
 
   tapToMarkRead: lodash.debounce(async function(this,{currentTarget:{dataset:{key}}}: any){
