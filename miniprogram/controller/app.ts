@@ -450,6 +450,14 @@ class AppManager extends Controller {
     return iapItems
   }
 
+  //设置页开始
+  logout(){
+    this.deleteLocalData('KATU_APP_TOKEN')
+    this.deleteHomeDataCache()
+    this.masterKeyManager.clear()
+    this.emit('loginChange', false)
+  }
+
   //数据
   //清除缓存
   async clearCacheData(){

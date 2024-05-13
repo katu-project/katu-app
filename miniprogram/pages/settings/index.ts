@@ -31,13 +31,10 @@ Page({
   },
 
   async tapToLogout(){
-    await app.showConfirm('退出登录将清除用户本地数据')
-    await app.deleteLocalData('KATU_APP_TOKEN')
-    app.deleteHomeDataCache()
-    app.masterKeyManager.clear()
-    app.emit('loginChange', false)
+    await app.showConfirm('确认退出登录？')
+    app.logout()
     await showLoading('正在退出', 2000)
     await app.showNotice('已退出登录')
-    app.goToUserProfilePage()
+    app.navigateBack()
   }
 })
