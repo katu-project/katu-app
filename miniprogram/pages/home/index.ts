@@ -65,11 +65,22 @@ Page({
   },
 
   loadEvent(action:'on'|'off'){
+    const clearData = ()=>{
+      this.setData({
+        cateList: [],
+        likeList: [],
+        notice: {
+          content: ''
+        }
+      })
+    }
+
     Reflect.apply(app[action], app, ['cardChange',this.onEventCardChange])
     Reflect.apply(app[action], app, ['cardDelete',this.onEventCardDelete])
     Reflect.apply(app[action], app, ['cardDecrypt',this.onEventCardChange])
     Reflect.apply(app[action], app, ['cardHide',this.onEventCardHide])
     Reflect.apply(app[action], app, ['loginChange',this.onEventLoginChange])
+    Reflect.apply(app[action], app, ['cacheDelete',clearData])
   },
   
   loadShowUserPrivacy(privacyContractName){

@@ -461,10 +461,16 @@ class AppManager extends Controller {
   //数据
   //清除缓存
   async clearCacheData(){
-    await file.rmdir(this.getConst('APP_ROOT_DIR'), true)
+    try {
+      await file.rmdir(this.getConst('APP_TEMP_DIR'), true)
+      await file.rmdir(this.getConst('APP_DOWN_DIR'), true)
+      await file.rmdir(this.getConst('APP_IMAGE_DIR'), true)
+    } catch (error) {
+      console.warn('clearCacheData', error)
+    }
     await this.cache.deleteAllCard()
     await this.cache.deleteHomeData()
-    return 
+    this.emit('cacheDelete')
   }
 
   //数据备份
