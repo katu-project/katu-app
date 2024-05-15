@@ -201,13 +201,14 @@ async function loadData<T extends AnyFunction>(
       if(!hideLoading){
         await wx.hideLoading()
       }
+      console.error(error)
       if(Object.hasOwnProperty ? Object.hasOwnProperty.call(error,'code'): error.code){ // 业务错误代码
         if(error.code === 1){ // 普通业务错误代码
           wx.showModal({
             title: '操作错误',
-            content: failedContent || error.message || '未知错误',
+            content: failedContent || error.message.toString() || '未知错误',
             showCancel: failedNoticeCancel ? true : false,
-            cancelText: failedNoticeCancel?.text,
+            cancelText: failedNoticeCancel?.text || '取消',
             success: res=>{
               if(failedNoticeCancel && res.cancel){
                 failedNoticeCancel.action()
