@@ -138,9 +138,7 @@ Page({
 
   async tapToSendEmailCode(){
     if(!this.checkToc()) return
-    const {verifyId} = await loadData(app.api.sendEmailVerifyCode, {
-      email: this.data.emailLogin.email
-    })
+    const {verifyId} = await loadData(app.sendEmailVerifyCode, this.data.emailLogin.email)
     await app.showMiniNotice('验证码已发送')
     this.setData({
       'emailLogin.sendCode': true,

@@ -546,8 +546,18 @@ class AppManager extends Controller {
     return this.api.getApiToken()
   }
 
-  async sendVerifyCode(data: {tel:string}){
-    return this.api.sendVerifyCode(data)
+  async sendSmsVerifyCode(tel:string){
+    return this.api.sendVerifyCode({
+      type: 'sms',
+      value: tel
+    })
+  }
+
+  async sendEmailVerifyCode(email:string){
+    return this.api.sendVerifyCode({
+      type: 'email',
+      value: email
+    })
   }
 
   async getNotices(_:any){
