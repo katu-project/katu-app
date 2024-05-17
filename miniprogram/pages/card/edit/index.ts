@@ -34,26 +34,47 @@ Page({
     if(options.id){
       this.id = options.id
     }
-    this.removeAllEvents()
-    this.addAllEvents()
+    this.loadEvent('on')
   },
 
   onUnload(){
-    this.removeAllEvents()
+    this.loadEvent('off')
   },
 
-  addAllEvents(){
-    app.on('setCardImage',this.onEventSetCardImage)
-    app.on('setCardTitle',this.onEventSetCardTitle)
-    app.on('setCardExtraData',this.onEventSetCardExtraData)
-    app.on('tagChange', this.onEventTagChange)
-  },
+  loadEvent(action:'on'|'off'){
+    const onEventSetCardImage = (path)=>{
+      const key = `card.image[${this.data.curShowPicIdx}].url`
+      this.setData({
+        [key]: path
+      })
+      this.checkDataChange()
+    }
 
-  removeAllEvents(){
-    app.off('setCardImage')
-    app.off('setCardTitle')
-    app.off('setCardExtraData')
-    app.off('tagChange')
+    const onEventSetCardTitle = (title)=>{
+      console.log('edit title:', title)
+      this.setData({
+        [`card.title`]: title
+      })
+      this.checkDataChange()
+    }
+
+    const onEventSetCardExtraData = (extraData)=>{
+      console.log('edit extraData:', JSON.stringify(extraData))
+      this.setData({
+        [`card.info`]: extraData
+      })
+      this.checkDataChange()
+    }
+
+    const onEventTagChange = ()=>{
+      this.loadTagData()
+      this.renderTagState()
+    }
+
+    Reflect.apply(app[action], app, ['setCardImage',onEventSetCardImage])
+    Reflect.apply(app[action], app, ['setCardTitle',onEventSetCardTitle])
+    Reflect.apply(app[action], app, ['setCardExtraData',onEventSetCardExtraData])
+    Reflect.apply(app[action], app, ['tagChange',onEventTagChange])
   },
 
   async onReady(){
@@ -80,35 +101,6 @@ Page({
     this.setData({
       tags
     })
-  },
-
-  onEventSetCardImage(path){
-    const key = `card.image[${this.data.curShowPicIdx}].url`
-    this.setData({
-      [key]: path
-    })
-    this.checkDataChange()
-  },
-
-  onEventSetCardTitle(title){
-    console.log('edit title:', title)
-    this.setData({
-      [`card.title`]: title
-    })
-    this.checkDataChange()
-  },
-
-  onEventSetCardExtraData(extraData){
-    console.log('edit extraData:', JSON.stringify(extraData))
-    this.setData({
-      [`card.info`]: extraData
-    })
-    this.checkDataChange()
-  },
-
-  onEventTagChange(){
-    this.loadTagData()
-    this.renderTagState()
   },
 
   applyUserSetting(){
