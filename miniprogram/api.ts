@@ -26,7 +26,9 @@ export default {
 
   setShareItem: (data?:any) => request<IAnyObject>('app/setShare', data),
 
-  sendVerifyCode: (data: {type:'sms'|'email', value:string}) => request<{verifyId:string}>('app/sendVerifyCode', data),
+  getActionSign: (data: {action:string, value:string}) => request<{sign:string}>('app/getSignKey', data),
+
+  sendVerifyCode: (data: {type:'sms'|'email', value:string, sign:string}) => request<{verifyId:string}>('app/sendVerifyCode', data),
 
   bindTelNumber: data => request('app/bindUserTel', data),
 

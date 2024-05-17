@@ -547,17 +547,11 @@ class AppManager extends Controller {
   }
 
   async sendSmsVerifyCode(tel:string){
-    return this.api.sendVerifyCode({
-      type: 'sms',
-      value: tel
-    })
+    return this.sendVerifyCode('sms', tel)
   }
 
   async sendEmailVerifyCode(email:string){
-    return this.api.sendVerifyCode({
-      type: 'email',
-      value: email
-    })
+    return this.sendVerifyCode('email', email)
   }
 
   async getNotices(_:any){

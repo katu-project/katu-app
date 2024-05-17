@@ -78,4 +78,16 @@ export default class Controller extends Navigation {
       } 
     }
   }
+
+  async sendVerifyCode(type: 'sms'|'email', value){
+    const { sign } = await this.api.getActionSign({
+      action: 'sendVerifyCode',
+      value: value
+    })
+    return this.api.sendVerifyCode({
+      type,
+      value,
+      sign
+    })
+  }
 }
