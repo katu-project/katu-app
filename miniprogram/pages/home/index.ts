@@ -22,15 +22,20 @@ Page({
 
   async onLoad() {
     this.loadEvent('on')
-    this.loadData(false,true)
+    this.loadData({
+      cacheOnly: true,
+      hideLoading: true
+    })
     await loadData(app.loadUser,undefined,'加载用户信息')
     if(user.isOk){
       await app.saveCurrentUserCode(user.uid)
       app.loadGlobalTask()
       app.checkQuotaNotice('可用兔币不足，请及时处理')
-      app.checkLikeCardNeedSync().then(sync=>{
-        if(sync){
-          this.loadData(true)
+      app.checkLikeCardNeedSync().then(needSync=>{
+        if(needSync){
+          this.loadData({
+            forceUpdate: true
+          })
         }
       })
       if(app.isMp){
@@ -88,7 +93,10 @@ Page({
 
     const onEventLoginChange = (login)=>{
       if(login){
-        this.loadData(true,true)
+        this.loadData({
+          forceUpdate: true,
+          hideLoading: true
+        })
       }else{
         removeHomeData()
       }
@@ -176,14 +184,15 @@ Page({
     })
   },
 
-  async loadData(forceUpdate?:boolean, hideLoading?:boolean){
+  async loadData(options?:{forceUpdate?:boolean, hideLoading?:boolean, cacheOnly?:boolean}){
     const {likeList, cateList} = await loadData(
       app.getHomeData,
       {
-        forceUpdate
+        skipCache: options?.forceUpdate,
+        cacheOnly: options?.cacheOnly
       },
-      hideLoading ? {
-        hideLoading
+      options?.hideLoading ? {
+        hideLoading: options?.hideLoading
       } : '加载卡片数据')
     
     const setData = {}
@@ -266,8 +275,7 @@ Page({
       })
     }else{ // 卡片新增，内容更新，无法判断tag变化，直接请求对应接口获取数据
       try {
-        const { cateList } = await app.getHomeData({getCateList:true})
-        setData['cateList'] = cateList
+        setData['cateList'] = await app.api.getCardSummary('CateList')
       } catch (error) {
         console.error('renderCateList getHomeData:', error)
       }
@@ -346,7 +354,9 @@ Page({
       },300)
       return
     }
-    this.loadData(true).then(()=>{
+    this.loadData({
+      forceUpdate: true
+    }).then(()=>{
       this.setData({
         isRefresh: false
       })

@@ -217,11 +217,21 @@ class AppManager extends Controller {
   }
 
   async checkLikeCardNeedSync(){
-    const {likeList} = await this.getHomeData({forceUpdate: false})
+    const homeDataCache = await this.cache.getHomeData()
+    if(!homeDataCache) return true
+    try {
+      this.checkTimeout(homeDataCache.cacheTime, this.getConfig('homeDataCacheTime'))
+      return false
+    } catch (error) {
+      console.log('首页数据缓存超时,进行数据同步检测')
+    }
+    const likeList = homeDataCache.data.likeList
     const remoteLikeList = await this.api.getCardSummary('LikeCardIdxs')
     console.debug('checkLikeCardNeedSync', likeList.length, remoteLikeList.length)
     // todo: 现在只对数量检查，需要考虑数量相同id不同的情况
     if(remoteLikeList.length && remoteLikeList.length !== likeList.length) return true
+    // 如果数据没变化，只是时间超时，就更新缓存的时间
+    this.cache.setHomeCacheData(homeDataCache.data)
     return false
   }
 
@@ -323,23 +333,20 @@ class AppManager extends Controller {
     return super.chooseLocalImage()
   }
 
-  async getHomeData({forceUpdate, getCateList}:{forceUpdate?:boolean, getCateList?:boolean}):Promise<IHomeData>{
+  async getHomeData({skipCache, cacheOnly}:{skipCache?:boolean, cacheOnly?:boolean}):Promise<IHomeData>{
     let homeData:IHomeData|undefined
 
-    if(getCateList){
-      homeData = {
-        likeList: [],
-        cateList: await this.api.getCardSummary('CateList')
+    if(!skipCache){
+      const homeDataCache = await this.cache.getHomeData()
+      homeData = homeDataCache?.data
+      if(cacheOnly) {
+        return homeData || {
+          likeList: [],
+          cateList: []
+        }
       }
-      return homeData
-    }
 
-    if(!forceUpdate){
-      homeData = await this.cache.getHomeData()
-      return homeData || {
-        likeList: [],
-        cateList: []
-      }
+      if(homeData) return homeData
     }
 
     homeData = await this.api.getHomeData()
