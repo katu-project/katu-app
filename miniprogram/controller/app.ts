@@ -162,28 +162,30 @@ class AppManager extends Controller {
 
   async loadGlobalTask(){
     const clearTempFileCache = async ()=> {
-      console.debug(`开始清理临时文件目录`)
-      await this.cache.clearTempDirFile()
+      if(await this.globalTaskTimeoutCheck()){
+        console.debug(`开始清理临时文件目录`)
+        await this.cache.clearTempDirFile()
+      }
     }
     const clearExtraDataCache = async ()=> {
-      console.debug('开始检测是否有无效的卡片附加数据')
-      try {
-        const cardIdxs = await this.api.getCardSummary('CardIdxs')
-        const localExtraDataCache = await this.cache.getExtraDatas()
-        const invalidIds = Object.keys(localExtraDataCache).filter(e=>!cardIdxs.includes(e))
-        if(invalidIds.length){
-          console.debug(`删除无效附加数据本地缓存：${invalidIds.length} 条`)
-          await this.cache.deleteCardExtraData(invalidIds)
+      if(await this.globalTaskTimeoutCheck()){
+        console.debug('开始检测是否有无效的卡片附加数据')
+        try {
+          const cardIdxs = await this.api.getCardSummary('CardIdxs')
+          const localExtraDataCache = await this.cache.getExtraDatas()
+          const invalidIds = Object.keys(localExtraDataCache).filter(e=>!cardIdxs.includes(e))
+          if(invalidIds.length){
+            console.debug(`删除无效附加数据本地缓存：${invalidIds.length} 条`)
+            await this.cache.deleteCardExtraData(invalidIds)
+          }
+        } catch (error) {
+          console.error('clearExtraDataCache:',error)
         }
-      } catch (error) {
-        console.error('clearExtraDataCache:',error)
       }
     }
     const clearCardImageCache = async ()=> {
-      console.debug('开始检测是否有无效图片缓存数据')
-      try {
-        await this.checkCacheClearTimeout()
-      } catch (_) {
+      if(await this.globalTaskTimeoutCheck()){
+        console.debug('开始检测是否有无效图片缓存数据')
         try {
           const imageIds = await this.api.getCardSummary('ImageIds')
           console.debug(`删除无效图片缓存数据：${imageIds.length} 条`)

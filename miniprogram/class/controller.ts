@@ -50,9 +50,14 @@ export default class Controller extends Navigation {
     return this.checkTimeout(lastTime, this.getConfig('smsGapTime'))
   }
 
-  async checkCacheClearTimeout(){
+  async globalTaskTimeoutCheck(){
     const lastTime = await this.getLastCacheClearTime()
-    return this.checkTimeout(lastTime, this.getConfig('cacheClearGapTime'))
+    try {
+      this.checkTimeout(lastTime, this.getConfig('cacheClearGapTime'))
+    } catch (error) {
+      return true
+    }
+    return false
   }
 
   createAdvSetData(originSetData,dataCount:number,gap?:number){

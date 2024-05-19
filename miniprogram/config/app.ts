@@ -9,7 +9,7 @@ const AppConfig:IAppConfig = {
   allowUploadImageType: ['jpeg','png','jpg'],
   cardImageMaxNum: 2,
   devHomeDataCacheTime: 3600,
-  homeDataCacheTime: 86400,
+  homeDataCacheTime: 86400, // 一天
   noticeFetchTime: 60,
   smsGapTime: 60,
   shareInfo: {
@@ -17,7 +17,7 @@ const AppConfig:IAppConfig = {
     path: `/pages/home/index`,
     imageUrl: '/static/share.png'
   },
-  cacheClearGapTime: 86400,
+  cacheClearGapTime: 86400, // 一天
   contentCheckHash: 'SHA1',
   imageNameFormatHashMethod: 'MD5',
   appEntryPagePath: 'home/index'
