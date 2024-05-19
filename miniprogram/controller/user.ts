@@ -83,11 +83,6 @@ export default class User extends Controller {
   async init(){
     await this.loadInfo()
     if(!this.isOk) return
-    wx.nextTick(()=>{
-      setTimeout(() => {
-        this.getTags()
-      }, 1000);
-    })
     this.loadOnAppHideConfig()
   }
   
