@@ -106,8 +106,8 @@ Page({
     }
   },
 
-  renderTagInfo(){
-    const tags = (user.config?.general.useDefaultTag ? app.getCardConfig('defaultTags') : []).concat(user.tags)
+  async renderTagInfo(){
+    const tags = (user.config?.general.useDefaultTag ? app.getCardConfig('defaultTags') : []).concat(await user.getTags())
     const cardTags = this.data.card.tags.map(tag=>{
       return {
         name: tag,

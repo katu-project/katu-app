@@ -59,8 +59,8 @@ Page({
     this.loadCardImage()
   },
 
-  loadTagsInfo(){
-    const tags = (user.config?.general.useDefaultTag ? app.getCardConfig('defaultTags') : []).concat(user.tags)
+  async loadTagsInfo(){
+    const tags = (user.config?.general.useDefaultTag ? app.getCardConfig('defaultTags') : []).concat(await user.getTags())
     const tagsInfo = {}
     tags.map(e=>e.color && (tagsInfo[e.name]=e.color))
     this.setData({

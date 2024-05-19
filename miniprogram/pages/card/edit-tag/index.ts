@@ -83,7 +83,7 @@ Page({
       list: this.data.list
     })
     app.showNotice('删除成功')
-    await user.loadCustomTags()
+    await user.getTags()
     this.sendChangeEvent()
   },
 
@@ -101,7 +101,7 @@ Page({
       [`list[${this.data.list.length}]`]: {name: res.name, _id: res._id}
     })
     app.showNotice('创建成功')
-    await user.loadCustomTags()
+    await user.getTags()
     this.sendChangeEvent()
   },
 
@@ -126,7 +126,7 @@ Page({
           [`list[${this.data.selectedTagIdx}].color`]: tag.color,
         })
         this.hideDialog('showDialogSetColor')
-        user.loadCustomTags()
+        user.getTags()
       })
     }
   }

@@ -79,7 +79,7 @@ Page({
 
   async onReady(){
     this.applyUserSetting()
-    this.loadTagData()
+    this.loadRenderData()
     if(this.id){
       await this.loadData()
       // 处理卡片标签选中状态
@@ -94,8 +94,8 @@ Page({
     this.loadTagData()
   },
 
-  loadTagData(){
-    const tags = (this.data.useDefaultTag ? app.getCardConfig('defaultTags') : []).concat(user.tags)
+  async loadTagData(){
+    const tags = (this.data.useDefaultTag ? app.getCardConfig('defaultTags') : []).concat(await user.getTags())
     // 记录【其他】标签的idx
     this.otherTagIdx = tags.findIndex(e=>e._id === 'oc')
     this.setData({

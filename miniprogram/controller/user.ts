@@ -3,7 +3,6 @@ import Controller from '@/class/controller'
 export default class User extends Controller {
   _user: Partial<IUser> = {}
   _avatar: string = ''
-  _tags: ICardTag[] = []
 
   constructor(){
     super()
@@ -27,10 +26,6 @@ export default class User extends Controller {
 
   get quota(){
     return this.user.quota?.remain || 0
-  }
-
-  get tags(){
-    return this.deepCloneObject(this._tags)
   }
 
   get isActive():boolean{
@@ -90,7 +85,7 @@ export default class User extends Controller {
     if(!this.isOk) return
     wx.nextTick(()=>{
       setTimeout(() => {
-        this.loadCustomTags()
+        this.getTags()
       }, 1000);
     })
     this.loadOnAppHideConfig()
@@ -141,10 +136,6 @@ export default class User extends Controller {
     return this.api.quotaExchange(data)
   }
 
-  async loadCustomTags(){
-    this._tags = await this.api.getUserTag()
-  }
-
   async applyConfig(configItem:{key:string,value:string|boolean}){
     try {
       await this.api.updateUserConfig(configItem)
@@ -184,12 +175,13 @@ export default class User extends Controller {
   }
 
   async createTag(tagName:string){
-    if(this.tags.find(tag=>tag.name === tagName)){
+    const customTags = await this.getTags()
+    if(customTags.find(tag=>tag.name === tagName)){
       throw Error("标签已存在")
     }
 
     if(this.config?.general.useDefaultTag && this.getCardConfig('defaultTags').find(tag=>tag.name === tagName)){
-      throw Error("已存在于内置标签\n可直接使用无需重复创建")
+      throw Error("内置标签中已经存在\n无需重复创建")
     }
 
     return this.api.createTag(tagName)
