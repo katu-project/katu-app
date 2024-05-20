@@ -33,37 +33,48 @@ const MenuConfig = {
     }
   ],
   settings: [
-    {
-      icon: 'apps',
-      title: '通用',
-      url: 'general'
-    },
-    {
-      icon: 'profile',
-      title: '账户',
-      url: 'account'
-    },
-    {
-      icon: 'unlock',
-      title: '安全',
-      url: 'security'
-    },
-    {
-      icon: 'file',
-      title: '数据',
-      url: 'data'
-    },
-    {
-      icon: 'explore',
-      title: '高级',
-      url: 'adv'
-    },
-    {
-      icon: 'repair',
-      title: '调试',
-      url: '/packages/debug/pages/index',
-      hide: true
-    }
+    [
+      {
+        icon: 'profile',
+        title: '账户',
+        url: 'account',
+        bg: 'green'
+      }
+    ],
+    [
+      {
+        icon: 'apps',
+        title: '通用',
+        url: 'general',
+        bg: 'blue'
+      },
+      {
+        icon: 'unlock',
+        title: '安全',
+        url: 'security',
+        bg: 'yellow'
+      },
+      {
+        icon: 'file',
+        title: '数据',
+        url: 'data',
+        bg: 'cyan'
+      }
+    ],
+    [
+      {
+        icon: 'explore',
+        title: '高级',
+        url: 'adv',
+        bg: 'green'
+      },
+      {
+        icon: 'repair',
+        title: '调试',
+        url: '/packages/debug/pages/index',
+        devOnly: true
+      }
+    ]
   ],
   qa: [{
     icon: 'apps',

@@ -13,12 +13,14 @@ Page({
   },
 
   onReady() {
-    const hideIdx = this.data.menu.findIndex(e=>e.hide !== undefined)
-    if(hideIdx !== -1){
-      this.setData({
-        [`menu[${hideIdx}].hide`]: !app.isDev
-      })
-    }
+    this.data.menu.map((group, idx)=>{
+      const hideIdx = group.findIndex(e=>e.devOnly === true)
+      if(hideIdx !== -1){
+        this.setData({
+          [`menu[${idx}][${hideIdx}].hide`]: !app.isDev
+        })
+      }
+    })
   },
 
   onShow() {

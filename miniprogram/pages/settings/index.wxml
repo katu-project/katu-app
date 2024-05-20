@@ -3,12 +3,14 @@
   <view slot="content">设置</view>
 </cu-custom>
 <view class="page">
-  <view class="cu-list menu margin-top">
-    <block wx:for="{{menu}}" wx:key="title">
-      <view class="cu-item arrow item" wx:if="{{!item.hide}}" data-page="{{item.url}}" bindtap="tapToPage">
-        <view class="content">
-          <text class="cuIcon-{{item.icon}} text-grey"></text>
-          <text class="">{{item.title}}</text>
+  <view class="cu-list menu sm-border margin-top shadow bg-white" wx:for="{{menu}}" wx:for-item="group" wx:key="index">
+    <block wx:for="{{group}}" wx:key="title" wx:if="{{!item.hide}}">
+      <view class="cu-item arrow item" data-page="{{item.url}}" bindtap="tapToPage">
+        <view class="content flex-row">
+          <view class="icon bg-{{item.bg}} light padding-xs text-xl br-10">
+            <text class="cuIcon-{{item.icon}} text-black"></text>
+          </view>
+          <text class="text-lg text-black">{{item.title}}</text>
         </view>
       </view>
     </block>
