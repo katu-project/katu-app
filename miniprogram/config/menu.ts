@@ -49,6 +49,12 @@ const MenuConfig = {
         bg: 'blue'
       },
       {
+        icon: 'discover',
+        title: '效果',
+        url: 'ui',
+        bg: 'pink'
+      },
+      {
         icon: 'unlock',
         title: '安全',
         url: 'security',

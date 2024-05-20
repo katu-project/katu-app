@@ -380,12 +380,14 @@ Page({
   },
 
   bindscroll: lodash.debounce(async function(this){
+    if(!user.config?.ui.homeMainBtnAnimation) return
     this.setData({
       showMenu: true
     })
   },1500),
 
   onBinddragend(e){
+    if(!user.config?.ui.homeMainBtnAnimation) return
     if(!this.data.showMenu) return
     if(!e.detail.velocity) return
     if(e.detail.velocity.y<0 || e.detail.velocity.y>0.5){

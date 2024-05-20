@@ -1,0 +1,17 @@
+<cu-custom bgColor="bg-cyan" isBack="{{true}}">
+  <view slot="backText">返回</view>
+  <view slot="content">效果</view>
+</cu-custom>
+
+<view class="cu-list menu sm-border card-menu margin-top">
+  <view class="cu-item">
+    <view class="content">
+    <text class="">打开添加按钮动画</text>
+    </view>
+    <view class="action">
+      <switch class="sm" bindchange="tapToConfig" data-key="config_ui_homeMainBtnAnimation" checked="{{config_ui_homeMainBtnAnimation}}"></switch>
+    </view>
+  </view>
+  <view class="padding bg-white text-grey">在首页滑动列表时，控制底部按钮自动隐藏/显示</view>
+
+</view>

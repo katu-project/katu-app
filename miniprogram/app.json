@@ -23,6 +23,7 @@
     "pages/settings/security/mini-key/index",
     "pages/settings/account/index",
     "pages/settings/general/index",
+    "pages/settings/ui/index",
     "pages/settings/security/recovery-key/index",
     "pages/settings/security/reset-key/index",
     "pages/settings/security/reset-key/qrcode/index",

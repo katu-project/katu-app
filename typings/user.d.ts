@@ -27,6 +27,9 @@ interface IUser {
       useDefaultTag: boolean
       autoShowContent: boolean
     },
+    ui: {
+      homeMainBtnAnimation: boolean
+    },
     account: {
 
     },
