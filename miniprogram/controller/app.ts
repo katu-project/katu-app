@@ -133,13 +133,9 @@ class AppManager extends Controller {
 
   async loadUserByCode(code:string){
     const token = await this.api.getTokenByCode(code)
-    if(!token) return
+    if(!token) throw Error('登录错误，请使用其他方式登录或者联系客服')
     await this.setLocalData('KATU_APP_TOKEN', token)
-    await this.user.init()
-    if(this.user.isSetMasterKey && this.user.rememberPassword){
-      console.log("用户启用记住密码，尝试加载主密码")
-      this.masterKeyManager.load()
-    }
+    return this.loadUser()
   }
 
   async bindOtherLoginByCode(code:string){
