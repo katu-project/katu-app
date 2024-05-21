@@ -44,6 +44,18 @@ class Cache extends Module {
     return this.getFilePath(this.config.userAvatarDir, avatarId)
   }
 
+  async getLoginToken(){
+    return this.getLocalData<string>('KATU_APP_TOKEN')
+  }
+
+  async setLoginToken(value:string){
+    return this.setLocalData('KATU_APP_TOKEN', value)
+  }
+
+  async deleteLoginToken(){
+    this.deleteLocalData('KATU_APP_TOKEN')
+  }
+
   // master key cache
   async getMasterKey(){
     return this.getLocalData<string>('MASTER_KEY_CACHE_KEY')

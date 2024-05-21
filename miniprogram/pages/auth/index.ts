@@ -159,7 +159,7 @@ Page({
       code: this.data.emailLogin.code,
       verifyId: this.data.emailLogin.verifyId
     })
-    await app.setLocalData('KATU_APP_TOKEN', token)
+    await app.cache.setLoginToken(token)
     await app.showNotice('登录成功，即将返回')
     app.reLaunch()
   },

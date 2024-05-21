@@ -121,7 +121,7 @@ class AppManager extends Controller {
 
   async loadUser(){
     if(this.isApp){
-      const token = await this.getLocalData('KATU_APP_TOKEN')
+      const token = await this.cache.getLoginToken()
       if(!token) return 
     }
 
@@ -144,7 +144,7 @@ class AppManager extends Controller {
   async loadUserByCode(code:string){
     const token = await this.api.getTokenByCode(code)
     if(!token) throw Error('登录错误，请使用其他方式登录或者联系客服')
-    await this.setLocalData('KATU_APP_TOKEN', token)
+    await this.cache.setLoginToken(token)
     return this.loadUser()
   }
 
@@ -467,7 +467,7 @@ class AppManager extends Controller {
 
   //设置页开始
   logout(){
-    this.deleteLocalData('KATU_APP_TOKEN')
+    this.cache.deleteLoginToken()
     this.deleteHomeDataCache()
     this.masterKeyManager.clear()
     this.emit('loginChange', false)

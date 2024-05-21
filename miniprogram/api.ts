@@ -42,7 +42,7 @@ export default {
 
   activeAccount: (data:any) => request('app/active', data),
 
-  getTokenByCode: (code:string) => request('app/code2token', {code}),
+  getTokenByCode: (code:string) => request<string>('app/code2token', {code}),
 
   bindOtherLogin: (code:string)=> request('app/bindOtherAccount', {code}),
 
