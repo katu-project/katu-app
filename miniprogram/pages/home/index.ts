@@ -22,7 +22,7 @@ Page({
 
   async onLoad() {
     this.loadEvent('on')
-    this.loadData({
+    await this.loadData({
       cacheOnly: true,
       hideLoading: true
     })
