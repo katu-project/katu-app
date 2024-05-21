@@ -1,5 +1,4 @@
 import { getAppManager } from '@/controller/app'
-import { showLoading } from '@/utils/index'
 
 const app = getAppManager()
 
@@ -30,13 +29,5 @@ Page({
   tapToPage(e){
     const page = e.currentTarget.dataset.page
     app.goToPage(page.startsWith('/') ? page : `settings/${page}/index`)
-  },
-
-  async tapToLogout(){
-    await app.showConfirm('确认退出登录？')
-    app.logout()
-    await showLoading('正在退出', 2000)
-    await app.showNotice('已退出登录')
-    app.navigateBack()
   }
 })

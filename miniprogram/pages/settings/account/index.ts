@@ -1,4 +1,4 @@
-import { loadData } from "@/utils/index"
+import { loadData, showLoading } from "@/utils/index"
 import { getAppManager } from '@/controller/app'
 import { getUserManager } from "@/controller/user"
 const app = getAppManager()
@@ -48,5 +48,13 @@ Page({
         app.reLaunch()
       })
     })
+  },
+
+  async tapToLogout(){
+    await app.showConfirm('确认退出登录？')
+    app.logout()
+    await showLoading('正在退出', 2000)
+    await app.showNotice('已退出登录')
+    app.navigateBack()
   }
 })

@@ -27,7 +27,7 @@
         <text class="text-{{userTel?'green':'orange'}}">{{userTel||'未绑定'}}</text>
       </view>
     </view>
-    <view class="padding bg-white text-grey text-sm">用于接收消息通知，账户验证等操作</view>
+    <view class="padding bg-white text-grey text-sm">用于接收消息通知</view>
 
     <view class="cu-item arrow" style="padding-right: 70rpx;" bindtap="tapToPage" data-page="bind-email">
       <view class="content">
@@ -37,7 +37,7 @@
         <text class="text-{{userEmail?'green':'orange'}}">{{userEmail||'未绑定'}}</text>
       </view>
     </view>
-    <view class="padding bg-white text-grey text-sm">用于接收消息通知，账户验证等操作</view>
+    <view class="padding bg-white text-grey text-sm">用于接收消息通知</view>
     <!-- #endif -->
 
     <!-- #if NATIVE -->
@@ -62,4 +62,14 @@
     </view>
     <view class="padding bg-white text-grey text-sm">清空用户数据并删除账号</view>
   </view>
+
+  <!-- #if NATIVE -->
+  <view class="margin-lr margin-top-xl flex-row">
+    <button style="width:80vw" class="cu-btn shadow bg-white rb-10 lg margin-bottom-lg" bindtap="tapToLogout">
+      <view class="gfw text-black">
+        退出登录
+      </view>
+    </button>
+  </view>
+  <!-- #endif -->
 </view>
