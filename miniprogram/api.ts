@@ -88,7 +88,7 @@ export default {
   updateTag: (tag:Partial<ICardTag>) => request('tag/update', tag),
   // user custom tag end
 
-  getUser: () => request<IUser>('user/info'),
+  getUser: () => request<IUser>('user'),
   
   usageStatistic: () => request<IUsageStatistic>('user/usage'),
 
