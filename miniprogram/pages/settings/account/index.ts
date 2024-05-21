@@ -55,6 +55,6 @@ Page({
     app.logout()
     await showLoading('正在退出', 2000)
     await app.showNotice('已退出登录')
-    app.navigateBack()
+    app.reLaunch()
   }
 })
