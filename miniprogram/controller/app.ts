@@ -122,9 +122,19 @@ class AppManager extends Controller {
   async loadUser(){
     if(this.isApp){
       const token = await this.getLocalData('KATU_APP_TOKEN')
-      if(!token) return
+      if(!token) return 
     }
-    await this.user.init()
+
+    try {
+      await this.user.init()
+    } catch (error:any) {
+      console.error('app.loadUser',error)
+      if(this.isApp && error.code === 401){
+        this.logout()
+      }
+      throw error
+    }
+    
     if(this.user.isSetMasterKey && this.user.rememberPassword){
       console.log("用户启用记住密码，尝试加载主密码")
       this.masterKeyManager.load()
