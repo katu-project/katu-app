@@ -151,17 +151,14 @@ Page({
       app.showMiniNotice('输入有误')
       return
     }
-
     if(!this.checkToc()) return
-    
-    const { token } = await loadData(app.api.activeAccountWithEmail,{
+    await loadData(app.loadUserByEmail,{
       email: this.data.emailLogin.email,
       code: this.data.emailLogin.code,
       verifyId: this.data.emailLogin.verifyId
     })
-    await app.cache.setLoginToken(token)
     await app.showNotice('登录成功，即将返回')
-    app.reLaunch()
+    app.navigateBack()
   },
 
   tapToc(e){

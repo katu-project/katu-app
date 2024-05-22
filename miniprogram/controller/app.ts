@@ -148,6 +148,14 @@ class AppManager extends Controller {
     return this.loadUser()
   }
 
+  async loadUserByEmail(options:{email:string, code:string, verifyId:string}){
+    const { token } = await this.api.activeAccountWithEmail(options)
+    if(!token) throw Error('登录错误，请使用其他方式登录或者联系客服')
+    await this.cache.setLoginToken(token)
+    this.emit('loginChange', true)
+    return this.loadUser()
+  }
+
   async bindOtherLoginByCode(code:string){
     return this.api.bindOtherLogin(code)
   }
