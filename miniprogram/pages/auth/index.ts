@@ -108,8 +108,7 @@ Page({
     try {
       const code = await appleLogin()
       await hideLoading()
-      await loadData(app.loadUserByCode, code, '获取用户信息')
-      app.emit('loginChange', true)
+      await loadData(app.loginWithCode, code, '获取用户信息')
       await app.showNotice("Apple ID 授权成功")
       app.navigateBack()
     } catch (err:any) {
@@ -126,8 +125,7 @@ Page({
   async goMpLogin(){
     try {
       const code = await weixinMiniProgramLogin()
-      await loadData(app.loadUserByCode, code, '获取用户信息')
-      app.emit('loginChange', true)
+      await loadData(app.loginWithCode, code, '获取用户信息')
       await app.showNotice("小程序 授权成功")
       app.navigateBack()
     } catch (err:any) {
@@ -152,7 +150,7 @@ Page({
       return
     }
     if(!this.checkToc()) return
-    await loadData(app.loadUserByEmail,{
+    await loadData(app.loginWithEmail,{
       email: this.data.emailLogin.email,
       code: this.data.emailLogin.code,
       verifyId: this.data.emailLogin.verifyId
