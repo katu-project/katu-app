@@ -239,7 +239,7 @@ class AppManager extends Controller {
 
   async checkLikeCardNeedSync(){
     const homeDataCache = await this.cache.getHomeData()
-    if(!homeDataCache) return true
+    if(!homeDataCache || homeDataCache?.data?.cateList?.length === 0) return true
     try {
       this.checkTimeout(homeDataCache.cacheTime, this.getConfig('homeDataCacheTime'))
       return false
