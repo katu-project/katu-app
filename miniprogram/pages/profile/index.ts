@@ -28,8 +28,22 @@ Page({
   },
 
   loadEvent(action:'on'|'off'){
-    Reflect.apply(app[action], app, ['userLoad',this.onEventUserLoad])
-    Reflect.apply(app[action], app, ['loginChange',this.onEventLoginChange])
+    const onEventUserProfileChange = ()=>{
+      this.renderUserData()
+    }
+
+    const onEventLoginChange = (login)=>{
+      if(login){
+        this.renderUserData()
+      }else{
+        this.setData({
+          user: {}
+        })
+      }
+    }
+
+    Reflect.apply(app[action], app, ['userProfileChange', onEventUserProfileChange])
+    Reflect.apply(app[action], app, ['loginChange', onEventLoginChange])
   },
 
   renderUserData(){
@@ -62,27 +76,6 @@ Page({
   tapToEditInfo(){
     if(!user.isActive) return
     app.goProfileEditPage()
-  },
-
-  async onEventUserLoad(reload){
-    this.setData({
-      'user.avatarUrl': app.getConst('DefaultUserAvatar')
-    })
-    if(reload){
-      await user.reloadInfo()
-    }
-    this.renderUserData()
-  },
-
-  async onEventLoginChange(login){
-    if(login){
-      user.emit('userLoad',true)
-    }else{
-      this.setData({
-        user: {}
-      })
-      user.clearInfo()
-    }
   },
 
   async tapToItem(e){

@@ -71,7 +71,8 @@ Page({
     }
     
     await loadData(user.updateProfile, userData, '正在保存信息')
-    user.emit('userLoad',true)
+    await user.reloadInfo()
+    user.emit('userProfileChange')
     await app.showNotice('修改成功')
     app.navigateBack()
   }

@@ -479,6 +479,7 @@ class AppManager extends Controller {
     this.cache.deleteLoginToken()
     this.deleteHomeDataCache()
     this.masterKeyManager.clear()
+    this.user.clearInfo()
     this.emit('loginChange', false)
   }
 
