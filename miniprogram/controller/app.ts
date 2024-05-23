@@ -157,6 +157,12 @@ class AppManager extends Controller {
     return this.loadUser()
   }
 
+  async loginWithMp(){
+    await this.api.activeAccount()
+    this.emit('loginChange', true)
+    return this.loadUser()
+  }
+
   async bindOtherLoginByCode(code:string){
     return this.api.bindOtherLogin(code)
   }

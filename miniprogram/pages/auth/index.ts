@@ -1,8 +1,6 @@
 import { appleLogin, loadData, showLoading, weixinMiniProgramLogin } from '@/utils/index'
 import { getAppManager } from '@/controller/app'
-import { getUserManager } from '@/controller/user'
 const app = getAppManager()
-const user = getUserManager()
 
 Page({
   data: {
@@ -44,9 +42,8 @@ Page({
 
   async tapToActiveAccount(){
     this.hideActiveNotice()
-    await loadData(user.activeAccount, {}, '正在创建账号')
-    user.emit('userLoad', true)
-    await app.showNotice("账户已激活，可以体验完整功能")
+    await loadData(app.loginWithMp, undefined, '正在激活账户')
+    await app.showNotice('账户已激活')
     app.navigateBack()
   },
 

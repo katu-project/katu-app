@@ -40,7 +40,7 @@ export default {
   
   markRead: (id: string) => request('notice/checkin',{id}),
 
-  activeAccount: (data:any) => request('app/active', data),
+  activeAccount: (data?:any) => request('app/active', data),
 
   getTokenByCode: (code:string) => request<string>('app/code2token', {code}),
 
