@@ -82,8 +82,6 @@ export default class User extends Controller {
 
   async init(){
     await this.loadInfo()
-    if(!this.isOk) return
-    this.loadOnAppHideConfig()
   }
   
   async loadInfo(){
@@ -196,35 +194,6 @@ export default class User extends Controller {
   }
 
   // simple api proxy end
-
-  loadOnAppHideConfig(){
-    wx.onAppHide(res=>{
-      const globalState = getApp().globalData.state
-      console.log('onAppHide:', res, globalState);
-          // 暂时解决图片预览引起的清除主密码的bug
-      if(globalState.inPreviewPic){
-        globalState.inPreviewPic = false
-        return
-      }else if(globalState.inChooseLocalImage){
-        globalState.inChooseLocalImage = false
-        return
-      }else if(globalState.inShareData){
-        globalState.inShareData = false
-        return
-      }
-
-      if(this.rememberPassword){
-        console.log('缓存主密码');
-        this.emit('CacheMasterKey')
-      }else{
-        if(this.config?.security.lockOnExit){
-          console.log('退出并清除主密码');
-          this.emit('ClearMasterKey')
-        }
-      }
-    })
-  }
-
 }
 
 

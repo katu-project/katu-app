@@ -179,6 +179,32 @@ class AppManager extends Controller {
   loadGlobalEvents(){
     this.on('CacheMasterKey', this.masterKeyManager.setCache)
     this.on('ClearMasterKey', this.masterKeyManager.clear)
+    
+    wx.onAppHide(res=>{
+      const globalState = getApp().globalData.state
+      console.log('onAppHide:', res, globalState);
+      // 暂时解决图片预览引起的清除主密码的bug
+      if(globalState.inPreviewPic){
+        globalState.inPreviewPic = false
+        return
+      }else if(globalState.inChooseLocalImage){
+        globalState.inChooseLocalImage = false
+        return
+      }else if(globalState.inShareData){
+        globalState.inShareData = false
+        return
+      }
+
+      if(this.user.rememberPassword){
+        console.log('缓存主密码');
+        this.emit('CacheMasterKey')
+      }else{
+        if(this.user.config?.security.lockOnExit){
+          console.log('退出并清除主密码');
+          this.emit('ClearMasterKey')
+        }
+      }
+    })
   }
 
   async loadGlobalTask(){
