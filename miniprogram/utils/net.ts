@@ -15,7 +15,7 @@ async function request<T>(action: string, data:any, requestor, options): Promise
   } catch (err:any) {
     error.message = err.message || err.errMsg || err.toString()
     error.code = 600 // 云函数报错
-    console.error(error)
+    console.error(action,data,error)
     throw error
   }
 
