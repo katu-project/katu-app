@@ -520,9 +520,9 @@ class AppManager extends Controller {
   //清除缓存
   async clearCacheData(){
     try {
-      await file.rmdir(this.getConst('APP_TEMP_DIR'), true)
-      await file.rmdir(this.getConst('APP_DOWN_DIR'), true)
-      await file.rmdir(this.getConst('APP_IMAGE_DIR'), true)
+      await file.rmdir(this.getConst('APP_TEMP_DIR'))
+      await file.rmdir(this.getConst('APP_DOWN_DIR'))
+      await file.rmdir(this.getConst('APP_IMAGE_DIR'))
     } catch (error) {
       console.warn('clearCacheData', error)
     }

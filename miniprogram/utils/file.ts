@@ -99,12 +99,27 @@ export async function readdir(dirPath){
   }, 'files')
 }
 
-export async function rmdir(dirPath, recursive=false){
-  const rmdir = args => wx.getFileSystemManager().rmdir(args)
-  return toPromise(rmdir, {
-    dirPath,
-    recursive
-  })
+export async function rmdir(dirPath){
+  const _rmdir = args => wx.getFileSystemManager().rmdir(args)
+
+  const items = await getStats(dirPath, true)
+  console.log(dirPath,items)
+  const files = items.filter(e=>e.stats.isFile())
+  const dirs = items.filter(e=>e.stats.isDirectory()).sort((a,b)=>b.path.length-a.path.length)
+
+  for (const item of files) {
+    const path = `${dirPath}/${item.path}`
+    console.debug('delete file:', path)
+    await deleteFile(path)
+  }
+
+  for (const item of dirs) {
+    const path = `${dirPath}/${item.path}`
+    console.debug('delete dir:', path)
+    await toPromise<any>(_rmdir, {
+      dirPath: path
+    })
+  }
 }
 // ------- wx function end ----
 

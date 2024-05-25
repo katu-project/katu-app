@@ -25,7 +25,7 @@ class Cache extends Module {
     }else{
       console.debug('开始缓存用户头像')
       try {
-        await file.rmdir(this.config.userAvatarDir, true)
+        await file.rmdir(this.config.userAvatarDir)
       } catch (_) {}
 
       try {
@@ -70,7 +70,7 @@ class Cache extends Module {
   }
 
   async deleteMiniKey(){
-    await file.rmdir(this.getConst('APP_MINI_KEY_DIR'), true).catch(console.error)
+    await file.rmdir(this.getConst('APP_MINI_KEY_DIR')).catch(console.error)
   }
 
   // home data cache
@@ -241,7 +241,7 @@ class Cache extends Module {
   async clearTempDirFile(){
     try {
       await file.checkAccess(this.getConst('APP_TEMP_DIR'))
-      await file.rmdir(this.getConst('APP_TEMP_DIR'), true)
+      await file.rmdir(this.getConst('APP_TEMP_DIR'))
     } catch (error:any) {
       if(!error.message.startsWith('access:fail no such file or directory')){
         console.error('clearTempDirFile:',error)
