@@ -28,16 +28,20 @@ Page({
     })
     await loadData(app.loadUser,undefined,'加载用户信息')
     if(user.isOk){
-      await app.saveCurrentUserCode(user.uid)
-      app.loadGlobalTask()
-      app.checkQuotaNotice('可用兔币不足，请及时处理')
-      app.checkLikeCardNeedSync().then(needSync=>{
+      app.checkLikeCardNeedSync({
+        fastSync: this.data.cateList.length === 0 // 如果当前 cateList 没有数据就立即进行同步，不用等待后续同步检测，解决因数据同步检测造成数据空白的异常体验
+      }).then(needSync=>{
         if(needSync){
           this.loadData({
             forceUpdate: true
           })
         }
       })
+      
+      await app.saveCurrentUserCode(user.uid)
+      app.loadGlobalTask()
+      app.checkQuotaNotice('可用兔币不足，请及时处理')
+
       if(app.isMp){
         app.checkUserPrivacy().then((res)=>{
           console.debug('getPrivacySetting:',res)

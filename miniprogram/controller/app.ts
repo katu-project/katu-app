@@ -263,7 +263,8 @@ class AppManager extends Controller {
     return this.cache.setLocalData('LAST_LOGIN_UID', userCode)
   }
 
-  async checkLikeCardNeedSync(){
+  async checkLikeCardNeedSync(options?:{fastSync:boolean}){
+    if(options?.fastSync) return true
     const homeDataCache = await this.cache.getHomeData()
     if(!homeDataCache || homeDataCache?.data?.cateList?.length === 0) return true
     try {
