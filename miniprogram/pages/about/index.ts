@@ -45,6 +45,10 @@ Page({
   enableDebug(){
     const debug = !wx.getAppBaseInfo().enableDebug
     console.error('enableDebug:', debug)
+    wx.setStorage({
+      key: 'KATU_DEBUG',
+      data: true
+    })
     wx.setEnableDebug({
       enableDebug: debug
     })
