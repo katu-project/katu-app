@@ -66,8 +66,8 @@ Page({
       this.checkDataChange()
     }
 
-    const onEventTagChange = ()=>{
-      this.loadTagData()
+    const onEventTagChange = async ()=>{
+      await this.loadTagData()
       this.renderTagState()
     }
 
