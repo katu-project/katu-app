@@ -37,7 +37,7 @@ Page({
           })
         }
       })
-      
+
       await app.saveCurrentUserCode(user.uid)
       app.loadGlobalTask()
       app.checkQuotaNotice('可用兔币不足，请及时处理')
@@ -320,7 +320,7 @@ Page({
     })
     this.hideModal('showNotice')
     this.loadNotice(true)
-  },5000,{leading: true, trailing: false}),
+  },2000,{leading: true, trailing: false}),
  
   tapToHideModal(e){
     this.hideModal(e.currentTarget.dataset.name)
