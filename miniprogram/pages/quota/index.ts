@@ -146,7 +146,7 @@ Page({
   },
 
   async tapToShowExchangeDialog(){
-    if(app.isMp){
+    if(app.isMp || app.isAndroid){
       this.showExchangeDialog()
     }else if(app.isApp){
       const iapList = await loadData(app.getIapItems)
