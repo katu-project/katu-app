@@ -44,6 +44,20 @@ class Cache extends Module {
     return this.getFilePath(this.config.userAvatarDir, avatarId)
   }
 
+  // user custom tags
+  async getTags(){
+    return this.getLocalData<ICardTag[]>('USER_TAGS_CACHE_KEY')
+  }
+
+  async setTags(tags){
+    return this.setLocalData('USER_TAGS_CACHE_KEY', tags)
+  }
+
+  async deleteTags(){
+    this.deleteLocalData('USER_TAGS_CACHE_KEY')
+  }
+  // user custom tags end
+
   async getLoginToken(){
     return this.getLocalData<string>('KATU_APP_TOKEN')
   }
