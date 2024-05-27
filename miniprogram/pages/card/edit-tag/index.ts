@@ -82,9 +82,8 @@ Page({
     this.setData({
       list: this.data.list
     })
-    app.showNotice('删除成功')
-    await app.cache.deleteTags()
-    this.sendChangeEvent()
+    app.showMiniNotice('删除成功')
+    app.clearUserTagsCache()
   },
 
   async tapToSaveTag(){
@@ -100,13 +99,8 @@ Page({
     this.setData({
       [`list[${this.data.list.length}]`]: {name: res.name, _id: res._id}
     })
-    app.showNotice('创建成功')
-    await app.cache.deleteTags()
-    this.sendChangeEvent()
-  },
-
-  sendChangeEvent(){
-    app.emit('tagChange')
+    app.showMiniNotice('创建成功')
+    app.clearUserTagsCache()
   },
 
   tapToSelectColor(e){
@@ -116,19 +110,18 @@ Page({
     })
   },
 
-  tapToSetColor(){
+  async tapToSetColor(){
     const selectedColor = this.data.tempTagColor
     if(selectedColor && selectedColor !== this.data.list[this.data.selectedTagIdx].color) {
       const tag = this.data.list[this.data.selectedTagIdx] as ICardTag
       tag.color = selectedColor
-      loadData(user.updateTag, tag).then(async ()=>{
-        this.setData({
-          [`list[${this.data.selectedTagIdx}].color`]: tag.color,
-        })
-        this.hideDialog('showDialogSetColor')
-        await app.cache.deleteTags()
-        this.sendChangeEvent()
+      await loadData(user.updateTag, tag)
+      this.setData({
+        [`list[${this.data.selectedTagIdx}].color`]: tag.color,
       })
+      this.hideDialog('showDialogSetColor')
+      app.showMiniNotice('修改成功')
+      app.clearUserTagsCache()
     }
   }
 })

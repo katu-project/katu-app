@@ -507,6 +507,11 @@ class AppManager extends Controller {
     return iapItems
   }
 
+  async clearUserTagsCache(){
+    await this.cache.deleteTags()
+    this.emit('tagChange')
+  }
+
   //设置页开始
   logout(){
     this.cache.deleteLoginToken()
