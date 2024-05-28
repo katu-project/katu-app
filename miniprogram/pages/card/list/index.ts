@@ -119,14 +119,15 @@ Page({
   },
 
   async loadCardImage(card?:ICard, idx?:number){
+    const listKey = 'list'
     if(card){
-      const setData = await cardManager.getImageRenderSetData({idx:idx!, card, keyName:'list'})
+      const setData = await cardManager.getImageRenderSetData({idx:idx!, card, keyName:listKey})
       if(Object.keys(setData).length) this.setData(setData)
     }else{
       const advSetData = app.createAdvSetData(this.setData.bind(this), this.data.list.length)
       for (const idx in this.data.list) {
         const card = this.data.list[idx] as ICard
-        cardManager.getImageRenderSetData({idx, card, keyName:'list'})
+        cardManager.getImageRenderSetData({idx, card, keyName:listKey})
                    .then(advSetData)
       }
     }

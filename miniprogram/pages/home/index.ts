@@ -243,18 +243,19 @@ Page({
   },
 
   async renderLikeCardImage(card?:ICard){
+    const listKey = 'likeList'
     if(card){
       let idx = this.data.likeList.findIndex(e=>e._id === card._id)
       if(idx === -1){
         idx = this.data.likeList.length
       }
-      const setData = await cardManager.getImageRenderSetData({idx, card, keyName: 'likeList'})
+      const setData = await cardManager.getImageRenderSetData({idx, card, keyName: listKey})
       if(Object.keys(setData).length) this.setData(setData)
     }else{
       const advSetData = app.createAdvSetData(this.setData.bind(this), this.data.likeList.length)
       for (const idx in this.data.likeList) {
         const card = this.data.likeList[idx] as ICard
-        cardManager.getImageRenderSetData({idx, card, keyName: 'likeList'})
+        cardManager.getImageRenderSetData({idx, card, keyName: listKey})
                    .then(advSetData)
       }
     }
