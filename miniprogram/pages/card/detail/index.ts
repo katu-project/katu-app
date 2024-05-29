@@ -177,7 +177,7 @@ Page({
     if(this.data.card.encrypted){
       await cardManager.deleteCardImageCache(this.data.card)
     }
-    await this.loadData({ignoreCache: 'true'})
+    await this.loadData({ignoreCache: true})
   },
 
   checkActionUsability(){
