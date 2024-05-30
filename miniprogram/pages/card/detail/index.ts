@@ -10,6 +10,7 @@ Page({
   id: '',
   chooseIdx: 0,
   chooseAction: '',
+  syncMiniKey: false,
   shareData: {
     sid: '',
     sk: '',
@@ -75,7 +76,16 @@ Page({
     this.dataSyncCheck()
   },
 
-  async loadData(options?:{ hideLoading: boolean, ignoreCache: boolean, showText:string }){
+  loadEvent(action:'on'|'off'){
+    const onEventCardChange = (card)=>{
+      console.log('detail page: update card info:', card._id, card.title)
+      this.loadData({hideLoading: true, ignoreCache: true})
+    }
+
+    Reflect.apply(app[action], app, ['cardChange',onEventCardChange])
+  },
+
+  async loadData(options?:{ hideLoading?: boolean, ignoreCache?: boolean, showText?:string }){
     const { ignoreCache, showText, hideLoading } = options || {}
     try {
       const card = await loadData(
@@ -257,7 +267,7 @@ Page({
     })
   },
 
-  onShareAppMessage(){
+  onShareAppMessage(): WechatMiniprogram.Page.ICustomShareContent{
     // 取消由于分享导致的小程序 hide 事件
     getApp().globalData.state.inShareData = true
     const params = `sid=${this.shareData?.sid}&sk=${this.shareData?.sk}&dk=${this.shareData?.dk}`
@@ -316,7 +326,7 @@ Page({
     })
   },
 
-  showInputKey(options){
+  showInputKey(options?){
     this.setData({
       showInputKey: true,
       ...options

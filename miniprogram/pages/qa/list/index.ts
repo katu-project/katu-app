@@ -36,7 +36,7 @@ Page({
     app.goDocDetailPage(e.currentTarget.dataset.key)
   },
 
-  onShareAppMessage() {
+  onShareAppMessage(): WechatMiniprogram.Page.ICustomShareContent {
     return {
       title: '卡兔使用文档-' + this.data.cate.name
     }
