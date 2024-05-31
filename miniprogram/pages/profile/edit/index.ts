@@ -1,6 +1,7 @@
 import { loadData } from '@/utils/index'
 import { getUserManager } from '@/controller/user'
 import { getAppManager } from '@/controller/app'
+import { UserProfileChangeEvent } from '@/behaviors/event'
 const user = getUserManager()
 const app = getAppManager()
 
@@ -72,7 +73,7 @@ Page({
     
     await loadData(user.updateProfile, userData, '正在保存信息')
     await user.reloadInfo()
-    user.emit('userProfileChange')
+    user.emit(UserProfileChangeEvent)
     await app.showNotice('修改成功')
     app.navigateBack()
   }

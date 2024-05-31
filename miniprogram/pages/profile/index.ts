@@ -1,10 +1,16 @@
 import { loadData } from '@/utils/index'
 import { getAppManager } from '@/controller/app'
 import { getUserManager } from '@/controller/user'
+import { CreateEventBehavior } from '@/behaviors/event'
+
 const app = getAppManager()
 const user = getUserManager()
 
 Page({
+  behaviors: [
+    CreateEventBehavior('profile')
+  ],
+
   data: {
     user: {} as Partial<IUser>,
     menus: app.menu.profile,
@@ -12,11 +18,9 @@ Page({
   },
 
   onLoad(){
-    this.loadEvent('on')
   },
 
   onUnload(){
-    this.loadEvent('off')
   },
 
   async onReady(){
@@ -27,23 +31,18 @@ Page({
   onShow() {
   },
 
-  loadEvent(action:'on'|'off'){
-    const onEventUserProfileChange = ()=>{
+  onEventUserProfileChange(){
+    this.renderUserData()
+  },
+
+  onEventLoginChange(login){
+    if(login){
       this.renderUserData()
+    }else{
+      this.setData({
+        user: {}
+      })
     }
-
-    const onEventLoginChange = (login)=>{
-      if(login){
-        this.renderUserData()
-      }else{
-        this.setData({
-          user: {}
-        })
-      }
-    }
-
-    Reflect.apply(app[action], app, ['userProfileChange', onEventUserProfileChange])
-    Reflect.apply(app[action], app, ['loginChange', onEventLoginChange])
   },
 
   renderUserData(){

@@ -2,6 +2,8 @@ import { loadData } from '@/utils/index'
 import { getCardManager } from '@/controller/card'
 import { getAppManager } from '@/controller/app'
 import { getUserManager } from '@/controller/user'
+import { CardChangeEvent, CreateEventBehavior } from '@/behaviors/event'
+
 const app = getAppManager()
 const cardManager = getCardManager()
 const user = getUserManager()
@@ -10,6 +12,11 @@ Page({
   id: '',
   originData: {} as ICard,
   otherTagIdx: -1,
+
+  behaviors: [
+    CreateEventBehavior('edit')
+  ],
+
   data: {
     edit: false,
     useDefaultTag: true,
@@ -34,47 +41,38 @@ Page({
     if(options.id){
       this.id = options.id
     }
-    this.loadEvent('on')
   },
 
   onUnload(){
-    this.loadEvent('off')
   },
 
-  loadEvent(action:'on'|'off'){
-    const onEventSetCardImage = (path)=>{
-      const key = `card.image[${this.data.curShowPicIdx}].url`
-      this.setData({
-        [key]: path
-      })
-      this.checkDataChange()
-    }
+  onEventCardEditImage(path){
+    const key = `card.image[${this.data.curShowPicIdx}].url`
+    this.setData({
+      [key]: path
+    })
+    this.checkDataChange()
+  },
 
-    const onEventSetCardTitle = (title)=>{
-      console.log('edit title:', title)
-      this.setData({
-        [`card.title`]: title
-      })
-      this.checkDataChange()
-    }
+  onEventCardEditTitle(title){
+    console.debug('edit title:', title)
+    this.setData({
+      [`card.title`]: title
+    })
+    this.checkDataChange()
+  },
 
-    const onEventSetCardExtraData = (extraData)=>{
-      console.log('edit extraData:', JSON.stringify(extraData))
-      this.setData({
-        [`card.info`]: extraData
-      })
-      this.checkDataChange()
-    }
+  onEventCardEditExtraData(extraData){
+    console.log('edit extraData:', JSON.stringify(extraData))
+    this.setData({
+      [`card.info`]: extraData
+    })
+    this.checkDataChange()
+  },
 
-    const onEventTagChange = async ()=>{
-      await this.loadTagData()
-      this.renderTagState()
-    }
-
-    Reflect.apply(app[action], app, ['setCardImage',onEventSetCardImage])
-    Reflect.apply(app[action], app, ['setCardTitle',onEventSetCardTitle])
-    Reflect.apply(app[action], app, ['setCardExtraData',onEventSetCardExtraData])
-    Reflect.apply(app[action], app, ['tagChange',onEventTagChange])
+  async onEventTagChange(){
+    await this.loadTagData()
+    this.renderTagState()
   },
 
   async onReady(){
@@ -211,7 +209,7 @@ Page({
   async saveDone(card){ 
     console.debug(`提前缓存${this.data.edit?'修改':'新增'}卡片`)
     cardManager.cacheCard(card, this.data.card as ICard).then(()=>{
-      app.emit('cardChange',card)
+      app.emit(CardChangeEvent,card)
     })
     await app.showNotice('卡片数据已保存')
     app.navigateBack()

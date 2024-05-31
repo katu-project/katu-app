@@ -1,6 +1,8 @@
 import { loadData, showLoading } from '@/utils/index'
 import { getUserManager } from '@/controller/user'
 import { getAppManager } from '@/controller/app'
+import { CreateEventBehavior } from '@/behaviors/event'
+
 const user = getUserManager()
 const app = getAppManager()
 
@@ -8,6 +10,10 @@ Page({
   inPurchase: false,
 
   payHideLoading: ()=>{},
+
+  behaviors: [
+    CreateEventBehavior('quota')
+  ],
 
   data: {
     list: [] as AnyObject[],
@@ -21,8 +27,6 @@ Page({
   onLoad(){
     if(app.isApp){
       wx.miniapp.IAP.addTransactionObserver(app.observers.IapTransactionObserver)
-      app.on('AppleOrderPayDone', this.onEventPayDone)
-      app.on('AppleOrderPayCancel', this.onEventPayCancel)
     }
   },
 
@@ -32,13 +36,11 @@ Page({
 
   onUnload(){
     if(app.isApp){
-      app.off('AppleOrderPayDone')
-      app.off('AppleOrderPayCancel')
       wx.miniapp.IAP.removeTransactionObserver(app.observers.IapTransactionObserver)
     }
   },
 
-  onEventPayDone(transaction){
+  onEventAppleOrderPayDone(transaction){
     wx.miniapp.IAP.finishTransaction({
       transactionIdentifier: transaction.transactionIdentifier
     })
@@ -54,7 +56,7 @@ Page({
     }
   },
 
-  onEventPayCancel(){
+  onEventAppleOrderPayCancel(){
     this.showPayLoading()
   },
 

@@ -2,6 +2,7 @@ import { loadData } from '@/utils/index'
 import { getAppManager } from '@/controller/app'
 import { getUserManager } from '@/controller/user'
 import { getCardManager } from '@/controller/card'
+import { CardEditExtraDataEvent } from '@/behaviors/event'
 const app = getAppManager()
 const cardManager = getCardManager()
 const user = getUserManager()
@@ -110,9 +111,9 @@ Page({
           await loadData(app.textContentSafetyCheck,checkText,'内容合规检查')
         }
       }
-      app.emit('setCardExtraData', extraFields)
+      app.emit(CardEditExtraDataEvent, extraFields)
     }else{
-      app.emit('setCardExtraData', [])
+      app.emit(CardEditExtraDataEvent, [])
     }
     app.navigateBack()
   }

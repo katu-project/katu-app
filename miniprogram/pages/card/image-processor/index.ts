@@ -1,6 +1,7 @@
 import { loadData } from '@/utils/index'
 import { getCardManager } from '@/controller/card'
 import { getAppManager } from '@/controller/app'
+import { CardEditImageEvent } from '@/behaviors/event'
 const app = getAppManager()
 const cardManager = getCardManager()
 
@@ -46,7 +47,7 @@ Page({
       await app.knowContentCheck()
       await loadData(app.imageContentCheck,{imagePath:this.data.tmpImagePath},'内容合规检查')
     }
-    app.emit('setCardImage',this.data.tmpImagePath)
+    app.emit(CardEditImageEvent,this.data.tmpImagePath)
     app.navigateBack()
   },
 

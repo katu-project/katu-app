@@ -2,6 +2,8 @@ import { loadData } from '@/utils/index'
 import { getCardManager } from '@/controller/card'
 import { getUserManager } from '@/controller/user'
 import { getAppManager } from '@/controller/app'
+import { CardChangeEvent, CardDecryptEvent, CardDeleteEvent, CardHideEvent, CreateEventBehavior } from '@/behaviors/event'
+
 const app = getAppManager()
 const user = getUserManager()
 const cardManager = getCardManager()
@@ -45,6 +47,10 @@ Page({
     showHideCardData: false
   },
   
+  behaviors: [
+    CreateEventBehavior('detail')
+  ],
+
   onLoad(options) {
     if(options.id){
       this.id = options.id
@@ -52,16 +58,9 @@ Page({
     if(app.isMp){
       wx.hideShareMenu()
     }
-    this.removeAllEvent()
-    app.on('cardChange',this.onEventCardChange)
   },
 
   onUnload(){
-    this.removeAllEvent()
-  },
-
-  removeAllEvent(){
-    app.off('cardChange',this.onEventCardChange)
   },
 
   async onReady() {
@@ -76,13 +75,9 @@ Page({
     this.dataSyncCheck()
   },
 
-  loadEvent(action:'on'|'off'){
-    const onEventCardChange = (card)=>{
-      console.log('detail page: update card info:', card._id, card.title)
-      this.loadData({hideLoading: true, ignoreCache: true})
-    }
-
-    Reflect.apply(app[action], app, ['cardChange',onEventCardChange])
+  onEventCardChange(card){
+    console.log('detail page: update card info:', card._id, card.title)
+    this.loadData({hideLoading: true, ignoreCache: true})
   },
 
   async loadData(options?:{ hideLoading?: boolean, ignoreCache?: boolean, showText?:string }){
@@ -164,14 +159,9 @@ Page({
     })
   },
 
-  async onEventCardChange(card){
-    console.log('detail page: update card info:', card._id, card.title)
-    this.loadData({hideLoading: true, ignoreCache: true})
-  },
-
   async tapToHideCardData(){
     await cardManager.deleteCardImageCache(this.data.card)
-    app.emit('cardHide',this.id)
+    app.emit(CardHideEvent,this.id)
     this.loadData()
   },
 
@@ -179,7 +169,7 @@ Page({
     const state = !this.data.card.setLike
     loadData(cardManager.setLike,{id:this.id,state}).then(()=>{
       this.data.card.setLike = state
-      app.emit('cardChange', this.data.card)
+      app.emit(CardChangeEvent, this.data.card)
     })
   },
 
@@ -232,7 +222,7 @@ Page({
       'showHideCardData': !user.config?.general.autoShowContent
     }
     this.setData(setData)
-    app.emit('cardDecrypt', card)
+    app.emit(CardDecryptEvent, card)
   },
 
   async previewImage(idx=0){
@@ -262,7 +252,7 @@ Page({
     this.hideActionDialog()
     await app.showConfirm("卡片删除后不可恢复！")
     loadData(cardManager.deleteCard, this.data.card).then(()=>{
-      app.emit('cardDelete', this.data.card)
+      app.emit(CardDeleteEvent, this.data.card)
       app.navigateBack()
     })
   },

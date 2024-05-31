@@ -2,6 +2,7 @@ import { loadData } from '@/utils/index'
 import { getAppManager } from '@/controller/app'
 import { getCardManager } from '@/controller/card'
 import { getUserManager } from '@/controller/user'
+import { CreateEventBehavior } from '@/behaviors/event'
 
 const app = getAppManager()
 const user = getUserManager()
@@ -10,8 +11,13 @@ const cardManager = getCardManager()
 const AppDefaultTags = app.getCardConfig('defaultTags')
 
 Page({
-  where: {} as AnyObject,
+  where: {},
   originList: [] as AnyObject[],
+  
+  behaviors: [
+    CreateEventBehavior('list')
+  ],
+
   data: {
     key: '',
     tag: '',
@@ -33,14 +39,9 @@ Page({
         this.setData(setData)
       }
     }
-    this.subscribeEvents()
   },
 
   onUnload(){
-    app.off('cardDelete',this.onEventCardDelete)
-    app.off('cardChange',this.onEventCardChange)
-    app.off('cardDecrypt',this.onEventCardChange)
-    app.off('cardHide',this.onEventCardHide)
   },
 
   onReady() {
@@ -68,13 +69,6 @@ Page({
     })
   },
 
-  subscribeEvents(){
-    app.on('cardDelete',this.onEventCardDelete)
-    app.on('cardChange',this.onEventCardChange)
-    app.on('cardDecrypt',this.onEventCardChange)
-    app.on('cardHide',this.onEventCardHide)
-  },
-
   onEventCardDelete(card){
     const idx = this.data.list.findIndex(e=>e._id === card._id)
     if(idx>=0){
@@ -100,6 +94,7 @@ Page({
       if(originCard.setLike !== card.setLike){
         setData[`list[${idx}].setLike`] = card.setLike
       }
+      // 图片变动
       if(originCard.image[0].hash !== card.image[0].hash){
         setData[`list[${idx}].image`] = card.image
         setData[`list[${idx}]._url`] = app.getConst(card.encrypted ? 'DefaultShowLockImage' : 'DefaultShowImage')
@@ -107,6 +102,10 @@ Page({
       if(Object.keys(setData).length) this.setData(setData)
       this.loadCardImage(card, idx)
     }
+  },
+
+  onEventCardDecrypt(card){
+    return this.onEventCardChange(card)
   },
 
   onEventCardHide(id){
