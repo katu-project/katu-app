@@ -173,9 +173,8 @@ async function loadData<T extends AnyFunction>(
       title: loadingTitle,
       mask: true
     })
+    await sleep(300)
   }
-
-  await sleep(300)
 
   const timeoutCheck = new Promise(async (_,reject)=>{
     if(timeout > 0){
@@ -186,6 +185,14 @@ async function loadData<T extends AnyFunction>(
     }
   })
 
+  const hidenLoadingFunc = ()=>{
+    wx.hideLoading({
+      fail: (e)=>{
+        console.error('wx.hideLoading',e)
+      }
+    })
+  }
+
   return new Promise<Awaited<ReturnType<T>>>((resolve,reject)=>{
     Promise.race([
       pfunc(params),
@@ -193,13 +200,13 @@ async function loadData<T extends AnyFunction>(
     ])
     .then(async res=>{
       if(!hideLoading){
-        await wx.hideLoading()
+        hidenLoadingFunc()
       }
       return resolve(res as ReturnType<T>)
     })
     .catch(async error=>{
       if(!hideLoading){
-        await wx.hideLoading()
+        hidenLoadingFunc()
       }
       console.error(error)
       if(Object.hasOwnProperty ? Object.hasOwnProperty.call(error,'code'): error.code){ // 业务错误代码
