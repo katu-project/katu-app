@@ -91,7 +91,7 @@ Page({
     loadData(async ()=>{
       let msg = '未知二维码'
       if(resultJson.type === 'login'){
-        await app.api.qrCodelogin({
+        await app.invokeApi('qrCodelogin', {
           loginCode: resultJson.code
         })
         msg = '授权登录通过'

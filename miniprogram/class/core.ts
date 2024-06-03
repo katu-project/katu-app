@@ -4,11 +4,16 @@ import Config from '@/config/index'
 import { cache, file, crypto, checkTimeout, chooseLocalImage, scanQrcode } from "@/utils/index"
 import api from '@/api'
 
+
+type ApiType = typeof api
 type LocalCacheKeyType = keyof typeof Const.LOCAL_CACHE_KEYS
 
 export default class Core extends Base {
 
-  api = api
+  invokeApi<K extends keyof ApiType>(apiName: K, ...args:Parameters<ApiType[K]>){
+    console.debug('执行 API 请求: ', apiName, args)
+    return (api[apiName] as Function).call(null, ...args) as ReturnType<ApiType[K]>
+  }
 
   getConst<T extends keyof typeof Const>(key:T){
     return Const[key]
@@ -152,12 +157,12 @@ export default class Core extends Base {
       }
     }
     console.debug(`start download file:`, url)
-    await this.api.downloadFile({url, savePath})
+    await this.invokeApi('downloadFile', {url, savePath})
     return savePath
   }
 
   async uploadFile(filePath:string, type:UploadFileType) {
-    const uploadInfo = await this.api.getUploadInfo({ type })
-    return this.api.uploadFile(filePath, uploadInfo)
+    const uploadInfo = await this.invokeApi('getUploadInfo', { type })
+    return this.invokeApi('uploadFile', filePath, uploadInfo)
   }
 } 

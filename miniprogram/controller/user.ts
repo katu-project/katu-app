@@ -85,7 +85,7 @@ export default class User extends Controller {
   }
   
   async loadInfo(){
-    this._user = await this.api.getUser()
+    this._user = await this.invokeApi('getUser')
     await this.cacheAvatar()
   }
 
@@ -110,28 +110,28 @@ export default class User extends Controller {
   }
 
   async markDocRead(params){
-    return this.api.markRead(params)
+    return this.invokeApi('markRead', params)
   }
 
   async getQuotaLog(params){
-    return this.api.getUserQuotaLog(params)
+    return this.invokeApi('getUserQuotaLog', params)
   }
 
   async updateProfile(userInfo){
-    return this.api.updateUserProfile(userInfo)
+    return this.invokeApi('updateUserProfile', userInfo)
   }
 
   async getQuotaLogDetail(params){
-    return this.api.getUserQuotaLogDetail(params)
+    return this.invokeApi('getUserQuotaLogDetail', params)
   }
 
   async quotaExchange(data){
-    return this.api.quotaExchange(data)
+    return this.invokeApi('quotaExchange', data)
   }
 
   async applyConfig(configItem:{key:string,value:string|boolean}){
     try {
-      await this.api.updateUserConfig(configItem)
+      await this.invokeApi('updateUserConfig', configItem)
       return this.objectSetValue(this.user, configItem.key, configItem.value)
     } catch (error:any) {
       console.warn('applyConfig:',error.message)
@@ -141,24 +141,24 @@ export default class User extends Controller {
   }
 
   async updateQuota(transaction){
-    return this.api.updateUserQuota({
+    return this.invokeApi('updateUserQuota', {
       type: 'quota',
       transaction
     })
   }
 
   async bindTelNumber(data){
-    return this.api.bindTelNumber(data)
+    return this.invokeApi('bindTelNumber', data)
   }
 
   async removeBindTelNumber(data){
-    return this.api.removeBindTelNumber(data)
+    return this.invokeApi('removeBindTelNumber', data)
   }
 
   async getTags(){
     let cacheTags = await this.cache.getTags()
     if(!cacheTags) {
-      cacheTags = await this.api.getUserTag()
+      cacheTags = await this.invokeApi('getUserTag')
       await this.cache.setTags(cacheTags)
     }
     return cacheTags
@@ -169,7 +169,7 @@ export default class User extends Controller {
 
   // simple api proxy
   async deleteTag(_id: string){
-    return this.api.deleteTag({_id})
+    return this.invokeApi('deleteTag', {_id})
   }
 
   async createTag(tagName:string){
@@ -182,19 +182,19 @@ export default class User extends Controller {
       throw Error("内置标签中已经存在\n无需重复创建")
     }
 
-    return this.api.createTag(tagName)
+    return this.invokeApi('createTag', tagName)
   }
 
   async updateTag(tag: Pick<ICardTag,'color'|'_id'>){
-    return this.api.updateTag(tag)
+    return this.invokeApi('updateTag', tag)
   }
 
   async activeAccount(_:any){
-    return this.api.activeAccount({})
+    return this.invokeApi('activeAccount')
   }
 
   async deleteAccount(){
-    await this.api.removeAccount()
+    await this.invokeApi('removeAccount')
     return this.clearInfo()
   }
 

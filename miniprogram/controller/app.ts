@@ -125,7 +125,7 @@ class AppManager extends Controller {
   firstOpenTask(){
     if(this.isApp){
       // iOS app 首次安装后第一个网络请求会失败,所以先发送一个测试请求
-      this.api.appStatus().catch(e=>{
+      this.invokeApi('appStatus').catch(e=>{
         console.error('app hook req:',e)
       })
     }
@@ -154,7 +154,7 @@ class AppManager extends Controller {
   }
 
   async loginWithCode(code:string){
-    const token = await this.api.getTokenByCode(code)
+    const token = await this.invokeApi('getTokenByCode', code)
     if(!token) throw Error('登录错误，请使用其他方式登录或者联系客服')
     await this.cache.setLoginToken(token)
     await this.loadUser()
@@ -162,7 +162,7 @@ class AppManager extends Controller {
   }
 
   async loginWithEmail(options:{email:string, code:string, verifyId:string}){
-    const { token } = await this.api.activeAccountWithEmail(options)
+    const { token } = await this.invokeApi('activeAccountWithEmail', options)
     if(!token) throw Error('登录错误，请使用其他方式登录或者联系客服')
     await this.cache.setLoginToken(token)
     await this.loadUser()
@@ -170,17 +170,17 @@ class AppManager extends Controller {
   }
 
   async loginWithMp(){
-    await this.api.activeAccount()
+    await this.invokeApi('activeAccount')
     await this.loadUser()
     this.emit(LoginChangeEvent, true)
   }
 
   async bindOtherLoginByCode(code:string){
-    return this.api.bindOtherLogin(code)
+    return this.invokeApi('bindOtherLogin', code)
   }
 
   async unbindOtherLogin(type:string){
-    return this.api.unbindOtherLogin(type)
+    return this.invokeApi('unbindOtherLogin', type)
   }
 
   setBaseInfo(systemInfo){
@@ -230,7 +230,7 @@ class AppManager extends Controller {
       if(await this.globalTaskTimeoutCheck()){
         console.debug('开始检测是否有无效的卡片附加数据')
         try {
-          const cardIdxs = await this.api.getCardSummary('CardIdxs')
+          const cardIdxs = await this.invokeApi('getCardSummary', 'CardIdxs') as string[]
           const localExtraDataCache = await this.cache.getExtraDatas()
           const invalidIds = Object.keys(localExtraDataCache).filter(e=>!cardIdxs.includes(e))
           if(invalidIds.length){
@@ -246,7 +246,7 @@ class AppManager extends Controller {
       if(await this.globalTaskTimeoutCheck()){
         console.debug('开始检测是否有无效图片缓存数据')
         try {
-          const imageIds = await this.api.getCardSummary('ImageIds')
+          const imageIds = await this.invokeApi('getCardSummary', 'ImageIds') as string[]
           console.debug(`删除无效图片缓存数据：${imageIds.length} 条`)
           this.cache.deleteCardFile(imageIds)
         } catch (error) {
@@ -286,7 +286,7 @@ class AppManager extends Controller {
       console.log('首页数据缓存超时,进行数据同步检测')
     }
     const likeList = homeDataCache.data.likeList
-    const remoteLikeList = await this.api.getCardSummary('LikeCardIdxs')
+    const remoteLikeList = await this.invokeApi('getCardSummary', 'LikeCardIdxs')
     console.debug('checkLikeCardNeedSync', likeList.length, remoteLikeList.length)
     // todo: 现在只对数量检查，需要考虑数量相同id不同的情况
     if(remoteLikeList.length && remoteLikeList.length !== likeList.length) return true
@@ -372,7 +372,7 @@ class AppManager extends Controller {
         })
       }
     }
-    const resp = await this.api.setShareItem({
+    const resp = await this.invokeApi('setShareItem', {
       card: shareCard,
       scope,
       expiredTime,
@@ -409,7 +409,7 @@ class AppManager extends Controller {
       if(homeData) return homeData
     }
 
-    homeData = await this.api.getHomeData()
+    homeData = await this.invokeApi('getHomeData')
     await this.cache.setHomeCacheData(homeData)
     return homeData
   }
@@ -425,7 +425,7 @@ class AppManager extends Controller {
         return
       }
     }
-    const notice = await this.api.getHotNotice()
+    const notice = await this.invokeApi('getHotNotice')
     this.notice.resetNoticeFetchTime()
     return notice
   }
@@ -501,13 +501,13 @@ class AppManager extends Controller {
   }
 
   async getUserPrivacyNotice(_:any){
-    return this.api.getUserPrivacyInfo()
+    return this.invokeApi('getUserPrivacyInfo')
   }
 
   async getIapItems(){
     const iapItems:{key:string,label:string}[] = []
     try {
-      const items = await this.api.getIapItems()
+      const items = await this.invokeApi('getIapItems')
       items.map(e=>iapItems.push(e))
     } catch (error) {
       console.error('getIapItems:',error)
@@ -550,7 +550,7 @@ class AppManager extends Controller {
 
   //数据备份
   async exportCardData(){
-    return this.api.exportData({type: 'card'})
+    return this.invokeApi('exportData', {type: 'card'})
   }
 
   async deleteAccount(){
@@ -562,12 +562,12 @@ class AppManager extends Controller {
 
   async imageContentCheck({imagePath}){
     const hash = await this.getImageHash(imagePath, this.getConfig('contentCheckHash'))
-    const { needCheck, checkPass } = await this.api.getContentCheckInfo({hash})
+    const { needCheck, checkPass } = await this.invokeApi('getContentCheckInfo', {hash})
     if(needCheck){
       const url = await this.uploadTempFile(imagePath)
       for(let i=0;i<10;i++){
         if(i==9) throw Error("内容检测超时，请稍后重试")
-        const { checkEnd, checkPass } = await this.api.imageContentSafetyCheck({hash, url})
+        const { checkEnd, checkPass } = await this.invokeApi('imageContentSafetyCheck', {hash, url})
         if(checkEnd){
           if(checkPass){
             return
@@ -585,10 +585,10 @@ class AppManager extends Controller {
 
   async textContentSafetyCheck(text){
     const hash = this.crypto.getStringHash(text, this.getConfig('contentCheckHash'))
-    const { needCheck, checkPass } = await this.api.getContentCheckInfo({hash})
+    const { needCheck, checkPass } = await this.invokeApi('getContentCheckInfo', {hash})
     
     if(needCheck){
-      const { checkPass } = await this.api.textContentSafetyCheck({text})
+      const { checkPass } = await this.invokeApi('textContentSafetyCheck', {text})
       if(checkPass) return
     }else{
       if(checkPass) return
@@ -597,8 +597,8 @@ class AppManager extends Controller {
   }
 
   async getActiveInfo(){
-    const activeInfo = await this.api.getSysConfig('active')
-    const { content } = await this.api.getDoc({_id: activeInfo.id})
+    const activeInfo = await this.invokeApi('getSysConfig', 'active')
+    const { content } = await this.invokeApi('getDoc', {_id: activeInfo.id})
     return {
       activeInfo,
       content
@@ -618,7 +618,7 @@ class AppManager extends Controller {
 
   // simple api proxy
   async createApiToken(){
-    return this.api.getApiToken()
+    return this.invokeApi('getApiToken')
   }
 
   async sendSmsVerifyCode(tel:string){
@@ -630,27 +630,27 @@ class AppManager extends Controller {
   }
 
   async getNotices(_:any){
-    return this.api.getNotices()
+    return this.invokeApi('getNotices')
   }
 
   async getHotDoc(){
-    return this.api.getHotDoc()
+    return this.invokeApi('getHotDoc')
   }
 
   async getChangeLog(){
-    return this.api.getChangeLog()
+    return this.invokeApi('getChangeLog')
   }
 
   async getDoc(params){
-    return this.api.getDoc(params)
+    return this.invokeApi('getDoc', params)
   }
 
   async getCateDoc(params){
-    return this.api.getCateDoc(params)
+    return this.invokeApi('getCateDoc', params)
   }
 
   async getShareItem(params){
-    return this.api.getShareItem(params)
+    return this.invokeApi('getShareItem', params)
   }
 
   // 弹窗提示

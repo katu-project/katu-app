@@ -194,7 +194,7 @@ export function createRequest(config:IRequestConfig){
   }
 
   return {
-    request: <T,K extends IAnyObject = IAnyObject>(url:string,data?:K, options?:AnyObject) => request<T>(url,data||{},requestor, options),
+    request: <R = void,P extends IAnyObject = IAnyObject>(url:string, data?:P, options?:AnyObject) => request<R>(url,data||{},requestor, options),
     upload: (url:string, options):Promise<string> => uploader({url, options}),
     download: (url:string, options):Promise<void> => downloader({url, options})
   }

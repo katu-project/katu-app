@@ -85,7 +85,7 @@ class CardManager extends Controller{
       cardModel.image =  await this._updateNotEncryptImage(card.image)
     }
 
-    return this.api.saveCard(cardModel)
+    return this.invokeApi('saveCard', cardModel)
   }
 
   async add({card, key}){
@@ -109,7 +109,7 @@ class CardManager extends Controller{
       cardModel.info = []
     }
 
-    return this.api.saveCard(cardModel)
+    return this.invokeApi('saveCard', cardModel)
   }
 
   _createCardDefaultData(card){
@@ -173,7 +173,7 @@ class CardManager extends Controller{
     }
 
     if(!card){
-      card = await this.api.getCard({_id:id})
+      card = await this.invokeApi('getCard', {_id:id})
       if(!card) throw Error("卡片不存在")
       await this.cache.setCard(card)
     }
@@ -229,7 +229,7 @@ class CardManager extends Controller{
   async deleteCard(card: Pick<ICard,'_id'|'image'>){
     await this.cache.deleteCard(card._id)
     await this.cache.deleteCardImage(card)
-    return this.api.deleteCard({_id: card._id})
+    return this.invokeApi('deleteCard', {_id: card._id})
   }
 
   async deleteCardImageCache(card: Pick<ICard,'_id'|'image'>){
@@ -237,17 +237,17 @@ class CardManager extends Controller{
   }
 
   async setLike(params){
-    return this.api.setCardLike(params)
+    return this.invokeApi('setCardLike', params)
   }
 
   async syncCheck(id){
     const cacheCard = await this.cache.getCard(id)
-    const remoteCard = await this.api.getCard({_id:id}).catch(console.log)
+    const remoteCard = await this.invokeApi('getCard', {_id:id}).catch(console.log)
     return JSON.stringify(cacheCard) === JSON.stringify(remoteCard)
   }
 
   async getList(params){
-    const list = await this.api.getCardList(params)
+    const list = await this.invokeApi('getCardList', params)
     return list.map(card=>{
       if(card.encrypted){
         card._url = this.getConst('DefaultShowLockImage')
@@ -261,7 +261,7 @@ class CardManager extends Controller{
   async parseCardImageByRemoteApi(imagePath){
     await this.checkImageType(imagePath)
     const fileID = await this.uploadTempFile(imagePath)
-    const {fileID: fileUrl} = await this.api.captureCard(fileID)
+    const {fileID: fileUrl} = await this.invokeApi('captureCard', fileID)
     return this.downloadImage({url: fileUrl})
   }
 

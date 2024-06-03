@@ -24,7 +24,7 @@ class ResetKeyManager extends KeyManager {
   }
 
   save(keyPack){
-    return this.api.setRecoveryKey(keyPack)
+    return this.invokeApi('setRecoveryKey', keyPack)
   }
 
   async fetchKeyFromResetKey(rk){
@@ -54,7 +54,7 @@ class MiniKeyManager extends KeyManager {
     const keyId = await this.crypto.randomHex(16)
     const miniKeySaveDataPath = await this.getMiniKeyPath(keyId)
     await file.writeFile(miniKeySaveDataPath, miniKeySaveData)
-    return this.api.setUserMiniKeyInfo({
+    return this.invokeApi('setUserMiniKeyInfo', {
       configItem: 'useMiniKey',
       syncId: keyId,
       value: true
@@ -63,14 +63,14 @@ class MiniKeyManager extends KeyManager {
 
   async disable(){
     await this.cache.deleteMiniKey()
-    return this.api.setUserMiniKeyInfo({
+    return this.invokeApi('setUserMiniKeyInfo', {
       configItem: 'useMiniKey',
       value: false
     })
   }
 
   async disableSync(){
-    return this.api.setUserMiniKeyInfo({
+    return this.invokeApi('setUserMiniKeyInfo', {
       configItem: 'useSyncMiniKey',
       value: false
     })
@@ -86,7 +86,7 @@ class MiniKeyManager extends KeyManager {
     }
     const miniKeyJsonString = await file.readFile<string>(miniKeyFilePath)
     const miniKeyEncryptPack = await this.crypto.encryptString(miniKeyJsonString, masterKey)
-    return this.api.setUserMiniKeyInfo({
+    return this.invokeApi('setUserMiniKeyInfo', {
       configItem: 'useSyncMiniKey',
       value: true,
       miniKeyPack: {
@@ -140,7 +140,7 @@ class MasterKeyManager extends KeyManager{
 
   async create(key: string){
     const masterKeyPack = await this.crypto.createCommonKeyPack(key)
-    return this.api.setMasterKeyInfo(masterKeyPack)
+    return this.invokeApi('setMasterKeyInfo', masterKeyPack)
   }
 
   async update({key, newKey, originKey}:{key?:string, newKey:string, originKey?:string}){
@@ -152,7 +152,7 @@ class MasterKeyManager extends KeyManager{
     // 重新生成新的主密码包, 更新时使用最新的 ccv
     const masterKeyPack = await this.crypto.createCommonKeyPack(newKey, originKey)
     // 更新主密码包
-    return this.api.setMasterKeyInfo(masterKeyPack)
+    return this.invokeApi('setMasterKeyInfo', masterKeyPack)
   }
 
   async load(){
