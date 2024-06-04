@@ -140,7 +140,6 @@ class AppManager extends Controller {
     try {
       await this.user.init()
     } catch (error:any) {
-      console.error('app.loadUser',error)
       if(this.isApp && error.code === 401){
         this.logout()
       }

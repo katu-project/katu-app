@@ -208,7 +208,7 @@ async function loadData<T extends AnyFunction>(
       if(!hideLoading){
         hidenLoadingFunc()
       }
-      console.error(error)
+      console.error('loadData', func?.name||'No Name', params||'No Params', error)
       if(Object.hasOwnProperty ? Object.hasOwnProperty.call(error,'code'): error.code){ // 业务错误代码
         if(error.code === 1){ // 普通业务错误代码
           wx.showModal({
@@ -224,7 +224,6 @@ async function loadData<T extends AnyFunction>(
           })
           if(returnFailed) return reject(error)
         }else{ // 特殊业务错误代码
-          console.warn(error, func)
           const showContent = `错误代码: ${error.code}`
           const showModalOption: WechatMiniprogram.ShowModalOption = {
             title: `服务错误`,
@@ -269,7 +268,7 @@ async function loadData<T extends AnyFunction>(
           // 600是 api 底层请求错误
           if(error.code.toString().startsWith('6')){
             showModalOption.title = '网络环境异常'
-            showModalOption.content = '请检查应用网络设置后重试'
+            showModalOption.content = error?.message || '请检查应用网络设置后重试'
             showModalOption.showCancel = true
             showModalOption.confirmText = '查看设置'
             showModalOption.success = ({confirm})=>{

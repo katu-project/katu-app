@@ -1,8 +1,15 @@
-import { toPromise } from './base'
+import { sleep, toPromise } from './base'
 import { getCache } from './cache'
 import file from './file'
 
-async function request<T>(action: string, data:any, requestor, options): Promise<T>{
+const networkTimeout = new Promise(async (_,reject)=>{
+  await sleep(9000)
+  reject({
+    message: '请求超时，请检查网络'
+  })
+})
+
+async function request(action:string, data:any, requestor, options){
   const error = {
     code: 0,
     message: ''
@@ -11,11 +18,14 @@ async function request<T>(action: string, data:any, requestor, options): Promise
   let resp
 
   try {
-    resp = await requestor(action, data, options)
+    resp = await Promise.race([
+      requestor(action, data, options),
+      networkTimeout
+    ])
   } catch (err:any) {
     error.message = err.message || err.errMsg || err.toString()
     error.code = 600 // 云函数报错
-    console.error(action,data,error)
+    console.error('网络请求错误：',action,data,error)
     throw error
   }
 
@@ -194,7 +204,7 @@ export function createRequest(config:IRequestConfig){
   }
 
   return {
-    request: <R = void,P extends IAnyObject = IAnyObject>(url:string, data?:P, options?:AnyObject) => request<R>(url,data||{},requestor, options),
+    request: <R = void>(url:string, data?, options?):Promise<R> => request(url,data||{},requestor, options),
     upload: (url:string, options):Promise<string> => uploader({url, options}),
     download: (url:string, options):Promise<void> => downloader({url, options})
   }
