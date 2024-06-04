@@ -43,9 +43,9 @@ type CateItem = {
 
 interface ICardSummary {
   CateList: CateItem[]
-  CardIdxs: string[]
+  CardIds: string[]
   ImageIds: string[]
-  LikeCardIdxs: string[]
+  LikeCardIds: string[]
 }
 
 interface IHomeData {

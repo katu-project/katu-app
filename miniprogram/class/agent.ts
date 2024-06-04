@@ -38,4 +38,20 @@ export default abstract class Agent extends Core {
   getUserAvatarDir(){
     return this.getRootPath(`avatar`)
   }
+
+  getLikeCardIds(){
+    return this.invokeApi('getCardSummary', 'LikeCardIds') as Promise<string[]>
+  }
+
+  getCardIds(){
+    return this.invokeApi('getCardSummary', 'CardIds') as Promise<string[]>
+  }
+
+  getImageIds(){
+    return this.invokeApi('getCardSummary', 'ImageIds') as Promise<string[]>
+  }
+
+  getCateList(){
+    return this.invokeApi('getCardSummary', 'CateList') as Promise<CateItem[]>
+  }
 } 

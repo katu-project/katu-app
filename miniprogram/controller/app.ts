@@ -230,9 +230,9 @@ class AppManager extends Controller {
       if(await this.globalTaskTimeoutCheck()){
         console.debug('开始检测是否有无效的卡片附加数据')
         try {
-          const cardIdxs = await this.invokeApi('getCardSummary', 'CardIdxs') as string[]
+          const cardIds = await this.getCardIds()
           const localExtraDataCache = await this.cache.getExtraDatas()
-          const invalidIds = Object.keys(localExtraDataCache).filter(e=>!cardIdxs.includes(e))
+          const invalidIds = Object.keys(localExtraDataCache).filter(e=>!cardIds.includes(e))
           if(invalidIds.length){
             console.debug(`删除无效附加数据本地缓存：${invalidIds.length} 条`)
             await this.cache.deleteCardExtraData(invalidIds)
@@ -246,7 +246,7 @@ class AppManager extends Controller {
       if(await this.globalTaskTimeoutCheck()){
         console.debug('开始检测是否有无效图片缓存数据')
         try {
-          const imageIds = await this.invokeApi('getCardSummary', 'ImageIds') as string[]
+          const imageIds = await this.getImageIds()
           console.debug(`删除无效图片缓存数据：${imageIds.length} 条`)
           this.cache.deleteCardFile(imageIds)
         } catch (error) {
@@ -286,7 +286,7 @@ class AppManager extends Controller {
       console.log('首页数据缓存超时,进行数据同步检测')
     }
     const likeList = homeDataCache.data.likeList
-    const remoteLikeList = await this.invokeApi('getCardSummary', 'LikeCardIdxs')
+    const remoteLikeList = await this.getLikeCardIds()
     console.debug('checkLikeCardNeedSync', likeList.length, remoteLikeList.length)
     // todo: 现在只对数量检查，需要考虑数量相同id不同的情况
     if(remoteLikeList.length && remoteLikeList.length !== likeList.length) return true

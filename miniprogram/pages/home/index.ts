@@ -279,7 +279,7 @@ Page({
       })
     }else{ // 卡片新增，内容更新，无法判断tag变化，直接请求对应接口获取数据
       try {
-        setData['cateList'] = await app.invokeApi('getCardSummary', 'CateList')
+        setData['cateList'] = await app.getCateList()
       } catch (error) {
         console.error('renderCateList getHomeData:', error)
       }
