@@ -394,22 +394,19 @@ class AppManager extends Controller {
   }
 
   async getHomeData({skipCache, cacheOnly}:{skipCache?:boolean, cacheOnly?:boolean}):Promise<IHomeData>{
-    let homeData:IHomeData|undefined
-
     if(!skipCache){
       const homeDataCache = await this.cache.getHomeData()
-      homeData = homeDataCache?.data
+      const homeData = homeDataCache?.data
       if(cacheOnly) {
         return homeData || {
           likeList: [],
           cateList: []
         }
       }
-
       if(homeData) return homeData
     }
 
-    homeData = await this.invokeApi('getHomeData')
+    const homeData = await this.invokeApi('getHomeData')
     await this.cache.setHomeCacheData(homeData)
     return homeData
   }

@@ -10,9 +10,10 @@ type LocalCacheKeyType = keyof typeof Const.LOCAL_CACHE_KEYS
 
 export default class Core extends Base {
 
-  invokeApi<K extends keyof ApiType>(apiName: K, ...args:Parameters<ApiType[K]>){
+  async invokeApi<K extends keyof ApiType, R = ReturnType<ApiType[K]>>(apiName: K, ...args:Parameters<ApiType[K]>):Promise<Awaited<R>>{
     console.debug('执行 API 请求: ', apiName, args)
-    return (api[apiName] as Function).call(null, ...args) as ReturnType<ApiType[K]>
+    // @ts-ignore 类型识别有问题，先跳过
+    return api[apiName](...args)
   }
 
   getConst<T extends keyof typeof Const>(key:T){

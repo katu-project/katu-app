@@ -156,12 +156,12 @@ export default class User extends Controller {
   }
 
   async getTags(){
-    let cacheTags = await this.cache.getTags()
-    if(!cacheTags) {
-      cacheTags = await this.invokeApi('getUserTag')
-      await this.cache.setTags(cacheTags)
-    }
-    return cacheTags
+    const tagsCache = await this.cache.getTags()
+    if(tagsCache) return tagsCache
+
+    const fetchRemoteTags = await this.invokeApi('getUserTag')
+    await this.cache.setTags(fetchRemoteTags)
+    return fetchRemoteTags
   }
 
   // ui action 
