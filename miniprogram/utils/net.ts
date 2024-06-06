@@ -2,19 +2,19 @@ import { sleep, toPromise } from './base'
 import { getCache } from './cache'
 import file from './file'
 
-const networkTimeout = new Promise(async (_,reject)=>{
-  await sleep(9000)
-  reject({
-    message: '请求超时，请检查网络'
-  })
-})
-
 async function request(action:string, data:any, requestor, options){
   const error = {
     code: 0,
     message: ''
   }
 
+  const networkTimeout = new Promise(async (_,reject)=>{
+    await sleep(9000)
+    reject({
+      message: '请求超时，请检查网络'
+    })
+  })
+  
   let resp
 
   try {
