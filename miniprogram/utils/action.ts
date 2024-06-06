@@ -131,7 +131,8 @@ type LoadDataOptions = {
     text: string
     action: ()=>any
   }
-  timeout: number
+  timeout: number,
+  finally: ()=>void
 }
 
 async function loadData<T extends AnyFunction>(
@@ -145,7 +146,8 @@ async function loadData<T extends AnyFunction>(
       hideLoading = false,
       failedContent,
       timeout = 10000,
-      failedNoticeCancel: LoadDataOptions['failedNoticeCancel'] | undefined
+      failedNoticeCancel: LoadDataOptions['failedNoticeCancel'] | undefined,
+      finallyAction: AnyFunction | undefined
   if(options){
     if(typeof options === 'string'){
       loadingTitle = options
@@ -156,6 +158,7 @@ async function loadData<T extends AnyFunction>(
       failedContent = options.failedContent
       timeout = options.timeout || 10000
       failedNoticeCancel = options.failedNoticeCancel
+      finallyAction = options.finally
     }
   }
   let pfunc: (p?:any)=>unknown = ()=> sleep(2000)
@@ -304,6 +307,9 @@ async function loadData<T extends AnyFunction>(
           })
         }
       } 
+    })
+    .finally(()=>{
+      finallyAction && finallyAction()
     })
   })
 }
