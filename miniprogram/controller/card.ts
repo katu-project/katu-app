@@ -240,10 +240,11 @@ class CardManager extends Controller{
     return this.invokeApi('setCardLike', params)
   }
 
-  async syncCheck(id){
+  async syncCheck(id:string){
     const cacheCard = await this.cache.getCard(id)
-    const remoteCard = await this.invokeApi('getCard', {_id:id}).catch(console.log)
-    return JSON.stringify(cacheCard) === JSON.stringify(remoteCard)
+    const remoteCard = await this.invokeApi('getCard', {_id:id})
+    // todo: 优化数据变动检测
+    return JSON.stringify(cacheCard) !== JSON.stringify(remoteCard)
   }
 
   async getList(params){

@@ -148,14 +148,20 @@ Page({
   },
 
   async dataSyncCheck(){
-    if(!await cardManager.syncCheck(this.id)){
-      const { confirm } = await app.showChoose('检查到云端数据有变动\n是否同步最新数据？')
-      if(confirm){
-        await this.loadData({ ignoreCache:true , showText:'同步最新数据'})
+    loadData(cardManager.syncCheck, this.id, {
+      hideLoading:true,
+      finally: ()=>{
+        this.setData({
+          syncCheck: false
+        })
       }
-    }
-    this.setData({
-      syncCheck: false
+    }).then(async needSync=>{
+      if(needSync){
+        const { confirm } = await app.showChoose('检查到云端数据有变动\n是否同步最新数据？')
+        if(confirm){
+          await this.loadData({ ignoreCache:true , showText:'同步最新数据'})
+        }
+      }
     })
   },
 
