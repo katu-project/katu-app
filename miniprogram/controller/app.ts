@@ -227,7 +227,7 @@ class AppManager extends Controller {
     }
     const clearExtraDataCache = async ()=> {
       if(await this.globalTaskTimeoutCheck()){
-        console.debug('开始检测是否有无效的卡片附加数据')
+        console.debug('开始检测卡片无效附加数据')
         try {
           const cardIds = await this.getCardIds()
           const localExtraDataCache = await this.cache.getExtraDatas()
@@ -243,7 +243,7 @@ class AppManager extends Controller {
     }
     const clearCardImageCache = async ()=> {
       if(await this.globalTaskTimeoutCheck()){
-        console.debug('开始检测是否有无效图片缓存数据')
+        console.debug('开始检测图片无效缓存数据')
         try {
           const imageIds = await this.getImageIds()
           console.debug(`删除无效图片缓存数据：${imageIds.length} 条`)
