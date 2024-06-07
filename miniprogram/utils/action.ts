@@ -135,6 +135,14 @@ type LoadDataOptions = {
   finally: ()=>void
 }
 
+/**
+ * 注意：
+ * 1. 传进来的 finallyAction 只保证在内部 Promise.race 后会执行，与外面 then 里的异步函数无顺序关联
+ * @param func 
+ * @param params 
+ * @param options 
+ * @returns 
+ */
 async function loadData<T extends AnyFunction>(
   func?: T,
   params?: Parameters<T>[0],
@@ -201,13 +209,13 @@ async function loadData<T extends AnyFunction>(
       pfunc(params),
       timeoutCheck
     ])
-    .then(async res=>{
+    .then(res=>{
       if(!hideLoading){
         hidenLoadingFunc()
       }
-      return resolve(res as ReturnType<T>)
+      resolve(res as ReturnType<T>)
     })
-    .catch(async error=>{
+    .catch(error=>{
       if(!hideLoading){
         hidenLoadingFunc()
       }
