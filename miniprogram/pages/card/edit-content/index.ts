@@ -1,4 +1,3 @@
-import { CardEditTitleEvent } from '@/behaviors/event'
 import { getAppManager } from '@/controller/app'
 const app = getAppManager()
 
@@ -27,7 +26,7 @@ Page({
   },
 
   tapToSetContent(){
-    app.emit(CardEditTitleEvent,this.data.content.trim())
+    app.publishCardEditTitleEvent(this.data.content.trim())
     app.navigateBack()
   }
 })

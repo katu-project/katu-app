@@ -3,7 +3,6 @@ import { showChoose, setClipboardData, sleep, file, getPrivacySetting, showNotic
 import { getCardManager } from './card'
 import { getUserManager } from './user'
 import { getMiniKeyManager, getMasterKeyManager, getResetKeyManager } from './key'
-import { AppleOrderPayCancelEvent, AppleOrderPayDoneEvent, CacheDeleteEvent, LoginChangeEvent, MasterKeyCacheEvent, MasterKeyRemoveEvent, TagChangeEvent } from '@/behaviors/event'
 
 class AppManager extends Controller {
   AppInfo = wx.getAccountInfoSync()
@@ -92,10 +91,10 @@ class AppManager extends Controller {
           console.debug('支付状态变动:', transaction.payment.applicationUsername, transaction.transactionIdentifier || transaction.tempTransactionIdentifier, transaction.transactionState)
           switch (transaction.transactionState) {
             case 'SKPaymentTransactionStatePurchased':
-              this.emit(AppleOrderPayDoneEvent, transaction)
+              this.publishAppleOrderPayDoneEvent(transaction)
               break;
             case 'SKPaymentTransactionStateFailed':
-              this.emit(AppleOrderPayCancelEvent)
+              this.publishAppleOrderPayCancelEvent()
               break
             default:
               break;
@@ -157,7 +156,7 @@ class AppManager extends Controller {
     if(!token) throw Error('登录错误，请使用其他方式登录或者联系客服')
     await this.cache.setLoginToken(token)
     await this.loadUser()
-    this.emit(LoginChangeEvent, true)
+    this.publishLoginChangeEvent(true)
   }
 
   async loginWithEmail(options:{email:string, code:string, verifyId:string}){
@@ -165,13 +164,13 @@ class AppManager extends Controller {
     if(!token) throw Error('登录错误，请使用其他方式登录或者联系客服')
     await this.cache.setLoginToken(token)
     await this.loadUser()
-    this.emit(LoginChangeEvent, true)
+    this.publishLoginChangeEvent(true)
   }
 
   async loginWithMp(){
     await this.invokeApi('activeAccount')
     await this.loadUser()
-    this.emit(LoginChangeEvent, true)
+    this.publishLoginChangeEvent(true)
   }
 
   async bindOtherLoginByCode(code:string){
@@ -188,8 +187,8 @@ class AppManager extends Controller {
   }
 
   loadGlobalEvents(){
-    this.on(MasterKeyCacheEvent, this.masterKeyManager.setCache)
-    this.on(MasterKeyRemoveEvent, this.masterKeyManager.clear)
+    this.subscribeMasterKeyCacheEvent(this.masterKeyManager.setCache)
+    this.subscribeMasterKeyRemoveEvent(this.masterKeyManager.clear)
     
     wx.onAppHide(res=>{
       const globalState = getApp().globalData.state
@@ -208,11 +207,11 @@ class AppManager extends Controller {
 
       if(this.user.rememberPassword){
         console.log('缓存主密码');
-        this.emit(MasterKeyCacheEvent)
+        this.publishMasterKeyCacheEvent()
       }else{
         if(this.user.config?.security.lockOnExit){
           console.log('退出并清除主密码');
-          this.emit(MasterKeyRemoveEvent)
+          this.publishMasterKeyRemoveEvent()
         }
       }
     })
@@ -517,7 +516,7 @@ class AppManager extends Controller {
 
   async clearUserTagsCache(){
     await this.cache.deleteTags()
-    this.emit(TagChangeEvent)
+    this.publishTagChangeEvent()
   }
 
   //设置页开始
@@ -526,7 +525,7 @@ class AppManager extends Controller {
     this.deleteHomeDataCache()
     this.masterKeyManager.clear()
     this.user.clearInfo()
-    this.emit(LoginChangeEvent, false)
+    this.publishLoginChangeEvent(false)
   }
 
   //数据
@@ -541,7 +540,7 @@ class AppManager extends Controller {
     }
     await this.cache.deleteAllCard()
     await this.cache.deleteHomeData()
-    this.emit(CacheDeleteEvent)
+    this.publishCacheDeleteEvent()
   }
 
   //数据备份

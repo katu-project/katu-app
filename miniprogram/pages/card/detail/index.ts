@@ -2,7 +2,7 @@ import { loadData } from '@/utils/index'
 import { getCardManager } from '@/controller/card'
 import { getUserManager } from '@/controller/user'
 import { getAppManager } from '@/controller/app'
-import { CardChangeEvent, CardDecryptEvent, CardDeleteEvent, CardHideEvent, CreateEventBehavior } from '@/behaviors/event'
+import { CreateEventBehavior } from '@/behaviors/event'
 
 const app = getAppManager()
 const user = getUserManager()
@@ -167,7 +167,7 @@ Page({
 
   async tapToHideCardData(){
     await cardManager.deleteCardImageCache(this.data.card)
-    app.emit(CardHideEvent,this.id)
+    app.publishCardHideEvent(this.id)
     this.loadData()
   },
 
@@ -175,7 +175,7 @@ Page({
     const state = !this.data.card.setLike
     loadData(cardManager.setLike,{id:this.id,state}).then(()=>{
       this.data.card.setLike = state
-      app.emit(CardChangeEvent, this.data.card)
+      app.publishCardChangeEvent(this.data.card)
     })
   },
 
@@ -228,7 +228,7 @@ Page({
       'showHideCardData': !user.config?.general.autoShowContent
     }
     this.setData(setData)
-    app.emit(CardDecryptEvent, card)
+    app.publishCardDecryptEvent(card)
   },
 
   async previewImage(idx=0){
@@ -258,7 +258,7 @@ Page({
     this.hideActionDialog()
     await app.showConfirm("卡片删除后不可恢复！")
     loadData(cardManager.deleteCard, this.data.card).then(()=>{
-      app.emit(CardDeleteEvent, this.data.card)
+      app.publishCardDeleteEvent(this.data.card)
       app.navigateBack()
     })
   },

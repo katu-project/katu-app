@@ -1,4 +1,22 @@
 import Core from '@/class/core'
+import { 
+  AppleOrderPayCancelEvent, 
+  AppleOrderPayDoneEvent, 
+  CacheDeleteEvent, 
+  LoginChangeEvent, 
+  MasterKeyCacheEvent, 
+  MasterKeyRemoveEvent, 
+  TagChangeEvent,
+  CardHideEvent,
+  CardChangeEvent,
+  CardDecryptEvent,
+  CardDeleteEvent,
+  CardEditTitleEvent,
+  CardEditExtraDataEvent,
+  CardEditImageEvent,
+  UserProfileChangeEvent
+} from '@/behaviors/event'
+
 export default abstract class Agent extends Core {
 
   abstract navToDocPage(docId:string): void
@@ -54,4 +72,76 @@ export default abstract class Agent extends Core {
   getCateList(){
     return this.invokeApi('getCardSummary', 'CateList') as Promise<CateItem[]>
   }
+
+  // event agent 
+
+  publishAppleOrderPayDoneEvent(data){
+    this.emit(AppleOrderPayDoneEvent, data)
+  }
+
+  publishAppleOrderPayCancelEvent(){
+    this.emit(AppleOrderPayCancelEvent)
+  }
+
+  publishLoginChangeEvent(data){
+    this.emit(LoginChangeEvent, data)
+  }
+
+  subscribeMasterKeyCacheEvent(handler){
+    this.on(MasterKeyCacheEvent, handler)
+  }
+
+  publishMasterKeyCacheEvent(){
+    this.emit(MasterKeyCacheEvent)
+  }
+
+  subscribeMasterKeyRemoveEvent(handler){
+    this.on(MasterKeyRemoveEvent, handler)
+  }
+
+  publishMasterKeyRemoveEvent(){
+    this.emit(MasterKeyRemoveEvent)
+  }
+
+  publishTagChangeEvent(){
+    this.emit(TagChangeEvent)
+  }
+
+  publishCacheDeleteEvent(){
+    this.emit(CacheDeleteEvent)
+  }
+
+  publishCardHideEvent(data){
+    this.emit(CardHideEvent, data)
+  }
+
+  publishCardChangeEvent(data){
+    this.emit(CardChangeEvent, data)
+  }
+
+  publishCardDecryptEvent(data){
+    this.emit(CardDecryptEvent, data)
+  }
+
+  publishCardDeleteEvent(data){
+    this.emit(CardDeleteEvent, data)
+  }
+
+  publishCardEditTitleEvent(data){
+    this.emit(CardEditTitleEvent, data)
+  }
+  
+  publishCardEditExtraDataEvent(data){
+    this.emit(CardEditExtraDataEvent, data)
+  }
+  
+  publishCardEditImageEvent(data){
+    this.emit(CardEditImageEvent, data)
+  }
+
+  publishUserProfileChangeEvent(){
+    this.emit(UserProfileChangeEvent)
+  }
+
+  // event agent end
 } 

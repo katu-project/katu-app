@@ -2,7 +2,7 @@ import { loadData } from '@/utils/index'
 import { getCardManager } from '@/controller/card'
 import { getAppManager } from '@/controller/app'
 import { getUserManager } from '@/controller/user'
-import { CardChangeEvent, CreateEventBehavior } from '@/behaviors/event'
+import { CreateEventBehavior } from '@/behaviors/event'
 
 const app = getAppManager()
 const cardManager = getCardManager()
@@ -209,7 +209,7 @@ Page({
   async saveDone(card){ 
     console.debug(`提前缓存${this.data.edit?'修改':'新增'}卡片`)
     cardManager.cacheCard(card, this.data.card as ICard).then(()=>{
-      app.emit(CardChangeEvent,card)
+      app.publishCardChangeEvent(card)
     })
     await app.showNotice('卡片数据已保存')
     app.navigateBack()
