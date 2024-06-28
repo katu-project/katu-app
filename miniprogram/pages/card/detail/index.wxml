@@ -91,7 +91,7 @@
   <view class="action-dialog cu-dialog">
     <view class="padding">
       <view catchtap="tapToEditCard" class="item text-lg solids-bottom">修改</view>
-      <view catchtap="tapToShowShareDialog" class="item text-lg solids-bottom">分享</view>
+      <view hidden="{{disableShareAction}}" catchtap="tapToShowShareDialog" class="item text-lg solids-bottom">分享</view>
       <view catchtap="tapToDeleteCard" class="item text-lg solids-bottom text-red">删除</view>
       <view catchtap="tapToHideActionDialog"  data-close="true" class="item text-lg text-grey">取消</view>
     </view>

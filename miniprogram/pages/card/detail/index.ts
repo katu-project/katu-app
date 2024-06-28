@@ -44,7 +44,8 @@ Page({
     editable: true,
     shareable: true,
     syncCheck: true,
-    showHideCardData: false
+    showHideCardData: false,
+    disableShareAction: true
   },
   
   behaviors: [
@@ -57,6 +58,10 @@ Page({
     }
     if(app.isMp){
       wx.hideShareMenu()
+    }else{
+      this.setData({
+        disableShareAction: false
+      })
     }
   },
 
