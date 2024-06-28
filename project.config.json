@@ -59,8 +59,5 @@
     "tabSize": 2
   },
   "description": "卡兔APP小程序源码",
-  "projectArchitecture": "multiPlatform",
-  "simulatorPluginLibVersion": {
-    "wxext14566970e7e9f62": "3.0.2-14"
-  }
+  "projectArchitecture": "multiPlatform"
 }
