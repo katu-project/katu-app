@@ -187,11 +187,12 @@ async function loadData<T extends AnyFunction>(
     await sleep(300)
   }
 
-  const timeoutCheck = new Promise(async (_,reject)=>{
+  const timeoutCheck = new Promise((_,reject)=>{
     if(timeout > 0){
-      await sleep(timeout)
-      reject({
-        message: '服务超时，请稍后再试'
+      sleep(timeout).then(()=>{
+        reject({
+          message: '服务超时，请稍后再试'
+        })
       })
     }
   })
