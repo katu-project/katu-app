@@ -129,21 +129,3 @@
     </view>
   </scroll-view>
 </template>
-
-<view class="cu-modal {{showPrivacy?'show':''}}">
-  <view class="cu-dialog bg-white" wx:if="{{showPrivacy}}" style="width: 75vw;">
-    <view class="cu-bar justify-end">
-      <view class="text-center" style="flex:1">{{privacy.title}}</view>
-    </view>
-    <view class="padding-tb-sm padding-lr-sm margin-lr text-left solids-top solids">
-      <view style="min-height: 30vh;overflow-y: scroll;" class="flex-col">
-        <rich-text style="flex:1" nodes="{{privacy.content}}"></rich-text>
-        <text class="text-right padding-top">{{privacy.updateTime}}</text>
-      </view>
-    </view>
-    <view class="action flex-col justify-center">
-      <button class="cu-btn padding-sm margin-sm bg-grey" catch:tap="tapToOpenUserPrivacy">点击查看协议</button>
-      <button class="cu-btn padding-sm margin-bottom bg-cyan" id="agree-btn" disabled="{{!clickOpenUserPrivacy}}" open-type="agreePrivacyAuthorization" bindagreeprivacyauthorization="handleAgreePrivacyAuthorization">同意</button>
-    </view>
-  </view>
-</view>

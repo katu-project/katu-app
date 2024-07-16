@@ -1,5 +1,5 @@
 import Controller from '@/class/controller'
-import { showChoose, setClipboardData, sleep, file, getPrivacySetting, showNotice, hasWechatInstall } from '@/utils/index'
+import { showChoose, setClipboardData, sleep, file, showNotice, hasWechatInstall } from '@/utils/index'
 import { getCardManager } from './card'
 import { getUserManager } from './user'
 import { getMiniKeyManager, getMasterKeyManager, getResetKeyManager } from './key'
@@ -486,17 +486,6 @@ class AppManager extends Controller {
       }
       this.showNotice(msg || '无可用兔币，无法查看卡片')
     })
-  }
-
-  async checkUserPrivacy(){
-    try {
-      return await getPrivacySetting()
-    } catch (_) {}
-    return
-  }
-
-  async getUserPrivacyNotice(_:any){
-    return this.invokeApi('getUserPrivacyInfo')
   }
 
   async getIapItems(){

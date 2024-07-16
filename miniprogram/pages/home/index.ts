@@ -46,15 +46,6 @@ Page({
       await app.saveCurrentUserCode(user.uid)
       app.loadGlobalTask()
       app.checkQuotaNotice('可用兔币不足，请及时处理')
-
-      if(app.isMp){
-        app.checkUserPrivacy().then((res)=>{
-          console.debug('getPrivacySetting:',res)
-          if(res && res.needAuthorization){
-            this.loadShowUserPrivacy(res.privacyContractName)
-          }
-        })
-      }
     }else{
       if(!user.isActive){
         const neverLogin = await app.checkNeverLogin()
@@ -157,34 +148,6 @@ Page({
     // 更新cataList数据
     this.renderCateList(card, true)
     app.deleteHomeDataCache()
-  },
-  
-  loadShowUserPrivacy(privacyContractName){
-    loadData(app.getUserPrivacyNotice,{},{returnFailed:true}).then(privacy=>{
-      if(privacy){
-        this.setData({
-          showPrivacy: true,
-          privacy: {
-            title: privacyContractName || privacy.title || '用户隐私协议授权',
-            content: privacy.content,
-            updateTime: privacy.date
-          }
-        })
-      }
-    }).catch(console.log)
-  },
-
-  tapToOpenUserPrivacy(){
-    this.setData({
-      clickOpenUserPrivacy: true
-    })
-    return app.openUserPrivacyProtocol()
-  },
-
-  async handleAgreePrivacyAuthorization(){
-    this.setData({
-      showPrivacy: false
-    })
   },
 
   async loadData(options?:{forceUpdate?:boolean, hideLoading?:boolean, cacheOnly?:boolean}){
