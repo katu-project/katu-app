@@ -1,15 +1,6 @@
-project.private.config.json
 miniprogram_npm
 /minitest
 /miniprogram/packages/debug
-/scripts
-/cloud
-
-
-/miniapp/
-/i18n/
-/project.miniapp.json
-/miniprogram/app.miniapp.json
 
 .DS_Store
 node_modules

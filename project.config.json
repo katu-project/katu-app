@@ -50,14 +50,5 @@
   "condition": {},
   "srcMiniprogramRoot": "miniprogram/",
   "compileType": "miniprogram",
-  "packOptions": {
-    "ignore": [],
-    "include": []
-  },
-  "editorSetting": {
-    "tabIndent": "insertSpaces",
-    "tabSize": 2
-  },
-  "description": "卡兔APP小程序源码",
-  "projectArchitecture": "multiPlatform"
+  "description": "卡兔APP小程序源码"
 }
