@@ -88,16 +88,18 @@ Page({
 
   async tapToScan(){
     const resultJson = await loadData(app.scanQrcode,{},{ timeout: -1 })
-    loadData(async ()=>{
-      let msg = '未知二维码'
-      if(resultJson.type === 'login'){
+    let msg = '未知二维码'
+
+    if(resultJson.type === 'login'){
+      await app.showConfirm('正在进行 web 登录，确认登录？')
+      await loadData(async ()=>{
         await app.invokeApi('qrCodelogin', {
           loginCode: resultJson.code
         })
-        msg = '授权登录通过'
-      }
-      app.showNotice(msg)
-    })
+      })
+      msg = '授权登录成功'
+    }
+    app.showMiniNotice(msg)
   },
 
   async tapToOpenService(){
