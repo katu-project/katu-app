@@ -79,28 +79,35 @@ export default class User extends Controller {
   get rememberPassword(){
     return this.user.config?.security.rememberPassword || false
   }
-
-  async init(){
-    await this.loadInfo()
-  }
   
-  async loadInfo(){
-    this._user = await this.invokeApi('getUser')
-    await this.cacheAvatar()
+  async loadInfo(options?:{skipCache:boolean}){
+    if(options?.skipCache){
+      await this.deleteLocalData('USER_INFO_CACHE_KEY')
+    }
+    let cacheUser = await this.getLocalData<{data:IUser,time:number}>('USER_INFO_CACHE_KEY')    
+    if(!cacheUser){
+      const user = await this.invokeApi('getUser')
+      console.debug(`cache user info: ${JSON.stringify(user).length} bytes`)
+      cacheUser = {data:user, time:this.currentTimestamp}
+      await this.setLocalData('USER_INFO_CACHE_KEY', cacheUser)
+    }else{
+      const cacheTime = new Date(cacheUser.time).toLocaleString()
+      console.debug(`使用缓存的用户资料: ${JSON.stringify(cacheUser.data).length} bytes, 缓存时间: ${ cacheTime }`)
+    }
+    if(cacheUser.data.avatarUrl){
+      this._avatar = await this.cache.setUserAvatar(cacheUser.data.avatarUrl)
+    }
+    this._user = cacheUser.data
   }
 
   async reloadInfo(){
-    return this.loadInfo()
+    return this.loadInfo({
+      skipCache: true
+    })
   }
 
   async clearInfo(){
     this._user = {}
-  }
-
-  async cacheAvatar(){
-    // 缓存avatar
-    if(!this._user.avatarUrl) return  
-    this._avatar = await this.cache.setUserAvatar(this._user.avatarUrl)
   }
 
   async checkQuota(){
@@ -132,6 +139,7 @@ export default class User extends Controller {
   async applyConfig(configItem:{key:string,value:string|boolean}){
     try {
       await this.invokeApi('updateUserConfig', configItem)
+      await this.deleteLocalData('USER_INFO_CACHE_KEY')
       return this.objectSetValue(this.user, configItem.key, configItem.value)
     } catch (error:any) {
       console.warn('applyConfig:',error.message)
@@ -147,10 +155,12 @@ export default class User extends Controller {
     })
   }
 
+  // 未使用
   async bindTelNumber(data){
     return this.invokeApi('bindTelNumber', data)
   }
 
+  // 未使用
   async removeBindTelNumber(data){
     return this.invokeApi('removeBindTelNumber', data)
   }

@@ -137,14 +137,13 @@ class AppManager extends Controller {
     }
 
     try {
-      await this.user.init()
+      await this.user.loadInfo()
     } catch (error:any) {
       if(this.isApp && error.code === 401){
         this.logout()
       }
       throw error
     }
-    
     if(this.user.isSetMasterKey && this.user.rememberPassword){
       console.log("用户启用记住密码，尝试加载主密码")
       this.masterKeyManager.load()
@@ -155,7 +154,7 @@ class AppManager extends Controller {
     const token = await this.invokeApi('getTokenByCode', code)
     if(!token) throw Error('登录错误，请使用其他方式登录或者联系客服')
     await this.cache.setLoginToken(token)
-    await this.loadUser()
+    await this.user.reloadInfo()
     this.publishLoginChangeEvent(true)
   }
 
@@ -163,13 +162,13 @@ class AppManager extends Controller {
     const { token } = await this.invokeApi('activeAccountWithEmail', options)
     if(!token) throw Error('登录错误，请使用其他方式登录或者联系客服')
     await this.cache.setLoginToken(token)
-    await this.loadUser()
+    await this.user.reloadInfo()
     this.publishLoginChangeEvent(true)
   }
 
   async loginWithMp(){
     await this.invokeApi('activeAccount')
-    await this.loadUser()
+    await this.user.reloadInfo()
     this.publishLoginChangeEvent(true)
   }
 
@@ -268,20 +267,21 @@ class AppManager extends Controller {
     this.crypto.init(this.cryptoConfig)
   }
 
+  // 未使用
   async saveCurrentUserCode(userCode){
     if(!userCode) return
     return this.cache.setLocalData('LAST_LOGIN_UID', userCode)
   }
 
-  async checkLikeCardNeedSync(options?:{fastSync:boolean}){
-    if(options?.fastSync) return true
+  async checkLikeCardNeedSync(){
     const homeDataCache = await this.cache.getHomeData()
     if(!homeDataCache || homeDataCache?.data?.cateList?.length === 0) return true
     try {
       this.checkTimeout(homeDataCache.cacheTime, this.getConfig('homeDataCacheTime'))
+      console.debug('首页数据 likeList 缓存有效')
       return false
     } catch (error) {
-      console.log('首页数据缓存超时,进行数据同步检测')
+      console.debug('首页数据缓存超时,进行数据同步检测')
     }
     const likeList = homeDataCache.data.likeList
     const remoteLikeList = await this.getLikeCardIds()
@@ -293,6 +293,7 @@ class AppManager extends Controller {
     return false
   }
 
+  // 未使用
   async checkNeverLogin(){
     const loginUserId = await this.cache.getLocalData<string>('LAST_LOGIN_UID')
     return !loginUserId

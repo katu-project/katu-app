@@ -23,7 +23,8 @@ Page({
       auto_show: false
     } as AnyObject,
     isRefresh: false,
-    showMenu: true
+    showMenu: true,
+    userLoad: false
   },
 
   async onLoad() {
@@ -31,31 +32,7 @@ Page({
       cacheOnly: true,
       hideLoading: true
     })
-    await loadData(app.loadUser,undefined,'加载用户信息')
-    if(user.isOk){
-      app.checkLikeCardNeedSync({
-        fastSync: this.data.cateList.length === 0 // 如果当前 cateList 没有数据就立即进行同步，不用等待后续同步检测，解决因数据同步检测造成数据空白的异常体验
-      }).then(needSync=>{
-        if(needSync){
-          this.loadData({
-            forceUpdate: true
-          })
-        }
-      })
-
-      await app.saveCurrentUserCode(user.uid)
-      app.loadGlobalTask()
-      app.checkQuotaNotice('可用兔币不足，请及时处理')
-    }else{
-      if(!user.isActive){
-        const neverLogin = await app.checkNeverLogin()
-        if(neverLogin){
-          app.showActiveNotice(true, '现在激活账户可领取免费兔币')
-        }
-        return
-      }
-    }
-    this.loadNotice()
+    this.loadUser()
   },
 
   onUnload(){
@@ -66,6 +43,29 @@ Page({
   },
 
   async onReady() {
+  },
+
+  async loadUser(){
+    await loadData(app.loadUser, undefined, {
+      loadingTitle: '加载用户数据',
+      timeout: -1
+    })
+    this.setData({
+      userLoad: true
+    })
+    if(user.isOk){
+      app.loadGlobalTask()
+      app.checkLikeCardNeedSync().then(needSync=>{
+        if(needSync){
+          console.debug('准备后台更新首页数据')
+          this.loadData({
+            forceUpdate: true,
+            hideLoading: true
+          })
+        }
+      })
+    }
+    this.loadNotice()
   },
 
   removeLikeListCard(idx:number){
@@ -369,6 +369,9 @@ Page({
   },
 
   tapToProfile(){
+    if(!this.data.userLoad){
+      return this.loadUser()
+    }
     return app.goToUserProfilePage()
   },
 })
