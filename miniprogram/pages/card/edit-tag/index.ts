@@ -88,7 +88,7 @@ Page({
 
   async tapToSaveTag(){
     if(!user.isActive){
-      return app.showActiveNotice(true)
+      return app.showActiveNotice()
     }
     const tagName = this.data.tempTagName
     if(app.isMp){

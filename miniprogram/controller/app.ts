@@ -590,9 +590,8 @@ class AppManager extends Controller {
     }
   }
 
-  async showActiveNotice(goActivePage:boolean, title?:string){
-    await this.showConfirm(title || "未登录，无法进行该操作。",'去登录')
-    if(!goActivePage) return
+  async showActiveNotice(title?:string, confirmText?:string){
+    await this.showConfirm(title || "未登录，无法进行该操作。", confirmText || '去登录')
     return this.goToUserProfilePage()
   }
   

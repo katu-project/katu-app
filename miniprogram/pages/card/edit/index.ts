@@ -253,7 +253,7 @@ Page({
 
   async tapToChoosePic(){
     if(!user.isActive){
-      app.showActiveNotice(true)
+      app.showActiveNotice()
       return
     }
 
