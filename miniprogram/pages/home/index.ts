@@ -64,6 +64,16 @@ Page({
           })
         }
       })
+    }else{
+      if(app.isMp){
+        const {confirm} = await app.showChoose('现注册使用卡兔可领取免费兔币',{
+          confirmText: '去注册',
+          title: '好消息'
+        })
+        if(confirm){
+          app.goToUserProfilePage()
+        }
+      }
     }
     this.loadNotice()
   },
