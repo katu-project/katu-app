@@ -14,6 +14,22 @@ class Cache extends Module {
   }
 
   // user cache
+  async getUser(){
+    return this.getLocalData<{data:IUser,time:number}>('USER_INFO_CACHE_KEY')
+  }
+
+  async setUser(user){
+    const cacheData = {
+      data: user,
+      time: this.currentTimestamp
+    }
+    return this.setLocalData('USER_INFO_CACHE_KEY', cacheData)
+  }
+
+  async deleteUser(){
+    this.deleteLocalData('USER_INFO_CACHE_KEY')
+  }
+
   async setUserAvatar(url:string){
     const cachePath = await this.getUserAvatarCachePath(url)
     const cacheFile = await file.checkAccess(cachePath).catch(_=>{

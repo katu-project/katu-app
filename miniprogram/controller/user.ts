@@ -82,14 +82,14 @@ export default class User extends Controller {
   
   async loadInfo(options?:{skipCache:boolean}){
     if(options?.skipCache){
-      await this.deleteLocalData('USER_INFO_CACHE_KEY')
+      await this.cache.deleteUser()
     }
-    let cacheUser = await this.getLocalData<{data:IUser,time:number}>('USER_INFO_CACHE_KEY')    
+    let cacheUser = await this.cache.getUser() 
     if(!cacheUser){
       const user = await this.invokeApi('getUser')
       console.debug(`cache user info: ${JSON.stringify(user).length} bytes`)
-      cacheUser = {data:user, time:this.currentTimestamp}
-      await this.setLocalData('USER_INFO_CACHE_KEY', cacheUser)
+      cacheUser = { data:user, time:0 }
+      await this.cache.setUser(user)
     }else{
       const cacheTime = new Date(cacheUser.time).toLocaleString()
       console.debug(`使用缓存的用户资料: ${JSON.stringify(cacheUser.data).length} bytes, 缓存时间: ${ cacheTime }`)
