@@ -9,6 +9,7 @@
   </view>
   
   <!-- #if MP -->
+  <view class="text-xl margin-top-xl text-center" style="opacity: 0.8;">安全好用的卡片管理工具</view>
   <view style="margin-top:30%">
     <button class="cu-btn block line-cyan lg gfw round shadow" style="background: rgba(224, 255, 255, 0.5)" catchtap="tapToSignup">
       <text class="text-black">快速注册</text>
