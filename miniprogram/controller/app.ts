@@ -150,26 +150,35 @@ class AppManager extends Controller {
     }
   }
 
-  async loginWithCode(code:string){
-    const token = await this.invokeApi('getTokenByCode', code)
+  logout(){
+    this.cache.deleteLoginToken()
+    this.deleteHomeDataCache()
+    this.masterKeyManager.clear()
+    this.user.clearInfo()
+    this.publishLoginChangeEvent(false)
+  }
+
+  async login(token:string){
     if(!token) throw Error('登录错误，请使用其他方式登录或者联系客服')
     await this.cache.setLoginToken(token)
     await this.user.reloadInfo()
     this.publishLoginChangeEvent(true)
+  }
+
+  async loginWithCode(code:string){
+    const token = await this.invokeApi('getTokenByCode', code)
+    this.login(token)
   }
 
   async loginWithEmail(options:{email:string, code:string, verifyId:string}){
     const { token } = await this.invokeApi('activeAccountWithEmail', options)
     if(!token) throw Error('登录错误，请使用其他方式登录或者联系客服')
-    await this.cache.setLoginToken(token)
-    await this.user.reloadInfo()
-    this.publishLoginChangeEvent(true)
+    this.login(token)
   }
 
   async loginWithMp(){
     await this.invokeApi('activeAccount')
-    await this.user.reloadInfo()
-    this.publishLoginChangeEvent(true)
+    this.login('todo_not_use_now')
   }
 
   async bindOtherLoginByCode(code:string){
@@ -510,14 +519,6 @@ class AppManager extends Controller {
   }
 
   //设置页开始
-  logout(){
-    this.cache.deleteLoginToken()
-    this.deleteHomeDataCache()
-    this.masterKeyManager.clear()
-    this.user.clearInfo()
-    this.publishLoginChangeEvent(false)
-  }
-
   //数据
   //清除缓存
   async clearCacheData(){
