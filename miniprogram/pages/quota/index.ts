@@ -60,30 +60,19 @@ Page({
     this.showPayLoading()
   },
 
-  async loadData(reloadUser=false){
-    const reloadFunc = ()=> {
-      loadData(async ()=>{
-        if(reloadUser){
-          await user.reloadInfo()
-        }
-        this.setData({
-          'quota.remain': user.quota
-        })
-        const logs = await user.getQuotaLog({})
-        return logs
-      }).then(logs=>{
-        this.setData({
-          list: logs
-        })
-      })
+  async loadData(){
+    if(app.isApp){
+      // todo 检查iap购买历史记录，并刷新未完成的订单（服务端）    
     }
 
-    if(reloadUser && app.isApp){
-      // todo 检查iap购买历史记录，并刷新未完成的订单（服务端）
-      reloadFunc()
-    }else{
-      reloadFunc()
-    }
+    const logs = await loadData(async ()=>{
+      await user.reloadInfo()
+      return user.getQuotaLog({})
+    })
+    this.setData({
+      'quota.remain': user.quota,
+      list: logs
+    })
   },
 
   tapToReloadInfo(){
@@ -91,7 +80,7 @@ Page({
       'quota.remain': 0,
       list: []
     })
-    this.loadData(true)
+    this.loadData()
   },
 
   onCodeInput(){
@@ -105,7 +94,6 @@ Page({
         code: ''
       })
       app.showNotice('兑换成功')
-      await user.reloadInfo()
       this.loadData()
     })
   },
