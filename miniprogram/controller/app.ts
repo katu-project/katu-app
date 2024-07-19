@@ -133,7 +133,10 @@ class AppManager extends Controller {
   async loadUser(){
     if(this.isApp){
       const token = await this.cache.getLoginToken()
-      if(!token) return 
+      if(!token) {
+        this.logout()
+        return
+      } 
     }
 
     try {
@@ -170,8 +173,8 @@ class AppManager extends Controller {
     this.login(token)
   }
 
-  async loginWithEmail(options:{email:string, code:string, verifyId:string}){
-    const { token } = await this.invokeApi('activeAccountWithEmail', options)
+  async loginWithVerifyCode(options:{type:string, value:string, code:string, verifyId:string}){
+    const { token } = await this.invokeApi('loginWithVerifyCode', options)
     if(!token) throw Error('登录错误，请使用其他方式登录或者联系客服')
     this.login(token)
   }
@@ -606,12 +609,8 @@ class AppManager extends Controller {
     return this.invokeApi('getApiToken')
   }
 
-  async sendSmsVerifyCode(tel:string){
-    return this.sendVerifyCode('sms', tel)
-  }
-
-  async sendEmailVerifyCode(email:string){
-    return this.sendVerifyCode('email', email)
+  async sendLoginVerifyCode(options:{type:string,value:string}){
+    return this.sendVerifyCode(options.type, options.value)
   }
 
   async getNotices(_:any){

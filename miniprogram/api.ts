@@ -28,7 +28,7 @@ export default {
 
   getActionSign: (data: {action:string, value:string}) => request<{sign:string}>('app/getSignKey', data),
 
-  sendVerifyCode: (data: {type:'sms'|'email', value:string, sign:string}) => request<{verifyId:string}>('app/sendVerifyCode', data),
+  sendVerifyCode: (data: {type:string, value:string, sign:string}) => request<{verifyId:string}>('app/sendVerifyCode', data),
 
   bindTelNumber: data => request('app/bindUserTel', data),
 
@@ -48,7 +48,7 @@ export default {
 
   unbindOtherLogin: (type:string)=> request('app/unbindOtherAccount', {type}),
 
-  activeAccountWithEmail: (data:{email:string, code:string, verifyId:string}) => request<{token:string}>('app/loginWithEmail', data),
+  loginWithVerifyCode: (data:{type:string, value:string, code:string, verifyId:string}) => request<{token:string}>('app/loginWithVerifyCode', data),
 
   removeAccount: () => request('app/removeAccount'),
 

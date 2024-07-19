@@ -1,25 +1,39 @@
 import { appleLogin, loadData, showLoading, weixinMiniProgramLogin } from '@/utils/index'
 import { getAppManager } from '@/controller/app'
+import { CreateEventBehavior } from '@/behaviors/event'
+
 const app = getAppManager()
 
 Page({
+  behaviors: [
+    CreateEventBehavior('auth')
+  ],
+
   data: {
     activeInfo: {
       id: ''
     },
     showOtherLogin: false,
     showMpLogin: true,
-    emailLogin:{
-      email: '',
+    loginMode:{
+      key: 'tel',
+      label: '手机号',
+    },
+    loginState:{
+      value: '',
       code: '',
       sendCode: false,
-      verifyId: ''
+      verifyId: '',
+      telCode: '+86'
     },
     toc_1: '',
     toc_2: ''
   },
 
   async onLoad() {
+    if(app.DeviceInfo.language !== 'zh_CN'){
+      this.tapToChangeLoginMode()
+    }
     app.hasInstallWechat().then(hasInstall=>{
       if(!hasInstall){
         this.setData({
@@ -33,6 +47,12 @@ Page({
   },
 
   onShow() {
+  },
+
+  onEventTelCodeSelected(code){
+    this.setData({
+      'loginState.telCode': code
+    })
   },
 
   // 小程序快速注册
@@ -78,9 +98,27 @@ Page({
   },
 
   // app 端登录注册
+  tapToChangeLoginMode(){
+    if(this.data.loginMode.key === 'tel'){
+      this.setData({
+        'loginMode.key': 'email',
+        'loginMode.label': '邮箱'
+      })
+    }else{
+      this.setData({
+        'loginMode.key': 'tel',
+        'loginMode.label': '手机号'
+      })
+    }
+  },
+
+  tapToChooseTelCode(){
+    app.goTelCodeSelectPage()
+  },
+
   onInput(e){
     this.setData({
-      [`emailLogin.${e.currentTarget.dataset.key}`]: e.detail.value
+      [`loginState.${e.currentTarget.dataset.key}`]: e.detail.value
     })
   },
 
@@ -131,26 +169,30 @@ Page({
     }
   },
 
-  async tapToSendEmailCode(){
+  async tapToSendCode(){
     if(!this.checkToc()) return
-    const {verifyId} = await loadData(app.sendEmailVerifyCode, this.data.emailLogin.email)
+    const {verifyId} = await loadData(app.sendLoginVerifyCode, {
+      type: this.data.loginMode.key,
+      value: (this.data.loginMode.key === 'tel' ? this.data.loginState.telCode : '') + this.data.loginState.value 
+    })
     await app.showMiniNotice('验证码已发送')
     this.setData({
-      'emailLogin.sendCode': true,
-      'emailLogin.verifyId': verifyId
+      'loginState.sendCode': true,
+      'loginState.verifyId': verifyId
     })
   },
 
-  async tapToEmailLogin(){
-    if(!this.data.emailLogin.email || !this.data.emailLogin.code){
+  async tapToLogin(){
+    if(!this.data.loginState.value || !this.data.loginState.code){
       app.showMiniNotice('输入有误')
       return
     }
     if(!this.checkToc()) return
-    await loadData(app.loginWithEmail,{
-      email: this.data.emailLogin.email,
-      code: this.data.emailLogin.code,
-      verifyId: this.data.emailLogin.verifyId
+    await loadData(app.loginWithVerifyCode,{
+      type: this.data.loginMode.key,
+      value: (this.data.loginMode.key === 'tel' ? this.data.loginState.telCode : '') + this.data.loginState.value,
+      code: this.data.loginState.code,
+      verifyId: this.data.loginState.verifyId
     })
     await app.showNotice('登录成功，即将返回')
     app.navigateBack()
@@ -169,6 +211,10 @@ Page({
 
   tapToReadTos(){
     return app.navToDocPage('f6e08a6462b0879e08d6b0a15725ecbb')
+  },
+
+  tapToOpenHelper(){
+    return app.goDocListPage('account')
   },
 
   checkToc(){

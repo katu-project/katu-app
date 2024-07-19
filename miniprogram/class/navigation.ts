@@ -164,4 +164,10 @@ export default class Navigation extends Agent {
     return this.navToDocPage(this.navDocMap.uidInfo)
   }
   // open app doc end
+
+  // auth page
+  goTelCodeSelectPage(){
+    return this.goToPage('common/tel-code/index')
+  }
+  // auth page end
 }
