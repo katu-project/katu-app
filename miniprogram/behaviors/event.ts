@@ -13,6 +13,7 @@ export const AppleOrderPayCancelEvent = 'AppleOrderPayCancel'
 export const LoginChangeEvent = 'LoginChange'
 export const CacheDeleteEvent = 'CacheDelete'
 export const UserProfileChangeEvent = 'UserProfileChange'
+export const TelCodeSelectedEvent = 'TelCodeSelected'
 export const MasterKeyCacheEvent = 'MasterKeyCache'
 export const MasterKeyRemoveEvent = 'MasterKeyRemove'
 
@@ -47,6 +48,9 @@ const PageEventsMap = {
   profile: [
     UserProfileChangeEvent,
     LoginChangeEvent
+  ],
+  auth: [
+    TelCodeSelectedEvent
   ]
 }
 

@@ -14,7 +14,8 @@ import {
   CardEditTitleEvent,
   CardEditExtraDataEvent,
   CardEditImageEvent,
-  UserProfileChangeEvent
+  UserProfileChangeEvent,
+  TelCodeSelectedEvent
 } from '@/behaviors/event'
 
 export default abstract class Agent extends Core {
@@ -141,6 +142,10 @@ export default abstract class Agent extends Core {
 
   publishUserProfileChangeEvent(){
     this.emit(UserProfileChangeEvent)
+  }
+
+  publishTelCodeSelectedEvent(data){
+    this.emit(TelCodeSelectedEvent, data)
   }
 
   // event agent end

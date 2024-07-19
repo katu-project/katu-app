@@ -36,7 +36,8 @@
     "pages/auth/index",
     "pages/settings/adv/dev/index",
     "pages/settings/account/otherLogin/index",
-    "pages/settings/adv/info/index"
+    "pages/settings/adv/info/index",
+    "pages/common/tel-code/index"
   ],
   "subPackages": [
     {
