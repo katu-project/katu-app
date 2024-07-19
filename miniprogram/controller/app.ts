@@ -544,6 +544,7 @@ class AppManager extends Controller {
 
   async deleteAccount(){
     await this.user.deleteAccount()
+    await this.cache.deleteUser()
     await this.clearCacheData()
     return this.masterKeyManager.clear()
   }
