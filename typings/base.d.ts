@@ -70,6 +70,36 @@ declare namespace WechatMiniprogram {
     _table: (data:any) => void
   }
   
+  interface RenderingContext {
+    fillStyle: string
+    fillRect: any
+    save: any
+    beginPath: any
+    strokeStyle: string
+    lineWidth: number
+    arc: any
+    stroke: any
+    closePath: any
+    restore: any
+    fill: any
+    moveTo: any
+    lineTo: any
+    drawImage: any
+    getImageData: any
+    putImageData: any
+    canvas: any
+    scale: any
+    rotate: any
+    rect: any
+    setTransform: any
+    translate: any
+    transform: any
+    clearRect: any
+    clip: any
+    resetTransform: any
+    getTransform: any
+  }
+
   interface Wx {
     miniapp: {
       IAP: {

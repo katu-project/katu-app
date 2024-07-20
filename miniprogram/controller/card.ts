@@ -1,4 +1,5 @@
 import Controller from '@/class/controller'
+import { file } from '@/utils/index'
 
 class CardManager extends Controller{
   constructor(){
@@ -259,6 +260,7 @@ class CardManager extends Controller{
     })
   }
   
+  // not use
   async parseCardImageByRemoteApi(imagePath){
     await this.checkImageType(imagePath)
     const fileID = await this.uploadTempFile(imagePath)
@@ -266,10 +268,26 @@ class CardManager extends Controller{
     return this.downloadImage({url: fileUrl})
   }
 
+  // not use
   async parseCardImageByInternalApi(url){
     const { detectCardByContour } = await require.async('../packages/opencv/index')
     const tempPath = await this.getTempFilePath(`cv-${this.currentTimestamp}`)
     return detectCardByContour(url, tempPath)
+  }
+
+  async parseCardImageBySelectRectangle(options:{imageData, points}){
+    const { getCardFromPoints } = await require.async('../packages/opencv/index')
+    const tempPath = await this.getTempFilePath(`cv-${this.currentTimestamp}`)
+    const dstBuffer = await getCardFromPoints({
+      imageData: options.imageData,
+      pts: options.points,
+      dstSize: {
+        width: 1000,
+        height: 630
+      }
+    })
+    await file.writeFile(tempPath, dstBuffer)
+    return tempPath
   }
   
   // 辅助方法

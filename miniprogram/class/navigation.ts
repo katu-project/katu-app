@@ -33,7 +33,7 @@ export default class Navigation extends Agent {
   }
 
   goEditImagePage(picPath?:string){
-    return this.goToPage('card/image-processor/index',`value=${picPath}`)
+    return this.goToPage('card/edit-image/index',`value=${picPath}`)
   }
 
   goEditContentPage(content?:string){

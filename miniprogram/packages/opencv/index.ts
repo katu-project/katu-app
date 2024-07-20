@@ -119,9 +119,91 @@ export async function detectCardByContour(url, path){
   return path
 }
 
+type GetCardOptions = {
+  imageData: string,
+  pts: {
+    x: number,
+    y: number
+  }[],
+  dstSize?: {
+    width: number,
+    height: number
+  }
+}
+
+export async function getCardFromPoints(options:GetCardOptions){
+  await loadOpenCV()
+  const src = cv.imread(options.imageData)
+
+  function getSize(contour):[number,number,number[]]{
+    let corner1 = new cv.Point(contour[0][0], contour[0][1]);
+    let corner2 = new cv.Point(contour[1][0], contour[1][1]);
+    let corner3 = new cv.Point(contour[2][0], contour[2][1]);
+    let corner4 = new cv.Point(contour[3][0], contour[3][1]);
+
+    //Order the corners
+    let cornerArray = [{ corner: corner1 }, { corner: corner2 }, { corner: corner3 }, { corner: corner4 }];
+    //Sort by Y position (to get top-down)
+    cornerArray.sort((item1, item2) => { return (item1.corner.y < item2.corner.y) ? -1 : (item1.corner.y > item2.corner.y) ? 1 : 0; }).slice(0, 5);
+
+    //Determine left/right based on x position of top and bottom 2
+    let tl = cornerArray[0].corner.x < cornerArray[1].corner.x ? cornerArray[0] : cornerArray[1];
+    let tr = cornerArray[0].corner.x > cornerArray[1].corner.x ? cornerArray[0] : cornerArray[1];
+    let bl = cornerArray[2].corner.x < cornerArray[3].corner.x ? cornerArray[2] : cornerArray[3];
+    let br = cornerArray[2].corner.x > cornerArray[3].corner.x ? cornerArray[2] : cornerArray[3];
+
+    //Calculate the max width/height
+    let widthBottom = Math.hypot(br.corner.x - bl.corner.x, br.corner.y - bl.corner.y);
+    let widthTop = Math.hypot(tr.corner.x - tl.corner.x, tr.corner.y - tl.corner.y);
+    let theWidth = (widthBottom > widthTop) ? widthBottom : widthTop;
+    let heightRight = Math.hypot(tr.corner.x - br.corner.x, tr.corner.y - br.corner.y);
+    let heightLeft = Math.hypot(tl.corner.x - bl.corner.x, tr.corner.y - bl.corner.y);
+    let theHeight = (heightRight > heightLeft) ? heightRight : heightLeft;
+    return [ theWidth,
+             theHeight,
+             [
+              tl.corner.x, tl.corner.y,
+              tr.corner.x, tr.corner.y,
+              br.corner.x, br.corner.y,
+              bl.corner.x, bl.corner.y
+             ]
+           ]
+  }
+  
+  function four_point_transform(src, contour){
+    let [theWidth, theHeight, selectedCoords] = getSize(contour)
+    if(theWidth<theHeight){
+      [theWidth, theHeight] = [theHeight, theWidth]
+      selectedCoords = [...selectedCoords.slice(2), ...selectedCoords.slice(0,2)]
+    }
+    theWidth = options.dstSize?.width || theWidth
+    theHeight = options.dstSize?.height || theHeight
+
+    let finalDestCoords = cv.matFromArray(4, 1, cv.CV_32FC2, [0, 0, theWidth, 0, theWidth, theHeight, 0, theHeight]);
+    let srcCoords = cv.matFromArray(4, 1, cv.CV_32FC2, selectedCoords);
+    let dsize = new cv.Size(theWidth, theHeight);
+    let M = cv.getPerspectiveTransform(srcCoords, finalDestCoords)
+    let dst = new cv.Mat()
+    cv.warpPerspective(src, dst, M, dsize, cv.INTER_LINEAR, cv.BORDER_CONSTANT, new cv.Scalar());
+    M.delete();finalDestCoords.delete();srcCoords.delete()
+    return dst
+  }
+  let originSrc = src.clone()
+  let rect = four_point_transform(originSrc, options.pts.map(e=>[e.x,e.y]))
+  rect = cv.export(rect)
+  const imageBuffer = upng.encode([rect.data],rect.cols,rect.rows,0)
+  return imageBuffer
+}
+
+export function getInstance(){
+  // await loadOpenCV()
+  return cv
+}
+
+// export cv
 // todo: 现在cv模块加载是异步的，没办法确认完成时间，后续要优化一下，手动实例化
 // return cv 会出错，await 里返回 cv['then']的原因
-async function loadOpenCV() {
+export async function loadOpenCV() {
   console.debug('load opencv')
   let loadCount = 0
   while (!cv.Mat) {
