@@ -57,7 +57,7 @@
           <text class="text-white">登录/注册</text>
         </button>
         <view class="padding-top flex-row justify-between" style="width:100%;">
-          <text class="text-sm" bindtap="tapToChangeLoginMode">{{loginMode.label}}登录</text>
+          <text class="text-sm" bindtap="tapToChangeLoginMode">{{loginMode.key==='tel'?'邮箱':'手机号'}}登录</text>
           <text class="text-sm" bindtap="tapToOpenHelper">遇到问题</text>
         </view>
       </view>
