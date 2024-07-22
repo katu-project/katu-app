@@ -170,18 +170,18 @@ class AppManager extends Controller {
 
   async loginWithCode(code:string){
     const token = await this.invokeApi('getTokenByCode', code)
-    this.login(token)
+    return this.login(token)
   }
 
   async loginWithVerifyCode(options:{type:string, value:string, code:string, verifyId:string}){
     const { token } = await this.invokeApi('loginWithVerifyCode', options)
     if(!token) throw Error('登录错误，请使用其他方式登录或者联系客服')
-    this.login(token)
+    return this.login(token)
   }
 
   async loginWithMp(){
     await this.invokeApi('activeAccount')
-    this.login('todo_not_use_now')
+    return this.login('todo_not_use_now')
   }
 
   async bindOtherLoginByCode(code:string){
