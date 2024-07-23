@@ -181,7 +181,7 @@ Page({
         if(state.needKey){
           this.showInputKey()
         }else{
-          this.saveFailed(state)
+          app.showNotice(`${state.message}`)
         }
         return
       }
@@ -192,34 +192,21 @@ Page({
       try {
         await user.checkQuota()
       } catch (error:any) {
-        this.saveFailed(error)
+        app.showNotice(`${error.message}`)
         return
       }
     }
 
-    loadData(this.data.edit ? cardManager.update : cardManager.add, {
+    const savedCard = await loadData(this.data.edit ? cardManager.update : cardManager.add, {
       card: card as ICard, 
       key: app.masterKeyManager.masterKey
-    }, { returnFailed: true })
-      .then(this.saveDone)
-      .catch(this.saveFailed)
-      .finally(this.saveFinish)
-  },
-
-  async saveDone(card){ 
-    console.debug(`提前缓存${this.data.edit?'修改':'新增'}卡片`)
-    cardManager.cacheCard(card, this.data.card as ICard).then(()=>{
-      app.publishCardChangeEvent(card)
     })
-    await app.showNotice('卡片数据已保存')
+
+    console.debug(`提前缓存${this.data.edit?'修改':'新增'}卡片`)
+    await cardManager.cacheCard(savedCard, this.data.card as ICard)
+    app.publishCardChangeEvent(savedCard)
+    await app.showNotice(`卡片${this.data.edit?'修改':'保存'}成功`)
     app.navigateBack()
-  },
-
-  async saveFailed(error){
-    return app.showNotice(`${error.message}`)
-  },
-
-  async saveFinish(){
   },
 
   // key input section
