@@ -29,7 +29,6 @@ Page({
   data: {
     navHeight: globalData.CustomBar,
     tmpImagePath: '',
-    circles: [] as Point[],
     canvasInfo: {
       imageRotate: 0,
       dragTarget: {} as Point,
@@ -79,8 +78,7 @@ Page({
           {x: 0, y: imageHeight, r: radius}
         ]
         this.setData({
-          'canvasInfo.imageRotate': imageRotate,
-          circles: JSON.parse(JSON.stringify(this.originRect))
+          'canvasInfo.imageRotate': imageRotate
         })
 
         const realScale = realWidth/realHeight
@@ -137,6 +135,11 @@ Page({
           trans,
           dpr
         })
+        this.canvas.setMainImage({
+          image: this.image,
+          rotate: imageRotate,
+          rectPoints: JSON.parse(JSON.stringify(this.originRect))
+        })
         this.initCanvas()
       })
   },
@@ -168,7 +171,7 @@ Page({
       this.initCanvas({noSelect:true})
       const {trans,dpr} = this.canvas.options
 
-      const points = this.data.circles.map(e=>{
+      const points = this.canvas.scaleImageRectPoints.map(e=>{
         return {
           x: e.x * this.canvas.dpr * trans.xy,
           y: e.y * this.canvas.dpr * trans.xy
@@ -191,13 +194,13 @@ Page({
     const imageY = imageRotate === 90 ? -this.image.height : 0
     this.canvas.drawImage(this.image, 0, imageY, imageRotate)
     if(options?.noSelect) return
-    this.data.circles.map((e,i)=>{
+    this.canvas.scaleImageRectPoints.map((e,i,points)=>{
       this.canvas.drawCircle(Object.assign({},e,{f:true}))
       this.canvas.drawLine({
-        x: this.data.circles[i].x,
-        y: this.data.circles[i].y,
-        x1: this.data.circles[(i+1)%4].x,
-        y1: this.data.circles[(i+1)%4].y,
+        x: points[i].x,
+        y: points[i].y,
+        x1: points[(i+1)%4].x,
+        y1: points[(i+1)%4].y,
         width: this.image.width * 0.005
       })
     })
@@ -205,7 +208,7 @@ Page({
 
   handleCanvasStart(e){
     const canvasPosition = this.canvas.getCanvasPosition(e)
-    const circleRef = this.canvas.ifInCircle(canvasPosition, this.data.circles)
+    const circleRef = this.canvas.ifInCircle(canvasPosition, this.canvas.scaleImageRectPoints)
     const { canvasInfo } = this.data
     if(circleRef){
       wx.vibrateShort({
@@ -217,9 +220,7 @@ Page({
       this.setData({
         canvasInfo
       })
-      if(app.isMp){
-        this.canvas.drawCircleImage(canvasPosition)
-      }
+      this.canvas.drawCircleImage(canvasPosition)
     }
   },
 
@@ -237,9 +238,7 @@ Page({
       canvasInfo.dragTarget.y = canvasPosition.y
       // 重新绘制
       this.initCanvas()
-      if(app.isMp){
-        this.canvas.drawCircleImage(canvasPosition)
-      }
+      this.canvas.drawCircleImage(canvasPosition)
     }
 
     this.setData({
@@ -276,9 +275,7 @@ Page({
         break;
       case 'reset':
         {
-          this.setData({
-            'circles': JSON.parse(JSON.stringify(this.originRect))
-          })
+          this.canvas.scaleImageRectPoints = JSON.parse(JSON.stringify(this.originRect))
           this.initCanvas()
         }
         break

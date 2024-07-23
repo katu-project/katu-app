@@ -18,6 +18,7 @@ type CanvasOptions = {
 type Point = {
   x: number
   y: number
+  s?: boolean
   r?: number,
   f?: number
 }
@@ -73,6 +74,16 @@ export class Canvas {
     })
   }
 
+  scaleImage = {} as WechatMiniprogram.Image
+  scaleImageRotate = 0
+  scaleImageRectPoints = [] as Point[]
+
+  setMainImage({image,rotate,rectPoints}){
+    this.scaleImage = image
+    this.scaleImageRotate = rotate
+    this.scaleImageRectPoints = rectPoints
+  }
+
   clear(options:{bg:string}){
     const { xy } = this.options.trans
     this.ctx.fillStyle = options.bg
@@ -87,14 +98,17 @@ export class Canvas {
     }
   }
 
-  ifInCircle(pos, circles:Point[]){
+  ifInCircle(pos, circles: Point[]){
+    let truePoint
     for( let i = 0 ; i < circles.length; i++ ){
+      circles[i].s = false
       // 判断点击点到圆心是不是小于半径
       if( this.getDistance(circles[i], pos) < circles[i].r!* 3 ){
-        return circles[i]
+        circles[i].s = true 
+        truePoint = circles[i] 
       }
     }
-    return false
+    return truePoint || false
   }
 
   ifInRectangle(pos:Point, rectangle:Point[]){
@@ -116,10 +130,10 @@ export class Canvas {
     if(!r) r = this.canvas.width / this.dpr / 5
     const imageWidth = 2*r
 
-    const sx = (x*trans.xy+trans.x)*this.dpr - imageWidth/(2/scale)
-    const sy = (y*trans.xy+trans.y)*this.dpr - imageWidth/(2/scale)
-    const dx = (this.canvas.width/this.dpr - trans.x*2)/ trans.xy / 2 - imageWidth/2
-    const dy = (0 - trans.y)/ trans.xy 
+    let sx = 0
+    let sy = 0
+    let dx = (this.canvas.width/this.dpr - trans.x*2)/ trans.xy / 2 - imageWidth/2
+    let dy = (0 - trans.y)/ trans.xy 
     
     const circleImage = {
       x: dx+r,
@@ -133,17 +147,59 @@ export class Canvas {
     this.ctx.fill()
     this.ctx.clip()
 
+    this.ctx.save()
+    // 注意，这里硬编码了顺时针旋转90度
+    if(this.scaleImageRotate === 90){
+      this.rotate(this.scaleImageRotate)
+      this.ctx.translate(0, -this.scaleImage.height)
+      sx = y - imageWidth / (scale*2)
+      sy = (this.scaleImage.height - x)-imageWidth / (scale*2)
+      {
+        [dx,dy] = [dy,dx]
+      }
+    }else{
+      sx = x - imageWidth/(scale*2)
+      sy = y - imageWidth/(scale*2)
+    }
+
     this.ctx.drawImage(
-      this.canvas,
-      sx, 
-      sy, 
-      imageWidth*scale,
-      imageWidth*scale, 
+      this.scaleImage,
+      sx,
+      sy,
+      imageWidth/scale,
+      imageWidth/scale, 
       dx, 
       dy, 
       imageWidth, 
       imageWidth
     )
+    this.ctx.restore()
+
+    // 绘制当前点的夹角线
+    const selectedPoint = this.scaleImageRectPoints.findIndex(e=>e.s)
+    if(selectedPoint!==-1){
+      const left = this.scaleImageRectPoints[(4+selectedPoint-1)%4]
+      const mid = this.scaleImageRectPoints[selectedPoint]
+      const right = this.scaleImageRectPoints[(4+selectedPoint+1)%4]
+      const constX = circleImage.x - mid.x
+      const constY = circleImage.y - mid.y
+
+      this.drawLine({
+        x: circleImage.x,
+        y: circleImage.y,
+        x1: left.x + constX,
+        y1: left.y + constY,
+        width: this.width * 0.005
+      })
+      this.drawLine({
+        x: circleImage.x,
+        y: circleImage.y,
+        x1: right.x + constX,
+        y1: right.y + constY,
+        width: this.width * 0.005
+      })
+    }
+
     this.ctx.restore()
   }
 
