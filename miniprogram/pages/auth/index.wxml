@@ -32,7 +32,7 @@
       </view>
       <view class="cu-form-group" style="background-color: unset;">
         <view class="title">验证码:</view>
-        <input value="{{loginState.code}}" bindinput="onInput" data-key="code"></input>
+        <input value="{{loginState.code}}" type="number" bindinput="onInput" data-key="code"></input>
         <button disabled="{{loginState.value.length<6 || loginState.sendCode}}" catchtap="tapToSendCode" class="cu-btn bg-green round shadow" style="width:30vw">
           {{loginState.sendCode ? '已发送' : '发送验证码'}}
         </button>
