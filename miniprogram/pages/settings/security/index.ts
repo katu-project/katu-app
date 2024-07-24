@@ -36,10 +36,8 @@ Page({
       if(configItem.key === 'config_security_rememberPassword' && configItem.value === false){
         app.masterKeyManager.clear()
       }
-      user.reloadInfo().then(this.loadData)
-    }).catch(err=>{
+    }).catch(()=>{
       this.loadData()
-      app.showNotice(err.message)
     })
   },
 
