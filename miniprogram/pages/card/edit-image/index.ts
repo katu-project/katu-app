@@ -217,7 +217,9 @@ Page({
       this.setData({
         canvasInfo
       })
-      this.canvas.drawCircleImage(canvasPosition)
+      if(app.isMp){
+        this.canvas.drawCircleImage(canvasPosition)
+      }
     }
   },
 
@@ -235,7 +237,9 @@ Page({
       canvasInfo.dragTarget.y = canvasPosition.y
       // 重新绘制
       this.initCanvas()
-      this.canvas.drawCircleImage(canvasPosition)
+      if(app.isMp){
+        this.canvas.drawCircleImage(canvasPosition)
+      }
     }
 
     this.setData({
