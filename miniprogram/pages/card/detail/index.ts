@@ -176,12 +176,13 @@ Page({
     this.loadData()
   },
 
-  tapToSetLike(){
+  async tapToSetLike(){
     const state = !this.data.card.setLike
-    loadData(cardManager.setLike,{id:this.id,state}).then(()=>{
-      this.data.card.setLike = state
-      app.publishCardChangeEvent(this.data.card)
+    await loadData(cardManager.setLike,{id:this.id,state})
+    this.setData({
+      'card.setLike': state
     })
+    app.publishCardChangeEvent(this.data.card)
   },
 
   async tapToReloadCard(){
