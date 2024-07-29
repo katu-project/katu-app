@@ -5,14 +5,7 @@ type Rectangle = {
 
 type CanvasOptions = {
   canvas: WechatMiniprogram.Canvas,
-  renderSize: Rectangle,
-  canvasSize: Rectangle,
-  trans: {
-    x:number,
-    y:number,
-    xy:number
-  }
-  dpr: number
+  renderSize: Rectangle
 }
 
 type Point = {
@@ -32,6 +25,15 @@ export class Canvas {
   options = {} as CanvasOptions
 
   scale = 1
+  realSize = {} as Rectangle
+  size = {} as Rectangle
+  dpr = 1
+
+  trans = {
+    x: 0,
+    y: 0,
+    xy: 1
+  }
 
   get canvas(){
     return this.options.canvas
@@ -45,56 +47,133 @@ export class Canvas {
     return this.canvas.height
   }
 
-  get dpr(){
-    return this.options.dpr
-  }
-
   constructor(options:CanvasOptions){
     this.options = options
-    const { canvas, canvasSize, dpr, trans, renderSize } = options
+    const { canvas, renderSize } = options
     this.ctx = canvas.getContext('2d')
-  
-    canvas.width = canvasSize.width * dpr
-    canvas.height = canvasSize.height * dpr
-    this.ctx.scale(dpr,dpr)
-    // this.ctx.translate(options.trans.x,options.trans.y)
-    this.ctx.transform(trans.xy,0,0,trans.xy,trans.x,trans.y)
-    this.scale = parseFloat((canvas.width / (renderSize.width * dpr)).toFixed(4))
-    trans.xy = parseFloat(trans.xy.toFixed(4))
-    console.table({
-      'real size': renderSize,
-      'canvas size': canvasSize,
-      'trans': trans,
-      'canvas draw size': {
-        width: canvas.width,
-        height: canvas.height
-      },
-      dpr: dpr,
-      scale: this.scale
-    })
+    this.dpr = wx.getSystemInfoSync().pixelRatio
+    this.realSize = renderSize
   }
 
   scaleImage = {} as WechatMiniprogram.Image
   scaleImageRotate = 0
+  originScaleImageRectPoints = [] as Point[]
   scaleImageRectPoints = [] as Point[]
 
-  setMainImage({image,rotate,rectPoints}){
-    this.scaleImage = image
-    this.scaleImageRotate = rotate
-    this.scaleImageRectPoints = rectPoints
+  async initCardMode({image}){
+    this.scaleImage = await this.getImage(image)
+
+    let imageRotate = 0
+    let imageWidth = this.scaleImage.width
+    let imageHeight = this.scaleImage.height
+    const realScale = this.realSize.width / this.realSize.height
+
+    console.debug({imageWidth,imageHeight})
+    if(imageWidth>imageHeight){
+      [imageWidth,imageHeight] = [imageHeight,imageWidth]
+      imageRotate = 90
+    }
+    const radius = imageWidth * 0.03
+    this.originScaleImageRectPoints = [
+      {x: 0, y: 0, r: radius},
+      {x: imageWidth, y: 0, r: radius},
+      {x: imageWidth, y: imageHeight, r: radius},
+      {x: 0, y: imageHeight, r: radius}
+    ]
+ 
+    this.scaleImageRotate = imageRotate
+    this.scaleImageRectPoints = JSON.parse(JSON.stringify(this.originScaleImageRectPoints))
+
+    const imageScale = imageWidth/imageHeight
+    console.debug({realScale,imageScale})
+
+    const canvasSize = {
+      width: imageWidth,
+      height: imageHeight
+    }
+    console.debug('canvas 预设尺寸：',canvasSize.width,canvasSize.height)
+    
+    // 根据实际显示比例确定画布尺寸
+    if(imageScale<realScale){ 
+      // 小于 realScale 增加画布宽度
+      canvasSize.height = canvasSize.height * 1.1
+      canvasSize.width = canvasSize.height * realScale
+    }else{ 
+      // 大于 realScale 增加画布高度
+      canvasSize.width = canvasSize.width * 1.1
+      canvasSize.height = canvasSize.width / realScale
+    }
+
+    console.debug('canvas 适应显示比例尺寸：',canvasSize.width.toFixed(),canvasSize.height.toFixed())
+    
+    // 解决小程序canvas尺寸限制4096x4096
+    if(canvasSize.height * this.dpr > 4000){
+      const fixHeight = 4000 / this.dpr
+      const fixWidth = fixHeight * realScale
+      this.trans.xy = fixHeight/canvasSize.height
+      console.debug('canvas 解决4096限制后的尺寸：',fixWidth.toFixed(),fixHeight.toFixed(), ',缩放比例：', this.trans.xy.toFixed(2))
+      canvasSize.height = fixHeight
+      canvasSize.width = fixWidth
+    }
+
+    this.trans.x = Math.floor((canvasSize.width - imageWidth * this.trans.xy) / 2)
+    this.trans.y = Math.floor((canvasSize.height - imageHeight * this.trans.xy) / 2)
+    canvasSize.height = Math.ceil(canvasSize.height)
+    canvasSize.width = Math.ceil(canvasSize.width)
+
+    console.debug('canvas 修正后的最终尺寸：',canvasSize.width,canvasSize.height,this.dpr)
+
+    this.canvas.width = canvasSize.width * this.dpr
+    this.canvas.height = canvasSize.height * this.dpr
+    this.ctx.scale(this.dpr, this.dpr)
+
+    this.ctx.transform(this.trans.xy, 0, 0, this.trans.xy, this.trans.x, this.trans.y)
+    this.scale = parseFloat((this.width / (this.realSize.width * this.dpr)).toFixed(4))
+    this.trans.xy = parseFloat(this.trans.xy.toFixed(4))
+    this.size = canvasSize
+    console.table({
+      'real size': this.realSize,
+      'canvas size': canvasSize,
+      'trans': this.trans,
+      'canvas draw size': {
+        width: this.width,
+        height: this.height
+      },
+      dpr: this.dpr,
+      scale: this.scale
+    })
+  }
+
+  refreshCardMode(options?:{noSelect:boolean}){
+    this.clear({
+      bg: '#282828'
+    })
+    const imageY = this.scaleImageRotate === 90 ? - this.scaleImage.height : 0
+    this.drawImage(this.scaleImage, 0, imageY, this.scaleImageRotate)
+    if(options?.noSelect) return
+    this.scaleImageRectPoints.map((e,i,points)=>{
+      this.drawCircle(Object.assign({},e,{f:true}))
+      this.drawLine({
+        x: points[i].x,
+        y: points[i].y,
+        x1: points[(i+1)%4].x,
+        y1: points[(i+1)%4].y,
+        width: this.scaleImage.width * 0.005
+      })
+    })
   }
 
   clear(options:{bg:string}){
-    const { xy } = this.options.trans
+    const { xy } = this.trans
     this.ctx.fillStyle = options.bg
-    this.ctx.clearRect(-this.options.trans.x/xy,-this.options.trans.y/xy,this.options.canvasSize.width/xy,this.options.canvasSize.height/xy)
+    this.ctx.clearRect(-this.trans.x/xy,-this.trans.y/xy,this.size.width/xy,this.size.height/xy)
   }
 
   // 获取点击点的位置
   getCanvasPosition(e){
     return{
-      x: (e.changedTouches[0].x * this.scale - this.options.trans.x) / this.options.trans.xy,
-      y: (e.changedTouches[0].y * this.scale - this.options.trans.y) / this.options.trans.xy
+      x: (e.changedTouches[0].x * this.scale - this.trans.x) / this.trans.xy,
+      y: (e.changedTouches[0].y * this.scale - this.trans.y) / this.trans.xy
     }
   }
 
@@ -126,14 +205,13 @@ export class Canvas {
   }
 
   drawCircleImage({x,y},r=0,scale=2){
-    const {trans} = this.options
     if(!r) r = this.canvas.width / this.dpr / 5
     const imageWidth = 2*r
 
     let sx = 0
     let sy = 0
-    let dx = (this.canvas.width/this.dpr - trans.x*2)/ trans.xy / 2 - imageWidth/2
-    let dy = (0 - trans.y)/ trans.xy 
+    let dx = (this.canvas.width/this.dpr - this.trans.x*2)/ this.trans.xy / 2 - imageWidth/2
+    let dy = (0 - this.trans.y)/ this.trans.xy 
     
     const circleImage = {
       x: dx+r,
@@ -285,5 +363,16 @@ export class Canvas {
     }
     // console.debug(`最近点的坐标是: (${closestPoint.x}, ${closestPoint.y})`);
     return closestPoint;
+  }
+
+  async getImage(url):Promise<WechatMiniprogram.Image>{
+    return new Promise((resolve, reject) => {
+      const image = this.canvas.createImage()
+      image.onload = ()=>{
+        resolve(image)
+      }
+      image.onerror = reject
+      image.src = url
+    })
   }
 }
