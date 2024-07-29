@@ -4,7 +4,7 @@
 
 
 .tag-list{
-  min-height: 50rpx;
+  margin: 2rpx 0;
   .tag-list-content{
     width: 80vw; 
     overflow-x: scroll;
@@ -14,7 +14,7 @@
 .image-list{
   display: flex;
   flex-direction: column;
-  padding: 20rpx 0;
+  margin: 20rpx 0;
   .image-item {
     width: 700rpx;
     height: 440rpx;
