@@ -128,14 +128,6 @@ export default class Navigation extends Agent {
     return this.navToDocPage(this.navDocMap.dataCheckNotice)
   }
 
-  openInternalApiNotice(){
-    return this.navToDocPage(this.navDocMap.imageProcessorTip_1)
-  }
-
-  openRemoteApiNotice(){
-    return this.navToDocPage(this.navDocMap.imageProcessorTip_2)
-  }
-
   openRememberKeyNotice(){
     return this.navToDocPage(this.navDocMap.rememberKeyNotice)
   }

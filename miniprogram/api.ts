@@ -52,7 +52,6 @@ export default {
 
   removeAccount: () => request('app/removeAccount'),
 
-  captureCard: fileID => request<{fileID: string}>('app/capture', {fileId: fileID}),
   // data check
   imageContentSafetyCheck: (data:{url:string, hash:string}) => request<{checkEnd:boolean,checkPass:boolean}>('app/imageContentCheck', data),
   

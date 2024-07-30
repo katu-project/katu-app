@@ -4,7 +4,6 @@
     "pages/home/index",
     "pages/card/edit/index",
     "pages/card/detail/index",
-    "pages/card/image-processor/index",
     "pages/card/edit-image/index",
     "pages/card/edit-content/index",
     "pages/card/edit-tag/index",

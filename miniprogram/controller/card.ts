@@ -259,21 +259,6 @@ class CardManager extends Controller{
       return card
     })
   }
-  
-  // not use
-  async parseCardImageByRemoteApi(imagePath){
-    await this.checkImageType(imagePath)
-    const fileID = await this.uploadTempFile(imagePath)
-    const {fileID: fileUrl} = await this.invokeApi('captureCard', fileID)
-    return this.downloadImage({url: fileUrl})
-  }
-
-  // not use
-  async parseCardImageByInternalApi(url){
-    const { detectCardByContour } = await require.async('../packages/opencv/index')
-    const tempPath = await this.getTempFilePath(`cv-${this.currentTimestamp}`)
-    return detectCardByContour(url, tempPath)
-  }
 
   async parseCardImageBySelectRectangle(options:{imageData, points}){
     const { getCardFromPoints } = await require.async('../packages/opencv/index')

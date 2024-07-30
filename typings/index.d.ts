@@ -44,8 +44,6 @@ interface IDocConfig {
     userPrivacyProtocol: string
     masterKeyNotice: string
     rememberKeyNotice: string
-    imageProcessorTip_1: string
-    imageProcessorTip_2: string
     forgetKeyNotice: string
     dataShareNotice: string
     dataSaveSecurityNotice: string
