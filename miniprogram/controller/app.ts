@@ -494,7 +494,7 @@ class AppManager extends Controller {
 
   async checkQuotaNotice(msg?:string){
     return new Promise((resolve)=>{
-      if(this.user.quota > 0){
+      if(this.user.quota >= 0){
         return resolve("")
       }
       this.showNotice(msg || '无可用兔币，无法查看卡片')
