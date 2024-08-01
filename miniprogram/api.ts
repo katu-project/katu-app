@@ -51,6 +51,8 @@ export default {
   loginWithVerifyCode: (data:{type:string, value:string, code:string, verifyId:string}) => request<{token:string}>('app/loginWithVerifyCode', data),
 
   removeAccount: () => request('app/removeAccount'),
+  
+  getActionId: data => request<{actionId:string}>('app/action', data),
 
   // data check
   imageContentSafetyCheck: (data:{url:string, hash:string}) => request<{checkEnd:boolean,checkPass:boolean}>('app/imageContentCheck', data),

@@ -10,6 +10,7 @@ const user = getUserManager()
 
 Page({
   id: '',
+  actionId: '',
   originData: {} as ICard,
   otherTagIdx: -1,
 
@@ -83,6 +84,13 @@ Page({
       // 处理卡片标签选中状态
       this.renderTagState()
     }
+    // 获取操作id，防止重复提交
+    app.invokeApi('getActionId',{
+      type: 'card',
+      value: this.id
+    }).then((res)=>{
+      this.actionId = res.actionId
+    })
   },
 
   onShow() {
@@ -197,9 +205,24 @@ Page({
       }
     }
 
-    const savedCard = await loadData(this.data.edit ? cardManager.update : cardManager.add, {
+    // 重复提交
+    if(!this.actionId){
+      const { actionId } = await loadData(async ()=>{
+        return app.invokeApi('getActionId',{
+          type: 'card',
+          value: this.id
+        })
+      }, undefined, '检测数据格式')
+      this.actionId = actionId
+    }
+
+    const savedCard = await loadData(cardManager.save, {
+      action: this.data.edit ? 'update' : 'save',
+      actionId: this.actionId,
       card: card as ICard, 
       key: app.masterKeyManager.masterKey
+    },{
+      timeout: 30000
     })
 
     console.debug(`提前缓存${this.data.edit?'修改':'新增'}卡片`)

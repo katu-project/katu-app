@@ -70,50 +70,8 @@ class CardManager extends Controller{
     return newImages
   }
 
-  async update({card, key}:{card:ICard, key:string}){
-    const cardModel = this._createCardDefaultData(card)
-    cardModel._id = card._id
-    if(card.encrypted){
-      const originImageExtraData = JSON.stringify(await this.cache.getCardExtraData(card._id))
-      
-      cardModel.image =  await this._updateEncryptImage(card.image, {
-        extraData: card.info,
-        extraDataChange: originImageExtraData !== JSON.stringify(card.info),
-        key
-      })
-      cardModel.info = []
-    }else{
-      cardModel.image =  await this._updateNotEncryptImage(card.image)
-    }
-
-    return this.invokeApi('saveCard', cardModel)
-  }
-
-  async add({card, key}){
-    const cardModel = this._createCardDefaultData(card)
-    for (const pic of card.image) {
-      const image: ICardImage = { url: pic.url, hash: '', salt: '', ccv: ''}
-      await this.checkImageType(image.url)
-      image.hash = await this.getImageHash(image.url)
-      if(cardModel.encrypted){
-        const encrytedImage = await this.encryptImage(image, cardModel.info, key)
-        image.url = await this.uploadCardFile(encrytedImage.path)
-        image.salt = encrytedImage.keySalt
-        image.ccv = encrytedImage.ccv
-      }else{
-        image.url = await this.uploadCardFile(image.url)
-      }
-      cardModel.image!.push(image)
-    }
-
-    if(cardModel.encrypted){
-      cardModel.info = []
-    }
-
-    return this.invokeApi('saveCard', cardModel)
-  }
-
-  _createCardDefaultData(card){
+  async save(options:{action:'save'|'update',card:Partial<ICard>, key:string, actionId?:string}){
+    const { action, card, key, actionId } = options
     const cardModel: Partial<ICard> = { image: [] }
     cardModel.encrypted = card.encrypted || false
     cardModel.title = card.title || '未命名'
@@ -121,7 +79,70 @@ class CardManager extends Controller{
     cardModel.info = card.info || []
     cardModel.setLike = card.setLike || false
 
-    return cardModel
+    const saveImage = async ({images, encrypted, info, key})=>{
+      const savedImageList:ICardImage[] = []
+      if(images?.length){
+        for (const pic of images) {
+          const image: ICardImage = { url: pic.url, hash: '', salt: '', ccv: ''}
+          await this.checkImageType(image.url)
+          image.hash = await this.getImageHash(image.url)
+          if(encrypted){
+            const encrytedImage = await this.encryptImage(image, info, key)
+            image.url = await this.uploadCardFile(encrytedImage.path)
+            image.salt = encrytedImage.keySalt
+            image.ccv = encrytedImage.ccv
+          }else{
+            image.url = await this.uploadCardFile(image.url)
+          }
+          savedImageList.push(image)
+        }
+      }
+      return savedImageList
+    }
+
+    const updateImage = async ({images, encrypted, info, key, id})=>{
+      let updatedImageList:ICardImage[] = []
+      if(encrypted){
+        const originImageExtraData = JSON.stringify(await this.cache.getCardExtraData(id))
+        updatedImageList = await this._updateEncryptImage(images, {
+          extraData: info,
+          extraDataChange: originImageExtraData !== JSON.stringify(info),
+          key
+        })
+      }else{
+        updatedImageList = await this._updateNotEncryptImage(images)
+      }
+      return updatedImageList
+    }
+
+    if(action === 'save'){
+      cardModel.image = await saveImage({
+        images: card.image,
+        encrypted: cardModel.encrypted, 
+        info: cardModel.info,
+        key
+      })
+    }else{
+      if(!card._id) throw Error('操作错误，请返回重试')
+      cardModel._id = card._id
+      cardModel.image = await updateImage({
+        id: cardModel._id,
+        images: card.image,
+        encrypted: cardModel.encrypted, 
+        info: cardModel.info,
+        key
+      })
+    }
+
+    if(cardModel.encrypted){
+      cardModel.info = []
+    }
+
+    return this.invokeApi('saveCard', {
+      card: cardModel,
+      action,
+      actionId
+    })
   }
 
   async encryptImage(image:ICardImage, extraData, key:string){
