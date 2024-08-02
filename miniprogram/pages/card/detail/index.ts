@@ -82,7 +82,7 @@ Page({
 
   onEventCardChange(card){
     console.log('detail page: update card info:', card._id, card.title)
-    this.loadData({hideLoading: true, ignoreCache: true})
+    this.loadData({hideLoading: true})
   },
 
   async loadData(options?:{ hideLoading?: boolean, ignoreCache?: boolean, showText?:string }){
@@ -182,6 +182,7 @@ Page({
     this.setData({
       'card.setLike': state
     })
+    await app.cache.setCardField(this.data.card._id, 'setLike', state)
     app.publishCardChangeEvent(this.data.card)
   },
 

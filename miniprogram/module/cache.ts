@@ -137,6 +137,13 @@ class Cache extends Module {
     return undefined
   }
 
+  async setCardField(id, path, value){
+    const card = await this.getCard(id)
+    if(!card) return
+    this.objectSetValue(card, path, value)
+    return this.setCard(card)
+  }
+
   async setCard(card:ICard){
     console.debug('setCard cache:', card._id)
     const cards = await this.getCards()
