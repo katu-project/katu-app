@@ -205,12 +205,17 @@ export class Canvas {
   }
 
   drawCircleImage({x,y},r=0,scale=2){
-    if(!r) r = this.canvas.width / this.dpr / 5
+    // r 是 放大镜半径，默认取 画布宽度/6
+    if(!r) r = this.canvas.width / 6 / this.dpr / this.trans.xy
     const imageWidth = 2*r
 
+    // 原始图片x
     let sx = 0
-    let sy = 0
+    // 原始图片y
+    let sy = 0 
+    // 画布 x
     let dx = (this.canvas.width/this.dpr - this.trans.x*2)/ this.trans.xy / 2 - imageWidth/2
+    // 画布 y
     let dy = (0 - this.trans.y)/ this.trans.xy 
     
     const circleImage = {
