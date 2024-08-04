@@ -1,13 +1,15 @@
 import { net } from '@/utils/index'
 import RequestConfig from "@/config/request"
 
-const { request, upload, download } = net.createRequest(RequestConfig)
+const { request, upload, download, cosUpload } = net.createRequest(RequestConfig)
 
 export default {
   // base
-  downloadFile: (options:{url:string, savePath:string}) => download('app/download', options),
+  downloadFile: ({url,options}) => download(url, options),
 
   uploadFile: (filePath:string, uploadInfo) => upload('app/upload', {filePath, uploadInfo}),
+  
+  cosUpload: (data:{filePath:string, options?}) => cosUpload(data.filePath, data.options),
   // sys
 
   appStatus: () => request('app/status'),
@@ -35,6 +37,8 @@ export default {
   removeBindTelNumber: data => request('app/removeBindUserTel', data),
 
   getUploadInfo: data => request<IAnyObject>('app/getUploadInfo', data),
+  
+  getDownloadInfo: data => request<IAnyObject>('app/getDownloadInfo', data),
 
   getContentCheckInfo: data => request<{needCheck:boolean, checkPass:boolean}>('app/getContentCheckInfo', data),
   

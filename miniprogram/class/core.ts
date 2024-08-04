@@ -158,12 +158,25 @@ export default class Core extends Base {
       }
     }
     console.debug(`start download file:`, url)
-    await this.invokeApi('downloadFile', {url, savePath})
+    const downloadInfo = await this.invokeApi('getDownloadInfo', { fileId:url })
+    await this.invokeApi('downloadFile', {
+      url: downloadInfo.downloadUrl,
+      options:{
+        savePath
+      }
+    })
     return savePath
   }
 
   async uploadFile(filePath:string, type:UploadFileType) {
     const uploadInfo = await this.invokeApi('getUploadInfo', { type })
+    if(uploadInfo.cos){
+      await this.invokeApi('cosUpload', {
+        filePath,
+        options: uploadInfo.cos
+      })
+      return 's3://' + uploadInfo.cloudPath
+    }
     return this.invokeApi('uploadFile', filePath, uploadInfo)
   }
 } 

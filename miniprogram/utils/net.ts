@@ -2,6 +2,14 @@ import { sleep, toPromise } from './base'
 import { getCache } from './cache'
 import file from './file'
 
+class CustomError extends Error {
+  constructor(message, cause?) {
+    super(message);
+    this.cause = cause;
+    this.name = 'CustomError';
+  }
+}
+
 async function request(action:string, data:any, requestor, options){
   const error = {
     code: 0,
@@ -46,13 +54,30 @@ async function request(action:string, data:any, requestor, options){
   return resp.data
 }
 
-async function downloadCloudFile(url:string, savePath:string){
+async function downloadFile(url:string, options:{savePath:string,header?:IAnyObject}){
+  const download = args => wx.downloadFile(args)
   try {
-    const { tempFilePath } = await wx.cloud.downloadFile({ fileID: url })
-    await file.saveTempFile(tempFilePath, savePath)
-  } catch (error: any) {
-    console.error('download Cloud File Error:', error)
-    throw Error('文件下载出错[033]')
+    const args: WechatMiniprogram.DownloadFileOption = {
+      url
+    }
+    if(options.header) {
+      args.header = options.header
+    }
+    const res:WechatMiniprogram.DownloadFileSuccessCallbackResult = await toPromise(download, args)
+    if (res.statusCode !== 200) {
+      throw new CustomError(`文件下载出错[${res.statusCode}]`)
+    }
+    if (!res.tempFilePath) {
+      throw new CustomError("文件下载出错[104]")
+    }
+    await file.saveTempFile(res.tempFilePath, options.savePath)
+    return res
+  } catch (error) {
+    console.error(error)
+    if(error instanceof CustomError){
+      throw error
+    }
+    throw Error("文件下载出错[100]")
   }
 }
 
@@ -152,42 +177,41 @@ function createHttpUploader(options:IHttpRequestOptions){
   }
 }
 
-function createHttpDownloader(options:IHttpRequestOptions){ 
-  return async ({url, options:{url:fileId, savePath}}) => {
-    const download = args => wx.downloadFile(args)
-    let res:WechatMiniprogram.DownloadFileSuccessCallbackResult
+function createCosUploader(){
+  return async (filePath:string, options) => {
+    const upload = args => wx.uploadFile(args)
+    let resp
 
-    const args: WechatMiniprogram.DownloadFileOption = {
-      url: `${options.api}/${url}?url=${fileId}`,
-      header: {
-        Token: options.token,
-        'x-origin': 'http'
-      },
+    const args = {
+      url: options.url,
+      filePath,
+      formData: options.formData,
+      name: 'file'
     }
 
-    // #if NATIVE
-    const token = await getCache<string>('KATU_APP_TOKEN').catch(console.debug)
-    args.header!.Token = token || ''
-    // #endif
-    
     try {
-      res = await toPromise(download, args)
-    } catch (error) {
-      console.error(error)
-      throw Error("文件下载出错[031]")
+      resp = await toPromise<string>(upload, args)
+    } catch (error:any) {
+      console.error('cos upload err:',error)
+      if(error.errMsg){
+        throw Error('上传出错了[021]')
+      }
+      throw error
     }
-    if (res.statusCode !== 200) {
-      throw Error(`文件下载出错[${res.statusCode}]`)
+
+    if(resp.statusCode !== 200){
+      console.error('cos upload resp err:',resp)
+      if(resp.statusCode === 413){
+        throw Error(`选择的文件太大了，无法上传`)
+      }
+      throw Error(`上传出错了[${resp.statusCode}]`)
     }
-    if (!res.tempFilePath) {
-      throw Error("文件下载出错[032]")
-    }
-    await file.saveTempFile(res.tempFilePath, savePath)
+    return resp.data
   }
 }
 
 export function createRequest(config:IRequestConfig){
-  let requestor, uploader, downloader
+  let requestor, uploader
 
   if(config.type === 'cloud'){
     wx.cloud.init({
@@ -196,16 +220,15 @@ export function createRequest(config:IRequestConfig){
     })
     requestor = createCloudRequestor(config.cloud!)
     uploader = uploadCloudFile
-    downloader = ({options})=> downloadCloudFile(options.url, options.savePath)
   }else{
     requestor = createHttpRequestor(config.http!)
     uploader = createHttpUploader(config.http!)
-    downloader = createHttpDownloader(config.http!)
   }
 
   return {
+    cosUpload: createCosUploader(),
     request: <R = void>(url:string, data?, options?):Promise<R> => request(url,data||{},requestor, options),
     upload: (url:string, options):Promise<string> => uploader({url, options}),
-    download: (url:string, options):Promise<void> => downloader({url, options})
+    download: downloadFile
   }
 }
