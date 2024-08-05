@@ -153,6 +153,7 @@ Page({
   },
 
   async dataSyncCheck(){
+    if(!this.data.card._id) return
     loadData(cardManager.syncCheck, this.id, {
       hideLoading:true,
       finally: ()=>{
@@ -162,7 +163,7 @@ Page({
       }
     }).then(async needSync=>{
       if(needSync){
-        const { confirm } = await app.showChoose('检查到云端数据有变动\n是否同步最新数据？')
+        const { confirm } = await app.showChoose('检查到云端数据有变动\n同步最新数据？')
         if(confirm){
           await this.loadData({ ignoreCache:true , showText:'同步最新数据'})
         }
