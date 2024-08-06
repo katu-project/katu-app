@@ -18,6 +18,7 @@
     "pages/change-log/index",
     "pages/settings/index",
     "pages/settings/data/index",
+    "pages/settings/data/cos/index",
     "pages/settings/security/index",
     "pages/settings/security/master-key/index",
     "pages/settings/security/mini-key/index",

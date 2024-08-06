@@ -33,6 +33,18 @@ interface IUser {
     account: {
 
     },
+    storage: {
+      cos: {
+        enable: boolean,
+        keyId: string,
+        keyPack: string,
+        type: string,
+        bucket: string,
+        region: string,
+        secretId: string,
+        secretKey: string
+      }
+    },
     security: {
       logins: {
         github: {

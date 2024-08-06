@@ -155,6 +155,51 @@ export default class User extends Controller {
     })
   }
 
+  async setCustomStorage({cosConfig, masterKey}){
+    const cosJsonString = JSON.stringify({
+      type: 'tencent.cos',
+      bucket: cosConfig.bucket,
+      region: cosConfig.region,
+      secret: {
+        id: cosConfig.secretId,
+        key: cosConfig.secretKey
+      }
+    })
+    const keyId = this.crypto.getStringHash(cosJsonString,'SHA1')
+    const keyPack = await this.crypto.encryptString(cosJsonString, masterKey)
+    const savePack = {
+      enable: cosConfig.enable,
+      keyId,
+      keyPack,
+      type: cosConfig.type,
+      bucket: cosConfig.bucket,
+      region: cosConfig.region,
+      secretId: '*'.repeat(10) + cosConfig.secretId.slice(-4),
+      secretKey: '*'.repeat(10) + cosConfig.secretKey.slice(-4)
+    }
+    await this.invokeApi('updateCustomStorage', {
+      config: savePack
+    })
+    await this.deleteLocalData('USER_INFO_CACHE_KEY')
+  }
+
+  async removeCustomStorage(){
+    await this.invokeApi('updateCustomStorage', {
+      config: {},
+      action: 'delete'
+    })
+    await this.deleteLocalData('USER_INFO_CACHE_KEY')
+  }
+
+  async configCustomStorage(enable:boolean){
+    await this.invokeApi('updateCustomStorage', {
+      config: {
+        enable 
+      }
+    })
+    await this.deleteLocalData('USER_INFO_CACHE_KEY')
+  }
+
   // 未使用
   async bindTelNumber(data){
     return this.invokeApi('bindTelNumber', data)

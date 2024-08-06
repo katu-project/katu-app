@@ -1,0 +1,57 @@
+<cu-custom bgColor="bg-cyan" isBack="{{true}}">
+  <view slot="backText">返回</view>
+  <view slot="content">自定义存储</view>
+</cu-custom>
+
+<form>
+  <view class="cu-form-group margin-top">
+		<view class="title">存储服务商</view>
+		<picker bindchange="typeChange" range-key="label" value="{{value}}" range="{{typeList}}">
+			<view class="picker">
+				{{selectedType||'未选择'}}
+			</view>
+		</picker>
+	</view>
+	<block wx:if="{{cosConfig.type}}">
+    <view class="cu-form-group">
+      <view class="title">存储桶</view>
+      <input placeholder="存储桶名称" value="{{cosConfig.bucket}}" bindinput="onBindinput" data-key="bucket"></input>
+    </view>
+    <view class="cu-form-group">
+      <view class="title">地域</view>
+      <input placeholder="存储桶地域" value="{{cosConfig.region}}" bindinput="onBindinput" data-key="region"></input>
+    </view>
+    <view class="cu-form-group">
+      <view class="title">SecretId</view>
+      <input placeholder="密钥 ID" value="{{cosConfig.secretId}}" bindinput="onBindinput" data-key="secretId"></input>
+    </view>
+    <view class="cu-form-group">
+      <view class="title">SecretKey</view>
+      <input placeholder="密钥 KEY" value="{{cosConfig.secretKey}}" bindinput="onBindinput" data-key="secretKey"></input>
+    </view>
+    <view class="cu-form-group">
+      <view class="title">启用配置</view>
+      <switch checked="{{cosConfig.enable}}" bindchange="enableChange"></switch>
+    </view>
+  </block>
+</form>
+
+<view class="margin-lr margin-top-xl flex-col">
+  <button wx:if="{{cosConfig.type}}" style="width:80vw" class="cu-btn shadow bg-cyan rb-10 lg margin-bottom-lg" bindtap="tapToSave">
+    <view class="gfw text-white">
+      保存配置
+    </view>
+  </button>
+  <button wx:if="{{created}}" style="width:80vw" class="cu-btn shadow bg-red rb-10 lg margin-bottom-lg" bindtap="tapToDelete">
+    <view class="gfw text-white">
+      删除配置
+    </view>
+  </button>
+</view>
+
+<input-key
+  tips="输入密码："
+  bind:confirm="inputKeyConfirm"
+  bind:tapSubBtn="tapToForgetKey"
+  result="{{inputKeyResult||''}}" 
+  show="{{showInputKey}}" />

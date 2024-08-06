@@ -14,6 +14,7 @@ export * as cache from './cache'
 export { UPNG as upng } from './upng'
 export * as bip39 from './bip39/index'
 export * as qrcode from './qrcode/index'
+export * as cos from './cos'
 
 function checkTimeout(oldTime:number, gapTime:number){
   const nowTime = getCurrentTimestamp()

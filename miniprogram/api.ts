@@ -9,7 +9,7 @@ export default {
 
   uploadFile: (filePath:string, uploadInfo) => upload('app/upload', {filePath, uploadInfo}),
   
-  cosUpload: (data:{filePath:string, options?}) => cosUpload(data.filePath, data.options),
+  cosUpload: (data:{filePath:string, options:{url:string,formData:IAnyObject}}) => cosUpload(data.filePath, data.options),
   // sys
 
   appStatus: () => request('app/status'),
@@ -67,6 +67,8 @@ export default {
 
   // user
   updateUserConfig: (configItem:any) => request('user/updateConfig', configItem),
+  
+  updateCustomStorage: (data:{config:IAnyObject,action?:string}) => request('user/storage/cos', data),
 
   updateUserProfile: (data:any) => request('user/updateProfile', data),
   

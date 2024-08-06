@@ -4,17 +4,28 @@
 </cu-custom>
 
 <view class="cu-list menu sm-border card-menu margin-top">
+  <view class="cu-item arrow" bindtap="tapToPage" data-page="settings/data/cos/index">
+    <view class="content">
+    <text class="">自定义存储</text>
+    </view>
+    <view class="action">
+      <text class="text-green text-sm" wx:if="{{config_storage_cos}}">已启用</text>
+      <text class="text-yellow text-sm" wx:else>未启用</text>
+    </view>
+  </view>
+  <view class="padding bg-white text-grey">使用自有存储储存卡片数据</view>
 
   <view class="cu-item">
     <view class="content">
     <text class="">删除缓存数据</text>
     </view>
     <view class="action">
-      <button class="cu-btn line-red light gfw w-150" bindtap="tapToClearCacheData">
-        清除</button>
+      <button class="cu-btn round line-red light gfw w-150" bindtap="tapToClearCacheData">
+        <text class="cuIcon-delete"></text>
+      </button>
     </view>
   </view>
-  <view class="padding bg-white text-grey">通过删除缓存数据可以修复一些使用异常</view>
+  <view class="padding bg-white text-grey">可以修复一些使用过程中的数据异常情况</view>
 
   <view class="cu-item">
     <view class="content">
@@ -22,7 +33,7 @@
     </view>
     <view class="action">
       <button class="cu-btn round line-green light gfw w-150" bindtap="tapToExportData">
-        <text class="cuIcon-down"></text> 导出</button>
+        <text class="cuIcon-down"></text></button>
     </view>
   </view>
   <view class="padding bg-white text-grey">可用于备份或者转移数据</view>

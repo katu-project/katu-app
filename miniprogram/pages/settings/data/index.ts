@@ -1,9 +1,12 @@
 import { loadData } from '@/utils/index'
 import { getAppManager } from '@/controller/app'
+import { getUserManager } from '@/controller/user'
 const app = getAppManager()
+const user = getUserManager()
 
 Page({
   data: {
+    config_storage_cos: false
   },
 
   onLoad() {
@@ -15,7 +18,9 @@ Page({
   },
 
   onShow() {
-
+    this.setData({
+      config_storage_cos: user.config?.storage.cos.enable
+    })
   },
 
   async tapToExportData(){
@@ -28,5 +33,9 @@ Page({
     await app.showConfirm('确认清空缓存数据？')
     await loadData(app.clearCacheData)
     app.showNotice('缓存数据删除成功')
+  },
+
+  tapToPage(e){
+    app.goToPage(e.currentTarget.dataset.page)
   }
 })
