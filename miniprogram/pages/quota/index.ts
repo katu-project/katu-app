@@ -71,7 +71,10 @@ Page({
     })
     this.setData({
       'quota.remain': user.quota,
-      list: logs
+      list: logs.map(e=>{
+        e['time'] = new Date(e.createTime).toISOString().split('T')[0]
+        return e
+      })
     })
   },
 
