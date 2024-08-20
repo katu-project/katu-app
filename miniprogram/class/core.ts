@@ -1,7 +1,7 @@
 import Base from '@/class/base'
 import Const from "@/const"
 import Config from '@/config/index'
-import { cache, file, crypto, checkTimeout, chooseLocalImage, scanQrcode } from "@/utils/index"
+import { cache, file, crypto, checkTimeout, chooseLocalImage, scanQrcode, cos } from "@/utils/index"
 import api from '@/api'
 
 
@@ -142,7 +142,7 @@ export default class Core extends Base {
     return this.getFilePath(this.getConst('APP_DOWN_DIR'), fileName)
   }
 
-  async downloadFile(options: { url: string, savePath?: string, ignoreCache?: boolean }) {
+  async downloadFile(options: { url: string, savePath?: string, ignoreCache?: boolean, customOption? }) {
     let { url, savePath } = options
     if (!savePath) {
       savePath = await this.getTempFilePath('down')
@@ -158,9 +158,16 @@ export default class Core extends Base {
       }
     }
     console.debug(`start download file:`, url)
-    const downloadInfo = await this.invokeApi('getDownloadInfo', { fileId:url })
+    let downloadInfo = {
+      url: ''
+    }
+    if(options.customOption){
+      downloadInfo.url = cos.getDownloadUrl(url.slice('s3+://'.length), options.customOption)
+    }else{
+      downloadInfo = await this.invokeApi('getDownloadInfo', { fileId:url })
+    }
     await this.invokeApi('downloadFile', {
-      url: downloadInfo.downloadUrl,
+      url: downloadInfo.url,
       options:{
         savePath
       }
@@ -168,14 +175,20 @@ export default class Core extends Base {
     return savePath
   }
 
-  async uploadFile(filePath:string, type:UploadFileType) {
+  async uploadFile(filePath:string, type:UploadFileType, customOption?) {
     const uploadInfo = await this.invokeApi('getUploadInfo', { type })
-    if(uploadInfo.cos){
+    if(customOption || uploadInfo.cos){
+      let prefix = 's3://'
+      let options = uploadInfo.cos
+      if(customOption){
+        prefix = 's3+://'
+        options = cos.getUploadInfo(uploadInfo.cloudPath, customOption)
+      }
       await this.invokeApi('cosUpload', {
         filePath,
-        options: uploadInfo.cos
+        options
       })
-      return 's3://' + uploadInfo.cloudPath
+      return `${prefix}${uploadInfo.cloudPath}`
     }
     return this.invokeApi('uploadFile', filePath, uploadInfo)
   }

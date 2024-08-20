@@ -72,6 +72,10 @@ export default class User extends Controller {
     return this.user.contact?.email
   }
 
+  get storage(){
+    return this.user.config?.storage
+  }
+
   get user(){
     return this._user
   }
@@ -153,6 +157,14 @@ export default class User extends Controller {
       type: 'quota',
       transaction
     })
+  }
+
+  async getCustomStorageConfig(masterKey){
+    if(!this.storage?.cos.enable) throw Error('未配置自定义存储')
+    const cosJsonStr = this.crypto.decryptString(this.storage?.cos.keyPack, masterKey)
+    if(this.crypto.getStringHash(cosJsonStr, 'SHA1') !== this.storage.cos.keyId) throw Error('提取配置出错')
+    const cosJson = JSON.parse(cosJsonStr)
+    return cosJson
   }
 
   async setCustomStorage({cosConfig, masterKey}){

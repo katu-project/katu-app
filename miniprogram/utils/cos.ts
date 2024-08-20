@@ -31,7 +31,7 @@ export function getDownloadUrl(key:string, config:CosConfigType){
   return url
 }
 // 获取签名
-export const getUploadInfo = function (key:string, config:CosConfigType) {
+export function getUploadInfo(key:string, config:CosConfigType) {
   let cosHost = `${config.bucket}.cos.${config.region}.myqcloud.com`
   if(config.url){
     

@@ -1,4 +1,6 @@
 import Controller from '@/class/controller'
+import { getUserManager } from '@/controller/user'
+import { getAppManager } from '@/controller/app'
 import { file } from '@/utils/index'
 
 class CardManager extends Controller{
@@ -8,6 +10,14 @@ class CardManager extends Controller{
   }
 
   init(){
+  }
+
+  get user(){
+    return getUserManager()
+  }
+
+  get app(){
+    return getAppManager()
   }
 
   async _updateNotEncryptImage(images:ICardImage[]){
@@ -29,14 +39,14 @@ class CardManager extends Controller{
           }else{
             await this.checkImageType(pic.url)
             console.log(`检测到卡面${idx}修改，重新上传`)
-            image.url = await this.uploadCardFile(pic.url)
+            image.url = await this._uploadImage(pic.url)
           }
         }
       }else{  // 更新添加卡面
         console.log(`检测到新增卡面${idx}，重新保存卡片数据`)
         await this.checkImageType(pic.url)
         image.hash = await this.getImageHash(pic.url)
-        image.url = await this.uploadCardFile(pic.url)
+        image.url = await this._uploadImage(pic.url)
       }
       newImages.push(image)
     }
@@ -61,7 +71,7 @@ class CardManager extends Controller{
         await this.checkImageType(pic.url)
         image.url = pic.url
         const encrytedImage = await this.encryptImage(image, extraData, key)
-        image.url = await this.uploadCardFile(encrytedImage.path)
+        image.url = await this._uploadImage(encrytedImage.path)
         image.salt = encrytedImage.keySalt
         image.ccv = encrytedImage.ccv
       }
@@ -88,11 +98,11 @@ class CardManager extends Controller{
           image.hash = await this.getImageHash(image.url)
           if(encrypted){
             const encrytedImage = await this.encryptImage(image, info, key)
-            image.url = await this.uploadCardFile(encrytedImage.path)
+            image.url = await this._uploadImage(encrytedImage.path)
             image.salt = encrytedImage.keySalt
             image.ccv = encrytedImage.ccv
           }else{
-            image.url = await this.uploadCardFile(image.url)
+            image.url = await this._uploadImage(image.url)
           }
           savedImageList.push(image)
         }
@@ -181,10 +191,36 @@ class CardManager extends Controller{
   }
 
   async downloadImage(image: Pick<ICardImage,'url'>){
+    let customOption
+    if(image.url.startsWith('s3+://')){
+      if(!this.user.config?.storage?.cos?.enable) throw Error('自定义存储未启用，无法获取卡片数据')
+      const cosConfig = await this.user.getCustomStorageConfig(this.app.masterKeyManager.masterKey)
+      customOption = {
+        bucket: cosConfig.bucket,
+        region: cosConfig.region,
+        secretId: cosConfig.secret.id,
+        secretKey: cosConfig.secret.key
+      }
+    }
     return this.downloadFile({
       url: image.url,
-      savePath: await this.getDownloadFilePath(image)
+      savePath: await this.getDownloadFilePath(image),
+      customOption
     })
+  }
+
+  async _uploadImage(filePath){
+    let customOption
+    if(this.user.config?.storage?.cos?.enable){
+      const cosConfig = await this.user.getCustomStorageConfig(this.app.masterKeyManager.masterKey)
+      customOption = {
+        bucket: cosConfig.bucket,
+        region: cosConfig.region,
+        secretId: cosConfig.secret.id,
+        secretKey: cosConfig.secret.key
+      }
+    }
+    return this.uploadCardFile(filePath, customOption)
   }
 
   // 渲染层业务接口
