@@ -84,7 +84,7 @@ class MiniKeyManager extends KeyManager {
     } catch (error:any) {
       throw Error('创建和同步需要在相同客户端')
     }
-    const miniKeyJsonString = await file.readFile<string>(miniKeyFilePath)
+    const miniKeyJsonString = await file.readFile<string>(miniKeyFilePath, 'utf8')
     const miniKeyEncryptPack = await this.crypto.encryptString(miniKeyJsonString, masterKey)
     return this.invokeApi('setUserMiniKeyInfo', {
       configItem: 'useSyncMiniKey',
@@ -174,7 +174,7 @@ class MasterKeyManager extends KeyManager{
       const miniKeySaveDataPath = await this.getMiniKeyPath(this.user.miniKeyPack?.syncId!)
       let mixMiniKey, keyPack
       try {
-        const keyPackJson = JSON.parse(await file.readFile<string>(miniKeySaveDataPath))
+        const keyPackJson = JSON.parse(await file.readFile<string>(miniKeySaveDataPath, 'utf8'))
         mixMiniKey = `${key}${keyPackJson.rk}`
         keyPack = keyPackJson.keyPack
       } catch (error) {

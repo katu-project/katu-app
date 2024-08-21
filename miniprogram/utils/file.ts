@@ -10,8 +10,8 @@ export async function deleteFile(filePath){
 export async function readFile<T extends string | ArrayBuffer>(filePath:string, encoding?:string){
   const readFile = args => wx.getFileSystemManager().readFile(args)
   readFile.noLog = true
-  const options = {filePath, encoding: 'utf8'}
-  if(encoding) options.encoding = encoding
+  const options = {filePath}
+  if(encoding) options['encoding'] = encoding
   return toPromise<T>(readFile, options , 'data')
 }
 

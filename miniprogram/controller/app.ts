@@ -563,7 +563,7 @@ class AppManager extends Controller {
       error['code'] = 1
       throw error
     }
-    const downTestFileContent = await file.readFile(testFile)
+    const downTestFileContent = await file.readFile(testFile, 'utf8')
     if(downTestFileContent !== testContent) throw Error('内容检查错误')
   }
 

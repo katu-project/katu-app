@@ -57,7 +57,7 @@ Page({
   async showDebugLog(){
     console._log('showDebugLog')
     const logfile = `${wx.env.USER_DATA_PATH}/err.log`
-    const text = await file.readFile(logfile)
+    const text = await file.readFile(logfile, 'utf8')
     console._log(text)
   }
 })
