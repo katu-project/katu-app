@@ -9,7 +9,7 @@ export default {
 
   uploadFile: (filePath:string, uploadInfo) => upload('app/upload', {filePath, uploadInfo}),
   
-  cosUpload: (data:{filePath:string, options:{url:string,formData:IAnyObject}}) => cosUpload(data.filePath, data.options),
+  cosUpload: (data:{filePath:string, options:{url:string, method?:string, formData?:IAnyObject}}) => cosUpload(data.filePath, data.options),
   // sys
 
   appStatus: () => request('app/status'),

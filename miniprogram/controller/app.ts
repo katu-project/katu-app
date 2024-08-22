@@ -537,20 +537,17 @@ class AppManager extends Controller {
     this.publishCacheDeleteEvent()
   }
 
-  async cosConnectTest(cosConfig:{bucket:string,region:string,secretId:string,secretKey:string}){
+  async cosConnectTest(cosConfig){
     const testContent = 'katu custom storage connect test'
     const testFile = await this.getTempFilePath('cos-connect-test.txt')
     await file.writeFile(testFile, testContent)
     const fileKey = testFile.split('/').at(-1)!
     const uploadInfo = cos.getUploadInfo(fileKey, cosConfig)
-    const cosDownUrl = cos.getDownloadUrl(fileKey, cosConfig)
+    const cosDownUrl = cos.getDownloadInfo(fileKey, cosConfig)
     try {
       await this.invokeApi('cosUpload',{
         filePath: testFile,
-        options: {
-          url: uploadInfo.url,
-          formData: uploadInfo.formData
-        }
+        options: uploadInfo
       })
       await file.deleteFile(testFile)
       await this.invokeApi('downloadFile', {

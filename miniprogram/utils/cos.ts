@@ -1,14 +1,66 @@
 const crypto = require('crypto-js')
 import { Base64 } from 'js-base64'
 
-type CosConfigType = {
+interface CosConfigType {
   bucket: string,
   region: string,
   secretId?: string,
   secretKey?: string,
   url?:string
 }
-export function getDownloadUrl(key:string, config:CosConfigType){
+
+interface CloudflareCosConfig extends CosConfigType {
+  accountId: string
+}
+
+interface CosOptions extends CloudflareCosConfig {
+  type: string
+}
+
+function getCloudflareR2Info(key:string, actionId:'GetObject'|'PutObject', config:CloudflareCosConfig){
+  const awsMark = 'aws4_request'
+  const algorithm = 'AWS4-HMAC-SHA256'
+  const time = new Date().toISOString().replace(/[-:\.]/g,'').slice(0,-4)+'Z'
+  const date = time.split('T')[0]
+  const region = "auto";
+  const service = "s3"
+  const contentHash = 'UNSIGNED-PAYLOAD'
+  const host = `${config.accountId}.r2.cloudflarestorage.com`
+  key = key.startsWith('/') ? key : '/' + key
+  const requestMethod = {
+    GetObject: 'GET',
+    PutObject: 'PUT'
+  }
+  const queryString = [
+    `X-Amz-Algorithm=${algorithm}`,
+    `X-Amz-Content-Sha256=${contentHash}`,
+    `X-Amz-Credential=${config.secretId}%2F${date}%2F${region}%2F${service}%2F${awsMark}`,
+    `X-Amz-Date=${time}`,
+    "X-Amz-Expires=3600",
+    "X-Amz-SignedHeaders=host",
+    `x-id=${actionId}`
+  ].join('&')
+  const requestInfo = [
+    requestMethod[actionId],
+    key,
+    queryString,
+    `host:${config.bucket}.${host}`,
+    '',
+    'host',
+    contentHash
+  ]
+  const requestHash = crypto.SHA256(requestInfo.join('\n')).toString()
+  const signString = `${algorithm}\n${time}\n${date}/${region}/${service}/${awsMark}\n${requestHash}`
+  const kdate = crypto.HmacSHA256(date, "AWS4"+config.secretKey);
+  const kregion = crypto.HmacSHA256(region, kdate);
+  const kservice = crypto.HmacSHA256(service, kregion);
+  const ksigning = crypto.HmacSHA256(awsMark, kservice);
+  const sign = crypto.HmacSHA256(signString, ksigning).toString()
+  const url = `https://${config.bucket}.${host}${key}?${queryString}&X-Amz-Signature=${sign}`
+  return url
+}
+
+function getTencentCosDownloadUrl(key:string, config:CosConfigType){
   let cosHost = `${config.bucket}.cos.${config.region}.myqcloud.com`
   
   key = key.startsWith('/') ? key : '/' + key
@@ -31,7 +83,7 @@ export function getDownloadUrl(key:string, config:CosConfigType){
   return url
 }
 // 获取签名
-export function getUploadInfo(key:string, config:CosConfigType) {
+function getTencentCosUploadInfo(key:string, config:CosConfigType) {
   let cosHost = `${config.bucket}.cos.${config.region}.myqcloud.com`
   if(config.url){
     
@@ -76,4 +128,29 @@ export function getUploadInfo(key:string, config:CosConfigType) {
       'q-signature': qSignature
     }
   }
-};
+}
+
+export function getUploadInfo(key:string, config:CosOptions){
+  switch (config.type) {
+    case 'cloudflare.r2':
+      return {
+        url: getCloudflareR2Info(key,'PutObject', config),
+        method: 'PUT'
+      }
+    case 'tencent.cos':
+      return getTencentCosUploadInfo(key, config)
+    default:
+      throw Error('不支持的存储类型')
+  }
+}
+
+export function getDownloadInfo(key:string, config:CosOptions){
+  switch (config.type) {
+    case 'cloudflare.r2':
+      return getCloudflareR2Info(key, 'GetObject', config)
+    case 'tencent.cos':
+      return getTencentCosDownloadUrl(key, config)
+    default:
+      throw Error('不支持的存储类型')
+  }
+}

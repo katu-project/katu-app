@@ -162,7 +162,7 @@ export default class Core extends Base {
       url: ''
     }
     if(options.customOption){
-      downloadInfo.url = cos.getDownloadUrl(url.slice('s3+://'.length), options.customOption)
+      downloadInfo.url = cos.getDownloadInfo(url.slice('s3+://'.length), options.customOption)
     }else{
       downloadInfo = await this.invokeApi('getDownloadInfo', { fileId:url })
     }

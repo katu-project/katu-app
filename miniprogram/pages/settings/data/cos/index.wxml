@@ -12,7 +12,7 @@
 			</view>
 		</picker>
 	</view>
-	<block wx:if="{{cosConfig.type}}">
+	<block wx:if="{{cosConfig.type==='tencent.cos'}}">
     <view class="cu-form-group">
       <view class="title">存储桶</view>
       <input placeholder="存储桶名称" value="{{cosConfig.bucket}}" bindinput="onBindinput" data-key="bucket"></input>
@@ -20,6 +20,28 @@
     <view class="cu-form-group">
       <view class="title">地域</view>
       <input placeholder="存储桶地域" value="{{cosConfig.region}}" bindinput="onBindinput" data-key="region"></input>
+    </view>
+    <view class="cu-form-group">
+      <view class="title">SecretId</view>
+      <input placeholder="密钥 ID" value="{{cosConfig.secretId}}" bindinput="onBindinput" data-key="secretId"></input>
+    </view>
+    <view class="cu-form-group">
+      <view class="title">SecretKey</view>
+      <input placeholder="密钥 KEY" value="{{cosConfig.secretKey}}" bindinput="onBindinput" data-key="secretKey"></input>
+    </view>
+    <view class="cu-form-group">
+      <view class="title">启用配置</view>
+      <switch checked="{{cosConfig.enable}}" bindchange="enableChange"></switch>
+    </view>
+  </block>
+  <block wx:elif="{{cosConfig.type==='cloudflare.r2'}}">
+    <view class="cu-form-group">
+      <view class="title">帐户ID</view>
+      <input placeholder="存储桶所属帐户 ID" value="{{cosConfig.accountId}}" bindinput="onBindinput" data-key="accountId"></input>
+    </view>
+    <view class="cu-form-group">
+      <view class="title">存储桶</view>
+      <input placeholder="存储桶名称" value="{{cosConfig.bucket}}" bindinput="onBindinput" data-key="bucket"></input>
     </view>
     <view class="cu-form-group">
       <view class="title">SecretId</view>

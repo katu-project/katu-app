@@ -194,13 +194,7 @@ class CardManager extends Controller{
     let customOption
     if(image.url.startsWith('s3+://')){
       if(!this.user.config?.storage?.cos?.enable) throw Error('自定义存储未启用，无法获取卡片数据')
-      const cosConfig = await this.user.getCustomStorageConfig(this.app.masterKeyManager.masterKey)
-      customOption = {
-        bucket: cosConfig.bucket,
-        region: cosConfig.region,
-        secretId: cosConfig.secret.id,
-        secretKey: cosConfig.secret.key
-      }
+      customOption = await this.user.getCustomStorageConfig(this.app.masterKeyManager.masterKey)
     }
     return this.downloadFile({
       url: image.url,
@@ -212,13 +206,10 @@ class CardManager extends Controller{
   async _uploadImage(filePath){
     let customOption
     if(this.user.config?.storage?.cos?.enable){
-      const cosConfig = await this.user.getCustomStorageConfig(this.app.masterKeyManager.masterKey)
-      customOption = {
-        bucket: cosConfig.bucket,
-        region: cosConfig.region,
-        secretId: cosConfig.secret.id,
-        secretKey: cosConfig.secret.key
+      if(this.app.isMp){
+        throw Error('小程序无法使用自定义存储，请使用 APP 操作')
       }
+      customOption = await this.user.getCustomStorageConfig(this.app.masterKeyManager.masterKey)
     }
     return this.uploadCardFile(filePath, customOption)
   }

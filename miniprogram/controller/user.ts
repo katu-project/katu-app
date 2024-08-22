@@ -168,27 +168,21 @@ export default class User extends Controller {
   }
 
   async setCustomStorage({cosConfig, masterKey}){
-    const cosJsonString = JSON.stringify({
-      type: 'tencent.cos',
-      bucket: cosConfig.bucket,
-      region: cosConfig.region,
-      secret: {
-        id: cosConfig.secretId,
-        key: cosConfig.secretKey
-      }
-    })
+    const cosJsonString = JSON.stringify(cosConfig)
     const keyId = this.crypto.getStringHash(cosJsonString,'SHA1')
     const keyPack = await this.crypto.encryptString(cosJsonString, masterKey)
-    const savePack = {
-      enable: cosConfig.enable,
+    
+    // 非指定字段脱敏处理
+    Object.keys(cosConfig).map((key)=>{
+      if(!['type','bucket','region','enable'].includes(key)){
+        cosConfig[key] = '*'.repeat(10) + cosConfig[key].slice(-4)
+      }
+    })
+
+    const savePack = Object.assign(cosConfig,{
       keyId,
-      keyPack,
-      type: cosConfig.type,
-      bucket: cosConfig.bucket,
-      region: cosConfig.region,
-      secretId: '*'.repeat(10) + cosConfig.secretId.slice(-4),
-      secretKey: '*'.repeat(10) + cosConfig.secretKey.slice(-4)
-    }
+      keyPack
+    })
     await this.invokeApi('updateCustomStorage', {
       config: savePack
     })

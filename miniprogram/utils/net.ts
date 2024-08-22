@@ -10,6 +10,24 @@ class CustomError extends Error {
   }
 }
 
+async function httpRequest(url:string, data, options:Omit<WechatMiniprogram.RequestOption,'url'>){
+  const request = args => wx.request(args)
+  request.noLog = true
+  const args:WechatMiniprogram.RequestOption = {
+    url,
+    data,
+    ...options
+  }
+  return toPromise(request, args)
+}
+
+export async function httpPutRequest(url:string, data, options:Omit<WechatMiniprogram.RequestOption,'url'|'method'>){
+  return httpRequest(url, data, {
+    method: 'PUT',
+    ...options
+  })
+}
+
 async function request(action:string, data:any, requestor, options){
   const error = {
     code: 0,
@@ -179,18 +197,33 @@ function createHttpUploader(options:IHttpRequestOptions){
 
 function createCosUploader(){
   return async (filePath:string, options) => {
-    const upload = args => wx.uploadFile(args)
+    let uploader:()=>any
+
+    if(options.method === 'PUT'){
+      uploader = async ()=>{
+        const fileBinary = await file.readFile(filePath)
+        return httpPutRequest(options.url, fileBinary, {
+          header: {
+            'content-type': 'application/octet-stream'
+          }
+        })
+      }
+    }else{
+      const upload = args => wx.uploadFile(args)
+      const args = {
+        url: options.url,
+        filePath,
+        formData: options.formData,
+        name: 'file'
+      }
+      uploader = async ()=>{
+        return toPromise<string>(upload, args)
+      }
+    }
     let resp
 
-    const args = {
-      url: options.url,
-      filePath,
-      formData: options.formData,
-      name: 'file'
-    }
-
     try {
-      resp = await toPromise<string>(upload, args)
+      resp = await uploader()
     } catch (error:any) {
       console.error('cos upload err:',error)
       if(error.errMsg){

@@ -9,7 +9,28 @@ Page({
     typeList: [
       {
         label: '腾讯云',
-        value: 'tencent.cos'
+        value: 'tencent.cos',
+        config: {
+          enable: false,
+          type: 'tencent.cos',
+          bucket: '',
+          region: '',
+          secretId: '',
+          secretKey: ''
+        }
+      },
+      {
+        label: 'Cloudflare',
+        value: 'cloudflare.r2',
+        config: {
+          enable: false,
+          type: 'cloudflare.r2',
+          accountId: '',
+          bucket: '',
+          region: 'auto',
+          secretId: '',
+          secretKey: ''
+        }
       }
     ],
     created: false,
@@ -39,18 +60,14 @@ Page({
   async renderData(){
     await user.loadInfo()
     const cos = user.config?.storage.cos
-    if(!cos) return
+    if(!cos?.type) return
+    const selectedType = this.data.typeList.find(e=>e.value===cos.type)
+    const setConfig = Object.assign({},selectedType?.config)
+    Object.keys(setConfig).map(key=>setConfig[key] = cos[key])
     this.setData({
       created: cos.keyId ? true : false,
-      selectedType: this.data.typeList.find(e=>e.value===cos.type)?.label,
-      cosConfig: {
-        enable: cos.enable,
-        type: cos.type,
-        bucket: cos.bucket,
-        region: cos.region,
-        secretId: cos.secretId,
-        secretKey: cos.secretKey
-      }
+      selectedType: selectedType?.label || '',
+      cosConfig: setConfig
     })
   },
 
@@ -104,13 +121,14 @@ Page({
     const item = this.data.typeList[e.detail.value]
     this.setData({
       selectedType: item.label,
-      'cosConfig.type': item.value
+      'cosConfig.type': item.value,
+      cosConfig: Object.assign({},item.config)
     })
   },
 
   async enableChange(e){
     const enable = e.detail.value
-    if(!this.data.created){
+    if(!this.data.created || this.data.cosConfig.type !== user.config?.storage.cos.type){
       this.setData({
         'cosConfig.enable': enable
       })
