@@ -164,19 +164,17 @@ export default class User extends Controller {
     const cosJsonStr = this.crypto.decryptString(this.storage?.cos.keyPack, masterKey)
     if(this.crypto.getStringHash(cosJsonStr, 'SHA1') !== this.storage.cos.keyId) throw Error('提取配置出错')
     const cosJson = JSON.parse(cosJsonStr)
-    return cosJson
+    return cosJson as ICustomStorageConfig
   }
 
-  async setCustomStorage({cosConfig, masterKey}){
+  async setCustomStorage({cosConfig, masterKey}:{cosConfig:ICustomStorageConfig, masterKey:string}){
     const cosJsonString = JSON.stringify(cosConfig)
     const keyId = this.crypto.getStringHash(cosJsonString,'SHA1')
     const keyPack = await this.crypto.encryptString(cosJsonString, masterKey)
     
-    // 非指定字段脱敏处理
-    Object.keys(cosConfig).map((key)=>{
-      if(!['type','bucket','region','enable'].includes(key)){
-        cosConfig[key] = '*'.repeat(10) + cosConfig[key].slice(-4)
-      }
+    // secret 字段脱敏处理
+    Object.keys(cosConfig.secret).map((key)=>{
+      cosConfig.secret[key] = '*'.repeat(10) + cosConfig.secret[key].slice(-4)
     })
 
     const savePack = Object.assign(cosConfig,{

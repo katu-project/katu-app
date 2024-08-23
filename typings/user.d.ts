@@ -35,14 +35,17 @@ interface IUser {
     },
     storage: {
       cos: {
-        enable: boolean,
-        keyId: string,
-        keyPack: string,
         type: string,
+        enable: boolean,
+        keyId?: string,
+        keyPack?: string,
         bucket: string,
         region: string,
-        secretId: string,
-        secretKey: string
+        secret: {
+          secretId?: string
+          secretKey?: string
+          accountId?: string
+        }
       }
     },
     security: {

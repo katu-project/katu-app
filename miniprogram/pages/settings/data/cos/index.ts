@@ -9,28 +9,11 @@ Page({
     typeList: [
       {
         label: '腾讯云',
-        value: 'tencent.cos',
-        config: {
-          enable: false,
-          type: 'tencent.cos',
-          bucket: '',
-          region: '',
-          secretId: '',
-          secretKey: ''
-        }
+        value: 'tencent.cos'
       },
       {
         label: 'Cloudflare',
-        value: 'cloudflare.r2',
-        config: {
-          enable: false,
-          type: 'cloudflare.r2',
-          accountId: '',
-          bucket: '',
-          region: 'auto',
-          secretId: '',
-          secretKey: ''
-        }
+        value: 'cloudflare.r2'
       }
     ],
     created: false,
@@ -40,8 +23,7 @@ Page({
       type: '',
       bucket: '',
       region: '',
-      secretId: '',
-      secretKey: ''
+      secret: {}
     }
   },
 
@@ -57,23 +39,55 @@ Page({
 
   },
 
+  getDefaultCosConfig(serviceType){
+    const baseConfig = {
+      enable: false,
+      type: serviceType,
+      bucket: '',
+      region: '',
+      secret: {
+        secretId: '',
+        secretKey: ''
+      }
+    }
+    if(serviceType === 'cloudflare.r2'){
+      baseConfig.region = 'auto'
+      baseConfig.secret['accountId'] = ''
+    }
+
+    return baseConfig
+  },
+
   async renderData(){
+    const serviceTypeLabel = {
+      'tencent.cos': '腾讯云',
+      'cloudflare.r2': 'Cloudflare'
+    }
+
+    this.setData({
+      selectedType: '',
+      created: false,
+      cosConfig: this.getDefaultCosConfig('')
+    })
     await user.loadInfo()
     const cos = user.config?.storage.cos
     if(!cos?.type) return
-    const selectedType = this.data.typeList.find(e=>e.value===cos.type)
-    const setConfig = Object.assign({},selectedType?.config)
-    Object.keys(setConfig).map(key=>setConfig[key] = cos[key])
+    const setConfig = JSON.parse(JSON.stringify(cos))
+    delete setConfig.keyId
+    delete setConfig.keyPack
     this.setData({
       created: cos.keyId ? true : false,
-      selectedType: selectedType?.label || '',
+      selectedType: serviceTypeLabel[setConfig.type] || '',
       cosConfig: setConfig
     })
   },
 
   async tapToSave(){
     const { cosConfig } = this.data
-    if(Object.keys(cosConfig).some(e=>cosConfig[e]==='')){
+    if(
+      Object.keys(cosConfig).some(e=>cosConfig[e]==='') ||
+      Object.keys(cosConfig.secret).some(e=>cosConfig.secret[e]==='')
+    ){
       app.showMiniNotice('请填写配置')
       return
     }
@@ -98,8 +112,8 @@ Page({
     }
 
     await loadData(app.cosConnectTest,cosConfig,{
-      loadingTitle: '尝试连接测试',
-      failedContent: '连接自定义存储失败，请检查配置'
+      loadingTitle: '连接测试',
+      failedContent: '无法访问存储，请检查配置'
     })
 
     await loadData(user.setCustomStorage, {
@@ -121,8 +135,7 @@ Page({
     const item = this.data.typeList[e.detail.value]
     this.setData({
       selectedType: item.label,
-      'cosConfig.type': item.value,
-      cosConfig: Object.assign({},item.config)
+      cosConfig: this.getDefaultCosConfig(item.value)
     })
   },
 
@@ -151,12 +164,6 @@ Page({
   onBindinput({currentTarget:{dataset: {key}}, detail: {value}}){
     const setData = {
       [`cosConfig.${key}`]: value
-    }
-    if(['bucket','region'].includes(key)){
-      if(value !== user.config?.storage?.cos[key]){
-        setData[`cosConfig.secretId`] = ''
-        setData[`cosConfig.secretKey`] = ''
-      }
     }
     this.setData(setData)
   },

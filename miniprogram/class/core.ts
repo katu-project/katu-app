@@ -142,7 +142,7 @@ export default class Core extends Base {
     return this.getFilePath(this.getConst('APP_DOWN_DIR'), fileName)
   }
 
-  async downloadFile(options: { url: string, savePath?: string, ignoreCache?: boolean, customOption? }) {
+  async downloadFile(options: { url: string, savePath?: string, ignoreCache?: boolean, customOption?:ICustomStorageConfig }) {
     let { url, savePath } = options
     if (!savePath) {
       savePath = await this.getTempFilePath('down')
@@ -175,7 +175,7 @@ export default class Core extends Base {
     return savePath
   }
 
-  async uploadFile(filePath:string, type:UploadFileType, customOption?) {
+  async uploadFile(filePath:string, type:UploadFileType, customOption?:ICustomStorageConfig) {
     const uploadInfo = await this.invokeApi('getUploadInfo', { type })
     if(customOption || uploadInfo.cos){
       let prefix = 's3://'

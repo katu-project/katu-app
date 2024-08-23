@@ -1,31 +1,15 @@
 const crypto = require('crypto-js')
 import { Base64 } from 'js-base64'
 
-interface CosConfigType {
-  bucket: string,
-  region: string,
-  secretId?: string,
-  secretKey?: string,
-  url?:string
-}
-
-interface CloudflareCosConfig extends CosConfigType {
-  accountId: string
-}
-
-interface CosOptions extends CloudflareCosConfig {
-  type: string
-}
-
-function getCloudflareR2Info(key:string, actionId:'GetObject'|'PutObject', config:CloudflareCosConfig){
+function getCloudflareR2Info(key:string, actionId:'GetObject'|'PutObject', config:ICustomStorageConfig){
   const awsMark = 'aws4_request'
   const algorithm = 'AWS4-HMAC-SHA256'
   const time = new Date().toISOString().replace(/[-:\.]/g,'').slice(0,-4)+'Z'
   const date = time.split('T')[0]
-  const region = "auto";
+  const region = config.region;
   const service = "s3"
   const contentHash = 'UNSIGNED-PAYLOAD'
-  const host = `${config.accountId}.r2.cloudflarestorage.com`
+  const host = `${config.secret.accountId}.r2.cloudflarestorage.com`
   key = key.startsWith('/') ? key : '/' + key
   const requestMethod = {
     GetObject: 'GET',
@@ -34,7 +18,7 @@ function getCloudflareR2Info(key:string, actionId:'GetObject'|'PutObject', confi
   const queryString = [
     `X-Amz-Algorithm=${algorithm}`,
     `X-Amz-Content-Sha256=${contentHash}`,
-    `X-Amz-Credential=${config.secretId}%2F${date}%2F${region}%2F${service}%2F${awsMark}`,
+    `X-Amz-Credential=${config.secret.secretId}%2F${date}%2F${region}%2F${service}%2F${awsMark}`,
     `X-Amz-Date=${time}`,
     "X-Amz-Expires=3600",
     "X-Amz-SignedHeaders=host",
@@ -51,7 +35,7 @@ function getCloudflareR2Info(key:string, actionId:'GetObject'|'PutObject', confi
   ]
   const requestHash = crypto.SHA256(requestInfo.join('\n')).toString()
   const signString = `${algorithm}\n${time}\n${date}/${region}/${service}/${awsMark}\n${requestHash}`
-  const kdate = crypto.HmacSHA256(date, "AWS4"+config.secretKey);
+  const kdate = crypto.HmacSHA256(date, "AWS4"+config.secret.secretKey);
   const kregion = crypto.HmacSHA256(region, kdate);
   const kservice = crypto.HmacSHA256(service, kregion);
   const ksigning = crypto.HmacSHA256(awsMark, kservice);
@@ -60,12 +44,12 @@ function getCloudflareR2Info(key:string, actionId:'GetObject'|'PutObject', confi
   return url
 }
 
-function getTencentCosDownloadUrl(key:string, config:CosConfigType){
+function getTencentCosDownloadUrl(key:string, config:ICustomStorageConfig){
   let cosHost = `${config.bucket}.cos.${config.region}.myqcloud.com`
   
   key = key.startsWith('/') ? key : '/' + key
-  const ak = config.secretId
-  const sk = config.secretKey
+  const ak = config.secret.secretId
+  const sk = config.secret.secretKey
   const now = Math.round(Date.now() / 1000)
   const exp = now + 900;
   const qKeyTime = now + ';' + exp
@@ -83,13 +67,10 @@ function getTencentCosDownloadUrl(key:string, config:CosConfigType){
   return url
 }
 // 获取签名
-function getTencentCosUploadInfo(key:string, config:CosConfigType) {
+function getTencentCosUploadInfo(key:string, config:ICustomStorageConfig) {
   let cosHost = `${config.bucket}.cos.${config.region}.myqcloud.com`
-  if(config.url){
-    
-  }
-  const ak = config.secretId
-  const sk = config.secretKey
+  const ak = config.secret.secretId
+  const sk = config.secret.secretKey
   const now = Math.round(Date.now() / 1000)
   const exp = now + 900;
   const qKeyTime = now + ';' + exp
@@ -130,7 +111,7 @@ function getTencentCosUploadInfo(key:string, config:CosConfigType) {
   }
 }
 
-export function getUploadInfo(key:string, config:CosOptions){
+export function getUploadInfo(key:string, config:ICustomStorageConfig){
   switch (config.type) {
     case 'cloudflare.r2':
       return {
@@ -144,7 +125,7 @@ export function getUploadInfo(key:string, config:CosOptions){
   }
 }
 
-export function getDownloadInfo(key:string, config:CosOptions){
+export function getDownloadInfo(key:string, config:ICustomStorageConfig){
   switch (config.type) {
     case 'cloudflare.r2':
       return getCloudflareR2Info(key, 'GetObject', config)

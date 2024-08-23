@@ -537,7 +537,7 @@ class AppManager extends Controller {
     this.publishCacheDeleteEvent()
   }
 
-  async cosConnectTest(cosConfig){
+  async cosConnectTest(cosConfig:ICustomStorageConfig){
     const testContent = 'katu custom storage connect test'
     const testFile = await this.getTempFilePath('cos-connect-test.txt')
     await file.writeFile(testFile, testContent)

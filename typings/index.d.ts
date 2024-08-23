@@ -111,3 +111,15 @@ interface IChangeLog extends IAnyObject{
   version: string
   _id: string
 }
+
+interface ICustomStorageConfig {
+  type: string
+  bucket: string
+  region: string
+  url?: string
+  secret: {
+    secretId?: string
+    secretKey?: string
+    accountId?: string
+  }
+}
