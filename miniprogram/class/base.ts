@@ -7,7 +7,8 @@ export default class Base {
   static instance: Base
   static getInstance<T extends Base>(){
       if(!this.instance){
-          this.instance = selfish(new this())
+        // 使用 selfish 解决传递类方法导致 this 丢失问题
+        this.instance = selfish(new this())
       }
       return this.instance as T
   }
