@@ -1,5 +1,5 @@
 import Controller from '@/class/controller'
-import { showChoose, setClipboardData, sleep, file, showNotice, hasWechatInstall, cos } from '@/utils/index'
+import { showChoose, setClipboardData, sleep, file, showNotice, hasWechatInstall } from '@/utils/index'
 import { getCardManager } from './card'
 import { getUserManager } from './user'
 import { getMiniKeyManager, getMasterKeyManager, getResetKeyManager } from './key'
@@ -535,33 +535,6 @@ class AppManager extends Controller {
     await this.cache.deleteAllCard()
     await this.cache.deleteHomeData()
     this.publishCacheDeleteEvent()
-  }
-
-  async cosConnectTest(cosConfig:ICustomStorageConfig){
-    const testContent = 'katu custom storage connect test'
-    const testFile = await this.getTempFilePath('cos-connect-test.txt')
-    await file.writeFile(testFile, testContent)
-    const fileKey = testFile.split('/').at(-1)!
-    const uploadInfo = cos.getUploadInfo(fileKey, cosConfig)
-    const cosDownUrl = cos.getDownloadInfo(fileKey, cosConfig)
-    try {
-      await this.invokeApi('cosUpload',{
-        filePath: testFile,
-        options: uploadInfo
-      })
-      await file.deleteFile(testFile)
-      await this.invokeApi('downloadFile', {
-        url: cosDownUrl,
-        options: {
-          savePath: testFile
-        }
-      })
-    } catch (error:any) {
-      error['code'] = 1
-      throw error
-    }
-    const downTestFileContent = await file.readFile(testFile, 'utf8')
-    if(downTestFileContent !== testContent) throw Error('内容检查错误')
   }
 
   //数据备份

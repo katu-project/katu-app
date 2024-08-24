@@ -1,6 +1,6 @@
 import Navigation from './navigation'
 import { file, editImage } from '@/utils/index'
-import { getNoticeModule, getCryptoModule, getCacheModule } from '@/module/index'
+import { getNoticeModule, getCryptoModule, getCacheModule, getStorageModule } from '@/module/index'
 
 export default class Controller extends Navigation {
   constructor(){
@@ -17,6 +17,10 @@ export default class Controller extends Navigation {
 
   get cache(){
     return getCacheModule()
+  }
+
+  get storage(){
+    return getStorageModule()
   }
 
   async checkImageType(picPath:string){

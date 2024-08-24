@@ -6,16 +6,7 @@ const user = getUserManager()
 
 Page({
   data: {
-    typeList: [
-      {
-        label: '腾讯云',
-        value: 'tencent.cos'
-      },
-      {
-        label: 'Cloudflare',
-        value: 'cloudflare.r2'
-      }
-    ],
+    typeList: app.storage.ServiceList,
     created: false,
     selectedType: '',
     cosConfig: {
@@ -39,35 +30,11 @@ Page({
 
   },
 
-  getDefaultCosConfig(serviceType){
-    const baseConfig = {
-      enable: false,
-      type: serviceType,
-      bucket: '',
-      region: '',
-      secret: {
-        secretId: '',
-        secretKey: ''
-      }
-    }
-    if(serviceType === 'cloudflare.r2'){
-      baseConfig.region = 'auto'
-      baseConfig.secret['accountId'] = ''
-    }
-
-    return baseConfig
-  },
-
   async renderData(){
-    const serviceTypeLabel = {
-      'tencent.cos': '腾讯云',
-      'cloudflare.r2': 'Cloudflare'
-    }
-
     this.setData({
       selectedType: '',
       created: false,
-      cosConfig: this.getDefaultCosConfig('')
+      cosConfig: app.storage.getDefaultConfig()
     })
     await user.loadInfo()
     const cos = user.config?.storage.cos
@@ -77,7 +44,7 @@ Page({
     delete setConfig.keyPack
     this.setData({
       created: cos.keyId ? true : false,
-      selectedType: serviceTypeLabel[setConfig.type] || '',
+      selectedType: app.storage.ServiceTypeLabel[setConfig.type].label || '',
       cosConfig: setConfig
     })
   },
@@ -111,7 +78,7 @@ Page({
           }
     }
 
-    await loadData(app.cosConnectTest,cosConfig,{
+    await loadData(app.storage.connectTest, cosConfig, {
       loadingTitle: '连接测试',
       failedContent: '无法访问存储，请检查配置'
     })
@@ -135,7 +102,7 @@ Page({
     const item = this.data.typeList[e.detail.value]
     this.setData({
       selectedType: item.label,
-      cosConfig: this.getDefaultCosConfig(item.value)
+      cosConfig: app.storage.getDefaultConfig(item.name)
     })
   },
 

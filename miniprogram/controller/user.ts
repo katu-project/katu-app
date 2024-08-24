@@ -72,7 +72,7 @@ export default class User extends Controller {
     return this.user.contact?.email
   }
 
-  get storage(){
+  get storageConfig(){
     return this.user.config?.storage
   }
 
@@ -160,9 +160,9 @@ export default class User extends Controller {
   }
 
   async getCustomStorageConfig(masterKey){
-    if(!this.storage?.cos.enable) throw Error('未配置自定义存储')
-    const cosJsonStr = this.crypto.decryptString(this.storage?.cos.keyPack, masterKey)
-    if(this.crypto.getStringHash(cosJsonStr, 'SHA1') !== this.storage.cos.keyId) throw Error('提取配置出错')
+    if(!this.storageConfig?.cos.enable) throw Error('未配置自定义存储')
+    const cosJsonStr = this.crypto.decryptString(this.storageConfig?.cos.keyPack, masterKey)
+    if(this.crypto.getStringHash(cosJsonStr, 'SHA1') !== this.storageConfig.cos.keyId) throw Error('提取配置出错')
     const cosJson = JSON.parse(cosJsonStr)
     return cosJson as ICustomStorageConfig
   }
