@@ -288,12 +288,11 @@ class AppManager extends Controller {
   async checkLikeCardNeedSync(){
     const homeDataCache = await this.cache.getHomeData()
     if(!homeDataCache || homeDataCache?.data?.cateList?.length === 0) return true
-    try {
-      this.checkTimeout(homeDataCache.cacheTime, this.getConfig('homeDataCacheTime'))
-      console.debug('首页数据 likeList 缓存有效')
-      return false
-    } catch (error) {
+    if(this.likeListCacheTimeoutCheck(homeDataCache.cacheTime)){
       console.debug('首页数据缓存超时,进行数据同步检测')
+    }else{
+      console.debug('首页数据 likeList 缓存有效')
+      return false 
     }
     const likeList = homeDataCache.data.likeList
     const remoteLikeList = await this.getLikeCardIds()

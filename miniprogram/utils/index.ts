@@ -16,13 +16,19 @@ export * as bip39 from './bip39/index'
 export * as qrcode from './qrcode/index'
 export * as cos from './cos'
 
+/**
+ * 超时检测，返回时间秒数 s，大于 0 差 s 秒超时，小于 0 超时 s 秒
+ * @param oldTime 开始时间
+ * @param gapTime 超时时间
+ * @returns s number
+ */
 function checkTimeout(oldTime:number, gapTime:number){
   const nowTime = getCurrentTimestamp()
+  // 兼容秒处理
+  oldTime = String(oldTime).length === 10 ? oldTime * 1000 : oldTime
   if(oldTime > nowTime) return 0
   const costTime = Math.floor((nowTime - oldTime)/1000)
-  const remainSecond =  costTime - gapTime
-  if(remainSecond >= 0) throw Error('Timeout')
-  return -remainSecond
+  return gapTime - costTime
 }
 
 const lodash = {

@@ -50,18 +50,18 @@ export default class Controller extends Navigation {
     return tempFilePath
   }
 
+  // 移除号码设置页后未使用
   checkSmsTimeout(lastTime:number){
     return this.checkTimeout(lastTime, this.getConfig('smsGapTime'))
   }
 
   async globalTaskTimeoutCheck(){
     const lastTime = await this.getLastCacheClearTime()
-    try {
-      this.checkTimeout(lastTime, this.getConfig('cacheClearGapTime'))
-    } catch (error) {
-      return true
-    }
-    return false
+    return this.checkTimeout(lastTime, this.getConfig('cacheClearGapTime')) < 0
+  }
+
+  likeListCacheTimeoutCheck(time:number){
+    return this.checkTimeout(time, this.getConfig('homeDataCacheTime')) < 0
   }
 
   createAdvSetData(originSetData,dataCount:number,gap?:number){

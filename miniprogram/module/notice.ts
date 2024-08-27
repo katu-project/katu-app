@@ -18,12 +18,7 @@ class Notice extends Module {
   }
 
   checkNeedFetchNotice(){
-    try {
-      this.checkTimeout(this.lastNoticeFetchTime, this.noticeFetchIntervalTime)
-      return false
-    } catch (_) {
-      return true
-    }
+    return this.checkTimeout(this.lastNoticeFetchTime, this.noticeFetchIntervalTime) < 0
   }
 
   async _getOnceNoticeLog(){
