@@ -26,6 +26,7 @@ interface IAppConfig {
   homeDataCacheTime: number
   noticeFetchTime: number
   smsGapTime: number
+  userInfoCacheTime: number
   shareInfo: IAnyObject
   cacheClearGapTime: number
   contentCheckHash: HashType

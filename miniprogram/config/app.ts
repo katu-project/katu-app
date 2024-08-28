@@ -12,6 +12,7 @@ const AppConfig:IAppConfig = {
   homeDataCacheTime: 86400, // 一天
   noticeFetchTime: 60,
   smsGapTime: 60,
+  userInfoCacheTime: 86400,
   shareInfo: {
     title: '卡兔-安全好用的卡片管理助手',
     path: `/pages/home/index`,

@@ -63,6 +63,10 @@ export default class Controller extends Navigation {
   likeListCacheTimeoutCheck(time:number){
     return this.checkTimeout(time, this.getConfig('homeDataCacheTime')) < 0
   }
+  
+  userInfoCacheTimeout(cacheTime:number){
+    return this.checkTimeout(cacheTime, this.getConfig('userInfoCacheTime')) < 0
+  }
 
   createAdvSetData(originSetData,dataCount:number,gap?:number){
     let dataSets: any[] = []

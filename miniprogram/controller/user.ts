@@ -89,9 +89,9 @@ export default class User extends Controller {
       await this.cache.deleteUser()
     }
     let cacheUser = await this.cache.getUser() 
-    if(!cacheUser){
+    if(!cacheUser || this.userInfoCacheTimeout(cacheUser.time)){
       const user = await this.invokeApi('getUser')
-      console.debug(`cache user info: ${JSON.stringify(user).length} bytes`)
+      console.debug(`用户数据缓存过期，重新获取: ${JSON.stringify(user).length} bytes`)
       cacheUser = { data:user, time:0 }
       await this.cache.setUser(user)
     }else{
@@ -259,7 +259,6 @@ export default class User extends Controller {
 
   // simple api proxy end
 }
-
 
 function getUserManager(){
   return User.getInstance<User>()
