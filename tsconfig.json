@@ -16,7 +16,7 @@
     "noUnusedParameters": true,
     "strict": true,
     "strictPropertyInitialization": true,
-    "lib": ["ES2020"],
+    "lib": ["ES2022"],
     "outDir": "dist",
     "typeRoots": [
       "typings"
@@ -31,7 +31,6 @@
     "typings"
   ],
   "exclude": [
-    "node_modules",
-    "miniprogram/packages/debug"
+    "node_modules"
   ]
 }
