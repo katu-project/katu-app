@@ -378,9 +378,9 @@ Page({
     app.goCardEditPage('', true)
   },
 
-  tapToProfile(){
+  async tapToProfile(){
     if(!this.data.userLoad){
-      return this.loadUser()
+      await this.loadUser()
     }
     return app.goToUserProfilePage()
   },
