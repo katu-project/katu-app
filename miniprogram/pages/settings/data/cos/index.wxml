@@ -13,28 +13,44 @@
 		</picker>
 	</view>
   <block wx:if="{{selectedType}}">
-    <view class="cu-form-group">
-      <view class="title">存储桶</view>
-      <input placeholder="存储桶名称" disabled="{{created}}" value="{{cosConfig.bucket}}" bindinput="onBindinput" data-key="bucket"></input>
-    </view>
-    <view class="cu-form-group">
-      <view class="title">地域</view>
-      <input placeholder="存储桶地域" disabled="{{created}}" value="{{cosConfig.region}}" bindinput="onBindinput" data-key="region"></input>
-    </view>
-    <block wx:if="{{cosConfig.type==='cloudflare.r2'}}">
+    <block wx:if="{{cosConfig.type==='webdav'}}">
       <view class="cu-form-group">
-        <view class="title">帐户 ID</view>
-        <input placeholder="存储桶所属帐户 ID" disabled="{{created}}" value="{{cosConfig.secret.accountId}}" bindinput="onBindinput" data-key="secret.accountId"></input>
+        <view class="title">服务器地址</view>
+        <input placeholder="WebDAV 服务器地址" disabled="{{created}}" value="{{cosConfig.bucket}}" bindinput="onBindinput" data-key="bucket"></input>
+      </view>
+      <view class="cu-form-group">
+        <view class="title">用户名</view>
+        <input placeholder="用户名" disabled="{{created}}" value="{{cosConfig.secret.secretId}}" bindinput="onBindinput" data-key="secret.secretId"></input>
+      </view>
+      <view class="cu-form-group">
+        <view class="title">密码</view>
+        <input placeholder="密码" disabled="{{created}}" value="{{cosConfig.secret.secretKey}}" bindinput="onBindinput" data-key="secret.secretKey"></input>
       </view>
     </block>
-    <view class="cu-form-group">
-      <view class="title">SecretId</view>
-      <input placeholder="密钥 ID" disabled="{{created}}" value="{{cosConfig.secret.secretId}}" bindinput="onBindinput" data-key="secret.secretId"></input>
-    </view>
-    <view class="cu-form-group">
-      <view class="title">SecretKey</view>
-      <input placeholder="密钥 KEY" disabled="{{created}}" value="{{cosConfig.secret.secretKey}}" bindinput="onBindinput" data-key="secret.secretKey"></input>
-    </view>
+    <block wx:else>
+      <view class="cu-form-group">
+        <view class="title">存储桶</view>
+        <input placeholder="存储桶名称" disabled="{{created}}" value="{{cosConfig.bucket}}" bindinput="onBindinput" data-key="bucket"></input>
+      </view>
+      <view class="cu-form-group">
+        <view class="title">地域</view>
+        <input placeholder="存储桶地域" disabled="{{created}}" value="{{cosConfig.region}}" bindinput="onBindinput" data-key="region"></input>
+      </view>
+      <block wx:if="{{cosConfig.type==='cloudflare.r2'}}">
+        <view class="cu-form-group">
+          <view class="title">帐户 ID</view>
+          <input placeholder="存储桶所属帐户 ID" disabled="{{created}}" value="{{cosConfig.secret.accountId}}" bindinput="onBindinput" data-key="secret.accountId"></input>
+        </view>
+      </block>
+      <view class="cu-form-group">
+        <view class="title">SecretId</view>
+        <input placeholder="密钥 ID" disabled="{{created}}" value="{{cosConfig.secret.secretId}}" bindinput="onBindinput" data-key="secret.secretId"></input>
+      </view>
+      <view class="cu-form-group">
+        <view class="title">SecretKey</view>
+        <input placeholder="密钥 KEY" disabled="{{created}}" value="{{cosConfig.secret.secretKey}}" bindinput="onBindinput" data-key="secret.secretKey"></input>
+      </view>
+    </block>
     <view class="cu-form-group">
       <view class="title">启用配置</view>
       <switch checked="{{cosConfig.enable}}" bindchange="enableChange"></switch>

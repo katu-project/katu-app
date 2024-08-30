@@ -3,6 +3,7 @@ import Const from "@/const"
 import Config from '@/config/index'
 import { cache, file, crypto, checkTimeout, chooseLocalImage, scanQrcode, cos } from "@/utils/index"
 import api from '@/api'
+import { Client } from '@/utils/webdav'
 
 
 type ApiType = typeof api
@@ -162,7 +163,20 @@ export default class Core extends Base {
       url: ''
     }
     if(options.customOption){
-      downloadInfo.url = cos.getDownloadInfo(url.slice('s3+://'.length), options.customOption)
+      const prefix = url.split('://')[0]
+      const cloudPath = url.slice(prefix.length + 3)
+      if(prefix === 's3+'){
+        downloadInfo.url = cos.getDownloadInfo(cloudPath, options.customOption)
+      }else if(prefix === 'webdav'){
+        const client = new Client({
+          server: options.customOption.bucket,
+          username: options.customOption.secret.secretId!,
+          password: options.customOption.secret.secretKey!
+        })
+        const fileKey = cloudPath.replace(/\//g, '_')
+        await client.download(fileKey, savePath)
+        return savePath
+      }
     }else{
       downloadInfo = await this.invokeApi('getDownloadInfo', { fileId:url })
     }
@@ -178,17 +192,36 @@ export default class Core extends Base {
   async uploadFile(filePath:string, type:UploadFileType, customOption?:ICustomStorageConfig) {
     const uploadInfo = await this.invokeApi('getUploadInfo', { type })
     if(customOption || uploadInfo.cos){
-      let prefix = 's3://'
-      let options = uploadInfo.cos
       if(customOption){
-        prefix = 's3+://'
-        options = cos.getUploadInfo(uploadInfo.cloudPath, customOption)
+        if(customOption.type === 'tencent.cos' || customOption.type === 'cloudflare.r2'){
+          const prefix = 's3+://'
+          const options = cos.getUploadInfo(uploadInfo.cloudPath, customOption)
+          await this.invokeApi('cosUpload', {
+            filePath,
+            options
+          })
+          return `${prefix}${uploadInfo.cloudPath}`
+        }else if(customOption.type === 'webdav'){
+          const prefix = 'webdav://'
+          const client = new Client({
+            server: customOption.bucket,
+            username: customOption.secret.secretId!,
+            password: customOption.secret.secretKey!
+          })
+          // 目前 webdav 不能创建子目录，将路径中的 / 替换为 _
+          const fileKey = uploadInfo.cloudPath.replace(/\//g,'_')
+          await client.upload(fileKey, filePath)
+          return `${prefix}${uploadInfo.cloudPath}`
+        }
+      }else{
+        const prefix = 's3://'
+        const options = uploadInfo.cos
+        await this.invokeApi('cosUpload', {
+          filePath,
+          options
+        })
+        return `${prefix}${uploadInfo.cloudPath}`
       }
-      await this.invokeApi('cosUpload', {
-        filePath,
-        options
-      })
-      return `${prefix}${uploadInfo.cloudPath}`
     }
     return this.invokeApi('uploadFile', filePath, uploadInfo)
   }

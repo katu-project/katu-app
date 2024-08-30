@@ -192,7 +192,7 @@ class CardManager extends Controller{
 
   async downloadImage(image: Pick<ICardImage,'url'>){
     let customOption
-    if(image.url.startsWith('s3+://')){
+    if(image.url.startsWith('s3+://') || image.url.startsWith('webdav://')){
       if(!this.user.config?.storage?.cos?.enable){
         throw Error('自定义存储未启用，无法获取卡片数据')
       }
