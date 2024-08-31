@@ -133,6 +133,7 @@ Page({
     this.setData({
       showOtherLogin: false
     })
+    if(!this.checkToc(true)) return
     if(type === 'apple') return this.goAppleLogin()
     if(type === 'mp') return this.goMpLogin()
     return
@@ -217,7 +218,7 @@ Page({
     return app.goDocListPage('account')
   },
 
-  checkToc(){
+  checkToc(skipToc2?:boolean){
     if(!this.data.toc_1){
       this.setData({
         showTocAnima_1: true
@@ -229,7 +230,7 @@ Page({
       }, 300)
       return false
     }
-    if(!this.data.toc_2){
+    if(!skipToc2 && !this.data.toc_2){
       this.setData({
         showTocAnima_2: true
       })
