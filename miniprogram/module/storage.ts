@@ -112,6 +112,36 @@ class Storage extends Module {
     const downTestFileContent = await file.readFile(testFile, 'utf8')
     if(downTestFileContent !== testContent) throw Error('内容检查错误')
   }
+
+  async saveCardImage(filePath:string, storageConfig:ICustomStorageConfig){
+    const uploadInfo = await this.invokeApi('getUploadInfo', { type: 'card' })
+    const prefix = this.ServiceTypeLabel[storageConfig.type].prefix
+
+    switch(storageConfig.type) {
+      case 'tencent.cos':
+      case 'cloudflare.r2':
+        const options = cos.getUploadInfo(uploadInfo.cloudPath, storageConfig)
+        await this.invokeApi('cosUpload', {
+          filePath,
+          options
+        })
+        break
+      case 'webdav':
+        const client = new Client({
+          server: storageConfig.bucket,
+          username: storageConfig.secret.secretId!,
+          password: storageConfig.secret.secretKey!
+        })
+        // 目前 webdav 不能创建子目录，将路径中的 / 替换为 _
+        const fileKey = uploadInfo.cloudPath.replace(/\//g,'_')
+        await client.upload(fileKey, filePath)
+        break
+      default:
+        throw Error('未知的存储类型')
+    }
+
+    return `${prefix}${uploadInfo.cloudPath}`
+  }
 }
 
 

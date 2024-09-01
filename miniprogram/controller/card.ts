@@ -39,14 +39,14 @@ class CardManager extends Controller{
           }else{
             await this.checkImageType(pic.url)
             console.log(`检测到卡面${idx}修改，重新上传`)
-            image.url = await this._uploadImage(pic.url)
+            image.url = await this.saveImageFile(pic.url)
           }
         }
       }else{  // 更新添加卡面
         console.log(`检测到新增卡面${idx}，重新保存卡片数据`)
         await this.checkImageType(pic.url)
         image.hash = await this.getImageHash(pic.url)
-        image.url = await this._uploadImage(pic.url)
+        image.url = await this.saveImageFile(pic.url)
       }
       newImages.push(image)
     }
@@ -71,7 +71,7 @@ class CardManager extends Controller{
         await this.checkImageType(pic.url)
         image.url = pic.url
         const encrytedImage = await this.encryptImage(image, extraData, key)
-        image.url = await this._uploadImage(encrytedImage.path)
+        image.url = await this.saveImageFile(encrytedImage.path)
         image.salt = encrytedImage.keySalt
         image.ccv = encrytedImage.ccv
       }
@@ -98,11 +98,11 @@ class CardManager extends Controller{
           image.hash = await this.getImageHash(image.url)
           if(encrypted){
             const encrytedImage = await this.encryptImage(image, info, key)
-            image.url = await this._uploadImage(encrytedImage.path)
+            image.url = await this.saveImageFile(encrytedImage.path)
             image.salt = encrytedImage.keySalt
             image.ccv = encrytedImage.ccv
           }else{
-            image.url = await this._uploadImage(image.url)
+            image.url = await this.saveImageFile(image.url)
           }
           savedImageList.push(image)
         }
@@ -208,15 +208,15 @@ class CardManager extends Controller{
     })
   }
 
-  async _uploadImage(filePath){
-    let customOption
+  async saveImageFile(filePath){
     if(this.user.config?.storage?.cos?.enable){
       if(this.app.isMp){
         throw Error('小程序无法使用自定义存储，请使用 APP 操作')
       }
-      customOption = await this.user.getCustomStorageConfig(this.app.masterKeyManager.masterKey)
+      const storageConfig = await this.user.getCustomStorageConfig(this.app.masterKeyManager.masterKey)
+      return this.storage.saveCardImage(filePath, storageConfig)
     }
-    return this.uploadCardFile(filePath, customOption)
+    return this.uploadCardFile(filePath)
   }
 
   // 渲染层业务接口

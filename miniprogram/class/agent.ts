@@ -46,8 +46,8 @@ export default abstract class Agent extends Core {
     return this.uploadFile(filePath, this.getConfig('uploadShareType'))
   }
 
-  async uploadCardFile(filePath:string, customOption?){
-    return this.uploadFile(filePath, this.getConfig('uploadCardType'), customOption)
+  async uploadCardFile(filePath:string){
+    return this.uploadFile(filePath, this.getConfig('uploadCardType'))
   }
 
   async uploadTempFile(filePath:string){
