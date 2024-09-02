@@ -142,6 +142,45 @@ class Storage extends Module {
 
     return `${prefix}${uploadInfo.cloudPath}`
   }
+
+  async downloadCardImage(url:string, storageConfig:ICustomStorageConfig){
+    const prefix = url.split('://')[0] + '://'
+    const cloudPath = url.slice(prefix.length)
+    const storageType = Object.values(this.ServiceTypeLabel).find(e=>e.prefix === prefix)
+    if(!storageType) throw Error('未知的存储类型')
+    const savePath = await this.getTempFilePath('down')
+
+    switch(storageType.name){
+      case 'tencent.cos':
+      case 'cloudflare.r2':
+        const downloadUrl = cos.getDownloadInfo(cloudPath, storageConfig)
+        await this.invokeApi('downloadFile', {
+          url: downloadUrl,
+          options: {
+            savePath
+          }
+        })
+        break
+      case 'webdav':
+        const client = new Client({
+          server: storageConfig.bucket,
+          username: storageConfig.secret.secretId!,
+          password: storageConfig.secret.secretKey!
+        })
+        // 目前 webdav 不能创建子目录，将路径中的 / 替换为 _
+        const fileKey = cloudPath.replace(/\//g, '_')
+        await client.download(fileKey, savePath)
+        break
+      default:
+        throw Error('未知的存储类型')
+    }
+
+    return savePath
+  }
+
+  checkUseCustomStorage(url:string){
+    return Object.values(this.ServiceTypeLabel).some(e=>url.startsWith(e.prefix))
+  }
 }
 
 

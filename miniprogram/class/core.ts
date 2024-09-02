@@ -1,10 +1,8 @@
 import Base from '@/class/base'
 import Const from "@/const"
 import Config from '@/config/index'
-import { cache, file, crypto, checkTimeout, chooseLocalImage, scanQrcode, cos } from "@/utils/index"
+import { cache, file, crypto, checkTimeout, chooseLocalImage, scanQrcode } from "@/utils/index"
 import api from '@/api'
-import { Client } from '@/utils/webdav'
-
 
 type ApiType = typeof api
 type LocalCacheKeyType = keyof typeof Const.LOCAL_CACHE_KEYS
@@ -143,7 +141,7 @@ export default class Core extends Base {
     return this.getFilePath(this.getConst('APP_DOWN_DIR'), fileName)
   }
 
-  async downloadFile(options: { url: string, savePath?: string, ignoreCache?: boolean, customOption?:ICustomStorageConfig }) {
+  async downloadFile(options: { url: string, savePath?: string, ignoreCache?: boolean }) {
     let { url, savePath } = options
     if (!savePath) {
       savePath = await this.getTempFilePath('down')
@@ -159,27 +157,8 @@ export default class Core extends Base {
       }
     }
     console.debug(`start download file:`, url)
-    let downloadInfo = {
-      url: ''
-    }
-    if(options.customOption){
-      const prefix = url.split('://')[0]
-      const cloudPath = url.slice(prefix.length + 3)
-      if(prefix === 's3+'){
-        downloadInfo.url = cos.getDownloadInfo(cloudPath, options.customOption)
-      }else if(prefix === 'webdav'){
-        const client = new Client({
-          server: options.customOption.bucket,
-          username: options.customOption.secret.secretId!,
-          password: options.customOption.secret.secretKey!
-        })
-        const fileKey = cloudPath.replace(/\//g, '_')
-        await client.download(fileKey, savePath)
-        return savePath
-      }
-    }else{
-      downloadInfo = await this.invokeApi('getDownloadInfo', { fileId:url })
-    }
+    const downloadInfo = await this.invokeApi('getDownloadInfo', { fileId:url })
+    console.debug('downloadInfo: ', downloadInfo)
     await this.invokeApi('downloadFile', {
       url: downloadInfo.url,
       options:{

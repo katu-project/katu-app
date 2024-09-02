@@ -191,20 +191,19 @@ class CardManager extends Controller{
   }
 
   async downloadImage(image: Pick<ICardImage,'url'>){
-    let customOption
-    if(image.url.startsWith('s3+://') || image.url.startsWith('webdav://')){
+    if(this.storage.checkUseCustomStorage(image.url)){
       if(!this.user.config?.storage?.cos?.enable){
         throw Error('自定义存储未启用，无法获取卡片数据')
       }
       if(this.app.isMp){
         throw Error('小程序无法使用自定义存储，请使用 APP 操作')
       }
-      customOption = await this.user.getCustomStorageConfig(this.app.masterKeyManager.masterKey)
+      const storageConfig = await this.user.getCustomStorageConfig(this.app.masterKeyManager.masterKey)
+      return this.storage.downloadCardImage(image.url, storageConfig)
     }
     return this.downloadFile({
       url: image.url,
-      savePath: await this.getDownloadFilePath(image),
-      customOption
+      savePath: await this.getDownloadFilePath(image)
     })
   }
 
