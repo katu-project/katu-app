@@ -178,7 +178,7 @@ class CardManager extends Controller{
       ccv: image.ccv
     })
     const savePath = await this.getImageFilePath(image)
-    const imagePath = await this.downloadImage(image)
+    const imagePath = await this.downloadImageFile(image)
     const decryptedImage = await this.crypto.decryptImage({
       imagePath,
       savePath,
@@ -190,7 +190,7 @@ class CardManager extends Controller{
     }
   }
 
-  async downloadImage(image: Pick<ICardImage,'url'>){
+  async downloadImageFile(image: Pick<ICardImage,'url'>){
     if(this.storage.checkUseCustomStorage(image.url)){
       if(!this.user.config?.storage?.cos?.enable){
         throw Error('自定义存储未启用，无法获取卡片数据')
