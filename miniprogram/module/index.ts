@@ -1,4 +1,4 @@
 export { getNoticeModule } from './notice'
 export { getCryptoModule } from './crypto'
 export { getCacheModule } from './cache'
-export { getStorageModule } from './storage'
+export { getStorageModule } from './storage/index'

@@ -1,6 +1,7 @@
 import Module from "@/class/module"
-import { file, cos } from "@/utils/index"
-import { Client } from "@/utils/webdav"
+import { file } from "@/utils/index"
+import { Client } from "./webdav"
+import * as cos from "./cos"
 
 class Storage extends Module {
   ServiceTypeLabel = {

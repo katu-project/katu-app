@@ -14,7 +14,6 @@ export * as cache from './cache'
 export { UPNG as upng } from './upng'
 export * as bip39 from './bip39/index'
 export * as qrcode from './qrcode/index'
-export * as cos from './cos'
 
 /**
  * 超时检测，返回时间秒数 s，大于 0 差 s 秒超时，小于 0 超时 s 秒

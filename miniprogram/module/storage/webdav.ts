@@ -3,7 +3,7 @@
  */
 
 import { Base64 } from 'js-base64'
-import file, { writeFile } from './file'
+import file, { writeFile } from '@/utils/file'
 
 class Client {
 
@@ -91,7 +91,6 @@ class Client {
     });
   }
 }
-
 
 export {
   Client
