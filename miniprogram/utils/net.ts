@@ -21,7 +21,7 @@ async function httpRequest(url:string, data, options:Omit<WechatMiniprogram.Requ
   return toPromise(request, args)
 }
 
-export async function httpPutRequest(url:string, data, options:Omit<WechatMiniprogram.RequestOption,'url'|'method'>){
+async function httpPutRequest(url:string, data, options:Omit<WechatMiniprogram.RequestOption,'url'|'method'>){
   return httpRequest(url, data, {
     method: 'PUT',
     ...options
@@ -72,7 +72,7 @@ async function request(action:string, data:any, requestor, options){
   return resp.data
 }
 
-async function downloadFile(url:string, options:{savePath:string,header?:IAnyObject}){
+export async function downloadFile(url:string, options:{savePath:string, header?:IAnyObject}){
   const download = args => wx.downloadFile(args)
   try {
     const args: WechatMiniprogram.DownloadFileOption = {
@@ -195,7 +195,7 @@ function createHttpUploader(options:IHttpRequestOptions){
   }
 }
 
-function createCosUploader(){
+export function createCosUploader(){
   return async (filePath:string, options) => {
     let uploader:()=>any
 

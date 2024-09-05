@@ -1,7 +1,7 @@
 import Module from "@/class/module"
 import { file } from "@/utils/index"
-import { Client } from "./webdav"
-import * as cos from "./cos"
+import webdav from "./webdav"
+import cos from "./cos"
 
 class Storage extends Module {
   ServiceTypeLabel = {
@@ -64,20 +64,11 @@ class Storage extends Module {
     const fileKey = testFile.split('/').at(-1)!
 
     const cosTest = async ()=>{
-      const uploadInfo = cos.getUploadInfo(fileKey, cosConfig)
-      const cosDownUrl = cos.getDownloadInfo(fileKey, cosConfig)
+      const cosClient = new cos.Client(cosConfig)
       try {
-        await this.invokeApi('cosUpload',{
-          filePath: testFile,
-          options: uploadInfo
-        })
+        await cosClient.upload(fileKey, testFile)
         await file.deleteFile(testFile)
-        await this.invokeApi('downloadFile', {
-          url: cosDownUrl,
-          options: {
-            savePath: testFile
-          }
-        })
+        await cosClient.download(fileKey, testFile)
       } catch (error:any) {
         error['code'] = 1
         throw error
@@ -85,11 +76,7 @@ class Storage extends Module {
     }
 
     const webdavTest = async ()=>{
-      const client = new Client({
-        server: cosConfig.bucket,
-        username: cosConfig.secret.secretId!,
-        password: cosConfig.secret.secretKey!
-      })
+      const client = new webdav.Client(cosConfig)
       try {
         await client.upload(fileKey, testFile)
         await file.deleteFile(testFile)
@@ -121,18 +108,11 @@ class Storage extends Module {
     switch(storageConfig.type) {
       case 'tencent.cos':
       case 'cloudflare.r2':
-        const options = cos.getUploadInfo(uploadInfo.cloudPath, storageConfig)
-        await this.invokeApi('cosUpload', {
-          filePath,
-          options
-        })
+        const cosClient = new cos.Client(storageConfig)
+        await cosClient.upload(uploadInfo.cloudPath, filePath)
         break
       case 'webdav':
-        const client = new Client({
-          server: storageConfig.bucket,
-          username: storageConfig.secret.secretId!,
-          password: storageConfig.secret.secretKey!
-        })
+        const client = new webdav.Client(storageConfig)
         // 目前 webdav 不能创建子目录，将路径中的 / 替换为 _
         const fileKey = uploadInfo.cloudPath.replace(/\//g,'_')
         await client.upload(fileKey, filePath)
@@ -144,30 +124,20 @@ class Storage extends Module {
     return `${prefix}${uploadInfo.cloudPath}`
   }
 
-  async downloadCardImage(url:string, storageConfig:ICustomStorageConfig){
+  async downloadCardImage(url:string, savePath:string, storageConfig:ICustomStorageConfig){
     const prefix = url.split('://')[0] + '://'
     const cloudPath = url.slice(prefix.length)
     const storageType = Object.values(this.ServiceTypeLabel).find(e=>e.prefix === prefix)
     if(!storageType) throw Error('未知的存储类型')
-    const savePath = await this.getTempFilePath('down')
 
     switch(storageType.name){
       case 'tencent.cos':
       case 'cloudflare.r2':
-        const downloadUrl = cos.getDownloadInfo(cloudPath, storageConfig)
-        await this.invokeApi('downloadFile', {
-          url: downloadUrl,
-          options: {
-            savePath
-          }
-        })
+        const cosClient = new cos.Client(storageConfig)
+        await cosClient.download(cloudPath, savePath)
         break
       case 'webdav':
-        const client = new Client({
-          server: storageConfig.bucket,
-          username: storageConfig.secret.secretId!,
-          password: storageConfig.secret.secretKey!
-        })
+        const client = new webdav.Client(storageConfig)
         // 目前 webdav 不能创建子目录，将路径中的 / 替换为 _
         const fileKey = cloudPath.replace(/\//g, '_')
         await client.download(fileKey, savePath)

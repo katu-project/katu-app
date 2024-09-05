@@ -15,10 +15,15 @@ class Client {
 
   authHeader = ''
 
-  constructor(options:{server:string, username:string, password:string}) {
-    if (!options.server.endsWith('/')) options.server = options.server + '/'
-    if (!options.server.startsWith('http')) options.server = 'https://' + options.server
-    this.options = options
+  constructor(options:ICustomStorageConfig) {
+    let server = options.bucket
+    if (!server.endsWith('/')) server = server + '/'
+    if (!server.startsWith('http')) server = 'https://' + server
+    this.options = {
+      server,
+      username: options.secret.secretId!,
+      password: options.secret.secretKey!,
+    }
   }
 
   async get(href) {
@@ -92,6 +97,6 @@ class Client {
   }
 }
 
-export {
+export default {
   Client
 }

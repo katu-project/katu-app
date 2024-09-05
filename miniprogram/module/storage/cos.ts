@@ -1,4 +1,5 @@
 const crypto = require('crypto-js')
+import { createCosUploader, downloadFile } from '@/utils/net'
 import { Base64 } from 'js-base64'
 
 function getCloudflareR2Info(key:string, actionId:'GetObject'|'PutObject', config:ICustomStorageConfig){
@@ -111,7 +112,7 @@ function getTencentCosUploadInfo(key:string, config:ICustomStorageConfig) {
   }
 }
 
-export function getUploadInfo(key:string, config:ICustomStorageConfig){
+function getUploadInfo(key:string, config:ICustomStorageConfig){
   switch (config.type) {
     case 'cloudflare.r2':
       return {
@@ -125,7 +126,7 @@ export function getUploadInfo(key:string, config:ICustomStorageConfig){
   }
 }
 
-export function getDownloadInfo(key:string, config:ICustomStorageConfig){
+function getDownloadInfo(key:string, config:ICustomStorageConfig){
   switch (config.type) {
     case 'cloudflare.r2':
       return getCloudflareR2Info(key, 'GetObject', config)
@@ -134,4 +135,28 @@ export function getDownloadInfo(key:string, config:ICustomStorageConfig){
     default:
       throw Error('不支持的存储类型')
   }
+}
+
+class Client {
+  config:ICustomStorageConfig
+
+  constructor(config:ICustomStorageConfig){
+    this.config = config
+  }
+
+  async download(key:string, savePath:string){
+    const downloadUrl = getDownloadInfo(key, this.config)
+    await downloadFile(downloadUrl, {savePath})
+    return savePath
+  }
+
+  async upload(key:string, filePath:string){
+    const uploadInfo = getUploadInfo(key, this.config)
+    const cosUpload = createCosUploader()
+    return cosUpload(filePath, uploadInfo)
+  }
+}
+
+export default {
+  Client
 }

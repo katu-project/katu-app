@@ -191,6 +191,7 @@ class CardManager extends Controller{
   }
 
   async downloadImageFile(image: Pick<ICardImage,'url'>){
+    const savePath = await this.getDownloadFilePath(image)
     if(this.storage.checkUseCustomStorage(image.url)){
       if(!this.user.config?.storage?.cos?.enable){
         throw Error('自定义存储未启用，无法获取卡片数据')
@@ -199,11 +200,11 @@ class CardManager extends Controller{
         throw Error('小程序无法使用自定义存储，请使用 APP 操作')
       }
       const storageConfig = await this.user.getCustomStorageConfig(this.app.masterKeyManager.masterKey)
-      return this.storage.downloadCardImage(image.url, storageConfig)
+      return this.storage.downloadCardImage(image.url, savePath, storageConfig)
     }
     return this.downloadFile({
       url: image.url,
-      savePath: await this.getDownloadFilePath(image)
+      savePath
     })
   }
 
