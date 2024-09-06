@@ -5,9 +5,9 @@ const RequestConfig:IRequestConfig = {
     apiName: ''
   },
   http: {
-    api: 'https://api.katucloud.com/v2',
-    token: '' // 请访问【卡兔APP】小程序-软件设置-高级 获取 API 密钥
-                            // 具体帮助文档请访问 https://katucloud.com/docs#token
+    api: 'https://api.katucloud.com/v3',
+    token: '' // 请访问 【 i卡兔 】- 软件设置 - 高级 获取 API 密钥
+              // 具体帮助文档请访问 https://katucloud.com/docs#token
   }
 }
 
