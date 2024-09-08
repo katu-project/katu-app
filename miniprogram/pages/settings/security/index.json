@@ -1,5 +1,4 @@
 {
-  "navigationBarTitleText": "安全",
   "usingComponents": {
     "cu-custom": "/colorui/components/cu-custom"
   }

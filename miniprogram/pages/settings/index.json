@@ -1,5 +1,4 @@
 {
-  "navigationBarTitleText": "设置",
   "usingComponents": {
     "cu-custom": "/colorui/components/cu-custom"
   }
