@@ -10,9 +10,11 @@
         <text class="cuIcon-tag text-cyan"></text>
         <text class="padding-left-sm">我的标签<text class="text-df text-grey" wx:if="{{list.length}}">・{{list.length}}</text></text>
       </view>
-      <view class="text-df padding-right">
-        <button class="cu-btn icon round line-cyan sm" style="width:100rpx" bindtap="tapToShowCreateTag">
-          <text class="cuIcon-add text-cyan gfw">添加</text>
+      <view class="padding-right">
+        <button class="cu-btn icon round line-cyan sm" bindtap="tapToShowCreateTag">
+          <text class="text-lg">
+            <text class="cuIcon-add"></text>
+          </text>
         </button>
       </view>
     </view>
