@@ -5,7 +5,7 @@
 
 <view class="flex-col justify-center align-center padding margin-top-lg">
   <view class="user-avatar flex-col br-16">
-    <image class="image br-16" src="{{avatar}}" mode="aspectFit"></image>
+    <image class="image br-16" src="{{avatar}}" mode="aspectFill"></image>
   </view>
 
   <!-- #if MP -->
