@@ -22,7 +22,7 @@ Page({
     edit: false,
     useDefaultTag: true,
     card: {
-      encrypted: false,
+      encrypted: true,
       title: '卡片名称1',
       tags: [] as string[],
       setLike: false,
@@ -173,26 +173,19 @@ Page({
       return
     }
 
-    // 相关警告提示
-    if(!card.encrypted){
-      await app.knowDataEncrypt()
+    if(!user.isSetMasterKey){
+      await app.showSetMasterKeyNotice()
+      return
     }
-    
-    // 加密模式下，主密码有效性预检查
-    if(card.encrypted){
-      if(!user.isSetMasterKey){
-        await app.showSetMasterKeyNotice()
-        return
+
+    const state = app.masterKeyManager.check()
+    if(state){
+      if(state.needKey){
+        this.showInputKey()
+      }else{
+        app.showNotice(`${state.message}`)
       }
-      const state = app.masterKeyManager.check()
-      if(state){
-        if(state.needKey){
-          this.showInputKey()
-        }else{
-          app.showNotice(`${state.message}`)
-        }
-        return
-      }
+      return
     }
     
     // 提前检查可用额度，避免因为可用额度不足而导致处理卡片数据产生无效的消耗
@@ -292,22 +285,6 @@ Page({
     this.checkDataChange()
   },
 
-  async onBindCryptModeChange(e){
-    this.changeCryptoMode(e.detail.value)
-    if(user.isActive && e.detail.value){
-      if(!user.isSetMasterKey){
-        this.changeCryptoMode(false)
-        await app.showSetMasterKeyNotice()
-      }
-    }
-  },
-
-  changeCryptoMode(value:boolean){
-    this.setData({
-      'card.encrypted': value
-    })
-  },
-
   changeLikeState(e){
     this.setData({
       'card.setLike': e.detail.value
@@ -318,12 +295,6 @@ Page({
   // 卡片名称
   tapToEditTitle(){
     app.goEditContentPage(this.data.card.title)
-  },
-
-  tapToShowEncryptChangeNotice(){
-    if(this.id){
-      app.showNotice('更新卡片暂不支持切换加密模式')
-    }
   },
 
   tapToEditExtraData(){
