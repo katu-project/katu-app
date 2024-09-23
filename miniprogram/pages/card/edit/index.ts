@@ -112,9 +112,6 @@ Page({
   applyUserSetting(){
     if(user.isActive){
       const setData = {}
-      if(user.config?.general.defaultUseEncrytion){
-        setData['card.encrypted'] = true
-      }
       if(!user.config?.general.useDefaultTag){
         setData['useDefaultTag'] = false
       }
