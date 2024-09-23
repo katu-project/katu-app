@@ -47,7 +47,6 @@ interface IDocConfig {
     rememberKeyNotice: string
     forgetKeyNotice: string
     dataShareNotice: string
-    dataSaveSecurityNotice: string
     dataCheckNotice: string
     tagConflictHelp: string
     miniKeyNotice: string

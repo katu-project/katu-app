@@ -116,10 +116,6 @@ export default class Navigation extends Agent {
     }
   }
 
-  openDataSaveSecurityNoticeDoc(){
-    return this.navToDocPage(this.navDocMap.dataSaveSecurityNotice)
-  }
-
   openDataShareDoc(){
     return this.navToDocPage(this.navDocMap.dataShareNotice)
   }

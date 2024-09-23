@@ -473,24 +473,6 @@ class AppManager extends Controller {
     return
   }
 
-  async knowDataEncrypt(){
-    const isKnow = await this.notice.getKnowEncryptSave()
-    if(isKnow) return
-    
-    const {cancel, confirm} = await this.showChoose('非加密保存有数据泄漏风险！',{
-      cancelText: '了解详情',
-      confirmText: '不再提示'
-    })
-    if(cancel){
-      this.openDataSaveSecurityNoticeDoc()
-      return new Promise(()=>{})
-    }
-    if(confirm){
-      this.notice.setKnowEncryptSave()
-    }
-    return
-  }
-
   async checkQuotaNotice(msg?:string){
     return new Promise((resolve)=>{
       if(this.user.quota >= 0){

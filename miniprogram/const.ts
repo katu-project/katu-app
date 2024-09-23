@@ -33,7 +33,6 @@ export const LOCAL_CACHE_KEYS = {
 }
 
 export const ONCE_NOTICE_KEYS = {
-  ENCRYPT_SAVE: "ENCRYPT_SAVE",
   SHARE_DATA: "SHARE_DATA",
   DATA_CHECK: "DATA_CHECK"
 }

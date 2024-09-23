@@ -37,14 +37,6 @@ class Notice extends Module {
     return sets[key] === undefined ? false : sets[key]
   }
 
-  async getKnowEncryptSave(){
-    return this._getOnceNotice(this.ONCE_NOTICE_KEYS.ENCRYPT_SAVE)
-  }
-
-  async setKnowEncryptSave(){
-    return this._setOnceNoticeLog(this.ONCE_NOTICE_KEYS.ENCRYPT_SAVE,true)
-  }
-
   async getKnowShareData(){
     return this._getOnceNotice(this.ONCE_NOTICE_KEYS.SHARE_DATA)
   }
