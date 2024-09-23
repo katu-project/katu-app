@@ -65,7 +65,7 @@ Page({
         loadingTitle: '正在绑定账户',
         returnFailed: true
       }).then(async ()=>{
-        app.showNotice("绑定成功")
+        app.showMiniNotice("绑定成功")
         await user.reloadInfo()
       }).catch(()=>{
       }).finally(()=>{
@@ -80,7 +80,7 @@ Page({
         loadData(app.unbindOtherLogin, type, {
           returnFailed: true
         }).then(async ()=>{
-          app.showNotice("已取消绑定")
+          app.showMiniNotice("已取消绑定")
           await user.reloadInfo()
         }).catch(()=>{
         }).finally(()=>{

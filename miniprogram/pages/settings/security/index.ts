@@ -32,7 +32,7 @@ Page({
       value: e.detail.value
     }
     loadData(user.applyConfig,configItem,{returnFailed: true}).then(()=>{
-      app.showNotice('修改成功')
+      app.showMiniNotice('修改成功')
       if(configItem.key === 'config_security_rememberPassword' && configItem.value === false){
         app.masterKeyManager.clear()
       }
