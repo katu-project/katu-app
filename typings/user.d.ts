@@ -70,7 +70,6 @@ interface IUser {
           name: ''
         }
       },
-      lockOnExit: boolean
       useMiniKey: boolean
       useSyncMiniKey: boolean
       rememberPassword: boolean

@@ -46,14 +46,5 @@
     </view>
     <view class="padding bg-white text-grey text-sm">访问数据不再要求主密码 <text class="cuIcon-warn text-yellow" bindtap="tapToReadDoc"></text></view>
 
-    <view class="cu-item">
-      <view class="content">
-      <text class="{{config_security_rememberPassword?'text-gray':''}}">退出应用后清除主密码</text>
-      </view>
-      <view class="action">
-        <switch class="sm" disabled="{{config_security_rememberPassword}}" bindchange="tapToConfig" data-key="config_security_lockOnExit" checked="{{config_security_lockOnExit}}"></switch>
-      </view>
-    </view>
-    <view class="padding bg-white text-grey text-sm">再次进入应用后相关操作需验证主密码</view>
   </view>
 </view>

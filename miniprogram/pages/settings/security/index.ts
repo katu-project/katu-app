@@ -8,7 +8,6 @@ Page({
   data: {
     setMasterKey: false,
     config_security_rememberPassword: false,
-    config_security_lockOnExit: true,
     config_security_setRecoveryKey: false
   },
 
@@ -21,7 +20,6 @@ Page({
     this.setData({
       setMasterKey: user.isSetMasterKey,
       config_security_rememberPassword: config?.security.rememberPassword,
-      config_security_lockOnExit: config?.security.lockOnExit,
       config_security_setRecoveryKey: config?.security.setRecoveryKey,
     })
   },

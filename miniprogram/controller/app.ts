@@ -217,13 +217,9 @@ class AppManager extends Controller {
       }
 
       if(this.user.rememberPassword){
-        console.log('缓存主密码');
         this.publishMasterKeyCacheEvent()
       }else{
-        if(this.user.config?.security.lockOnExit){
-          console.log('退出并清除主密码');
-          this.publishMasterKeyRemoveEvent()
-        }
+        this.publishMasterKeyRemoveEvent()
       }
     })
   }
