@@ -23,7 +23,6 @@ interface IUser {
   noticeReadLog: string[]
   config: {
     general: {
-      defaultUseEncrytion: boolean
       useDefaultTag: boolean
       autoShowContent: boolean
     },

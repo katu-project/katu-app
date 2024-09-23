@@ -6,16 +6,6 @@
 <view class="cu-list menu sm-border card-menu margin-top">
   <view class="cu-item">
     <view class="content">
-    <text class="">默认启用加密</text>
-    </view>
-    <view class="action">
-      <switch class="switch-lock sm" bindchange="tapToConfig" data-key="config_general_defaultUseEncrytion" checked="{{config_general_defaultUseEncrytion}}"></switch>
-    </view>
-  </view>
-  <view class="padding bg-white text-grey">卡片默认使用加密保存</view>
-
-  <view class="cu-item">
-    <view class="content">
     <text class="">默认标签</text>
     </view>
     <view class="action">
