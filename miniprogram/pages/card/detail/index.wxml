@@ -40,20 +40,7 @@
   </view>
   <view class="image-list">
     <view wx:for="{{card.image}}" wx:key="index" class="image-item br-10">
-      <block wx:if="{{item.checkId}}"> 
-        <image class="card {{item.checkPass?'':'check-filter'}}" data-index="{{index}}" binderror="onImageShowError" mode="aspectFit" bindtap="tapToChoosePic" src="{{item._url}}"></image>
-        <view wx:if="{{!item.checkPass}}" class="checking-layer">
-          <view wx:if="{{item.checkResult}}" bindtap="tapToShowDataCheckHelp" class="padding br-12 checking">
-            <text class="text-xl text-red">未通过内容安全检测 <text class="cuIcon-question"></text></text>
-          </view>
-          <view wx:else bindtap="tapToShowDataCheckHelp" class="padding br-12 checking">
-            <text class="text-xl text-yellow">请等待内容安全检测 <text class="cuIcon-question"></text></text>
-          </view>
-        </view>
-      </block>
-      <block wx:else>
-        <image class="card" data-index="{{index}}" binderror="onImageShowError" mode="aspectFit" bindtap="tapToChoosePic" src="{{item._url}}"></image>
-      </block>
+      <image class="card" data-index="{{index}}" binderror="onImageShowError" mode="aspectFit" bindtap="tapToChoosePic" src="{{item._url}}"></image>
     </view>
   </view>
   <view hidden="{{!extraData.length}}" class="padding-sm br-12 extra-data-list">

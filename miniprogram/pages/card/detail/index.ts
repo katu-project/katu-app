@@ -41,8 +41,6 @@ Page({
     },
     extraData: [] as AnyObject[],
     tagsInfo: [] as AnyObject[],
-    editable: true,
-    shareable: true,
     syncCheck: true,
     showHideCardData: false,
     disableShareAction: true
@@ -105,7 +103,6 @@ Page({
         'extraData': cardManager.rebuildExtraFields(card.info),
         'showHideCardData': card.encrypted && !user.config?.general.autoShowContent && !card.image.some(e=>e._url === app.getConst('DefaultShowLockImage'))
       })
-      // this.checkActionUsability()
       this.renderTagInfo()
       this.autoShowContent()
     } catch (error:any) {
@@ -192,15 +189,6 @@ Page({
       await cardManager.deleteCardImageCache(this.data.card)
     }
     await this.loadData({ignoreCache: true})
-  },
-
-  checkActionUsability(){
-    if(this.data.card.image?.some(pic=>pic['checkId'] && !pic['checkPass'])){
-      this.setData({
-        editable: false,
-        shareable: false
-      })
-    }
   },
 
   async tapToChoosePic(e){

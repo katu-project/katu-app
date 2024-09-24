@@ -28,25 +28,6 @@
       width: 687rpx;
       height: 432rpx;
     }
-    .check-filter{
-      filter: blur(10px) opacity(0.6) brightness(0.5);
-    }
-    .checking-layer{
-      position: absolute;
-      justify-content: center;
-      align-items: center;
-      display: flex;
-      top: 0;
-      left: 0;
-      height: 100%;
-      width: 100%;
-      .checking{
-        border: 1px solid rgb(177, 177, 146);
-      }
-      .not-pass{
-        border: 1px solid orangered;
-      }
-    }
   }
 }
 
