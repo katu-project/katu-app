@@ -7,11 +7,6 @@
     <view class="head flex justify-between align-center">
       <view class="text-cyan text-xl flex align-center">
         <text class="cuIcon-vipcard padding-right-xs"></text>
-        <block wx:if="{{card.encrypted}}">
-          <view class="text-green">
-            <text class="cuIcon-lock padding-right-xs"></text>
-          </view>
-        </block>
         <text class="text-xl text-black">{{card.title||'加载中...'}}</text>
       </view>
       <view style="flex:1"></view>
