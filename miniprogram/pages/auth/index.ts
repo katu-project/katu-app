@@ -1,8 +1,10 @@
 import { appleLogin, loadData, showLoading, weixinMiniProgramLogin } from '@/utils/index'
 import { getAppManager } from '@/controller/app'
 import { CreateEventBehavior } from '@/behaviors/event'
+import { getUserManager } from '@/controller/user'
 
 const app = getAppManager()
+const user = getUserManager()
 
 Page({
   behaviors: [
@@ -56,7 +58,13 @@ Page({
   },
 
   // 小程序快速注册
-  tapToSignup(){
+  async tapToMpSignup(){
+    await user.loadInfo({skipCache:true})
+    if(user.isActive) {
+      await app.showNotice('登录成功')
+      app.reLaunch()
+      return
+    }
     return this.showActiveInfo()
   },
 
