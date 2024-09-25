@@ -56,8 +56,6 @@ export default {
 
   removeAccount: () => request('app/removeAccount'),
   
-  getActionId: data => request<{actionId:string}>('app/action', data),
-
   // data check
   imageContentSafetyCheck: (data:{url:string, hash:string}) => request<{checkEnd:boolean,checkPass:boolean}>('app/imageContentCheck', data),
   

@@ -80,8 +80,8 @@ class CardManager extends Controller{
     return newImages
   }
 
-  async save(options:{action:'save'|'update',card:Partial<ICard>, key:string, actionId?:string}){
-    const { action, card, key, actionId } = options
+  async save(options:{action:'save'|'update',card:Partial<ICard>, key:string}){
+    const { action, card, key } = options
     const cardModel: Partial<ICard> = { image: [] }
     cardModel.encrypted = card.encrypted || false
     cardModel.title = card.title || '未命名'
@@ -150,8 +150,7 @@ class CardManager extends Controller{
 
     return this.invokeApi('saveCard', {
       card: cardModel,
-      action,
-      actionId
+      action
     })
   }
 
