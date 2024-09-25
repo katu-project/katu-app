@@ -39,7 +39,13 @@ class AppManager extends Controller {
     this.loadModules()
     this.firstOpenTask()
     this.checkUpdate()
-    return
+    if(this.isApp){
+      const requestConfig = this.getRequestConfig('http')
+      if(requestConfig?.token){
+        console.debug('使用内置 Token')
+        await this.cache.setLoginToken(requestConfig.token)
+      }
+    }
   }
 
   get version(){
@@ -142,6 +148,7 @@ class AppManager extends Controller {
     try {
       await this.user.loadInfo()
     } catch (error:any) {
+      // 服务端凭证失效，需要重新登录
       if(this.isApp && error.code === 401){
         this.logout()
       }

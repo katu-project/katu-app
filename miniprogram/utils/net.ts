@@ -134,8 +134,10 @@ function createHttpRequestor(options:IHttpRequestOptions){
     }
 
     // #if NATIVE
-    const token = await getCache<string>('KATU_APP_TOKEN').catch(console.debug)
-    args.header!.Token = token || ''
+    if(!args.header?.Token){ // 内置 Token 优先
+      const token = await getCache<string>('KATU_APP_TOKEN').catch(console.debug)
+      args.header!.Token = token || ''
+    }
     // #endif
     return toPromise(apiReq, args, 'data')
   }
@@ -159,8 +161,10 @@ function createHttpUploader(options:IHttpRequestOptions){
     }
 
     // #if NATIVE
-    const token = await getCache<string>('KATU_APP_TOKEN').catch(console.debug)
-    args.header!.Token = token || ''
+    if(!args.header?.Token){ // 内置 Token 优先
+      const token = await getCache<string>('KATU_APP_TOKEN').catch(console.debug)
+      args.header!.Token = token || ''
+    }
     // #endif
 
     try {

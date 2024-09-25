@@ -31,6 +31,10 @@ export default class Core extends Base {
     return Config.Crypto[key]
   }
 
+  getRequestConfig<T extends keyof IRequestConfig>(key:T){
+    return Config.Request[key]
+  }
+
   getDocConfig<T extends keyof IDocConfig>(key:T){
     return Config.Doc[key]
   }
