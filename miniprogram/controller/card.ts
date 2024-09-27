@@ -20,97 +20,60 @@ class CardManager extends Controller{
     return getAppManager()
   }
 
-  async _updateEncryptImage(images:ICardImage[], options){
-    const {extraData, extraDataChange, key} = options
-    const newImages:ICardImage[] = []
-    for (const idx in images) {
-      const pic = images[idx]
-      const image = {url:'',salt:'',hash:'', ccv:''}
-      const originPicUrl = pic._url
-      image.hash = await this.getImageHash(pic.url)
-
-      if(originPicUrl && pic.hash === image.hash && !extraDataChange){
-        console.log(`编辑卡面${idx}与原始Hash一致并且附加数据一致，保持原始数据不做改变`)
-        image.salt = pic.salt
-        image.url = originPicUrl
-      }else{ 
-        console.log(originPicUrl? `检测到卡面${idx}/附加数据修改，重新加密上传` : `检测到新增卡面${idx}，重新保存卡片数据`)
-        await this.checkImageType(pic.url)
-        image.url = pic.url
-        const encrytedImage = await this.encryptImage(image, extraData, key)
-        image.url = await this.saveImageFile(encrytedImage.path)
-        image.salt = encrytedImage.keySalt
-        image.ccv = encrytedImage.ccv
-      }
-      newImages.push(image)
+  async saveImage({image, info, cardId}){
+    const saveImageItem: ICardImage = { 
+      url: image.url, 
+      hash: '',
+      salt: '', 
+      ccv: ''
     }
-    return newImages
+    if(cardId){
+      const originImageExtraData = JSON.stringify(await this.cache.getCardExtraData(cardId))
+      const extraDataChange = originImageExtraData !== JSON.stringify(info)
+      
+      const originPicUrl = image._url
+      saveImageItem.hash = await this.getImageHash(image.url)
+
+      if(originPicUrl && saveImageItem.hash === image.hash && !extraDataChange){
+        console.log(`编辑${image.hash}卡面与原始Hash一致并且附加数据一致，保持原始数据不做改变`)
+        saveImageItem.salt = image.salt
+        saveImageItem.ccv = image.ccv
+        saveImageItem.url = originPicUrl
+      }else{ 
+        console.log(originPicUrl? `检测到${image.hash}卡面/附加数据修改，重新加密上传` : `检测到新增卡面${image.hash}，重新保存卡片数据`)
+        await this.checkImageType(image.url)
+        const encrytedImage = await this.encryptImage(saveImageItem, info, this.app.masterKeyManager.masterKey)
+        saveImageItem.url = await this.saveImageFile(encrytedImage.path)
+        saveImageItem.salt = encrytedImage.keySalt
+        saveImageItem.ccv = encrytedImage.ccv
+      }
+    }else{
+      await this.checkImageType(image.url)
+      saveImageItem.hash = await this.getImageHash(image.url)
+      const encrytedImage = await this.encryptImage(saveImageItem, info, this.app.masterKeyManager.masterKey)
+      saveImageItem.url = await this.saveImageFile(encrytedImage.path)
+      saveImageItem.salt = encrytedImage.keySalt
+      saveImageItem.ccv = encrytedImage.ccv
+    }
+    return saveImageItem
   }
 
-  async save(options:{action:'save'|'update',card:Partial<ICard>, key:string}){
-    const { action, card, key } = options
-    const cardModel: Partial<ICard> = { image: [] }
-    cardModel.encrypted = card.encrypted || false
+  async save(options:{card:Partial<ICard>, images}){
+    const { card, images } = options
+    if(!images.length) throw Error('无卡片图片')
+
+    const cardModel: Partial<ICard> = { image: images }
+    cardModel.encrypted = true
     cardModel.title = card.title || '未命名'
     cardModel.tags = card.tags || ['其他']
-    cardModel.info = card.info || []
+    cardModel.info = []
     cardModel.setLike = card.setLike || false
-
-    const saveImage = async ({images, encrypted, info, key})=>{
-      if(!encrypted) throw Error('未使用加密')
-      if(!images?.length) throw Error('无卡片图片')
-
-      const savedImageList:ICardImage[] = []
-      for (const pic of images) {
-        const image: ICardImage = { url: pic.url, hash: '', salt: '', ccv: ''}
-        await this.checkImageType(image.url)
-        image.hash = await this.getImageHash(image.url)
-        const encrytedImage = await this.encryptImage(image, info, key)
-        image.url = await this.saveImageFile(encrytedImage.path)
-        image.salt = encrytedImage.keySalt
-        image.ccv = encrytedImage.ccv
-        savedImageList.push(image)
-      }
-      return savedImageList
-    }
-
-    const updateImage = async ({images, encrypted, info, key, id})=>{
-      if(!encrypted) throw Error('未使用加密')
-      const originImageExtraData = JSON.stringify(await this.cache.getCardExtraData(id))
-      const updatedImageList = await this._updateEncryptImage(images, {
-        extraData: info,
-        extraDataChange: originImageExtraData !== JSON.stringify(info),
-        key
-      })
-      return updatedImageList
-    }
-
-    if(action === 'save'){
-      cardModel.image = await saveImage({
-        images: card.image,
-        encrypted: cardModel.encrypted, 
-        info: cardModel.info,
-        key
-      })
-    }else{
-      if(!card._id) throw Error('操作错误，请返回重试')
+    if(card._id){
       cardModel._id = card._id
-      cardModel.image = await updateImage({
-        id: cardModel._id,
-        images: card.image,
-        encrypted: cardModel.encrypted, 
-        info: cardModel.info,
-        key
-      })
     }
-
-    if(cardModel.encrypted){
-      cardModel.info = []
-    }
-
     return this.invokeApi('saveCard', {
       card: cardModel,
-      action
+      action: ''
     })
   }
 

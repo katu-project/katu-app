@@ -13,6 +13,8 @@ Page({
   originData: {} as ICard,
   otherTagIdx: -1,
 
+  saveState: {} as Map<string,ICardImage>,
+
   behaviors: [
     CreateEventBehavior('edit')
   ],
@@ -21,6 +23,7 @@ Page({
     edit: false,
     useDefaultTag: true,
     card: {
+      _id: '',
       encrypted: true,
       title: '卡片名称1',
       tags: [] as string[],
@@ -41,6 +44,7 @@ Page({
     if(options.id){
       this.id = options.id
     }
+    this.saveState = new Map()
   },
 
   onUnload(){
@@ -112,14 +116,18 @@ Page({
   },
 
   async loadData(){
-    const card = await loadData(
-                  cardManager.getCard, 
-                  { id: this.id, 
-                    ignoreCache: true
-                  }
-                )
-    
-    // todo: 临时处理，后续需要统_url的定义
+    const card = await loadData(cardManager.getCard, { id: this.id, ignoreCache: true })
+    // 记录原始图片数据，保存时判断图片是否变动
+    // 检测 图片路径 和 附加数据
+    card.image.map(e=>{
+      const image = JSON.parse(JSON.stringify(e))
+      const saveKey = `${image._url}-${JSON.stringify(card.info)}`
+      delete image._url
+      this.saveState.set(saveKey, image)
+    })
+
+    // url 远程地址
+    // _url 本地地址
     card.image.map(e=> {
       const t = e.url
       e.url = e._url!
@@ -166,16 +174,6 @@ Page({
       await app.showSetMasterKeyNotice()
       return
     }
-
-    const state = app.masterKeyManager.check()
-    if(state){
-      if(state.needKey){
-        this.showInputKey()
-      }else{
-        app.showNotice(`${state.message}`)
-      }
-      return
-    }
     
     // 提前检查可用额度，避免因为可用额度不足而导致处理卡片数据产生无效的消耗
     if(!this.data.edit){
@@ -187,13 +185,39 @@ Page({
       }
     }
 
+    const savedImages:ICardImage[] = []
+    for (const idx in card.image) {
+      const image = card.image[idx]
+      const saveKey = `${image.url}-${JSON.stringify(card.info)}`
+      if(this.saveState.has(saveKey)){
+        console.debug('使用保存缓存数据:',saveKey)
+        savedImages.push(this.saveState.get(saveKey)!)
+      }else{
+        // 需要保存加密数据时才进行密码检测
+        const state = app.masterKeyManager.check()
+        if(state){
+          if(state.needKey){
+            this.showInputKey()
+          }else{
+            app.showNotice(`${state.message}`)
+          }
+          return
+        }
+
+        const savedImage = await loadData(cardManager.saveImage, {
+          image,
+          info: card.info,
+          cardId: card._id
+        }, `保存第${+idx+1}张卡面`)
+        this.saveState.set(saveKey, savedImage)
+        savedImages.push(savedImage as ICardImage)
+      }
+    }
+
     const savedCard = await loadData(cardManager.save, {
-      action: this.data.edit ? 'update' : 'save',
       card: card as ICard, 
-      key: app.masterKeyManager.masterKey
-    },{
-      timeout: 30000
-    })
+      images: savedImages
+    },'保存卡片信息')
 
     console.debug(`提前缓存${this.data.edit?'修改':'新增'}卡片`)
     await cardManager.cacheCard(savedCard, this.data.card as ICard)
