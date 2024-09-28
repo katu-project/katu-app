@@ -113,7 +113,7 @@ Page({
   onEventCardHide(id){
     const idx = this.data.likeList.findIndex(e=>e._id === id)
     const findCard = this.data.likeList[idx]
-    console.log('home page: onEventCardHide:', id, findCard.title)
+    console.log('home page: onEventCardHide:', id, findCard?.title || 'skip event')
     if(findCard){
       const setData = {}
       setData[`likeList[${idx}]._url`] = app.getConst('DefaultShowLockImage')
