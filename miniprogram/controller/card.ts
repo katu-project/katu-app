@@ -20,41 +20,29 @@ class CardManager extends Controller{
     return getAppManager()
   }
 
-  async saveImage({image, info, cardId}){
+  async saveImage({imageLocalPath, info}){
     const saveImageItem: ICardImage = { 
-      url: image.url, 
+      url: imageLocalPath, 
       hash: '',
       salt: '', 
       ccv: ''
     }
-    if(cardId){
-      const originImageExtraData = JSON.stringify(await this.cache.getCardExtraData(cardId))
-      const extraDataChange = originImageExtraData !== JSON.stringify(info)
-      
-      const originPicUrl = image._url
-      saveImageItem.hash = await this.getImageHash(image.url)
-
-      if(originPicUrl && saveImageItem.hash === image.hash && !extraDataChange){
-        console.log(`编辑${image.hash}卡面与原始Hash一致并且附加数据一致，保持原始数据不做改变`)
-        saveImageItem.salt = image.salt
-        saveImageItem.ccv = image.ccv
-        saveImageItem.url = originPicUrl
-      }else{ 
-        console.log(originPicUrl? `检测到${image.hash}卡面/附加数据修改，重新加密上传` : `检测到新增卡面${image.hash}，重新保存卡片数据`)
-        await this.checkImageType(image.url)
-        const encrytedImage = await this.encryptImage(saveImageItem, info, this.app.masterKeyManager.masterKey)
-        saveImageItem.url = await this.saveImageFile(encrytedImage.path)
-        saveImageItem.salt = encrytedImage.keySalt
-        saveImageItem.ccv = encrytedImage.ccv
+    const saveImageFile = async(filePath:string) => {
+      if(this.user.config?.storage?.cos?.enable){
+        if(this.app.isMp){
+          throw Error('小程序无法使用自定义存储，请使用 APP 操作')
+        }
+        const storageConfig = await this.user.getCustomStorageConfig(this.app.masterKeyManager.masterKey)
+        return this.storage.saveCardImage(filePath, storageConfig)
       }
-    }else{
-      await this.checkImageType(image.url)
-      saveImageItem.hash = await this.getImageHash(image.url)
-      const encrytedImage = await this.encryptImage(saveImageItem, info, this.app.masterKeyManager.masterKey)
-      saveImageItem.url = await this.saveImageFile(encrytedImage.path)
-      saveImageItem.salt = encrytedImage.keySalt
-      saveImageItem.ccv = encrytedImage.ccv
+      return this.uploadCardFile(filePath)
     }
+    await this.checkImageType(saveImageItem.url)
+    saveImageItem.hash = await this.getImageHash(saveImageItem.url)
+    const encrytedImage = await this.encryptImage(saveImageItem, info, this.app.masterKeyManager.masterKey)
+    saveImageItem.url = await saveImageFile(encrytedImage.path)
+    saveImageItem.salt = encrytedImage.keySalt
+    saveImageItem.ccv = encrytedImage.ccv
     return saveImageItem
   }
 
@@ -128,17 +116,6 @@ class CardManager extends Controller{
       url: image.url,
       savePath
     })
-  }
-
-  async saveImageFile(filePath){
-    if(this.user.config?.storage?.cos?.enable){
-      if(this.app.isMp){
-        throw Error('小程序无法使用自定义存储，请使用 APP 操作')
-      }
-      const storageConfig = await this.user.getCustomStorageConfig(this.app.masterKeyManager.masterKey)
-      return this.storage.saveCardImage(filePath, storageConfig)
-    }
-    return this.uploadCardFile(filePath)
   }
 
   // 渲染层业务接口

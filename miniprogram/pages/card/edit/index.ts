@@ -187,7 +187,7 @@ Page({
 
     const savedImages:ICardImage[] = []
     for (const idx in card.image) {
-      const image = card.image[idx]
+      const image = card.image[idx] as ICardImage
       const saveKey = `${image.url}-${JSON.stringify(card.info)}`
       if(this.saveState.has(saveKey)){
         console.debug('使用保存缓存数据:',saveKey)
@@ -204,11 +204,20 @@ Page({
           return
         }
 
+        if(card._id){
+          if(image._url) {
+            console.debug(`UPDATE - 卡面/附加数据修改`)
+          }else{
+            console.debug(`UPDATE - 新增卡面`)
+          }
+        }else{
+          console.debug('CREATE - 新增卡面')
+        }
+
         const savedImage = await loadData(cardManager.saveImage, {
-          image,
-          info: card.info,
-          cardId: card._id
-        }, `保存第${+idx+1}张卡面`)
+          imageLocalPath: image.url,
+          info: card.info
+        }, `保存卡面 ${+idx+1}`)
         this.saveState.set(saveKey, savedImage)
         savedImages.push(savedImage as ICardImage)
       }
