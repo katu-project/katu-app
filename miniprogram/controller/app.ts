@@ -307,6 +307,28 @@ class AppManager extends Controller {
     return false
   }
 
+  syncMiniKey(){
+    return this.miniKeyManager.sync(this.masterKeyManager.masterKey)
+  }
+
+  enableSyncMiniKey({syncId}){
+    return this.miniKeyManager.enableSync({
+      kid: syncId,
+      masterKey: this.masterKeyManager.masterKey
+    })
+  }
+
+  createMiniKey({miniKey}){
+    return this.miniKeyManager.createMiniKey({
+      miniKey,
+      masterKey: this.masterKeyManager.masterKey
+    })
+  }
+
+  createResetKey(){
+    return this.resetKeyManager.create(this.masterKeyManager.masterKey)
+  }
+
   // 未使用
   async checkNeverLogin(){
     const loginUserId = await this.cache.getLocalData<string>('LAST_LOGIN_UID')

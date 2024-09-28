@@ -1,4 +1,5 @@
 import Controller from '@/class/controller'
+import { getAppManager } from './app'
 
 export default class User extends Controller {
   _user: Partial<IUser> = {}
@@ -6,6 +7,10 @@ export default class User extends Controller {
 
   constructor(){
     super()
+  }
+
+  get app(){
+    return getAppManager()
   }
 
   get config(){
@@ -167,10 +172,10 @@ export default class User extends Controller {
     return cosJson as ICustomStorageConfig
   }
 
-  async setCustomStorage({cosConfig, masterKey}:{cosConfig:ICustomStorageConfig, masterKey:string}){
+  async setCustomStorage({cosConfig}:{cosConfig:ICustomStorageConfig}){
     const cosJsonString = JSON.stringify(cosConfig)
     const keyId = this.crypto.getStringHash(cosJsonString,'SHA1')
-    const keyPack = await this.crypto.encryptString(cosJsonString, masterKey)
+    const keyPack = await this.crypto.encryptString(cosJsonString, this.app.masterKeyManager.masterKey)
     
     // secret 字段脱敏处理
     Object.keys(cosConfig.secret).map((key)=>{

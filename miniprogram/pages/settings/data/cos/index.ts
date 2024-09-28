@@ -84,8 +84,7 @@ Page({
     })
 
     await loadData(user.setCustomStorage, {
-      cosConfig,
-      masterKey: app.masterKeyManager.masterKey
+      cosConfig
     })
     app.showMiniNotice('修改成功')
     this.renderData()

@@ -138,7 +138,7 @@ Page({
     try {
       await app.miniKeyManager.checkState()
     } catch (error) {
-      const { confirm } = await app.showChoose('已启用多端同步，同步快速密码？')
+      const { confirm } = await app.showChoose('在本设备使用快速密码？')
       if(confirm){
         this.syncMiniKey = true
         this.showInputKey({
@@ -292,8 +292,8 @@ Page({
     app.masterKeyManager.loadWithKey(key).then(async ()=>{
       this.hideInputKey()
       if(this.syncMiniKey){
-        await loadData(app.miniKeyManager.sync, app.masterKeyManager.masterKey)
-        await app.showNotice('快速密码同步成功')
+        await loadData(app.syncMiniKey)
+        await app.showMiniNotice('同步成功')
         this.syncMiniKey = false
       }
       if(this.chooseAction){
