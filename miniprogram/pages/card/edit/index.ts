@@ -116,7 +116,7 @@ Page({
   },
 
   async loadData(){
-    const card = await loadData(cardManager.getCard, { id: this.id, ignoreCache: true })
+    const card = await loadData(cardManager.getCard, { id: this.id })
     // 记录原始图片数据，保存时判断图片是否变动
     // 检测 图片路径 和 附加数据
     card.image.map(e=>{

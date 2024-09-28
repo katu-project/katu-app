@@ -160,7 +160,7 @@ Page({
       }
     }).then(async needSync=>{
       if(needSync){
-        const { confirm } = await app.showChoose('检查到云端数据有变动\n同步最新数据？')
+        const { confirm } = await app.showChoose('云端数据有变动\n同步最新数据？')
         if(confirm){
           await this.loadData({ ignoreCache:true , showText:'同步最新数据'})
         }
@@ -211,15 +211,9 @@ Page({
       return
     }
    
-    const card = await loadData(
-      cardManager.getCard, 
-      {id: this.id, key:app.masterKeyManager.masterKey}, 
-      '读取卡面数据'
-    )
-    
+    const card = await loadData(cardManager.getCard, { id: this.id, decrypt:true }, '读取卡面')
     const setData = {
       [`card.image`]: card.image,
-      [`card.info`]: card.info,
       ['extraData']: cardManager.rebuildExtraFields(card.info),
       'showHideCardData': !user.config?.general.autoShowContent
     }

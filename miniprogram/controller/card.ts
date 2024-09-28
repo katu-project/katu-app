@@ -118,7 +118,7 @@ class CardManager extends Controller{
   }
 
   // 渲染层业务接口
-  async getCard({id, ignoreCache, key}:{id, ignoreCache?:boolean, key?:string}):Promise<ICard>{
+  async getCard({id, ignoreCache, decrypt}:{id, ignoreCache?:boolean, decrypt?:boolean}):Promise<ICard>{
     let card:ICard|undefined
     if(!ignoreCache){
       card = await this.cache.getCard(id)
@@ -131,11 +131,12 @@ class CardManager extends Controller{
     }
 
     for (const image of card.image) {
-      if(card.encrypted && key){ // 解密图片
-        const imageData =  await this.decryptImage(image, key)
+      if(decrypt){ // 解密图片
+        const imageData =  await this.decryptImage(image, this.app.masterKeyManager.masterKey)
         image._url = imageData.imagePath
         card.info = imageData.extraData
         if(card.info.length){
+          // 2个卡面会多次重复调用
           await this.cache.setCardExtraData(id, imageData.extraData)
         }
       }else{ // 获取图片缓存
