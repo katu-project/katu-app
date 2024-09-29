@@ -64,7 +64,7 @@ class AppManager extends Controller {
     return this.DeviceInfo.platform
   }
 
-  get user(){
+  get userManager(){
     return getUserManager()
   }
 
@@ -146,7 +146,7 @@ class AppManager extends Controller {
     }
 
     try {
-      await this.user.loadInfo()
+      await this.userManager.loadInfo()
     } catch (error:any) {
       // 服务端凭证失效，需要重新登录
       if(this.isApp && error.code === 401){
@@ -154,7 +154,7 @@ class AppManager extends Controller {
       }
       throw error
     }
-    if(this.user.isSetMasterKey && this.user.rememberPassword){
+    if(this.userManager.isSetMasterKey && this.userManager.rememberPassword){
       console.log("用户启用记住密码，尝试加载主密码")
       this.masterKeyManager.load()
     }
@@ -164,14 +164,14 @@ class AppManager extends Controller {
     this.cache.deleteLoginToken()
     this.deleteHomeDataCache()
     this.masterKeyManager.clear()
-    this.user.clearInfo()
+    this.userManager.clearInfo()
     this.publishLoginChangeEvent(false)
   }
 
   async login(token:string){
     if(!token) throw Error('登录错误，请使用其他方式登录或者联系客服')
     await this.cache.setLoginToken(token)
-    await this.user.reloadInfo()
+    await this.userManager.reloadInfo()
     this.publishLoginChangeEvent(true)
   }
 
@@ -223,7 +223,7 @@ class AppManager extends Controller {
         return
       }
 
-      if(this.user.rememberPassword){
+      if(this.userManager.rememberPassword){
         this.publishMasterKeyCacheEvent()
       }else{
         this.publishMasterKeyRemoveEvent()
@@ -500,7 +500,7 @@ class AppManager extends Controller {
 
   async checkQuotaNotice(msg?:string){
     return new Promise((resolve)=>{
-      if(this.user.quota >= 0){
+      if(this.userManager.quota >= 0){
         return resolve("")
       }
       this.showNotice(msg || '无可用兔币，无法查看卡片')
@@ -549,7 +549,7 @@ class AppManager extends Controller {
   }
 
   async deleteAccount(){
-    await this.user.deleteAccount()
+    await this.userManager.deleteAccount()
     await this.cache.deleteUser()
     await this.clearCacheData()
     return this.masterKeyManager.clear()
