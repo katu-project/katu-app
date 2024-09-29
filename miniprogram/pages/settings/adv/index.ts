@@ -4,7 +4,6 @@ const app = getAppManager()
 
 Page({
   data: {
-    user: app.user,
     showDevItem: false
   },
 

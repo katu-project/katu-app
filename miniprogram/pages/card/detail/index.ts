@@ -259,7 +259,7 @@ Page({
     const params = `sid=${this.shareData?.sid}&sk=${this.shareData?.sk}&dk=${this.shareData?.dk}`
     this.hideShareDialog()
     return {
-      title: `来自 ${app.user.nickName} 分享的内容`,
+      title: `来自 ${user.nickName} 分享的内容`,
       path: `/pages/share/index?${params}`,
       imageUrl: app.getConst('DefaultShareImage')
     }
