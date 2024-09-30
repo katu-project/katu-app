@@ -1,5 +1,5 @@
 import Controller from '@/class/controller'
-import { showChoose, setClipboardData, sleep, file, showNotice, hasWechatInstall } from '@/utils/index'
+import { showChoose, setClipboardData, sleep, file, showNotice, hasWechatInstall, convert } from '@/utils/index'
 import { getCardManager } from './card'
 import { getUserManager } from './user'
 import { getMiniKeyManager, getMasterKeyManager, getResetKeyManager } from './key'
@@ -48,6 +48,16 @@ class AppManager extends Controller {
     }
   }
 
+  get deviceInfo(){
+    return {
+      platform: this.platform,
+      brand: this.DeviceInfo.brand || '未知品牌',
+      model: this.DeviceInfo.model || '未知型号',
+      system: this.DeviceInfo.system || '未知系统版本',
+      language: this.DeviceInfo.language || '未知系统语言'
+    }
+  }
+
   get version(){
     let version = this.AppInfo.miniProgram.version
     if(this.isApp){
@@ -61,7 +71,7 @@ class AppManager extends Controller {
   }
 
   get platform(){
-    return this.DeviceInfo.platform
+    return this.DeviceInfo.platform || '未知平台'
   }
 
   get userManager(){
@@ -180,7 +190,12 @@ class AppManager extends Controller {
     return this.login(token)
   }
 
-  async loginWithVerifyCode(options:{type:string, value:string, code:string, verifyId:string}){
+  async loginWithVerifyCode(options:{type:string, value:string, code:string, verifyId:string, extra?:string}){
+    const extra = {
+      device: `${this.deviceInfo.platform}_${this.deviceInfo.brand}_${this.deviceInfo.model}`,
+      language: this.deviceInfo.language
+    }
+    options.extra = convert.stringToBase64(JSON.stringify(extra))
     const { token } = await this.invokeApi('loginWithVerifyCode', options)
     if(!token) throw Error('登录错误，请使用其他方式登录或者联系客服')
     return this.login(token)
