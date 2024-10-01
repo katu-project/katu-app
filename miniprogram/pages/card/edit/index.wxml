@@ -11,7 +11,7 @@
           indicator-color="#8799a3" 
           indicator-active-color="#0081ff">
     <swiper-item wx:for="{{card.image}}" wx:key="index" class="{{curShowPicIdx==index?'cur':''}}">
-      <view class="swiper-item" bindtap="tapToChoosePic">
+      <view class="swiper-item" bindtap="tapToChoosePic" bindlongpress="longtapToChoosePic">
         <image class="pic-img card" mode="aspectFit" src="{{item.url}}"></image>
       </view>
     </swiper-item>

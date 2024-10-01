@@ -280,6 +280,16 @@ Page({
     }
   },
 
+  async longtapToChoosePic(){
+    try {
+      const picPath = this.data.card.image[this.data.curShowPicIdx].url
+      await app.goEditImagePage(picPath)
+    } catch (error:any) {
+      console.error(error)
+      app.showNotice(`选取错误: ${error.message||'未知错误'}`)
+    }
+  },
+
   addCardPic(){
     const idx = this.data.card.image.length
     if(idx == 1){
