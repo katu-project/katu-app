@@ -170,6 +170,11 @@ Page({
       return
     }
 
+    if(!user.isActive){
+      await app.showActiveNotice()
+      return
+    }
+
     if(!user.isSetMasterKey){
       await app.showSetMasterKeyNotice()
       return
@@ -265,11 +270,6 @@ Page({
   },
 
   async tapToChoosePic(){
-    if(!user.isActive){
-      app.showActiveNotice()
-      return
-    }
-
     try {
       const picPath = await app.chooseLocalImage()
       if(!picPath) return
