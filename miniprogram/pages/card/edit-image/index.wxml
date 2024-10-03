@@ -1,6 +1,6 @@
 <cu-custom bgColor="bg-cyan" isBack="{{true}}">
   <view slot="backText">返回</view>
-  <view slot="content">图片处理</view>
+  <view slot="content">选择卡面</view>
 </cu-custom>
 
 <view class="flex-col justify-between" style="height: calc(100vh - {{navHeight}}px);">
