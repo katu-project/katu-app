@@ -30,10 +30,10 @@ class AppManager extends Controller {
   get deviceInfo(){
     return {
       platform: this.platform,
-      brand: this.DeviceInfo.brand || '未知品牌',
-      model: this.DeviceInfo.model || '未知型号',
-      system: this.DeviceInfo.system || '未知系统版本',
-      language: this.DeviceInfo.language || '未知系统语言'
+      brand: this.DeviceInfo.brand || 'unknown',
+      model: this.DeviceInfo.model || 'unknown',
+      system: this.DeviceInfo.system || 'unknown',
+      language: this.DeviceInfo.language || 'unknown'
     }
   }
 
