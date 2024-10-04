@@ -34,7 +34,10 @@ export default class Core extends Base {
   }
 
   get isApp(){
-    return this.isIos || this.isAndroid
+    // #if NATIVE
+    return true
+    // #endif
+    return false
   }
 
   async invokeApi<K extends keyof ApiType, R = ReturnType<ApiType[K]>>(apiName: K, ...args:Parameters<ApiType[K]>):Promise<Awaited<R>>{
