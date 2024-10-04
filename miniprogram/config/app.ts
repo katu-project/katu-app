@@ -8,7 +8,6 @@ const AppConfig:IAppConfig = {
   uploadTempFileType: 'temp',
   allowUploadImageType: ['jpeg','png','jpg'],
   cardImageMaxNum: 2,
-  devHomeDataCacheTime: 3600,
   homeDataCacheTime: 86400, // 一天
   noticeFetchTime: 60,
   smsGapTime: 60,

@@ -254,7 +254,7 @@ class AppManager extends Controller {
   async loadModules(){
     this.cache.init({
       userAvatarDir: await this.getUserAvatarDir(),
-      homeDataCacheTime: this.getConfig(this.isDev?'devHomeDataCacheTime':'homeDataCacheTime')
+      homeDataCacheTime: this.getConfig('homeDataCacheTime')
     })
     this.notice.init({
       noticeFetchIntervalTime: this.getConfig('noticeFetchTime')

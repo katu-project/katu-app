@@ -22,7 +22,6 @@ interface IAppConfig {
   uploadTempFileType: UploadFileType
   allowUploadImageType: string[]
   cardImageMaxNum: number
-  devHomeDataCacheTime: number
   homeDataCacheTime: number
   noticeFetchTime: number
   smsGapTime: number
