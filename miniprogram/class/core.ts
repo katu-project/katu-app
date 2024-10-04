@@ -8,6 +8,15 @@ type ApiType = typeof api
 type LocalCacheKeyType = keyof typeof Const.LOCAL_CACHE_KEYS
 
 export default class Core extends Base {
+  DeviceInfo: Partial<WechatMiniprogram.SystemInfo> = {}
+
+  get platform(){
+    return this.DeviceInfo.platform || 'unknown'
+  }
+
+  get isMac(){
+    return this.platform === 'mac'
+  }
 
   async invokeApi<K extends keyof ApiType, R = ReturnType<ApiType[K]>>(apiName: K, ...args:Parameters<ApiType[K]>):Promise<Awaited<R>>{
     console.debug('执行 API 请求: ', apiName, args)
@@ -59,6 +68,10 @@ export default class Core extends Base {
     return scanQrcode
   }
 
+  setBaseInfo(systemInfo){
+    this.DeviceInfo = systemInfo
+  }
+
   async getLocalData<T>(key: LocalCacheKeyType) {
     try {
       return await cache.getCache<T>(Const.LOCAL_CACHE_KEYS[key])
@@ -85,6 +98,10 @@ export default class Core extends Base {
   }
 
   async chooseLocalImage(){
+    if(this.isMac){
+      throw Error('当前客户端不支持该功能')
+    }
+    getApp().globalData.state.push('InSelectFile')
     const chooseTempFile = await chooseLocalImage()
     let userTempFile = ''
     if(chooseTempFile){
@@ -92,6 +109,14 @@ export default class Core extends Base {
       await file.saveTempFile(chooseTempFile, userTempFile)
     }
     return userTempFile
+  }
+
+  async previewImage(pics: string[], idx?:number){
+    getApp().globalData.state.push('inPreviewPic')
+    wx.previewImage({
+      urls: pics,
+      current: pics[idx || 0]
+    })
   }
 
   async getImageType(path: string) {

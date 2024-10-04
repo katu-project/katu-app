@@ -6,7 +6,6 @@ import { getMiniKeyManager, getMasterKeyManager, getResetKeyManager } from './ke
 
 class AppManager extends Controller {
   AppInfo = wx.getAccountInfoSync()
-  DeviceInfo: Partial<WechatMiniprogram.SystemInfo> = {}
 
   isApp = false
   isAndroid = false
@@ -35,6 +34,7 @@ class AppManager extends Controller {
 
   async init(systemInfo){
     this.setBaseInfo(systemInfo)
+    console.debug(systemInfo,this.AppInfo)
     this.loadGlobalEvents()
     this.loadModules()
     this.firstOpenTask()
@@ -68,10 +68,6 @@ class AppManager extends Controller {
 
   get isDev(){
     return this.AppInfo.miniProgram.envVersion !== 'release'
-  }
-
-  get platform(){
-    return this.DeviceInfo.platform || '未知平台'
   }
 
   get userManager(){
@@ -214,27 +210,17 @@ class AppManager extends Controller {
     return this.invokeApi('unbindOtherLogin', type)
   }
 
-  setBaseInfo(systemInfo){
-    this.DeviceInfo = systemInfo
-    console.debug(systemInfo,this.AppInfo)
-  }
-
   loadGlobalEvents(){
     this.subscribeMasterKeyCacheEvent(this.masterKeyManager.setCache)
     this.subscribeMasterKeyRemoveEvent(this.masterKeyManager.clear)
     
-    wx.onAppHide(res=>{
+    wx.onAppHide(()=>{
+      // 以下操作会触发 onAppHide 事件
+      const OnAppHideAction = ['InPreviewPic','InSelectFile','InShare']
       const globalState = getApp().globalData.state
-      console.log('onAppHide:', res, globalState);
-      // 暂时解决图片预览引起的清除主密码的bug
-      if(globalState.inPreviewPic){
-        globalState.inPreviewPic = false
-        return
-      }else if(globalState.inChooseLocalImage){
-        globalState.inChooseLocalImage = false
-        return
-      }else if(globalState.inShareData){
-        globalState.inShareData = false
+      if(globalState.length && OnAppHideAction.includes(globalState[0])){
+        console.log('onAppHide:', globalState[0]);
+        globalState.pop()
         return
       }
 
@@ -380,14 +366,6 @@ class AppManager extends Controller {
     }
   }
 
-  async previewImage(pics: string[], idx?:number){
-    getApp().globalData.state.inPreviewPic = true
-    wx.previewImage({
-      urls: pics,
-      current: pics[idx || 0]
-    })
-  }
-
   async createShareItem({card, scope, expiredTime}:CreateShareOptions){
     scope = scope?.length ? scope : []
     expiredTime = expiredTime || 3600
@@ -433,14 +411,6 @@ class AppManager extends Controller {
       sk,
       dk
     }
-  }
-
-  async chooseLocalImage(){
-    if(this.platform === 'mac'){
-      throw Error('该客户端不支持选择图片功能')
-    }
-    getApp().globalData.state.inChooseLocalImage = true
-    return super.chooseLocalImage()
   }
 
   async getHomeData({skipCache, cacheOnly}:{skipCache?:boolean, cacheOnly?:boolean}):Promise<IHomeData>{

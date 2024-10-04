@@ -27,10 +27,6 @@ App({
     StatusBar: 0,
     CustomBar: 0,
     Custom: {},
-    state: {
-      inPreviewPic: false,
-      inChooseLocalImage: false,
-      inShareData: false
-    }
+    state: []
   }
 });

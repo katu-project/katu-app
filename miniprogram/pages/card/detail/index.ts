@@ -255,7 +255,7 @@ Page({
 
   onShareAppMessage(): WechatMiniprogram.Page.ICustomShareContent{
     // 取消由于分享导致的小程序 hide 事件
-    getApp().globalData.state.inShareData = true
+    getApp().globalData.state.push('inShare')
     const params = `sid=${this.shareData?.sid}&sk=${this.shareData?.sk}&dk=${this.shareData?.dk}`
     this.hideShareDialog()
     return {
