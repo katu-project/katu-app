@@ -7,29 +7,8 @@ import { getMiniKeyManager, getMasterKeyManager, getResetKeyManager } from './ke
 class AppManager extends Controller {
   AppInfo = wx.getAccountInfoSync()
 
-  isApp = false
-  isAndroid = false
-  isIos = false
-  isMp = true
-
   constructor(){
     super()
-    // #if ANDROID
-    this.isMp = false
-    this.isAndroid = true
-    this.isIos = false
-    this.isApp = true
-    // #elif IOS
-    this.isMp = false
-    this.isAndroid = false
-    this.isIos = true
-    this.isApp = true
-    // #elif MP
-    this.isMp = true
-    this.isAndroid = false
-    this.isIos = false
-    this.isApp = false
-    // #endif
   }
 
   async init(systemInfo){

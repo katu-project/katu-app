@@ -18,6 +18,25 @@ export default class Core extends Base {
     return this.platform === 'mac'
   }
 
+  get isAndroid(){
+    return this.platform === 'android'
+  }
+
+  get isIos(){
+    return this.platform === 'ios'
+  }
+
+  get isMp(){
+    // #if MP
+    return true
+    // #endif
+    return false
+  }
+
+  get isApp(){
+    return this.isIos || this.isAndroid
+  }
+
   async invokeApi<K extends keyof ApiType, R = ReturnType<ApiType[K]>>(apiName: K, ...args:Parameters<ApiType[K]>):Promise<Awaited<R>>{
     console.debug('执行 API 请求: ', apiName, args)
     // @ts-ignore 类型识别有问题，先跳过
