@@ -150,7 +150,7 @@ Page({
       app.showNotice(this.data.list[idx].cnText)
       return
     }
-    app.setClipboardData(this.data.list[idx].cn)
+    app.copyText(this.data.list[idx].cn)
   },
   
   async tapToCardDetail(e){

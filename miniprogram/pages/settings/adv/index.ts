@@ -31,7 +31,7 @@ Page({
       confirmText: '复制密钥'
     })
     if(confirm){
-      app.setClipboardData(token)
+      app.copyText(token)
     }
   },
 

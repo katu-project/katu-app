@@ -1,7 +1,7 @@
 import Base from '@/class/base'
 import Const from "@/const"
 import Config from '@/config/index'
-import { cache, file, crypto, checkTimeout, chooseLocalImage, scanQrcode } from "@/utils/index"
+import { cache, file, crypto, checkTimeout, chooseLocalImage, scanQrcode, setClipboardData } from "@/utils/index"
 import api from '@/api'
 
 type ApiType = typeof api
@@ -139,6 +139,10 @@ export default class Core extends Base {
       urls: pics,
       current: pics[idx || 0]
     })
+  }
+
+  copyText(text:string){
+    return setClipboardData(text)
   }
 
   async getImageType(path: string) {

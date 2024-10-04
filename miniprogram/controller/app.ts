@@ -1,5 +1,5 @@
 import Controller from '@/class/controller'
-import { showChoose, setClipboardData, sleep, file, showNotice, hasWechatInstall, convert } from '@/utils/index'
+import { showChoose, sleep, file, showNotice, hasWechatInstall, convert } from '@/utils/index'
 import { getCardManager } from './card'
 import { getUserManager } from './user'
 import { getMiniKeyManager, getMasterKeyManager, getResetKeyManager } from './key'
@@ -627,11 +627,6 @@ class AppManager extends Controller {
 
   async showChoose(msg:string, options?:WechatMiniprogram.ShowModalOption){
     return showChoose('温馨提示', msg, options)
-  }
-
-  // 系统API
-  setClipboardData(data){
-    return setClipboardData(data)
   }
 }
 

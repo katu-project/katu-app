@@ -241,7 +241,7 @@ Page({
   },
 
   tapToCopyValue(e){
-    app.setClipboardData(e.currentTarget.dataset.value)
+    app.copyText(e.currentTarget.dataset.value)
   },
 
   async tapToDeleteCard(){

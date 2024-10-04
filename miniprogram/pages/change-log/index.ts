@@ -32,6 +32,6 @@ Page({
   },
 
   tapToCopy(){
-    app.setClipboardData(this.data.webUrl)
+    app.copyText(this.data.webUrl)
   }
 })
