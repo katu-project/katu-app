@@ -1,5 +1,4 @@
 import { getAppManager } from '@/controller/app'
-
 export const CardChangeEvent = 'CardChange'
 export const CardDeleteEvent = 'CardDelete'
 export const CardHideEvent = 'CardHide'
@@ -17,45 +16,46 @@ export const TelCodeSelectedEvent = 'TelCodeSelected'
 export const MasterKeyCacheEvent = 'MasterKeyCache'
 export const MasterKeyRemoveEvent = 'MasterKeyRemove'
 
-const PageEventsMap = {
-  list: [
-    CardChangeEvent,
-    CardDeleteEvent,
-    CardHideEvent,
-    CardDecryptEvent
-  ],
-  detail: [
-    CardChangeEvent
-  ],
-  edit: [
-    CardEditImageEvent,
-    CardEditTitleEvent,
-    CardEditExtraDataEvent,
-    TagChangeEvent
-  ],
-  quota: [
-    AppleOrderPayDoneEvent,
-    AppleOrderPayCancelEvent
-  ],
-  home: [
-    CardChangeEvent,
-    CardDeleteEvent,
-    CardDecryptEvent,
-    CardHideEvent,
-    LoginChangeEvent,
-    CacheDeleteEvent
-  ],
-  profile: [
-    UserProfileChangeEvent,
-    LoginChangeEvent
-  ],
-  auth: [
-    TelCodeSelectedEvent
-  ]
-}
-
 export const CreateEventBehavior = (page:string)=>{
   const app = getAppManager()
+
+  const PageEventsMap = {
+    list: [
+      CardChangeEvent,
+      CardDeleteEvent,
+      CardHideEvent,
+      CardDecryptEvent
+    ],
+    detail: [
+      CardChangeEvent
+    ],
+    edit: [
+      CardEditImageEvent,
+      CardEditTitleEvent,
+      CardEditExtraDataEvent,
+      TagChangeEvent
+    ],
+    quota: app.isIos ? [
+      AppleOrderPayDoneEvent,
+      AppleOrderPayCancelEvent
+    ] : [],
+    home: [
+      CardChangeEvent,
+      CardDeleteEvent,
+      CardDecryptEvent,
+      CardHideEvent,
+      LoginChangeEvent,
+      CacheDeleteEvent
+    ],
+    profile: [
+      UserProfileChangeEvent,
+      LoginChangeEvent
+    ],
+    auth: app.isApp ? [
+      TelCodeSelectedEvent
+    ] : []
+  }
+
   if(!PageEventsMap[page]) return
   const pageEvents = PageEventsMap[page]
   const funcMap = new Map()
