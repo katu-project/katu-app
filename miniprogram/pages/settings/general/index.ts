@@ -9,9 +9,11 @@ Page({
     config_general_useDefaultTag: true,
     config_general_autoShowContent: false
   },
+
   onShow(){
     this.loadData()
   },
+
   loadData(){
     const {config} = user
     this.setData({
@@ -19,6 +21,7 @@ Page({
       config_general_autoShowContent: config?.general.autoShowContent
     })
   },
+
   tapToConfig(e){
     const configItem = {
       key: e.currentTarget.dataset.key,
@@ -38,5 +41,9 @@ Page({
     }).catch(()=>{
       this.loadData()
     })
+  },
+
+  tapToPage({currentTarget:{dataset:{page}}}){
+    app.goToPage(page)
   }
 })
