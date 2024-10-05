@@ -33,7 +33,8 @@ Page({
   },
 
   async onLoad() {
-    if(app.DeviceInfo.language !== 'zh_CN'){
+    const useLang = await app.getUseLanguage()
+    if(useLang && useLang === 'en'){
       this.tapToChangeLoginMode()
     }
     app.hasInstallWechat().then(hasInstall=>{

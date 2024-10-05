@@ -40,6 +40,10 @@ export default class Core extends Base {
     return false
   }
 
+  get systemLanguage(){
+    return this.DeviceInfo.language || 'unknown'
+  }
+
   async invokeApi<K extends keyof ApiType, R = ReturnType<ApiType[K]>>(apiName: K, ...args:Parameters<ApiType[K]>):Promise<Awaited<R>>{
     console.debug('执行 API 请求: ', apiName, args)
     // @ts-ignore 类型识别有问题，先跳过

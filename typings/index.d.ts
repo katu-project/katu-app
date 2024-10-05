@@ -122,3 +122,5 @@ interface ICustomStorageConfig {
     accountId?: string
   }
 }
+
+type UseLanguageType = 'zh'|'en'

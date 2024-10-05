@@ -6,6 +6,7 @@ import { getMiniKeyManager, getMasterKeyManager, getResetKeyManager } from './ke
 
 class AppManager extends Controller {
   AppInfo = wx.getAccountInfoSync()
+  UseLanguage = ''
 
   constructor(){
     super()
@@ -14,6 +15,7 @@ class AppManager extends Controller {
   async init(systemInfo){
     this.setBaseInfo(systemInfo)
     console.debug(systemInfo,this.AppInfo)
+    this.setDefaultLanguage()
     this.loadGlobalEvents()
     this.loadModules()
     this.firstOpenTask()
@@ -260,6 +262,40 @@ class AppManager extends Controller {
       noticeFetchIntervalTime: this.getConfig('noticeFetchTime')
     })
     this.crypto.init(this.cryptoConfig)
+  }
+
+  async setDefaultLanguage(){
+    let useLanguage = await this.getLocalData<UseLanguageType>('USE_LANG')
+    if(!useLanguage) {
+      const LanguageMap = [
+        {
+          name: 'zh',
+          values: ['zh_CN','zh_HK','zh_TW'],
+          default: true
+        },
+        {
+          name: 'en',
+          values: ['en']
+        }
+      ]
+      let checkUseLang = LanguageMap.find(e=>e.values.includes(this.systemLanguage))
+      if(!checkUseLang){
+        checkUseLang = LanguageMap.find(e=>e.default)
+      }
+      await this.setLocalData('USE_LANG', checkUseLang?.name)
+      useLanguage = checkUseLang?.name as UseLanguageType
+    }
+
+    this.UseLanguage = useLanguage
+  }
+
+  async getUseLanguage(){
+    return this.getLocalData<UseLanguageType>('USE_LANG')
+  }
+
+  async setUseLanguage(lang:UseLanguageType){
+    this.UseLanguage = lang
+    return this.setLocalData('USE_LANG', lang)
   }
 
   // 未使用
