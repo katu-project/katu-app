@@ -229,10 +229,10 @@ Page({
   tapToEditCard(){
     this.chooseAction = 'edit'
     this.hideActionDialog()
-    return this._tapToEditCard()
+    return this.goEditCard()
   },
 
-  _tapToEditCard(){
+  goEditCard(){
     if(this.data.card.encrypted && this.data.card.image?.some(e=>e._url === app.getConst('DefaultShowLockImage'))){
       this.showEncryptedImage()
       return
@@ -298,7 +298,7 @@ Page({
       }
       if(this.chooseAction){
         if(this.chooseAction === 'edit'){
-          this._tapToEditCard()
+          this.goEditCard()
         }
         this.chooseAction = ''
       }else if(this.data.card.image?.some(e=>e._url === app.getConst('DefaultShowLockImage'))){
