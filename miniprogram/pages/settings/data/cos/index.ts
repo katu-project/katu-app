@@ -1,6 +1,8 @@
 import { loadData } from '@/utils/index'
 import { getAppManager } from '@/controller/app'
 import { getUserManager } from '@/controller/user'
+import { CreateKeyInput } from '@/behaviors/keyInput'
+
 const app = getAppManager()
 const user = getUserManager()
 
@@ -17,6 +19,10 @@ Page({
       secret: {}
     }
   },
+
+  behaviors: [
+    CreateKeyInput()
+  ],
 
   onLoad() {
 
@@ -62,7 +68,7 @@ Page({
     const state = app.masterKeyManager.check()
     if(state){
       if(state.needKey){
-        this.showInputKey()
+        this.showKeyInput()
       }else{
         app.showNotice(`${state.message}`)
       }
@@ -134,31 +140,7 @@ Page({
     this.setData(setData)
   },
 
-  inputKeyConfirm(e){
-    const key = e.detail.value
-    app.masterKeyManager.loadWithKey(key).then(()=>{
-      this.hideInputKey()
-      this.tapToSave()
-    }).catch(error=>{
-      this.setData({
-        inputKeyResult: error.message
-      })
-    })
-  },
-
-  showInputKey(){
-    this.setData({
-      showInputKey: true
-    })
-  },
-
-  hideInputKey(){
-    this.setData({
-      showInputKey: false
-    })
-  },
-
-  tapToForgetKey(){
-    app.goResetKeyPage()
+  inputKeyConfirm(){
+    this.tapToSave()
   }
 })
