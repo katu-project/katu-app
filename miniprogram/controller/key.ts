@@ -134,20 +134,26 @@ class MasterKeyManager extends KeyManager{
     return this._masterKey
   }
 
+  get originUserKey(){
+    return this._userKey
+  }
+
   setValue(key:string){
     this._masterKey = key
   }
 
   async create(key: string){
+    if(!key) throw Error('新密码缺失')
     const masterKeyPack = await this.crypto.createCommonKeyPack(key)
     return this.invokeApi('setMasterKeyInfo', masterKeyPack)
   }
 
-  async update({key, newKey, originKey}:{key?:string, newKey:string, originKey?:string}){
-    if(key && originKey) throw Error('内部错误')
-    if(key){
+  async update({newKey, originKey}:{newKey:string, originKey?:string}){
+    if(!newKey) throw Error('新密码缺失')
+    if(!originKey){
+      if(!this.masterKey) throw Error('主密码缺失')
       // 获取目前使用的主密码
-      originKey = await this.crypto.fetchKeyFromKeyPack(this.user.masterKeyPack!, key)
+      originKey = this.masterKey
     }
     // 重新生成新的主密码包, 更新时使用最新的 ccv
     const masterKeyPack = await this.crypto.createCommonKeyPack(newKey, originKey)

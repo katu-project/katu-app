@@ -5,8 +5,8 @@ const app = getAppManager()
 const user = getUserManager()
 
 Page({
-  oldKey: '',
   inputKey: '',
+
   data: {
     key: '',
     setMasterKey: false,
@@ -17,9 +17,7 @@ Page({
     inputKeyResult: ''
   },
 
-  onLoad() {
-
-  },
+  onLoad() {},
 
   onShow(){
     this.setData({
@@ -28,52 +26,39 @@ Page({
     })
   },
 
-  checkInput(){
+  checkInput(){},
 
-  },
-
-  checkRepeatInput(){
-
-  },
+  checkRepeatInput(){},
 
   async tapToSetMasterKey(){
+    const updateMasterKey = async (newKey)=>{
+      const params = { newKey }
+      app.masterKeyManager.checkMasterKeyFormat(newKey)
+      loadData(app.masterKeyManager.update, params).then(()=>{
+        this.finishTask()
+      })
+    }
+    const setMasterKey = async (key)=>{
+      app.masterKeyManager.checkMasterKeyFormat(key)
+      loadData(app.masterKeyManager.create, key).then(()=>{
+        this.finishTask()
+      })
+    }
     try {
-      if(user.isSetMasterKey){  
-        await this.updateMasterKey(this.oldKey, this.inputKey)
+      if(user.isSetMasterKey){
+        await updateMasterKey(this.inputKey)
       }else{
-        await this.setMasterKey(this.inputKey)
+        await setMasterKey(this.inputKey)
       }
     } catch (error:any) {
       app.showNotice(error.message)
     }
   },
 
-  async updateMasterKey(key, newKey){
-    if(!user.isSetMasterKey){
-      throw Error('请先设置主密码')
-    }
-    const params = { key, newKey }
-    app.masterKeyManager.checkMasterKeyFormat(newKey)
-    loadData(app.masterKeyManager.update, params).then(()=>{
-      this.finishTask()
-    })
-  },
-
-  async setMasterKey(key){
-    if(user.isSetMasterKey){
-      app.showNotice('已设置过主密码')
-      return
-    }
-    app.masterKeyManager.checkMasterKeyFormat(key)
-    loadData(app.masterKeyManager.create, key).then(()=>{
-      this.finishTask()
-    })
-  },
-
   async finishTask(){
     app.masterKeyManager.clear()
+    await app.showMiniNotice(`${user.isSetMasterKey?'更新':'设置'}成功`)
     await user.reloadInfo()
-    await app.showNotice(`主密码${user.isSetMasterKey?'更新':'设置'}成功`)
     app.navigateBack()
   },
 
@@ -87,7 +72,7 @@ Page({
 
   tapToStartSetKey(){
     this.inputKey = ''
-    if(user.isSetMasterKey && this.oldKey === ''){
+    if(user.isSetMasterKey && app.masterKeyManager.masterKey === ''){
       this.showInputKey()
       return
     }
@@ -149,7 +134,7 @@ Page({
       return
     }
 
-    if(this.data.step === 1 && this.oldKey === key){
+    if(this.data.step === 1 && app.masterKeyManager.originUserKey === key){
       this.showTips('新密码不能与被修改的主密码相同！')
       return
     }
@@ -172,7 +157,6 @@ Page({
     const key = e.detail.value
     app.masterKeyManager.loadWithKey(key).then(()=>{
       this.hideInputKey()
-      this.oldKey = key
       this.tapToStartSetKey()
     }).catch(error=>{
       this.setData({
