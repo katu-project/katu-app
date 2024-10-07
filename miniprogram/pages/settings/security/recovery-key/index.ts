@@ -1,18 +1,23 @@
 import { loadData, qrcode, showLoading } from "@/utils/index"
 import { getAppManager } from '@/controller/app'
 import { getUserManager } from '@/controller/user'
+import { CreateKeyInput } from '@/behaviors/keyInput'
+
 const app = getAppManager()
 const user = getUserManager()
 
 Page({
   _canvasCtx: {} as IAnyObject,
+
   data: {
     setRecoveryKey: false,
     recoveryKeyId: '0000',
-    readyExport: false,
-    showInputKey: false,
-    inputKeyResult: '',
+    readyExport: false
   },
+
+  behaviors: [
+    CreateKeyInput()
+  ],
   
   onLoad() {
 
@@ -199,7 +204,7 @@ Page({
     const state = app.masterKeyManager.check()
     if(state){
       if(state.needKey){
-        this.showInputKey()
+        this.showKeyInput()
       }else{
         app.showNotice(state.message)
       }
@@ -218,7 +223,7 @@ Page({
           readyExport: false
         })
         this.initCanvasContent(this._canvasCtx).then(()=>{
-          app.showNotice("保存成功")
+          app.showMiniNotice("保存成功")
         })
       },
       fail: error => {
@@ -228,31 +233,7 @@ Page({
     })
   },
 
-  inputKeyConfirm(e){
-    const key = e.detail.value
-    app.masterKeyManager.loadWithKey(key).then(()=>{
-      this.hideInputKey()
-      this.genCert()
-    }).catch(error=>{
-      this.setData({
-        inputKeyResult: error.message
-      })
-    })
-  },
-  
-  showInputKey(){
-    this.setData({
-      showInputKey: true
-    })
-  },
-
-  hideInputKey(){
-    this.setData({
-      showInputKey: false
-    })
-  },
-
-  tapToForgetKey(){
-    app.goResetKeyPage()
+  inputKeyConfirm(){
+    this.genCert()
   }
 })
