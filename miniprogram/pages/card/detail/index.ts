@@ -3,6 +3,7 @@ import { getCardManager } from '@/controller/card'
 import { getUserManager } from '@/controller/user'
 import { getAppManager } from '@/controller/app'
 import { CreateEventBehavior } from '@/behaviors/event'
+import { CreateKeyInput } from '@/behaviors/keyInput'
 
 const app = getAppManager()
 const user = getUserManager()
@@ -19,10 +20,6 @@ Page({
     dk: ''
   },
   data: {
-    showInputKey: false,
-    inputMode: '',
-    inputKeyResult: '',
-    changeMode: true,
     card: {
       _id: '',
       title: '',
@@ -47,7 +44,8 @@ Page({
   },
   
   behaviors: [
-    CreateEventBehavior('detail')
+    CreateEventBehavior('detail'),
+    CreateKeyInput()
   ],
 
   onLoad(options) {
@@ -141,7 +139,7 @@ Page({
       const { confirm } = await app.showChoose('在本设备使用快速密码？')
       if(confirm){
         this.syncMiniKey = true
-        this.showInputKey({
+        this.showKeyInput({
           inputMode: 'adv',
           changeMode: false
         })
@@ -204,7 +202,7 @@ Page({
     const state = app.masterKeyManager.check()
     if(state){
       if(state.needKey){
-        this.showInputKey()
+        this.showKeyInput()
       }else{
         app.showNotice(state.message)
       }
@@ -287,46 +285,21 @@ Page({
     })
   },
 
-  inputKeyConfirm(e){
-    const key = e.detail.value
-    app.masterKeyManager.loadWithKey(key).then(async ()=>{
-      this.hideInputKey()
-      if(this.syncMiniKey){
-        await loadData(app.syncMiniKey)
-        await app.showMiniNotice('同步成功')
-        this.syncMiniKey = false
+  // 密码验证通过回调
+  async inputKeyConfirm(){
+    if(this.syncMiniKey){
+      await loadData(app.syncMiniKey)
+      await app.showMiniNotice('同步成功')
+      this.syncMiniKey = false
+    }
+    if(this.chooseAction){
+      if(this.chooseAction === 'edit'){
+        this.goEditCard()
       }
-      if(this.chooseAction){
-        if(this.chooseAction === 'edit'){
-          this.goEditCard()
-        }
-        this.chooseAction = ''
-      }else if(this.data.card.image?.some(e=>e._url === app.getConst('DefaultShowLockImage'))){
-        this.showEncryptedImage()
-      }
-    }).catch(error=>{
-      console.log(error)
-      this.setData({
-        inputKeyResult: error.message
-      })
-    })
-  },
-
-  showInputKey(options?){
-    this.setData({
-      showInputKey: true,
-      ...options
-    })
-  },
-
-  hideInputKey(){
-    this.setData({
-      showInputKey: false
-    })
-  },
-
-  tapToForgetKey(){
-    app.goResetKeyPage()
+      this.chooseAction = ''
+    }else if(this.data.card.image?.some(e=>e._url === app.getConst('DefaultShowLockImage'))){
+      this.showEncryptedImage()
+    }
   },
 
   onImageShowError(e){
@@ -364,10 +337,5 @@ Page({
     this.setData({
       showActionDialog: false
     })
-  },
-
-  async tapToShowDataCheckHelp(){
-    await app.showConfirm("卡片似乎存在不合适内容",'查看详情')
-    app.openDataCheckDoc()
   }
 })
