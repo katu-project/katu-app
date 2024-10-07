@@ -1,6 +1,8 @@
 import { loadData } from '@/utils/index'
 import { getAppManager } from '@/controller/app'
 import { getUserManager } from '@/controller/user'
+import { CreateKeyInput } from '@/behaviors/keyInput'
+
 const app = getAppManager()
 const user = getUserManager()
 
@@ -8,15 +10,15 @@ Page({
   inputKey: '',
   setStep: 0,
   useKeyFor: 'setKey',
+
   data: {
     useMiniKey: false,
-    syncMiniKey: false,
-    showInputKey: false,
-    changeMode: false,
-    tips: '验证密码：',
-    inputKeyResult: '',
-    inputMode: 'mini'
+    syncMiniKey: false
   },
+
+  behaviors: [
+    CreateKeyInput()
+  ],
 
   onLoad() {
 
@@ -32,14 +34,15 @@ Page({
     this.inputKey = ''
     this.setData({
       useMiniKey: user.useMiniKey,
-      syncMiniKey: user.useSyncMiniKey,
-      changeMode: false
+      syncMiniKey: user.useSyncMiniKey
     })
+    this.setKeyInputChangeMode(false)
   },
 
   async tapToUseMiniKey(e){
     this.useKeyFor = 'setKey'
     const value = e.detail.value
+    // 先取消switch样式
     this.setData({
       useMiniKey: this.data.useMiniKey,
     })
@@ -51,8 +54,9 @@ Page({
       const state = app.masterKeyManager.check()
       if(state){
         if(state.needKey){
-          this.showInputKey({
-            inputMode: 'adv'
+          this.showKeyInput({
+            inputMode: 'adv',
+            tips: '验证主密码：'
           })
         }else{
           app.showNotice(state.message)
@@ -62,14 +66,16 @@ Page({
       this.showSetMiniKeyStep(1)
     }else{
       await loadData(app.miniKeyManager.disable)
-      app.showNotice('取消成功')
-      user.reloadInfo().then(this.loadData)
+      await user.reloadInfo()
+      this.loadData()
+      app.showMiniNotice('取消成功')
     }
   },
 
   async tapToSetSync(e){
     this.useKeyFor = 'setSync'
     const value = e.detail.value
+    // 先取消switch样式
     this.setData({
       syncMiniKey: this.data.syncMiniKey,
     })
@@ -81,7 +87,7 @@ Page({
       const state = app.masterKeyManager.check()
       if(state){
         if(state.needKey){
-          this.showInputKey({
+          this.showKeyInput({
             changeMode: true
           })
         }else{
@@ -92,20 +98,20 @@ Page({
       this.setSyncMiniKey()
     }else{
       await loadData(app.miniKeyManager.disableSync)
-      app.showNotice('取消成功')
+      app.showMiniNotice('取消成功')
       user.reloadInfo().then(this.loadData)
     }
   },
 
   async setSyncMiniKey(){
     if(!user.miniKeyPack?.syncId) {
-      app.showNotice('启用同步出错')
+      app.showNotice('请先启用快速密码')
       return
     }
     loadData(app.enableSyncMiniKey, {
       syncId: user.miniKeyPack?.syncId
     }).then(()=>{
-      app.showNotice('设置成功')
+      app.showMiniNotice('设置成功')
       user.reloadInfo().then(this.loadData)
     })
   },
@@ -113,34 +119,34 @@ Page({
   async createMiniKey(key){
     if(this.setStep === 1){
       if(!key.match(/^\d{6}$/)){
-        this.showTips('密码格式错误!')
+        this.showKeyInputTips('密码格式错误!')
         return
       }
       this.inputKey = key
-      this.hideInputKey()
+      this.hideKeyInput()
       setTimeout(()=>{
         this.showSetMiniKeyStep(2)
       },300)
     }else if(this.setStep === 2){
       if(this.inputKey !== key){
-        this.showTips('两次输入不一致！')
+        this.showKeyInputTips('两次输入不一致！')
         return
       }
-      this.hideInputKey()
+      this.hideKeyInput()
       await loadData(app.createMiniKey,{
         miniKey: this.inputKey
       })
-      app.showNotice(`快速密码设置成功`)
+      app.showMiniNotice(`设置成功`)
       user.reloadInfo().then(this.loadData)
     }else{
       app.masterKeyManager.loadWithKey(key).then(()=>{
         this.inputKey = ''
-        this.hideInputKey()
+        this.hideKeyInput()
         setTimeout(()=>{
           this.showSetMiniKeyStep(1)
         },500)
       }).catch(error=>{
-        this.showTips(error.message)
+        this.showKeyInputTips(error.message)
       })
     }
   },
@@ -149,11 +155,12 @@ Page({
     this.setStep = step
     this.setData({
       key: '',
-      tips: step === 1 ? '设置快速密码' : '再次确认快速密码',
-      inputMode: 'mini',
       inputKeyShowSubBtn: false,
     })
-    this.showInputKey()
+    this.showKeyInput({
+      inputMode: 'mini',
+      tips: step === 1 ? '设置快速密码' : '再次确认快速密码'
+    })
   },
 
   inputKeyConfirm(e){
@@ -163,40 +170,17 @@ Page({
     }else if(this.useKeyFor === 'setSync'){
       app.masterKeyManager.loadWithKey(key).then(()=>{
         this.inputKey = ''
-        this.hideInputKey()
+        this.hideKeyInput()
         this.setSyncMiniKey()
       }).catch(error=>{
-        this.showTips(error.message)
+        this.showKeyInputTips(error.message)
       })
     }else{
       app.showNotice('未知错误').then(app.navigateBack)
     }
   },
 
-  showTips(message){
-    this.setData({
-      inputKeyResult: message
-    })
-  },
-
-  showInputKey(options?: {inputMode?:string, changeMode?:boolean}){
-    this.setData({
-      showInputKey: true,
-      ...options
-    })
-  },
-
-  hideInputKey(){
-    this.setData({
-      showInputKey: false
-    })
-  },
-
   tapToOpenDoc(){
     app.openMiniKeyNotice()
-  },
-
-  tapToResetKey(){
-    app.goResetKeyPage()
-  },
+  }
 })

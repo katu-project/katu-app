@@ -27,10 +27,10 @@
 
 <input-key 
   bind:confirm="inputKeyConfirm"
-  bind:tapSubBtn="tapToResetKey"
+  bind:tapSubBtn="tapToForgetKey"
   showSubBtn="{{inputKeyShowSubBtn}}"
-  changeMode="{{changeMode}}"
-  tips="{{tips}}"
-  inputMode="{{inputMode}}"
-  result="{{inputKeyResult}}" 
-  show="{{showInputKey}}" />
+  changeMode="{{__inputKey.changeMode}}"
+  tips="{{__inputKey.tips}}"
+  inputMode="{{__inputKey.inputMode}}"
+  result="{{__inputKey.resultText}}" 
+  show="{{__inputKey.show}}" />
