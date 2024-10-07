@@ -68,11 +68,10 @@
 
 <input-key 
   tips="输入主密码："
-  bind:confirm="inputKeyConfirm"
+  bind:confirm="keyInputConfirm"
+  bind:tapSubBtn="tapToForgetKey"
   inputMode="adv"
   changeMode="{{false}}"
   showSubBtn="{{setMasterKey}}"
-  subBtnText="忘记密码"
-  bind:tapSubBtn="tapToResetKey"
-  result="{{inputKeyResult}}" 
-  show="{{showInputKey}}" />
+  result="{{__inputKey.resultText}}" 
+  show="{{__inputKey.show}}" />
