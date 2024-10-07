@@ -99,7 +99,7 @@
 
 <input-key
   tips="输入密码："
-  bind:confirm="inputKeyConfirm"
+  bind:confirm="keyInputConfirm"
   bind:tapSubBtn="tapToForgetKey"
-  result="{{inputKeyResult}}" 
-  show="{{showInputKey}}" />
+  result="{{__inputKey.resultText}}" 
+  show="{{__inputKey.show}}" />

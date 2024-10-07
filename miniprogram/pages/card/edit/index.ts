@@ -3,6 +3,7 @@ import { getCardManager } from '@/controller/card'
 import { getAppManager } from '@/controller/app'
 import { getUserManager } from '@/controller/user'
 import { CreateEventBehavior } from '@/behaviors/event'
+import { CreateKeyInput } from '@/behaviors/keyInput'
 
 const app = getAppManager()
 const cardManager = getCardManager()
@@ -16,7 +17,8 @@ Page({
   saveState: {} as Map<string,ICardImage>,
 
   behaviors: [
-    CreateEventBehavior('edit')
+    CreateEventBehavior('edit'),
+    CreateKeyInput()
   ],
 
   data: {
@@ -34,8 +36,6 @@ Page({
       info: [] as AnyArray[]
     },
     curShowPicIdx: 0,
-    showInputKey: false,
-    inputKeyResult: '',
     dataChange: false,
     tags: [] as AnyObject[]
   },
@@ -202,7 +202,7 @@ Page({
         const state = app.masterKeyManager.check()
         if(state){
           if(state.needKey){
-            this.showInputKey()
+            this.showKeyInput()
           }else{
             app.showNotice(`${state.message}`)
           }
@@ -241,32 +241,8 @@ Page({
   },
 
   // key input section
-  inputKeyConfirm(e){
-    const key = e.detail.value
-    app.masterKeyManager.loadWithKey(key).then(()=>{
-      this.hideInputKey()
-      this.tapToSaveCard()
-    }).catch(error=>{
-      this.setData({
-        inputKeyResult: error.message
-      })
-    })
-  },
-
-  showInputKey(){
-    this.setData({
-      showInputKey: true
-    })
-  },
-
-  hideInputKey(){
-    this.setData({
-      showInputKey: false
-    })
-  },
-
-  tapToForgetKey(){
-    app.goResetKeyPage()
+  inputKeyConfirm(){
+    this.tapToSaveCard()
   },
 
   async tapToChoosePic(){
