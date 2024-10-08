@@ -15,7 +15,7 @@
         </view>
       </view>
       <view class='input_tip text-left'>
-        <text>{{tips}}</text>
+        <text>{{title}}</text>
       </view>
       <view class='input_row' catchtap='getFocus'>
 

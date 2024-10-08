@@ -11,7 +11,7 @@ export const CreateKeyInput = ()=>{
     data: {
       __inputKey:{
         show: false,
-        tips: '',
+        title: '',
         inputMode: '',
         changeMode: false,
         resultText: ''
@@ -20,19 +20,10 @@ export const CreateKeyInput = ()=>{
   
     methods: {
       showKeyInput(options){
-        const setData = {
+        this.configKeyInput(options)
+        this.setData({
           '__inputKey.show': true
-        }
-        if(options?.hasOwnProperty('inputMode')){
-          setData['__inputKey.inputMode'] = options.inputMode
-        }
-        if(options?.hasOwnProperty('changeMode')){
-          setData['__inputKey.changeMode'] = options.changeMode
-        }
-        if(options?.hasOwnProperty('tips')){
-          setData['__inputKey.tips'] = options.tips
-        }
-        this.setData(setData)
+        })
       },
   
       hideKeyInput(){
@@ -45,6 +36,23 @@ export const CreateKeyInput = ()=>{
         app.goResetKeyPage()
       },
 
+      configKeyInput(options){
+        const setData = {}
+        if(options?.hasOwnProperty('inputMode')){
+          setData['__inputKey.inputMode'] = options.inputMode
+        }
+        if(options?.hasOwnProperty('changeMode')){
+          setData['__inputKey.changeMode'] = options.changeMode
+        }
+        if(options?.hasOwnProperty('title')){
+          setData['__inputKey.title'] = options.title
+        }
+        if(options?.hasOwnProperty('resultText')){
+          setData['__inputKey.resultText'] = options.resultText
+        }
+        this.setData(setData)
+      },
+
       keyInputConfirm(e){
         const key = e.detail.value
         app.masterKeyManager.loadWithKey(key).then(async ()=>{
@@ -52,31 +60,9 @@ export const CreateKeyInput = ()=>{
           this.inputKeyConfirm()
         }).catch(error=>{
           console.log(error)
-          this.showKeyInputTips(error.message)
-        })
-      },
-
-      changeKeyInputMode(mode){
-        this.setData({
-          '__inputKey.inputMode': mode
-        })
-      },
-
-      showKeyInputTips(msg:string){
-        this.setData({
-          '__inputKey.resultText': msg
-        })
-      },
-
-      setKeyInputTitle(title){
-        this.setData({
-          '__inputKey.tips': title
-        })
-      },
-
-      setKeyInputChangeMode(value){
-        this.setData({
-          '__inputKey.changeMode': value
+          this.configKeyInput({
+            resultText: error.message
+          })
         })
       }
     }

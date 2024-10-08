@@ -6,9 +6,9 @@ Component({
   options: {
   },
   properties: {
-    tips: {
+    title: {
       type: String,
-      value: ''
+      value: '输入密码：'
     },
     show: {
       type: Boolean,
