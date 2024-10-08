@@ -67,7 +67,7 @@
     adjust-position="{{false}}"/>
 
 <input-key 
-  tips="输入主密码："
+  title="输入主密码："
   bind:confirm="keyInputConfirm"
   bind:tapSubBtn="tapToForgetKey"
   inputMode="adv"

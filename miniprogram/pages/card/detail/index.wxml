@@ -80,8 +80,7 @@
   </view>
 </view>
 
-<input-key 
-  tips="输入密码："
+<input-key
   bind:confirm="keyInputConfirm"
   bind:tapSubBtn="tapToForgetKey"
   changeMode="{{__inputKey.changeMode}}"

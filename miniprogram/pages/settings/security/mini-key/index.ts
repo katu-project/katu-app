@@ -36,7 +36,9 @@ Page({
       useMiniKey: user.useMiniKey,
       syncMiniKey: user.useSyncMiniKey
     })
-    this.setKeyInputChangeMode(false)
+    this.configKeyInput({
+      changeMode: false
+    })
   },
 
   async tapToUseMiniKey(e){
@@ -56,7 +58,7 @@ Page({
         if(state.needKey){
           this.showKeyInput({
             inputMode: 'adv',
-            tips: '验证主密码：'
+            title: '验证主密码：'
           })
         }else{
           app.showNotice(state.message)
@@ -119,7 +121,9 @@ Page({
   async createMiniKey(key){
     if(this.setStep === 1){
       if(!key.match(/^\d{6}$/)){
-        this.showKeyInputTips('密码格式错误!')
+        this.configKeyInput({
+          resultText: '密码格式错误!'
+        })
         return
       }
       this.inputKey = key
@@ -129,7 +133,9 @@ Page({
       },300)
     }else if(this.setStep === 2){
       if(this.inputKey !== key){
-        this.showKeyInputTips('两次输入不一致！')
+        this.configKeyInput({
+          resultText: '两次输入不一致！'
+        })
         return
       }
       this.hideKeyInput()
@@ -146,7 +152,9 @@ Page({
           this.showSetMiniKeyStep(1)
         },500)
       }).catch(error=>{
-        this.showKeyInputTips(error.message)
+        this.configKeyInput({
+          resultText: error.message
+        })
       })
     }
   },
@@ -159,7 +167,7 @@ Page({
     })
     this.showKeyInput({
       inputMode: 'mini',
-      tips: step === 1 ? '设置快速密码' : '再次确认快速密码'
+      title: step === 1 ? '设置快速密码' : '再次确认快速密码'
     })
   },
 
@@ -173,7 +181,9 @@ Page({
         this.hideKeyInput()
         this.setSyncMiniKey()
       }).catch(error=>{
-        this.showKeyInputTips(error.message)
+        this.configKeyInput({
+          resultText: error.message
+        })
       })
     }else{
       app.showNotice('未知错误').then(app.navigateBack)

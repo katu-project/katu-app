@@ -14,8 +14,8 @@
 </view>
 
 <input-key 
+  title="输入主密码："
   bind:confirm="keyInputConfirm"
   bind:tapSubBtn="tapToForgetKey"
-  tips="输入主密码："
   result="{{__inputKey.resultText}}" 
   show="{{__inputKey.show}}" />

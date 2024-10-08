@@ -26,11 +26,11 @@
 </view>
 
 <input-key 
+  title="{{__inputKey.title}}"
   bind:confirm="inputKeyConfirm"
   bind:tapSubBtn="tapToForgetKey"
   showSubBtn="{{inputKeyShowSubBtn}}"
   changeMode="{{__inputKey.changeMode}}"
-  tips="{{__inputKey.tips}}"
   inputMode="{{__inputKey.inputMode}}"
   result="{{__inputKey.resultText}}" 
   show="{{__inputKey.show}}" />
