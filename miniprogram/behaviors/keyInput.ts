@@ -1,6 +1,6 @@
 import { getAppManager } from '@/controller/app'
 
-export const CreateKeyInput = ()=>{
+export const CreateKeyInput = (optinos?:KeyInputBehaviorOptionsType)=>{
   const app = getAppManager()
   return Behavior({
 
@@ -11,10 +11,12 @@ export const CreateKeyInput = ()=>{
     data: {
       __inputKey:{
         show: false,
-        title: '',
-        inputMode: '',
-        changeMode: false,
-        resultText: ''
+        title: optinos?.title || '输入密码：',
+        inputMode: optinos?.inputMode || '',
+        changeMode: optinos?.hasOwnProperty('changeMode') ? optinos.changeMode : true,
+        resultText: optinos?.resultText || '',
+        showSubBtn: optinos?.hasOwnProperty('showSubBtn') ? optinos.showSubBtn : true,
+        subBtnText: optinos?.subBtnText || '忘记密码'
       }
     },
   
@@ -49,6 +51,12 @@ export const CreateKeyInput = ()=>{
         }
         if(options?.hasOwnProperty('resultText')){
           setData['__inputKey.resultText'] = options.resultText
+        }
+        if(options?.hasOwnProperty('showSubBtn')){
+          setData['__inputKey.showSubBtn'] = options.showSubBtn
+        }
+        if(options?.hasOwnProperty('subBtnText')){
+          setData['__inputKey.subBtnText'] = options.subBtnText
         }
         this.setData(setData)
       },

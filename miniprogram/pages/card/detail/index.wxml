@@ -83,7 +83,5 @@
 <input-key
   bind:confirm="keyInputConfirm"
   bind:tapSubBtn="tapToForgetKey"
-  changeMode="{{__inputKey.changeMode}}"
-  inputMode="{{__inputKey.inputMode}}"
   result="{{__inputKey.resultText}}" 
   show="{{__inputKey.show}}" />

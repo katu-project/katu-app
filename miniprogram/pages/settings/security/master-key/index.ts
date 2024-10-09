@@ -28,6 +28,9 @@ Page({
       setMasterKey: user.isSetMasterKey,
       step: 0
     })
+    this.configKeyInput({
+      showSubBtn: user.isSetMasterKey
+    })
   },
 
   checkInput(){},

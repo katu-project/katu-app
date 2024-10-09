@@ -17,7 +17,9 @@ Page({
   },
 
   behaviors: [
-    CreateKeyInput()
+    CreateKeyInput({
+      changeMode: false
+    })
   ],
 
   onLoad() {
@@ -35,9 +37,6 @@ Page({
     this.setData({
       useMiniKey: user.useMiniKey,
       syncMiniKey: user.useSyncMiniKey
-    })
-    this.configKeyInput({
-      changeMode: false
     })
   },
 
@@ -162,11 +161,11 @@ Page({
   async showSetMiniKeyStep(step){
     this.setStep = step
     this.setData({
-      key: '',
-      inputKeyShowSubBtn: false,
+      key: ''
     })
     this.showKeyInput({
       inputMode: 'mini',
+      showSubBtn: false,
       title: step === 1 ? '设置快速密码' : '再次确认快速密码'
     })
   },

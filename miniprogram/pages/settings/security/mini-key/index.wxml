@@ -29,7 +29,7 @@
   title="{{__inputKey.title}}"
   bind:confirm="inputKeyConfirm"
   bind:tapSubBtn="tapToForgetKey"
-  showSubBtn="{{inputKeyShowSubBtn}}"
+  showSubBtn="{{__inputKey.showSubBtn}}"
   changeMode="{{__inputKey.changeMode}}"
   inputMode="{{__inputKey.inputMode}}"
   result="{{__inputKey.resultText}}" 

@@ -124,3 +124,12 @@ interface ICustomStorageConfig {
 }
 
 type UseLanguageType = 'zh'|'en'
+
+type KeyInputBehaviorOptionsType = {
+  title?: string
+  inputMode?: 'mini'|'adv'
+  changeMode?: boolean
+  resultText?: string
+  showSubBtn?: boolean
+  subBtnText?: string
+}
