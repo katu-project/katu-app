@@ -1,0 +1,10 @@
+<input-key 
+  title="{{__inputKey.title}}"
+  bind:confirm="keyInputConfirm"
+  bind:tapSubBtn="tapToForgetKey"
+  showSubBtn="{{__inputKey.showSubBtn}}"
+  subBtnText="{{__inputKey.subBtnText}}"
+  changeMode="{{__inputKey.changeMode}}"
+  inputMode="{{__inputKey.inputMode}}"
+  result="{{__inputKey.resultText}}" 
+  show="{{__inputKey.show}}" />

@@ -13,9 +13,4 @@
   </view>
 </view>
 
-<input-key 
-  title="输入主密码："
-  bind:confirm="keyInputConfirm"
-  bind:tapSubBtn="tapToForgetKey"
-  result="{{__inputKey.resultText}}" 
-  show="{{__inputKey.show}}" />
+<include src="/components/input-key/tpl.wxml"/>

@@ -16,7 +16,9 @@ Page({
   },
 
   behaviors: [
-    CreateKeyInput()
+    CreateKeyInput({
+      title: '输入主密码：'
+    })
   ],
   
   onLoad() {
@@ -233,6 +235,7 @@ Page({
     })
   },
 
+  // 密码验证通过回调
   inputKeyConfirm(){
     this.genCert()
   }

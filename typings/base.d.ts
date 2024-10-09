@@ -144,7 +144,7 @@ declare namespace WechatMiniprogram.Page {
 // 在 behaviors 里增加默认回调方法的类型支持
 declare namespace WechatMiniprogram.Component {
   interface InstanceMethods<D extends DataOption> {
-    inputKeyConfirm: ()=>void
+    inputKeyConfirm: (e?)=>void
   }
 }
 

@@ -25,12 +25,4 @@
   <view class="padding bg-white text-grey text-sm">快速密码可以在不同客户端使用</view>
 </view>
 
-<input-key 
-  title="{{__inputKey.title}}"
-  bind:confirm="inputKeyConfirm"
-  bind:tapSubBtn="tapToForgetKey"
-  showSubBtn="{{__inputKey.showSubBtn}}"
-  changeMode="{{__inputKey.changeMode}}"
-  inputMode="{{__inputKey.inputMode}}"
-  result="{{__inputKey.resultText}}" 
-  show="{{__inputKey.show}}" />
+<include src="/components/input-key/tpl.wxml"/>

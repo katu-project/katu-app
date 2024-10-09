@@ -66,12 +66,4 @@
     bindconfirm="inputConfirm"
     adjust-position="{{false}}"/>
 
-<input-key 
-  title="输入主密码："
-  bind:confirm="keyInputConfirm"
-  bind:tapSubBtn="tapToForgetKey"
-  inputMode="adv"
-  changeMode="{{false}}"
-  showSubBtn="{{__inputKey.showSubBtn}}"
-  result="{{__inputKey.resultText}}" 
-  show="{{__inputKey.show}}" />
+<include src="/components/input-key/tpl.wxml"/>

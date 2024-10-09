@@ -97,8 +97,4 @@
   </view>
 </view>
 
-<input-key
-  bind:confirm="keyInputConfirm"
-  bind:tapSubBtn="tapToForgetKey"
-  result="{{__inputKey.resultText}}" 
-  show="{{__inputKey.show}}" />
+<include src="/components/input-key/tpl.wxml"/>

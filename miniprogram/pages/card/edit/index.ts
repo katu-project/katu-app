@@ -240,7 +240,7 @@ Page({
     app.navigateBack()
   },
 
-  // key input section
+  // 密码验证通过回调
   inputKeyConfirm(){
     this.tapToSaveCard()
   },

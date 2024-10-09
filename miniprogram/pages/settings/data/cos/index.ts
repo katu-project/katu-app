@@ -140,6 +140,7 @@ Page({
     this.setData(setData)
   },
 
+  // 密码验证通过回调
   inputKeyConfirm(){
     this.tapToSave()
   }

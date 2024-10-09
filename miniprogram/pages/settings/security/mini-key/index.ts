@@ -18,7 +18,8 @@ Page({
 
   behaviors: [
     CreateKeyInput({
-      changeMode: false
+      changeMode: false,
+      customKeyInputConfirm: true
     })
   ],
 
@@ -170,6 +171,7 @@ Page({
     })
   },
 
+  // 密码验证通过回调
   inputKeyConfirm(e){
     const key = e.detail.value.trim()
     if(this.useKeyFor === 'setKey'){

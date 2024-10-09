@@ -1,6 +1,6 @@
 import { getAppManager } from '@/controller/app'
 
-export const CreateKeyInput = (optinos?:KeyInputBehaviorOptionsType)=>{
+export const CreateKeyInput = (optinos?:KeyInputBehaviorOptionsType&{customKeyInputConfirm?:boolean})=>{
   const app = getAppManager()
   return Behavior({
 
@@ -9,6 +9,7 @@ export const CreateKeyInput = (optinos?:KeyInputBehaviorOptionsType)=>{
     },
   
     data: {
+      customKeyInputConfirm: optinos?.customKeyInputConfirm,
       __inputKey:{
         show: false,
         title: optinos?.title || '输入密码：',
@@ -62,6 +63,7 @@ export const CreateKeyInput = (optinos?:KeyInputBehaviorOptionsType)=>{
       },
 
       keyInputConfirm(e){
+        if(this.data.customKeyInputConfirm) return this.inputKeyConfirm(e)
         const key = e.detail.value
         app.masterKeyManager.loadWithKey(key).then(async ()=>{
           this.hideKeyInput()

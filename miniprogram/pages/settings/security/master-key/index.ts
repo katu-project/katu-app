@@ -18,7 +18,11 @@ Page({
   },
 
   behaviors: [
-    CreateKeyInput()
+    CreateKeyInput({
+      changeMode: false,
+      inputMode: 'adv',
+      title: '输入主密码：'
+    })
   ],
 
   onLoad() {},
@@ -160,6 +164,7 @@ Page({
     })
   },
 
+  // 密码验证通过回调
   inputKeyConfirm(){
     this.tapToStartSetKey()
   }
