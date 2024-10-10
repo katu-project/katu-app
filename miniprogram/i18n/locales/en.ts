@@ -11,5 +11,15 @@ export default {
     advanced: 'Advanced',
     debug: 'Debug',
     settings: 'Settings'
+  },
+  profile: {
+    signin: 'Sign in',
+    signup: 'Sign up',
+    quota: 'Quota Info',
+    tag: 'Card Tags',
+    settings: 'Settings',
+    help: 'Help ( Q&A )',
+    about: 'About',
+    customer_support: 'Customer Support' 
   }
 }

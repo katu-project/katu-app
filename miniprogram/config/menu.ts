@@ -2,32 +2,32 @@ const MenuConfig = {
   profile: [
     {
       icon: 'choiceness',
-      name: '兔币明细',
+      name: 'quota',
       url: 'quota/index',
       dev: true,
       needActive: true
     },
     {
       icon: 'tag',
-      name: '卡片标签',
+      name: 'tag',
       url: 'card/edit-tag/index',
       needActive: true
     },
     {
       icon: 'settings',
-      name: '软件设置',
+      name: 'settings',
       url: 'settings/index',
       needActive: true
     },
     {
       icon: 'question',
-      name: '使用帮助 ( Q&A )',
+      name: 'help',
       url: 'qa/index',
       pass: true
     },
     {
       icon: 'info',
-      name: '关于卡兔',
+      name: 'about',
       url: 'about/index',
       pass: true
     }

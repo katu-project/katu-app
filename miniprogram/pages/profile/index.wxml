@@ -10,7 +10,7 @@
       <view class="margin-left flex-col justify-end" style="min-height: 100rpx;flex:1">
         <view class="flex-col padding-bottom-xs">
           <text wx:if="{{user.isActive}}" class="text-xxl nickname" style="color: rgb(53, 63, 63);" bindtap="tapUser">{{user.nickName}}</text>
-          <text wx:else class="text-xl underline text-white" bindtap="tapUser">注册 / 登录</text>
+          <text wx:else class="text-xl underline text-white" bindtap="tapUser">{{t.signup}} / {{t.signin}}</text>
 
           <text class="text-white margin-top">ID: {{user.identifyCode || '****'}}</text>
         </view>
@@ -25,19 +25,19 @@
     <view class="cu-item arrow" wx:for="{{menus}}" wx:key="index" data-item="{{item}}" bindtap="tapToItem">
       <view class="content">
         <text class="cuIcon-{{item.icon}} text-grey icon {{!item.pass && (user.isActive?'':'no-active')}}"></text>
-        <text class="text-xl padding-left-xs text {{!item.pass && (user.isActive?'':'no-active')}}">{{item.name}}</text>
+        <text class="text-xl padding-left-xs text {{!item.pass && (user.isActive?'':'no-active')}}">{{t[item.name]}}</text>
       </view>
     </view>
   </view>
 
-  <view class="flex flex-col align-center padding-xl">
+  <view class="flex flex-col align-center padding-xl" style="white-space: nowrap;">
     <!-- #if MP -->
     <button class="cu-btn block line-cyan lg gfw" open-type="contact" hover-class="none">
-      <text class="cuIcon-service padding-right-sm"></text> 我的客服
+      <text class="cuIcon-service padding-right-sm"></text> {{t.customer_support}}
     </button>
     <!-- #elif NATIVE -->
     <button wx:if="{{showCustomerService}}" class="cu-btn block line-cyan lg gfw" catchtap="tapToOpenService" hover-class="none">
-      <text class="cuIcon-service padding-right-sm"></text> 我的客服
+      <text class="cuIcon-service padding-right-sm"></text> {{t.customer_support}}
     </button>
     <!-- #endif -->
   </view>
