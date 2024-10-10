@@ -1,6 +1,7 @@
 import { appleLogin, loadData, showLoading, weixinMiniProgramLogin } from '@/utils/index'
 import { getAppManager } from '@/controller/app'
 import { CreateEventBehavior } from '@/behaviors/event'
+import { CreateI18nBehavior } from '@/behaviors/i18n'
 import { getUserManager } from '@/controller/user'
 
 const app = getAppManager()
@@ -8,7 +9,10 @@ const user = getUserManager()
 
 Page({
   behaviors: [
-    CreateEventBehavior('auth')
+    CreateEventBehavior('auth'),
+    CreateI18nBehavior({
+      page: 'auth'
+    })
   ],
 
   data: {

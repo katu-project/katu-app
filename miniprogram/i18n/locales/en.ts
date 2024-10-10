@@ -1,6 +1,9 @@
 export default {
   base: {
     back: 'Back',
+    signin: 'Sign in',
+    signup: 'Sign up',
+    and: 'And'
   },
   settings:{
     account: 'Account',
@@ -13,13 +16,30 @@ export default {
     settings: 'Settings'
   },
   profile: {
-    signin: 'Sign in',
-    signup: 'Sign up',
     quota: 'Quota Info',
     tag: 'Card Tags',
     settings: 'Settings',
     help: 'Help ( Q&A )',
     about: 'About',
     customer_support: 'Customer Support' 
+  },
+  auth: {
+    slogan: 'Secure And User-Friendly Card Management APP',
+    quick: 'Quick',
+    verify_code: 'SMS Code',
+    email: ' E-mail ',
+    tel: ' SMS ',
+    input_email: 'email address',
+    sent: 'Sent',
+    send_code: 'Send SMS',
+    input_tel: 'phone number',
+    read_and_approval: 'I have read and agreed',
+    toc: 'TOC',
+    privacy: 'Privacy',
+    unregistered: 'Unregistered',
+    auto_create_account: 'will be automatically created',
+    has_problem: 'Problems',
+    other_signin: 'Other Signin',
+    mp: 'Wechat'
   }
 }

@@ -9,10 +9,10 @@
   </view>
   
   <!-- #if MP -->
-  <view class="text-xl margin-top-xl text-center" style="opacity: 0.8;">安全好用的卡片管理工具</view>
+  <view class="text-xl margin-top-xl text-center" style="opacity: 0.8;">{{t.slogan}}</view>
   <view style="margin-top:30%">
     <button class="cu-btn block line-cyan lg gfw round shadow" style="background: rgba(224, 255, 255, 0.5)" catchtap="tapToMpSignup">
-      <text class="text-black">快速注册/登录</text>
+      <text class="text-black" style="white-space: nowrap;">{{t.quick}} {{t.signin}}/{{t.signup}}</text>
     </button>
   </view>
 
@@ -20,21 +20,21 @@
   <view style="margin-top:5%" class="margin-lr">
     <form>
       <view wx:if="{{loginMode.key === 'email'}}" class="cu-form-group" style="background-color: unset;">
-        <view class="title">E-mail :</view>
-        <input value="{{loginState.value}}" placeholder="请输入邮箱地址" bindinput="onInput" disabled="{{loginState.sendCode}}" data-key="value"></input>
+        <view class="title">{{t.email}} :</view>
+        <input value="{{loginState.value}}" placeholder="{{t.input_email}}" bindinput="onInput" disabled="{{loginState.sendCode}}" data-key="value"></input>
       </view>
       <view wx:else class="cu-form-group" style="background-color: unset;">
         <view class="title" catchtap="tapToChooseTelCode" >{{loginState.telCode}}</view>
         <view class="title text-lg" catchtap="tapToChooseTelCode">
           <text class="cuIcon-triangledownfill"></text>
         </view>
-        <input value="{{loginState.value}}" type="number" placeholder="请输入手机号" bindinput="onInput" disabled="{{loginState.sendCode}}" data-key="value"></input>
+        <input value="{{loginState.value}}" type="number" placeholder="{{t.input_tel}}" bindinput="onInput" disabled="{{loginState.sendCode}}" data-key="value"></input>
       </view>
       <view class="cu-form-group" style="background-color: unset;">
-        <view class="title">验证码:</view>
+        <view class="title">{{t.verify_code}}:</view>
         <input value="{{loginState.code}}" type="number" bindinput="onInput" data-key="code"></input>
         <button disabled="{{loginState.value.length<6 || loginState.sendCode}}" catchtap="tapToSendCode" class="cu-btn bg-green round shadow" style="width:30vw">
-          {{loginState.sendCode ? '已发送' : '发送验证码'}}
+          {{loginState.sendCode ? t.sent : t.send_code}}
         </button>
       </view>
       <view class="cu-form-group" style="background-color: unset;padding-top:0;height:1px;min-height:unset;"></view>
@@ -43,29 +43,29 @@
       <view>
         <view class="flex-row align-center animation-{{showTocAnima_1?'shake':''}}">
           <radio catchtap="tapToc" data-key="toc_1" checked="{{toc_1}}" value="toc_1" style="transform: scale(0.5);"></radio>
-          <text>我已阅读并同意 <text class="text-green" bindtap="tapToReadTos">用户协议</text> 和 <text class="text-green" bindtap="tapToReadPrivacy">隐私政策</text></text>
+          <text>{{t.read_and_approval}} <text class="text-green" bindtap="tapToReadTos">{{t.toc}}</text> {{t.and}} <text class="text-green" bindtap="tapToReadPrivacy">{{t.privacy}}</text></text>
         </view>
         <view catchtap="tapToc" data-key="toc_2" class="flex-row align-center animation-{{showTocAnima_2?'shake':''}}">
           <radio checked="{{toc_2}}" value="toc_2" style="transform: scale(0.5);"></radio>
-          <text>未注册{{loginMode.label}}验证后自动创建卡兔账号</text>
+          <text>{{t.unregistered}}{{t[loginMode.key]}}{{t.auto_create_account}}</text>
         </view>
       </view>
     </view>
     <form>
       <view class="cu-form-group flex-col margin-top" style="background-color: unset;">
         <button catchtap="tapToLogin" class="cu-btn block bg-cyan gfw lg margin-top-sm round" style="width:100%;">
-          <text class="text-white">登录/注册</text>
+          <text class="text-white">{{t.signup}}/{{t.signin}}</text>
         </button>
         <view class="padding-top flex-row justify-between" style="width:100%;">
-          <text class="text-sm" bindtap="tapToChangeLoginMode">{{loginMode.key==='tel'?'邮箱':'手机号'}}登录</text>
-          <text class="text-sm" bindtap="tapToOpenHelper">遇到问题</text>
+          <text class="text-sm" bindtap="tapToChangeLoginMode">{{loginMode.key==='tel'? t.email : t.tel}}{{t.signin}}</text>
+          <text class="text-sm" bindtap="tapToOpenHelper">{{t.has_problem}}</text>
         </view>
       </view>
     </form>
     <view class="text-center">
       <view class="padding-xl solid-bottom margin-bottom"></view>
       <span class="margin" catchtap="tapToShowLoginDialog">
-        其他登录方式
+        {{t.other_signin}}
         <text class="cuIcon-right"></text>
       </span>
     </view>
@@ -108,11 +108,11 @@
 >
   <view class="margin-xl">
     <view class="cu-btn block bg-white lg gfw round shadow margin-bottom" data-key="apple" catchtap="tapToOtherLogin">
-      <text class="text-black">Apple ID 登录</text>
+      <text class="text-black">Apple ID {{t.signin}}</text>
     </view>
     
     <view wx:if="{{showMpLogin}}" class="cu-btn block bg-white lg gfw round shadow margin-bottom" data-key="mp" catchtap="tapToOtherLogin">
-      <text class="text-black">微信小程序 登录</text>
+      <text class="text-black">{{t.mp}} {{t.signin}}</text>
     </view>
 
   </view>
