@@ -3,7 +3,11 @@ export default {
     back: '返回',
     signin: '登录',
     signup: '注册',
-    and: '和'
+    and: '和',
+    slogan: '安全好用的卡片管理工具',
+    toc: '用户协议',
+    privacy: '隐私政策',
+    about: '关于卡兔',
   },
   settings:{
     account: '账户',
@@ -20,11 +24,9 @@ export default {
     tag: '卡片标签',
     settings: '软件设置',
     help: '使用帮助 ( Q&A )',
-    about: '关于卡兔',
     customer_support: '我的客服' 
   },
   auth: {
-    slogan: '安全好用的卡片管理工具',
     quick: '快速',
     verify_code: '验证码',
     email: ' E-mail ',
@@ -34,12 +36,17 @@ export default {
     send_code: '发送验证码',
     input_tel: '请输入手机号',
     read_and_approval: '我已阅读并同意',
-    toc: '用户协议',
-    privacy: '隐私政策',
     unregistered: '未注册',
     auto_create_account: '验证后自动创建卡兔账号',
     has_problem: '遇到问题',
     other_signin: '其他登录方式',
     mp: '微信小程序'
+  },
+  about:{
+    version: '版本号',
+    change_log: '发布历史',
+    contact_us: '联系我们',
+    feedback: '使用反馈',
+    icp: '备案号'
   }
 }

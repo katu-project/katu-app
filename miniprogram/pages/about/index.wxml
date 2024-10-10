@@ -1,18 +1,18 @@
 <cu-custom bgColor="bg-cyan" isBack="{{true}}">
-  <view slot="backText">返回</view>
-  <view slot="content">关于卡兔</view>
+  <view slot="backText">{{t.back}}</view>
+  <view slot="content">{{t.about}}</view>
 </cu-custom>
 
 <view class="">
   <view class="padding-top-xl flex-col justify-center align-center">
     <image mode="aspectFit" bindtap="showDebugLog" bindlongpress="enableDebug" class="margin-bottom-xl w-200" style="border-radius: 10%;opacity: 0.9;height: 200rpx;" src="{{logo}}"></image>
     <text class="text-xxl text-shadow text-cyan">卡兔</text>
-    <text class="padding text-grey">安全好用的卡片管理工具</text>
+    <text class="padding text-grey">{{t.slogan}}</text>
   </view>
   <view class="cu-list menu sm-border card-menu margin-top">
     <view class="cu-item">
       <view class="content">
-        <text class="">版本号</text>
+        <text class="">{{t.version}}</text>
       </view>
       <view class="action">
         <text class="">{{version}}</text>
@@ -21,35 +21,35 @@
 
     <view class="cu-item arrow" bindtap="tapToChangeLog">
       <view class="content">
-        <text class="">发布历史</text>
+        <text class="">{{t.change_log}}</text>
       </view>
       <view class="action"></view>
     </view>
 
     <view class="cu-item arrow" bindtap="tapToContactUs">
       <view class="content">
-        <text class="">联系我们</text>
+        <text class="">{{t.contact_us}}</text>
       </view>
       <view class="action"></view>
     </view>
 
     <view class="cu-item arrow" bindtap="tapToDoc" data-key="usage">
       <view class="content">
-        <text class="">用户使用协议</text>
+        <text class="">{{t.toc}}</text>
       </view>
       <view class="action"></view>
     </view>
 
     <view class="cu-item arrow" bindtap="tapToDoc" data-key="privacy">
       <view class="content">
-        <text class="">隐私保护指引</text>
+        <text class="">{{t.privacy}}</text>
       </view>
       <view class="action"></view>
     </view>
     <!-- #if MP -->
     <view class="cu-item">
       <view class="content">
-        <text class="">使用反馈</text>
+        <text class="">{{t.feedback}}</text>
       </view>
       <view class="action">
         <button class="cu-btn bg-gray gfw" style="text-align: right;width: 160rpx;margin-right:0;padding:0" open-type="feedback">去提交</button>
@@ -58,7 +58,7 @@
 
     <view class="cu-item">
       <view class="content">
-        <text class="">备案号</text>
+        <text class="">{{t.icp}}</text>
       </view>
       <view class="action">
         <text class="text-sm text-grey">粤ICP备2023001493号</text>
