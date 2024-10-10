@@ -1,6 +1,6 @@
 <cu-custom bgColor="bg-cyan" isBack="{{true}}">
-  <view slot="backText">返回</view>
-  <view slot="content">设置</view>
+  <view slot="backText">{{t['back']}}</view>
+  <view slot="content">{{t['settings']}}</view>
 </cu-custom>
 <view class="page">
   <view class="cu-list menu sm-border margin-top shadow bg-white" wx:for="{{menu}}" wx:for-item="group" wx:key="index">
@@ -10,7 +10,7 @@
           <view class="icon bg-{{item.bg}} light padding-xs text-xl br-10">
             <text class="cuIcon-{{item.icon}} text-black"></text>
           </view>
-          <text class="text-lg text-black">{{item.title}}</text>
+          <text class="text-lg text-black">{{t[item.title]}}</text>
         </view>
       </view>
     </block>

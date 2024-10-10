@@ -36,7 +36,7 @@ const MenuConfig = {
     [
       {
         icon: 'profile',
-        title: '账户',
+        title: 'account',
         url: 'account',
         bg: 'green'
       }
@@ -44,25 +44,25 @@ const MenuConfig = {
     [
       {
         icon: 'apps',
-        title: '通用',
+        title: 'general',
         url: 'general',
         bg: 'blue'
       },
       {
         icon: 'discover',
-        title: '效果',
+        title: 'ui',
         url: 'ui',
         bg: 'pink'
       },
       {
         icon: 'unlock',
-        title: '安全',
+        title: 'security',
         url: 'security',
         bg: 'yellow'
       },
       {
         icon: 'file',
-        title: '数据',
+        title: 'data',
         url: 'data',
         bg: 'cyan'
       }
@@ -70,13 +70,13 @@ const MenuConfig = {
     [
       {
         icon: 'explore',
-        title: '高级',
+        title: 'advanced',
         url: 'adv',
         bg: 'green'
       },
       {
         icon: 'repair',
-        title: '调试',
+        title: 'debug',
         url: '/packages/debug/pages/index',
         devOnly: true
       }
