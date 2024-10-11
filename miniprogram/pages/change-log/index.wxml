@@ -1,6 +1,6 @@
 <cu-custom bgColor="bg-cyan" isBack="{{true}}">
-  <view slot="backText">返回</view>
-  <view slot="content">发布历史</view>
+  <view slot="backText">{{t.back}}</view>
+  <view slot="content">{{t.change_log}}</view>
 </cu-custom>
 
 <view class="cu-timeline" wx:for="{{list}}" wx:key="_id">
@@ -15,6 +15,6 @@
   </view>
 </view>
 <view class="padding text-center flex-col">
-  <text class="text-gray">完整更新说明可在官网查看:</text>
+  <text class="text-gray">{{t.full_change_log_notice}}:</text>
   <text class="padding text-lg" catchtap="tapToCopy" user-select>{{webUrl}}</text>
 </view>

@@ -1,5 +1,6 @@
 import { loadData } from '@/utils/index'
 import { getAppManager } from '@/controller/app'
+import { CreateI18nBehavior } from '@/behaviors/i18n'
 const app = getAppManager()
 
 Page({
@@ -7,6 +8,12 @@ Page({
     list: [] as AnyObject[],
     webUrl: 'https://katucloud.com/change-log'
   },
+
+  behaviors: [
+    CreateI18nBehavior({
+      page: 'changeLog'
+    })
+  ],
 
   onLoad() {
 
