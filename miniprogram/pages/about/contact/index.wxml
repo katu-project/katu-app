@@ -1,12 +1,12 @@
 <cu-custom bgColor="bg-cyan" isBack="{{true}}">
-  <view slot="backText">返回</view>
-  <view slot="content">联系卡兔</view>
+  <view slot="backText">{{t.back}}</view>
+  <view slot="content">{{t.contact_us}}</view>
 </cu-custom>
 <view>
   <view class="cu-list menu sm-border card-menu margin-top">
     <view class="cu-item" wx:if="{{showCustomerService}}">
       <view class="content">
-        <text class="">在线客服</text>
+        <text class="">{{t.online_help}}</text>
       </view>
       <view class="action">
         <view class="flex align-center" style="width:30vw">
@@ -24,7 +24,7 @@
     </view>
     <view class="cu-item">
       <view class="content">
-        <text class="">客服邮箱</text>
+        <text class="">{{t.help_email}}</text>
       </view>
       <view class="action">
         <text user-select="{{true}}">{{email}}</text>

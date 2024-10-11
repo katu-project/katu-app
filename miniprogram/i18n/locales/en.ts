@@ -8,7 +8,8 @@ export default {
     toc: 'TOC',
     privacy: 'Privacy',
     about: 'About',
-    change_log: 'Change Logs'
+    change_log: 'Change Logs',
+    contact_us: 'Contact Us'
   },
   settings:{
     account: 'Account',
@@ -45,11 +46,14 @@ export default {
   },
   about:{
     version: 'Version',
-    contact_us: 'Contact Us',
     feedback: 'Feedback',
     icp: 'ICP'
   },
   changeLog: {
     full_change_log_notice: 'Full change logs on the official website'
+  },
+  contactUs: {
+    online_help: 'Online Service',
+    help_email: 'Service Email'
   }
 }

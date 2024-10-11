@@ -8,7 +8,8 @@ export default {
     toc: '用户协议',
     privacy: '隐私政策',
     about: '关于卡兔',
-    change_log: '发布历史'
+    change_log: '发布历史',
+    contact_us: '联系我们',
   },
   settings:{
     account: '账户',
@@ -45,11 +46,14 @@ export default {
   },
   about:{
     version: '版本号',
-    contact_us: '联系我们',
     feedback: '使用反馈',
     icp: '备案号'
   },
   changeLog: {
     full_change_log_notice: '完整更新说明可在官网查看'
+  },
+  contactUs: {
+    online_help: '在线客服',
+    help_email: '客服邮箱'
   }
 }
