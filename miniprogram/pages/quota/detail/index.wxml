@@ -1,74 +1,74 @@
 <cu-custom class="skeleton-remove" bgColor="bg-cyan" isBack="{{true}}">
-  <view slot="backText">返回</view>
-  <view slot="content">记录详情</view>
+  <view slot="backText">{{t.back}}</view>
+  <view slot="content">{{t.log_detail}}</view>
 </cu-custom>
 
 <form hidden="{{loading}}">
   <view class="cu-form-group">
-    <view class="title">记录类型:</view>
+    <view class="title">{{t.log_type}}:</view>
     <input value="{{detail.typeName}}" disabled></input>
   </view>
   <view class="cu-form-group">
-    <view class="title">{{detail.timeName}}:</view>
+    <view class="title">{{t.log_date}}:</view>
     <input value="{{detail.time}}" disabled></input>
   </view>
 
   <block wx:if="{{detail.type==='gift'}}">
     <view class="cu-form-group">
-      <view class="title">增加兔币:</view>
+      <view class="title">{{t.add_quota}}:</view>
       <input 	placeholder-style="color:green" placeholder="{{detail.useQuota}}" disabled></input>
     </view>
     <view class="cu-form-group">
-      <view class="title">增加后可用兔币:</view>
+      <view class="title">{{t.add_remain_quota}}:</view>
       <input placeholder-style="color:green" placeholder="{{detail.remainQuota}}" disabled></input>
     </view>
   </block>
 
   <block wx:if="{{detail.type==='coupon-exchange'}}">
     <view class="cu-form-group">
-      <view class="title">兑换密码:</view>
+      <view class="title">{{t.coupon_code}}:</view>
       <input value="{{detail.coupon.code}}" disabled></input>
     </view>
     <view class="cu-form-group">
-      <view class="title">增加兔币:</view>
+      <view class="title">{{t.add_quota}}:</view>
       <input 	placeholder-style="color:green" placeholder="{{detail.useQuota}}" disabled></input>
     </view>
     <view class="cu-form-group">
-      <view class="title">增加后可用兔币:</view>
+      <view class="title">{{t.add_remain_quota}}:</view>
       <input placeholder-style="color:green" placeholder="{{detail.remainQuota}}" disabled></input>
     </view>
   </block>
 
   <block wx:if="{{detail.type==='quota-order' || detail.type === 'iap'}}">
     <view class="cu-form-group">
-      <view class="title">订单号:</view>
+      <view class="title">{{t.order_id}}:</view>
       <input value="{{detail.orderId}}" disabled></input>
     </view>
     <view class="cu-form-group">
-      <view class="title">增加兔币:</view>
+      <view class="title">{{t.add_quota}}:</view>
       <input 	placeholder-style="color:green" placeholder="{{detail.useQuota}}" disabled></input>
     </view>
     <view class="cu-form-group">
-      <view class="title">增加后可用兔币:</view>
+      <view class="title">{{t.add_remain_quota}}:</view>
       <input placeholder-style="color:green" placeholder="{{detail.remainQuota}}" disabled></input>
     </view>
   </block>
 
   <block wx:if="{{detail.type==='card-cost'}}">
     <view class="cu-form-group">
-      <view class="title">加密卡片:</view>
+      <view class="title">{{t.encrypted_card}}:</view>
       <input value="{{detail.encryptedImageCount}}" disabled></input>
     </view>
     <view class="cu-form-group">
-      <view class="title">普通卡片:</view>
+      <view class="title">{{t.no_encrypted_card}}:</view>
       <input value="{{detail.unencryptedImageCount}}" disabled></input>
     </view>
     <view class="cu-form-group">
-      <view class="title">消耗兔币:</view>
+      <view class="title">{{t.deduct_quota}}:</view>
       <input placeholder-style="color:red" placeholder="{{detail.useQuota}}" disabled></input>
     </view>
     <view class="cu-form-group">
-      <view class="title">扣除后可用兔币:</view>
+      <view class="title">{{t.deduct_remain_quota}}:</view>
       <input placeholder-style="color:green" placeholder="{{detail.remainQuota}}" disabled></input>
     </view>
   </block>

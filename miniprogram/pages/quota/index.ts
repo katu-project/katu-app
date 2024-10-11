@@ -2,6 +2,7 @@ import { loadData, showLoading } from '@/utils/index'
 import { getUserManager } from '@/controller/user'
 import { getAppManager } from '@/controller/app'
 import { CreateEventBehavior } from '@/behaviors/event'
+import { CreateI18nBehavior } from '@/behaviors/i18n'
 
 const user = getUserManager()
 const app = getAppManager()
@@ -12,7 +13,10 @@ Page({
   payHideLoading: ()=>{},
 
   behaviors: [
-    CreateEventBehavior('quota')
+    CreateEventBehavior('quota'),
+    CreateI18nBehavior({
+      page: 'quota'
+    })
   ],
 
   data: {

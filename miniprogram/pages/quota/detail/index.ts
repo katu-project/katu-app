@@ -1,24 +1,36 @@
 import { loadData } from '@/utils/index'
 import { getUserManager } from '@/controller/user'
+import { CreateI18nBehavior } from '@/behaviors/i18n'
 const user = getUserManager()
 
 Page({
   id: '',
+
   data: {
     loading: true,
     detail: {}
   },
+
+  behaviors: [
+    CreateI18nBehavior({
+      page: 'quota'
+    })
+  ],
+
   onLoad(options){
     if(options.id){
       this.id = options.id
     }
   },
+
   onReady(){
     
   },
+
   onShow(){
     this.loadData()
   },
+
   loadData(){
     loadData(user.getQuotaLogDetail,{_id:this.id}).then(log=>{
       const setData = {

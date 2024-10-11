@@ -11,7 +11,10 @@ export default {
     change_log: 'Change Logs',
     contact_us: 'Contact Us',
     help: 'Usage Help ( Q&A )',
-    no_data: 'No Data'
+    no_data: 'No Data',
+    quota: 'T-Coin Info',
+    cancel: 'Cancel',
+    confirm: 'Confirm'
   },
   settings:{
     account: 'Account',
@@ -24,7 +27,6 @@ export default {
     settings: 'Settings'
   },
   profile: {
-    quota: 'Quota Info',
     tag: 'Card Tags',
     settings: 'Settings',
     customer_support: 'Customer Support' 
@@ -69,5 +71,22 @@ export default {
     data_loading: 'Loading data',
     update_time: 'Update Time',
     share: 'Share Help'
+  },
+  quota: {
+    remain_quota: 'Remain T-Coin',
+    last_log: 'Last Logs',
+    get_quota: 'Get T-Coin',
+    input_code: 'Enter Redemption Code',
+    log_detail: 'Log Detail',
+    log_type: 'Type',
+    add_quota: 'Increase T-Coin',
+    add_remain_quota: 'After Increase',
+    coupon_code: 'Coupon Code',
+    order_id: 'Order Id',
+    deduct_quota: 'Decrease T-Coin',
+    deduct_remain_quota: 'After Decrease',
+    encrypted_card: 'Encrypted Card',
+    no_encrypted_card: 'Unencrypted Card',
+    log_date: 'Date'
   }
 }

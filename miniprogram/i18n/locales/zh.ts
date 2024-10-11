@@ -11,7 +11,10 @@ export default {
     change_log: '发布历史',
     contact_us: '联系我们',
     help: '使用帮助 ( Q&A )',
-    no_data: '暂无数据'
+    no_data: '暂无数据',
+    quota: '兔币明细',
+    cancel: '取消',
+    confirm: '确定'
   },
   settings:{
     account: '账户',
@@ -24,7 +27,6 @@ export default {
     settings: '设置'
   },
   profile: {
-    quota: '兔币明细',
     tag: '卡片标签',
     settings: '软件设置',
     customer_support: '我的客服' 
@@ -69,5 +71,22 @@ export default {
     data_loading: '数据加载中',
     update_time: '更新时间',
     share: '分享给好友'
+  },
+  quota: {
+    remain_quota: '可用兔币',
+    last_log: '最近记录',
+    get_quota: '获取兔币',
+    input_code: '输入兑换码',
+    log_detail: '记录详情',
+    log_type: '记录类型',
+    add_quota: '增加兔币',
+    add_remain_quota: '增加后可用兔币',
+    coupon_code: '兑换密码',
+    order_id: '订单号',
+    deduct_quota: '消耗兔币',
+    deduct_remain_quota: '扣除后可用兔币',
+    encrypted_card: '加密卡片',
+    no_encrypted_card: '普通卡片',
+    log_date: '日期'
   }
 }
