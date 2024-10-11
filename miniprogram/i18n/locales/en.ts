@@ -9,7 +9,9 @@ export default {
     privacy: 'Privacy',
     about: 'About',
     change_log: 'Change Logs',
-    contact_us: 'Contact Us'
+    contact_us: 'Contact Us',
+    help: 'Usage Help ( Q&A )',
+    no_data: 'No Data'
   },
   settings:{
     account: 'Account',
@@ -25,7 +27,6 @@ export default {
     quota: 'Quota Info',
     tag: 'Card Tags',
     settings: 'Settings',
-    help: 'Help ( Q&A )',
     customer_support: 'Customer Support' 
   },
   auth: {
@@ -55,5 +56,18 @@ export default {
   contactUs: {
     online_help: 'Online Service',
     help_email: 'Service Email'
+  },
+  help:{
+    category: 'Document Category',
+    faq: 'FAQ',
+    function: 'Ability',
+    setting: 'Settings',
+    account: 'Account',
+    safe: 'Security',
+    quota: 'Quota',
+    other: 'Other',
+    data_loading: 'Loading data',
+    update_time: 'Update Time',
+    share: 'Share Help'
   }
 }

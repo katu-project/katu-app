@@ -85,32 +85,32 @@ const MenuConfig = {
   qa: [{
     icon: 'apps',
     color: 'green',
-    name: '功能',
+    name: 'function',
     value: 'function'
   }, {
     icon: 'settings',
     color: 'cyan',
-    name: '设置',
+    name: 'setting',
     value: 'setting'
   }, {
     icon: 'people',
     color: 'orange',
-    name: '账户',
+    name: 'account',
     value: 'account'
   }, {
     icon: 'safe',
     color: 'red',
-    name: '安全',
+    name: 'safe',
     value: 'safe'
   }, {
     icon: 'recharge',
     color: 'olive',
-    name: '配额',
+    name: 'quota',
     value: 'quota'
   }, {
     icon: 'more',
     color: 'blue',
-    name: '其他',
+    name: 'other',
     value: 'other'
   }]
 }

@@ -1,5 +1,6 @@
 import { loadData } from '@/utils/index'
 import { getAppManager } from '@/controller/app'
+import { CreateI18nBehavior } from '@/behaviors/i18n'
 const app = getAppManager()
 
 Page({
@@ -7,11 +8,17 @@ Page({
     id: '',
     doc: {
       title: '',
-      content: '数据加载中',
+      content: '',
       updateTime: ''
     }
   },
 
+  behaviors: [
+    CreateI18nBehavior({
+      page: 'help'
+    })
+  ],
+  
   onLoad(options) {
     this.data.id = options.id || ''
   },

@@ -1,5 +1,6 @@
 import { loadData } from '@/utils/index'
 import { getAppManager } from '@/controller/app'
+import { CreateI18nBehavior } from '@/behaviors/i18n'
 const app = getAppManager()
 const QaTypeCate = app.menu.qa
 
@@ -9,6 +10,12 @@ Page({
     list: [] as AnyObject[],
     isLoading: true
   },
+
+  behaviors: [
+    CreateI18nBehavior({
+      page: 'help'
+    })
+  ],
 
   onLoad() {
     this.setData({

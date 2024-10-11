@@ -1,25 +1,25 @@
 <cu-custom class="skeleton-remove" bgColor="bg-cyan" isBack="{{true}}">
-  <view slot="backText">返回</view>
-  <view slot="content">使用帮助</view>
+  <view slot="backText">{{t.back}}</view>
+  <view slot="content">{{t.help}}</view>
 </cu-custom>
 
 <view class="page">
   <view class="padding-tb text-xl flex-row align-center">
     <text class="cuIcon-titles text-cyan"></text>
-    <text class="margin-left-xs text-orange">文档分类</text>
+    <text class="margin-left-xs text-orange">{{t.category}}</text>
   </view>
 
   <view class="cu-list grid col-3 skeleton-gray-block">
     <view class="cu-item" wx:for="{{qaCate}}" wx:key="name" bindtap="tapToGoDocList" data-key="{{item.value}}">
       <view class="cuIcon-{{item.icon}} text-{{item.color}}">
       </view>
-      <text>{{item.name}}</text>
+      <text>{{t[item.name]}}</text>
     </view>
   </view>
 
   <view class="padding-top text-xl flex-row align-center">
     <text class="cuIcon-titles text-cyan"></text>
-    <text class="margin-left-xs text-orange">常见问题</text>
+    <text class="margin-left-xs text-orange">{{t.faq}}</text>
   </view>
   <view class="cu-load {{isLoading?'loading':''}}"></view>
   <view class="cu-list menu sm-border margin-top">

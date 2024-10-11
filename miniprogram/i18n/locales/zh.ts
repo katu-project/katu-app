@@ -10,6 +10,8 @@ export default {
     about: '关于卡兔',
     change_log: '发布历史',
     contact_us: '联系我们',
+    help: '使用帮助 ( Q&A )',
+    no_data: '暂无数据'
   },
   settings:{
     account: '账户',
@@ -25,7 +27,6 @@ export default {
     quota: '兔币明细',
     tag: '卡片标签',
     settings: '软件设置',
-    help: '使用帮助 ( Q&A )',
     customer_support: '我的客服' 
   },
   auth: {
@@ -55,5 +56,18 @@ export default {
   contactUs: {
     online_help: '在线客服',
     help_email: '客服邮箱'
+  },
+  help: {
+    category: '文档分类',
+    faq: '常见问题',
+    function: '功能',
+    setting: '设置',
+    account: '账户',
+    safe: '安全',
+    quota: '配额',
+    other: '其他',
+    data_loading: '数据加载中',
+    update_time: '更新时间',
+    share: '分享给好友'
   }
 }
