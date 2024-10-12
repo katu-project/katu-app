@@ -8,7 +8,8 @@ import { CreateI18nBehavior } from '@/behaviors/i18n'
 class AppManager extends Controller {
   AppInfo = wx.getAccountInfoSync()
   UseLanguage = ''
-
+  SupportedLanguages = ['zh','en']
+  
   constructor(){
     super()
   }

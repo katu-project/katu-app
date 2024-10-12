@@ -135,6 +135,7 @@ declare namespace WechatMiniprogram {
 // 在 Page 里添加密码输入帮助方法的类型支持
 declare namespace WechatMiniprogram.Page {
   interface ILifetime {
+    t: (str:string, args?:string[]) => string
     showKeyInput: (args?:KeyInputBehaviorOptionsType) => void
     hideKeyInput: () => void
     configKeyInput: (args?:KeyInputBehaviorOptionsType) => void

@@ -2,17 +2,6 @@ import { getAppManager } from '@/controller/app'
 import { loadData } from '@/utils/index'
 const app = getAppManager()
 
-const codeList = [
-  {
-    name: '中文',
-    key: 'zh'
-  },
-  {
-    name: '英语',
-    key: 'en'
-  }
-]
-
 app.createPage({
   i18n: {
     page: ['language']
@@ -20,12 +9,12 @@ app.createPage({
   
   where: {},
 
-  originList: codeList,
+  originList: app.SupportedLanguages,
 
   data: {
     key: '',
     useLang: '',
-    list: codeList
+    list: app.SupportedLanguages
   },
 
   onLoad() {
@@ -74,7 +63,7 @@ app.createPage({
       this.resetData()
     }else{
       this.setData({
-        list: this.data.list.filter(e=>e.name.includes(key))
+        list: this.data.list.filter(e=>this.t(e).includes(key))
       })
     }
   },

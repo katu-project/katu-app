@@ -15,14 +15,14 @@
 </view>
 <view class="text-xl padding-top padding-left">{{t.support_language}}</view>
 <view class="cu-list menu margin-top-sm margin-bottom-xl default">
-  <view class="cu-item" wx:for="{{list}}" wx:key="name" data-key="{{item.key}}" bindtap="tapToChooseCode">
+  <view class="cu-item" wx:for="{{list}}" wx:key="*this" data-key="{{item}}" bindtap="tapToChooseCode">
     <view class="content flex-col">
       <view class="margin-top-xs">
-        <text class="text-cut">{{t[item.key]}}</text>
+        <text class="text-cut">{{t[item]}}</text>
       </view>
     </view>
     <view class="action">
-      <view wx:if="{{useLang === item.key}}" class="text-lg margin-right text-green">
+      <view wx:if="{{useLang === item}}" class="text-lg margin-right text-green">
         <text class="cuIcon-check"></text>
       </view>
     </view>
