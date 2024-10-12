@@ -1,6 +1,6 @@
 <cu-custom bgColor="bg-cyan" isBack="{{true}}">
-  <view slot="backText">返回</view>
-  <view slot="content">选择使用语言</view>
+  <view slot="backText">{{t.back}}</view>
+  <view slot="content">{{t.choose_language}}</view>
 </cu-custom>
 <view class="box">
   <view class="cu-bar bg-cyan search">
@@ -10,16 +10,15 @@
     </view>
     <view class="action" wx:if="{{key}}" bindtap="tapToCloseFilter">
       <text class="cuIcon-close"></text>
-      <text>取消</text>
     </view>
   </view>
 </view>
-<view class="text-xl padding-top padding-left">当前支持的语言</view>
+<view class="text-xl padding-top padding-left">{{t.support_language}}</view>
 <view class="cu-list menu margin-top-sm margin-bottom-xl default">
   <view class="cu-item" wx:for="{{list}}" wx:key="name" data-key="{{item.key}}" bindtap="tapToChooseCode">
     <view class="content flex-col">
       <view class="margin-top-xs">
-        <text class="text-cut">{{item.name}}</text>
+        <text class="text-cut">{{t[item.key]}}</text>
       </view>
     </view>
     <view class="action">

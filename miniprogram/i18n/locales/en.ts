@@ -110,5 +110,11 @@ export default {
     default_tag_desc: 'Use the APP built-in card tags',
     auto_show: 'Auto Display',
     auto_show_desc: 'Auto displays contents of the crypto card'
+  },
+  language: {
+    choose_language: 'Select Language',
+    support_language: 'Currently Supported Languages',
+    zh: 'Chinese',
+    en: 'English'
   }
 }

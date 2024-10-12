@@ -13,7 +13,11 @@ const codeList = [
   }
 ]
 
-Page({
+app.createPage({
+  i18n: {
+    page: ['language']
+  },
+  
   where: {},
 
   originList: codeList,

@@ -110,5 +110,11 @@ export default {
     default_tag_desc: '使用系统内置卡片标签',
     auto_show: '主动显示',
     auto_show_desc: '详情页自动显示加密卡片内容'
+  },
+  language: {
+    choose_language: '选择使用语言',
+    support_language: '当前支持的语言',
+    zh: '中文',
+    en: '英语'
   }
 }
