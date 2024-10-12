@@ -3,6 +3,7 @@ import { showChoose, sleep, file, showNotice, hasWechatInstall, convert } from '
 import { getCardManager } from './card'
 import { getUserManager } from './user'
 import { getMiniKeyManager, getMasterKeyManager, getResetKeyManager } from './key'
+import { CreateI18nBehavior } from '@/behaviors/i18n'
 
 class AppManager extends Controller {
   AppInfo = wx.getAccountInfoSync()
@@ -556,6 +557,18 @@ class AppManager extends Controller {
   }
   //设置页结束
 
+  createPage<TData extends WechatMiniprogram.Page.DataOption,TCustom extends WechatMiniprogram.Page.CustomOption>(obj:WechatMiniprogram.Page.Options<TData,TCustom>){
+    if(obj.i18n){
+      if(!obj.behaviors){
+        obj.behaviors = []
+      }
+      obj.behaviors.push(
+        CreateI18nBehavior(obj.i18n)
+      )
+    }
+    return Page(obj)
+  }
+  
   async imageContentCheck({imagePath}){
     const hash = await this.getImageHash(imagePath, this.getConfig('contentCheckHash'))
     const { needCheck, checkPass } = await this.invokeApi('getContentCheckInfo', {hash})

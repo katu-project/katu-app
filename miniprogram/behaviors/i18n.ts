@@ -1,7 +1,7 @@
 import { getAppManager } from '@/controller/app'
 import { Languages } from '@/i18n/index'
 
-export const CreateI18nBehavior = ({page})=>{
+export const CreateI18nBehavior = (options?:{page:string|string[]})=>{
   const app = getAppManager()
   return Behavior({
     data: {
@@ -11,10 +11,20 @@ export const CreateI18nBehavior = ({page})=>{
     async attached(){
       const useLang = await app.getUseLanguage()
       const langLib = Languages[useLang!]
+      let usePageLangs = {}
+      if(options?.page){
+        if(typeof options?.page === 'string'){
+          usePageLangs = langLib[options.page] 
+        }else{
+          usePageLangs = options?.page.reduce((obj, page) => {
+            return { ...obj, ...langLib[page] };
+        }, {})
+        }
+      }
       this.setData({
         t: {
           ...langLib.base,
-          ...langLib[page]
+          ...usePageLangs
         }
       })
     },

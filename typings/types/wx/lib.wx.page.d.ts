@@ -35,7 +35,8 @@ declare namespace WechatMiniprogram.Page {
     > = (TCustom &
         Partial<Data<TData>> &
         Partial<ILifetime> & {
-            options?: Component.ComponentOptions
+            options?: Component.ComponentOptions,
+            behaviors?: any
         }) &
         ThisType<Instance<TData, TCustom>>
     type TrivialInstance = Instance<IAnyObject, IAnyObject>
