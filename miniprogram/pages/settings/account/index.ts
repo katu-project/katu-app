@@ -4,7 +4,11 @@ import { getUserManager } from "@/controller/user"
 const app = getAppManager()
 const user = getUserManager()
 
-Page({
+app.createPage({
+  i18n: {
+    page: ['settings','account']
+  },
+
   data: {
     userId: '',
     userTel: '',

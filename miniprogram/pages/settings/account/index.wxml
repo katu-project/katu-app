@@ -1,73 +1,74 @@
 <cu-custom bgColor="bg-cyan" isBack="{{true}}">
-  <view slot="backText">返回</view>
-  <view slot="content">账户</view>
+  <view slot="backText">{{t.back}}</view>
+  <view slot="content">{{t.account}}</view>
 </cu-custom>
 
 <view class="">
   <view class="cu-list menu sm-border card-menu margin-top">
     <view class="cu-item">
       <view class="content">
-        <text class="text-black">账号 ID </text>
+        <text class="text-black">{{t.account}} ID </text>
         <text class="cuIcon-question text-yellow" catchtap="tapToPage" data-page="uid-info"></text>
       </view>
       <view class="action">
         <text class="text-green text-lg padding-right-sm">{{userId}}</text>
       </view>
     </view>
-    <view class="padding bg-white text-grey text-sm">卡兔 APP 为每个用户分配的唯一识别码</view>
+    <view class="padding bg-white text-grey text-sm">{{t.account_desc}}</view>
 
     <!-- #if MP -->
 
     <!-- #elif NATIVE -->
     <view class="cu-item arrow" style="padding-right: 70rpx;" bindtap="tapToPage" data-page="bind-tel">
       <view class="content">
-        <text class="text-black">手机号码</text>
+        <text class="text-black">{{t.tel_number}}</text>
       </view>
       <view class="action">
-        <text class="text-{{userTel?'green':'orange'}}">{{userTel||'未绑定'}}</text>
+        <text class="text-{{userTel?'green':'orange'}}">{{userTel|| t.not_bind}}</text>
       </view>
     </view>
-    <view class="padding bg-white text-grey text-sm">用于接收消息通知</view>
+    <view class="padding bg-white text-grey text-sm">{{t.used_to_receive_notice}}</view>
 
     <view class="cu-item arrow" style="padding-right: 70rpx;" bindtap="tapToPage" data-page="bind-email">
       <view class="content">
-        <text class="text-black">电子邮箱</text>
+        <text class="text-black">{{t.email}}</text>
       </view>
       <view class="action">
-        <text class="text-{{userEmail?'green':'orange'}}">{{userEmail||'未绑定'}}</text>
+        <text class="text-{{userEmail?'green':'orange'}}">{{userEmail|| t.not_bind}}</text>
       </view>
     </view>
-    <view class="padding bg-white text-grey text-sm">用于接收消息通知</view>
+    <view class="padding bg-white text-grey text-sm">{{t.used_to_receive_notice}}</view>
     <!-- #endif -->
 
     <!-- #if NATIVE -->
     <view class="cu-item arrow" style="padding-right: 70rpx;" bindtap="tapToPage" data-page="settings/account/otherLogin/index">
       <view class="content">
-        <text class="text-black">第三方登录</text>
+        <text class="text-black">{{t.other_login}}</text>
       </view>
       <view class="action">
       </view>
     </view>
-    <view class="padding bg-white text-grey text-sm">管理第三方账号登录</view>
+    <view class="padding bg-white text-grey text-sm">{{t.other_login_desc}}</view>
     <!-- #endif -->
 
     <view class="cu-item">
       <view class="content">
-        <text class="text-black">删除账户</text>
+        <text class="text-black">{{t.delete_account}}</text>
       </view>
       <view class="action">
-        <button class="cu-btn round line-red light gfw w-150" bindtap="tapToDeleteAccount">
-          <text class="cuIcon-delete"></text> 删除</button>
+        <button class="cu-btn round line-red light gfw w-150 text-lg" bindtap="tapToDeleteAccount">
+          <text class="cuIcon-delete"></text>
+        </button>
       </view>
     </view>
-    <view class="padding bg-white text-grey text-sm">清空用户数据并删除账号</view>
+    <view class="padding bg-white text-grey text-sm">{{t.delete_account_desc}}</view>
   </view>
 
   <!-- #if NATIVE -->
   <view class="margin-lr margin-top-xl flex-row">
     <button style="width:80vw" class="cu-btn shadow bg-white rb-10 lg margin-bottom-lg" bindtap="tapToLogout">
       <view class="gfw text-black">
-        退出登录
+        {{t.sign_out}}
       </view>
     </button>
   </view>

@@ -14,7 +14,8 @@ export default {
     no_data: 'No Data',
     quota: 'T-Coin Info',
     cancel: 'Cancel',
-    confirm: 'Confirm'
+    confirm: 'Confirm',
+    mp: 'Wechat'
   },
   settings:{
     account: 'Account',
@@ -44,8 +45,7 @@ export default {
     unregistered: 'Unregistered',
     auto_create_account: 'will be automatically created',
     has_problem: 'Problems',
-    other_signin: 'Other Signin',
-    mp: 'Wechat'
+    other_signin: 'Other Signin'
   },
   about:{
     version: 'Version',
@@ -88,5 +88,27 @@ export default {
     encrypted_card: 'Encrypted Card',
     no_encrypted_card: 'Unencrypted Card',
     log_date: 'Date'
+  },
+  account: {
+    tel_number: 'Phone Number',
+    email: 'Email',
+    other_login: 'Third-party Logins',
+    delete_account: 'Delete Account',
+    sign_out: 'Sign Out',
+    not_bind: 'Not Set',
+    account_desc: 'The unique identification code assigned by APP',
+    used_to_receive_notice: 'Used to receive message notifications',
+    other_login_desc: 'Manage third-party account logins',
+    delete_account_desc: 'Clear user data and delete accounts',
+    apple_id_login_desc: 'You can authorize sign-in with your Apple ID',
+    mp_login_desc: 'You can authorize sign-in with the WeChat MiniProgram'
+  },
+  general: {
+    language: 'Language',
+    change_language: 'Change language used',
+    default_tag: 'Default Tags',
+    default_tag_desc: 'Use the APP built-in card tags',
+    auto_show: 'Auto Display',
+    auto_show_desc: 'Auto displays contents of the crypto card'
   }
 }

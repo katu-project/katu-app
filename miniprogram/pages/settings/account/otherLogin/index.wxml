@@ -1,27 +1,27 @@
 <cu-custom bgColor="bg-cyan" isBack="{{true}}">
-  <view slot="backText">返回</view>
-  <view slot="content">账户</view>
+  <view slot="backText">{{t.back}}</view>
+  <view slot="content">{{t.other_login}}</view>
 </cu-custom>
 <view class="">
   <view class="cu-list menu sm-border card-menu margin-top">
     <view class="cu-item">
       <view class="content">
-        <text class="">Apple ID 登录</text>
+        <text class="">Apple ID {{t.signin}}</text>
       </view>
       <view class="action">
         <switch class="sm" bindchange="tapToConfig" data-key="apple" checked="{{logins.apple.enable}}"></switch>
       </view>
     </view>
-    <view class="padding bg-white text-grey text-sm">可以使用 Apple ID 授权登录应用</view>
+    <view class="padding bg-white text-grey text-sm">{{t.apple_id_login_desc}}</view>
 
     <view class="cu-item">
       <view class="content">
-        <text class="">微信小程序</text>
+        <text class="">{{t.mp}}</text>
       </view>
       <view class="action">
         <switch class="sm" bindchange="tapToConfig" data-key="mp" checked="{{logins.mp.enable}}"></switch>
       </view>
     </view>
-    <view class="padding bg-white text-grey text-sm">可以使用微信小程序授权登录应用</view>
+    <view class="padding bg-white text-grey text-sm">{{t.mp_login_desc}}</view>
   </view>
 </view>

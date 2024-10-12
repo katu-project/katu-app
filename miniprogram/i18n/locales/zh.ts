@@ -14,7 +14,8 @@ export default {
     no_data: '暂无数据',
     quota: '兔币明细',
     cancel: '取消',
-    confirm: '确定'
+    confirm: '确定',
+    mp: '微信小程序'
   },
   settings:{
     account: '账户',
@@ -44,8 +45,7 @@ export default {
     unregistered: '未注册',
     auto_create_account: '验证后自动创建卡兔账号',
     has_problem: '遇到问题',
-    other_signin: '其他登录方式',
-    mp: '微信小程序'
+    other_signin: '其他登录方式'
   },
   about:{
     version: '版本号',
@@ -88,5 +88,27 @@ export default {
     encrypted_card: '加密卡片',
     no_encrypted_card: '普通卡片',
     log_date: '日期'
+  },
+  account: {
+    tel_number: '手机号码',
+    email: '电子邮箱',
+    other_login: '第三方登录',
+    delete_account: '删除账户',
+    sign_out: '退出登录',
+    not_bind: '未绑定',
+    account_desc: '卡兔 APP 为每个用户分配的唯一识别码',
+    used_to_receive_notice: '用于接收消息通知',
+    other_login_desc: '管理第三方账号登录',
+    delete_account_desc: '清空用户数据并删除账号',
+    apple_id_login_desc: '可以使用 Apple ID 授权登录应用',
+    mp_login_desc: '可以使用微信小程序授权登录应用'
+  },
+  general: {
+    language: '多语言',
+    change_language: '切换使用语言',
+    default_tag: '默认标签',
+    default_tag_desc: '使用系统内置卡片标签',
+    auto_show: '主动显示',
+    auto_show_desc: '详情页自动显示加密卡片内容'
   }
 }

@@ -1,36 +1,36 @@
 <cu-custom bgColor="bg-cyan" isBack="{{true}}">
-  <view slot="backText">返回</view>
-  <view slot="content">通用</view>
+  <view slot="backText">{{t.back}}</view>
+  <view slot="content">{{t.general}}</view>
 </cu-custom>
 
 <view class="cu-list menu sm-border card-menu margin-top">
   <view class="cu-item arrow" bindtap="tapToPage" data-page="common/language/index">
     <view class="content">
-      <text class="">多语言</text>
+      <text class="">{{t.language}}</text>
     </view>
     <view class="action">
     </view>
   </view>
-  <view class="padding bg-white text-grey">切换使用语言</view>
+  <view class="padding bg-white text-grey">{{t.change_language}}</view>
 
   <view class="cu-item">
     <view class="content">
-    <text class="">默认标签</text>
+    <text class="">{{t.default_tag}}</text>
     </view>
     <view class="action">
       <switch class="sm" bindchange="tapToConfig" data-key="config_general_useDefaultTag" checked="{{config_general_useDefaultTag}}"></switch>
     </view>
   </view>
-  <view class="padding bg-white text-grey">使用系统内置卡片标签</view>
+  <view class="padding bg-white text-grey">{{t.default_tag_desc}}</view>
 
   <view class="cu-item">
     <view class="content">
-    <text class="">主动显示</text>
+    <text class="">{{t.auto_show}}</text>
     </view>
     <view class="action">
       <switch class="sm" bindchange="tapToConfig" data-key="config_general_autoShowContent" checked="{{config_general_autoShowContent}}"></switch>
     </view>
   </view>
-  <view class="padding bg-white text-grey">详情页自动显示加密卡片内容</view>
+  <view class="padding bg-white text-grey">{{t.auto_show_desc}}</view>
 
 </view>

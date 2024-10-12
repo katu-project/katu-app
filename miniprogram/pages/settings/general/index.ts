@@ -4,7 +4,11 @@ import { getAppManager } from "@/controller/app"
 const user = getUserManager()
 const app = getAppManager()
 
-Page({
+app.createPage({
+  i18n: {
+    page: ['settings','general']
+  },
+
   data: {
     config_general_useDefaultTag: true,
     config_general_autoShowContent: false
