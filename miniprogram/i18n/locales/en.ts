@@ -120,5 +120,16 @@ export default {
   ui: {
     turn_animation: 'Button Animation',
     turn_animation_desc: 'Turn on/off the Add button animation'
+  },
+  adv: {
+    token: 'Token',
+    create: 'Create',
+    token_desc: 'Access credentials provided to API',
+    security_module: 'Security Module',
+    security_module_desc: 'View the configuration of the security module',
+    developer: 'Development',
+    developer_desc: 'View run logs',
+    ccv: 'Common Crypto Version',
+    cpk: 'Crypto Packages'
   }
 }

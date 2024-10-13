@@ -1,12 +1,12 @@
 <cu-custom bgColor="bg-cyan" isBack="{{true}}">
-  <view slot="backText">返回</view>
-  <view slot="content">安全模块</view>
+  <view slot="backText">{{t.back}}</view>
+  <view slot="content">{{t.security_module}}</view>
 </cu-custom>
 
 <view class="cu-list menu sm-border card-menu margin-top">
   <view class="cu-item">
     <view class="content">
-    <text>通用安全配置（CCV）</text>
+    <text>{{t.ccv}} ( CCV )</text>
     </view>
     <view class="action">
       <text class="text-cyan text-lg padding-right-sm">{{ccv.ccv}}</text>
@@ -15,7 +15,7 @@
   
   <view class="cu-item">
     <view class="content">
-    <text>通用加密包（CPK）</text>
+    <text>{{t.cpk}} ( CPK )</text>
     </view>
     <view class="action">
       <text class="text-cyan text-lg padding-right-sm">{{cpk.cpk}}</text>

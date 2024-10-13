@@ -120,5 +120,16 @@ export default {
   ui: {
     turn_animation: '打开添加按钮动画',
     turn_animation_desc: '在首页滑动列表时，控制底部按钮自动隐藏/显示'
+  },
+  adv: {
+    token: '密钥',
+    create: '获取',
+    token_desc: '为开发者用户提供的访问凭证',
+    security_module: '安全模块',
+    security_module_desc: '查看安全模块配置参数',
+    developer: '开发者',
+    developer_desc: '查看各种运行日志',
+    ccv: '通用安全配置',
+    cpk: '通用加密包'
   }
 }

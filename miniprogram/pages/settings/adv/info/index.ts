@@ -1,7 +1,11 @@
 import { getAppManager } from '@/controller/app'
 const app = getAppManager()
 
-Page({
+app.createPage({
+  i18n: {
+    page: ['settings','adv']
+  },
+  
   data: {
     ccv: {},
     cpk: {}
