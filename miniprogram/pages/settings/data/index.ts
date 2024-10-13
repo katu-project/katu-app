@@ -4,7 +4,11 @@ import { getUserManager } from '@/controller/user'
 const app = getAppManager()
 const user = getUserManager()
 
-Page({
+app.createPage({
+  i18n: {
+    page: ['settings','storage']
+  },
+
   data: {
     config_storage_cos: false
   },

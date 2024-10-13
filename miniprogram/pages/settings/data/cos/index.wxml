@@ -1,58 +1,58 @@
 <cu-custom bgColor="bg-cyan" isBack="{{true}}">
-  <view slot="backText">返回</view>
-  <view slot="content">自定义存储</view>
+  <view slot="backText">{{t.back}}</view>
+  <view slot="content">{{t.custom_storage}}</view>
 </cu-custom>
 
 <form>
   <view class="cu-form-group margin-top">
-		<view class="title">存储服务商</view>
+		<view class="title">{{t.storage_service}}</view>
 		<picker disabled="{{created}}" bindchange="typeChange" range-key="label" value="{{value}}" range="{{typeList}}">
 			<view class="picker">
-				{{selectedType||'未选择'}}
+				{{selectedType||t.not_selected}}
 			</view>
 		</picker>
 	</view>
   <block wx:if="{{selectedType}}">
     <block wx:if="{{cosConfig.type==='webdav'}}">
       <view class="cu-form-group">
-        <view class="title">服务器地址</view>
-        <input placeholder="WebDAV 服务器地址" disabled="{{created}}" value="{{cosConfig.bucket}}" bindinput="onBindinput" data-key="bucket"></input>
+        <view class="title">{{t.server_address}}</view>
+        <input placeholder="WebDAV {{t.server_address}}" disabled="{{created}}" value="{{cosConfig.bucket}}" bindinput="onBindinput" data-key="bucket"></input>
       </view>
       <view class="cu-form-group">
-        <view class="title">用户名</view>
-        <input placeholder="用户名" disabled="{{created}}" value="{{cosConfig.secret.secretId}}" bindinput="onBindinput" data-key="secret.secretId"></input>
+        <view class="title">{{t.username}}</view>
+        <input placeholder="{{t.username}}" disabled="{{created}}" value="{{cosConfig.secret.secretId}}" bindinput="onBindinput" data-key="secret.secretId"></input>
       </view>
       <view class="cu-form-group">
-        <view class="title">密码</view>
-        <input placeholder="密码" disabled="{{created}}" value="{{cosConfig.secret.secretKey}}" bindinput="onBindinput" data-key="secret.secretKey"></input>
+        <view class="title">{{t.password}}</view>
+        <input placeholder="{{t.password}}" disabled="{{created}}" value="{{cosConfig.secret.secretKey}}" bindinput="onBindinput" data-key="secret.secretKey"></input>
       </view>
     </block>
     <block wx:else>
       <view class="cu-form-group">
-        <view class="title">存储桶</view>
-        <input placeholder="存储桶名称" disabled="{{created}}" value="{{cosConfig.bucket}}" bindinput="onBindinput" data-key="bucket"></input>
+        <view class="title">{{t.bucket}}</view>
+        <input placeholder="{{t.buctet_name}}" disabled="{{created}}" value="{{cosConfig.bucket}}" bindinput="onBindinput" data-key="bucket"></input>
       </view>
       <view class="cu-form-group">
-        <view class="title">地域</view>
-        <input placeholder="存储桶地域" disabled="{{created}}" value="{{cosConfig.region}}" bindinput="onBindinput" data-key="region"></input>
+        <view class="title">{{t.region}}</view>
+        <input placeholder="{{t.bucket}}{{t.region}}" disabled="{{created}}" value="{{cosConfig.region}}" bindinput="onBindinput" data-key="region"></input>
       </view>
       <block wx:if="{{cosConfig.type==='cloudflare.r2'}}">
         <view class="cu-form-group">
-          <view class="title">帐户 ID</view>
-          <input placeholder="存储桶所属帐户 ID" disabled="{{created}}" value="{{cosConfig.secret.accountId}}" bindinput="onBindinput" data-key="secret.accountId"></input>
+          <view class="title">{{t.account_id}}</view>
+          <input placeholder="{{t.account_id_desc}}" disabled="{{created}}" value="{{cosConfig.secret.accountId}}" bindinput="onBindinput" data-key="secret.accountId"></input>
         </view>
       </block>
       <view class="cu-form-group">
         <view class="title">SecretId</view>
-        <input placeholder="密钥 ID" disabled="{{created}}" value="{{cosConfig.secret.secretId}}" bindinput="onBindinput" data-key="secret.secretId"></input>
+        <input placeholder="{{t.secret_id}} ID" disabled="{{created}}" value="{{cosConfig.secret.secretId}}" bindinput="onBindinput" data-key="secret.secretId"></input>
       </view>
       <view class="cu-form-group">
         <view class="title">SecretKey</view>
-        <input placeholder="密钥 KEY" disabled="{{created}}" value="{{cosConfig.secret.secretKey}}" bindinput="onBindinput" data-key="secret.secretKey"></input>
+        <input placeholder="{{t.secret_id}} KEY" disabled="{{created}}" value="{{cosConfig.secret.secretKey}}" bindinput="onBindinput" data-key="secret.secretKey"></input>
       </view>
     </block>
     <view class="cu-form-group">
-      <view class="title">启用配置</view>
+      <view class="title">{{t.enable_config}}</view>
       <switch checked="{{cosConfig.enable}}" bindchange="enableChange"></switch>
     </view>
   </block>
@@ -61,12 +61,12 @@
 <view class="margin-lr margin-top-xl flex-col">
   <button wx:if="{{selectedType && !created}}" style="width:80vw" class="cu-btn shadow bg-cyan rb-10 lg margin-bottom-lg" bindtap="tapToSave">
     <view class="gfw text-white">
-      保存配置
+      {{t.save_config}}
     </view>
   </button>
   <button wx:if="{{created}}" style="width:80vw" class="cu-btn shadow bg-red rb-10 lg margin-bottom-lg" bindtap="tapToDelete">
     <view class="gfw text-white">
-      删除配置
+      {{t.delete_config}}
     </view>
   </button>
 </view>

@@ -6,7 +6,11 @@ import { CreateKeyInput } from '@/behaviors/keyInput'
 const app = getAppManager()
 const user = getUserManager()
 
-Page({
+app.createPage({
+  i18n: {
+    page: ['settings','storage']
+  },
+  
   data: {
     typeList: app.storage.ServiceList,
     created: false,

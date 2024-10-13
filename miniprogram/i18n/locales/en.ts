@@ -131,5 +131,29 @@ export default {
     developer_desc: 'View run logs',
     ccv: 'Common Crypto Version',
     cpk: 'Crypto Packages'
+  },
+  storage: {
+    custom_storage: 'Custom Storage',
+    enabled: 'Enabled',
+    not_enabled: 'Not Set',
+    custom_storage_desc :'Use custom storage to store card data',
+    delete_cache_data: 'Delete cached data',
+    delete_cache_data_desc: 'Can fix some data anomalies during use',
+    export_data: 'Export Card Data',
+    export_data_desc:'Back up or transfer data',
+    storage_service: 'Service Providers',
+    not_selected: 'Not Selected',
+    server_address: 'Server Address',
+    username: 'Username',
+    password: 'Password',
+    bucket: 'Bucket',
+    buctet_name: 'bucket name',
+    region: 'Region',
+    account_id: 'Account ID',
+    account_id_desc: 'account ID',
+    secret_id: 'Secret',
+    enable_config: 'Enable',
+    save_config: 'Save Configuration',
+    delete_config: 'Delete Configuration'
   }
 }

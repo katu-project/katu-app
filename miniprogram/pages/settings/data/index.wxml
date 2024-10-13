@@ -1,23 +1,23 @@
 <cu-custom bgColor="bg-cyan" isBack="{{true}}">
-  <view slot="backText">返回</view>
-  <view slot="content">数据</view>
+  <view slot="backText">{{t.back}}</view>
+  <view slot="content">{{t.data}}</view>
 </cu-custom>
 
 <view class="cu-list menu sm-border card-menu margin-top">
   <view class="cu-item arrow" bindtap="tapToPage" data-page="settings/data/cos/index">
     <view class="content">
-    <text class="">自定义存储</text>
+    <text class="">{{t.custom_storage}}</text>
     </view>
     <view class="action">
-      <text class="text-green text-sm" wx:if="{{config_storage_cos}}">已启用</text>
-      <text class="text-yellow text-sm" wx:else>未启用</text>
+      <text class="text-green text-sm" wx:if="{{config_storage_cos}}">{{t.enabled}}</text>
+      <text class="text-yellow text-sm" wx:else>{{t.not_enabled}}</text>
     </view>
   </view>
-  <view class="padding bg-white text-grey">使用自有存储储存卡片数据</view>
+  <view class="padding bg-white text-grey">{{t.custom_storage_desc}}</view>
 
   <view class="cu-item">
     <view class="content">
-    <text class="">删除缓存数据</text>
+    <text class="">{{t.delete_cache_data}}</text>
     </view>
     <view class="action">
       <button class="cu-btn round line-red light gfw w-150" bindtap="tapToClearCacheData">
@@ -25,17 +25,17 @@
       </button>
     </view>
   </view>
-  <view class="padding bg-white text-grey">可以修复一些使用过程中的数据异常情况</view>
+  <view class="padding bg-white text-grey">{{t.delete_cache_data_desc}}</view>
 
   <view class="cu-item">
     <view class="content">
-    <text class="">导出卡片数据</text>
+    <text class="">{{t.export_data}}</text>
     </view>
     <view class="action">
       <button class="cu-btn round line-green light gfw w-150" bindtap="tapToExportData">
         <text class="cuIcon-down"></text></button>
     </view>
   </view>
-  <view class="padding bg-white text-grey">可用于备份或者转移数据</view>
+  <view class="padding bg-white text-grey">{{t.export_data_desc}}</view>
 
 </view>

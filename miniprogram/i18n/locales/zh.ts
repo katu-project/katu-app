@@ -131,5 +131,29 @@ export default {
     developer_desc: '查看各种运行日志',
     ccv: '通用安全配置',
     cpk: '通用加密包'
+  },
+  storage: {
+    custom_storage: '自定义存储',
+    enabled: '已启用',
+    not_enabled: '未启用',
+    custom_storage_desc :'使用自有存储储存卡片数据',
+    delete_cache_data: '删除缓存数据',
+    delete_cache_data_desc: '可以修复一些使用过程中的数据异常情况',
+    export_data: '导出卡片数据',
+    export_data_desc:'可用于备份或者转移数据',
+    storage_service: '存储服务商',
+    not_selected: '未选择',
+    server_address: '服务器地址',
+    username: '用户名',
+    password: '密码',
+    bucket: '存储桶',
+    buctet_name: '存储桶名称',
+    region: '地域',
+    account_id: '帐户 ID',
+    account_id_desc: '存储桶所属帐户 ID',
+    secret_id: '密钥',
+    enable_config: '启用配置',
+    save_config: '保存配置',
+    delete_config: '删除配置'
   }
 }
