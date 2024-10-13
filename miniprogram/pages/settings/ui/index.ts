@@ -4,19 +4,26 @@ import { getAppManager } from "@/controller/app"
 const user = getUserManager()
 const app = getAppManager()
 
-Page({
+app.createPage({
+  i18n: {
+    page: ['settings','ui']
+  },
+
   data: {
     config_ui_homeMainBtnAnimation: false
   },
+
   onShow(){
     this.loadData()
   },
+
   loadData(){
     const { config } = user
     this.setData({
       config_ui_homeMainBtnAnimation: config?.ui?.homeMainBtnAnimation || false
     })
   },
+
   tapToConfig(e){
     const configItem = {
       key: e.currentTarget.dataset.key,

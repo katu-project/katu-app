@@ -116,5 +116,9 @@ export default {
     support_language: '当前支持的语言',
     zh: '中文',
     en: '英语'
+  },
+  ui: {
+    turn_animation: '打开添加按钮动画',
+    turn_animation_desc: '在首页滑动列表时，控制底部按钮自动隐藏/显示'
   }
 }

@@ -116,5 +116,9 @@ export default {
     support_language: 'Currently Supported Languages',
     zh: 'Chinese',
     en: 'English'
+  },
+  ui: {
+    turn_animation: 'Button Animation',
+    turn_animation_desc: 'Turn on/off the Add button animation'
   }
 }
