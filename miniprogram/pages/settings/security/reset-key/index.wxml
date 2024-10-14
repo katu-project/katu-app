@@ -1,23 +1,22 @@
 <cu-custom bgColor="bg-cyan" isBack="{{true}}">
-  <view slot="backText">返回</view>
-  <view slot="content">重置主密码</view>
+  <view slot="backText">{{t.back}}</view>
+  <view slot="content">{{t.reset_key}}</view>
 </cu-custom>
 
 <view class="page">
   <view class="padding-top-xl">
-    <text class="text-xl text-cyan">选择适用您的重置方式</text>
+    <text class="text-xl text-cyan">{{t.choose_reset_way}}</text>
   </view>
   <view class="cu-list menu margin-top">
     <view class="cu-item item arrow" bindtap="tapToPage" data-idx="1">
       <view class="content">
         <text class="cuIcon-scan text-grey"></text>
-        <text class="">有二维码重置凭证？</text>
+        <text class="">{{t.have_reset_code}}？</text>
       </view>
     </view>
   </view>
   <view class="padding" bindtap="tapToDoc">
     <text class="cuIcon-warn text-yellow"></text>
-    <text class="text-sm text-grey"> 没有以上材料？</text>
-    <text class="text-sm text-grey solids-bottom">点击获取帮助</text>
+    <text class="text-sm text-grey"> {{t.no_reset_way}}？</text>
   </view>
 </view>

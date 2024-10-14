@@ -15,7 +15,14 @@ export default {
     quota: '兔币明细',
     cancel: '取消',
     confirm: '确定',
-    mp: '微信小程序'
+    mp: '微信小程序',
+    update_success: '更新成功',
+    config_success: '设置成功',
+    cancel_success: '取消成功',
+    save_success: '保存成功',
+    save_failed: '保存失败',
+    unknown_error: '未知错误',
+    enter_master_key: '输入主密码'
   },
   settings:{
     account: '账户',
@@ -155,5 +162,85 @@ export default {
     enable_config: '启用配置',
     save_config: '保存配置',
     delete_config: '删除配置'
+  },
+  security: {
+    master_key: '主密码',
+    enabled: '已设置',
+    not_enabled: '未设置',
+    master_key_desc: '访问加密数据的唯一密钥',
+    mini_key: '快速密码',
+    mini_key_desc: '代替复杂主密码使用',
+    key_back_up: '主密码备份',
+    key_back_up_desc: '用于重置主密码',
+    remember_key: '记住主密码',
+    remember_key_desc: '访问数据不再要求主密码',
+    // sub
+    format_error: '密码格式错误',
+    same_input_error: '两次输入不一致'
+  },
+  masterKey: {
+    key_used_to: '主密码用于',
+    protect: '保护',
+    data_safe: '您的数据安全',
+    forget_key_will: '遗忘主密码将导致',
+    data_lose: '数据丢失',
+    must_remember: '务必牢记',
+    edit_key: '修改主密码',
+    start_setup: '开始设置',
+    more_desc: '详细介绍',
+    set_new_key: '设置新的主密码',
+    set_key: '设置主密码',
+    key_rule_desc: '格式为字母、数字的组合，长度不少于 ',
+    input_key_again: '再次输入主密码',
+    back_previous: '回到上一步',
+    confirm_update_master_key: '确认修改主密码',
+    confirm_master_key: '确认使用主密码',
+    // js
+    input_error: '输入有误',
+    same_key_error: '新密码不能与被修改的主密码相同！'
+  },
+  miniKey: {
+    mini_key_desc_1: '启用/取消快速密码',
+    mini_key_sync: '多端同步',
+    mini_key_sync_desc: '快速密码可以在不同客户端使用',
+    // js
+    enable_mini_key: '开启快速密码功能',
+    cancel_mini_key: '取消快速密码功能',
+    enable_mini_key_sync: '开启多端同步功能',
+    cancel_mini_key_sync: '取消多端同步功能',
+    enable_mini_key_first: '请先启用快速密码',
+    set_mini_key: '设置快速密码',
+    set_mini_key_again: '再次确认快速密码'
+  },
+  resetCode: {
+    recreate_reset_key: '重新生成凭证',
+    create_reset_key: '生成凭证',
+    export_reset_key: '导出凭证',
+    // js
+    check_data: '检查数据',
+    not_set_reset_code: '还未设置主密码重置凭证',
+    start_set_reset_code: '点击下方按钮开始设置',
+    has_set_reset_code: '已设置过主密码重置凭证',
+    reset_code_id: '凭证 ID',
+    key_reset_code: '主密码重置凭证',
+    please_wait: '请稍等',
+    export_and_save_safe: '请及时导出并妥善保存该凭证',
+    new_reset_code_notice: '生成新凭证会使已有凭证失效',
+    keep_reset_code_safe: '请妥善保管该凭证'
+  },
+  resetKey: {
+    reset_key: '重置主密码',
+    choose_reset_way: '选择适用您的重置方式',
+    have_reset_code: '有重置凭证二维码',
+    no_reset_way: '没有适用你的方式',
+    // qrcode
+    choose_reset_code: '点击选择重置凭证',
+    enter_new_key: '输入新的主密码',
+    confirm_key: '确认主密码',
+    save_key: '设置主密码',
+    // js
+    confirm_use_key: '确认使用该密码',
+    reset_key_success: '主密码重置成功',
+    start_set_key: '开始设置新密码'
   }
 }

@@ -1,30 +1,30 @@
 <cu-custom bgColor="bg-cyan" isBack="{{true}}">
-  <view slot="backText">返回</view>
-  <view slot="content">主密码</view>
+  <view slot="backText">{{t.back}}</view>
+  <view slot="content">{{t.master_key}}</view>
 </cu-custom>
 
 <view class="section">
   <block wx:if="{{step===0}}">
     <view class="desc padding flex flex-direction">
-      <text class="padding-tb">主密码用于<text class="text-green text-xxl"> 保护 </text>您的数据安全</text>
-      <text class="padding-tb">遗忘主密码将导致 <text class="text-red text-xl"> 数据丢失 </text></text>
-      <text class="padding-tb text-red text-xl">请务必牢记主密码！</text>
+      <text class="padding-tb">{{t.key_used_to}}<text class="text-green text-xxl"> {{t.protect}} </text>{{t.data_safe}}</text>
+      <text class="padding-tb">{{t.forget_key_will}} <text class="text-red text-xl"> {{t.data_lose}} </text></text>
+      <text class="padding-tb text-red text-xl">{{t.must_remember}}！</text>
     </view>
     <view class="margin-top padding flex flex-direction">
-      <button class="cu-btn bg-green lg gfw" catchtap="tapToStartSetKey">{{setMasterKey?'修改主密码':'开始设置'}}</button>
-      <button class="cu-btn margin-top bg-gray light gfw" catchtap="tapToOpenDoc">详细介绍</button>
+      <button class="cu-btn bg-green lg gfw" catchtap="tapToStartSetKey">{{setMasterKey?t.edit_key:t.start_setup}}</button>
+      <button class="cu-btn margin-top bg-gray light gfw" catchtap="tapToOpenDoc">{{t.more_desc}}</button>
     </view>
   </block>
 
   <block wx:if="{{step===1 || step===2}}">
     <view hidden="{{step===2}}" class="animation-{{backStep?'slide-left':'slide-right'}} section_header padding-tb flex flex-direction">
-      <text class="text-green text-xxl">输入{{setMasterKey?'新的':''}}主密码</text> 
-      <text class="padding-tb">密码要求为字母、数字的组合，不少于 <text class="text-red text-xxl">8</text> 位</text>
+      <text class="text-green text-xxl">{{setMasterKey?t.set_new_key:t.set_key}}</text> 
+      <text class="padding-tb">{{t.key_rule_desc}} <text class="text-red text-xxl">8</text></text>
     </view>
 
     <view hidden="{{step===1}}" class="animation-slide-right section_header padding-tb flex flex-direction">
-      <text class="text-green text-xxl">再次输入主密码</text> 
-      <text class="padding-tb" style="visibility: hidden;">密码要求为字母、数字的组合，不少于 <text class="text-red text-xxl">8</text> 位</text>
+      <text class="text-green text-xxl">{{t.input_key_again}}</text> 
+      <text class="padding-tb" style="visibility: hidden;">none</text>
     </view>
 
     <view class="padding-tb-xs line flex-row justify-center">
@@ -38,7 +38,7 @@
     </view>
 
     <view wx:if="{{step==2}}" class="margin-top padding flex flex-direction">
-      <button class="cu-btn gfw" catchtap="tapToBackStep">回到上一步</button>
+      <button class="cu-btn gfw" catchtap="tapToBackStep">{{t.back_previous}}</button>
     </view>
 
   </block>
@@ -46,12 +46,12 @@
 
 <view wx:if="{{step===3}}" class="section animation-slide-right">
   <view class="section_header padding-tb flex flex-direction">
-    <text class="text-green text-xxl">确认{{setMasterKey?'修改成':'使用'}}该主密码?</text> 
-    <text class="padding-tb" style="visibility: hidden;">密码要求</text>
+    <text class="text-green text-xxl">{{setMasterKey? t.confirm_update_master_key : t.confirm_master_key }}?</text> 
+    <text class="padding-tb" style="visibility: hidden;">none</text>
   </view>
 
   <view class="margin-top padding flex flex-direction">
-    <button class="cu-btn bg-green lg gfw" catchtap="tapToSetMasterKey">确认</button>
+    <button class="cu-btn bg-green lg gfw" catchtap="tapToSetMasterKey">{{t.confirm}}</button>
   </view>
 </view>
 

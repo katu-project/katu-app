@@ -6,7 +6,11 @@ import { CreateKeyInput } from '@/behaviors/keyInput'
 const app = getAppManager()
 const user = getUserManager()
 
-Page({
+app.createPage({
+  i18n: {
+    page: ['settings','security','masterKey']
+  },
+
   inputKey: '',
 
   data: {
@@ -68,7 +72,7 @@ Page({
 
   async finishTask(){
     app.masterKeyManager.clear()
-    await app.showMiniNotice(`${user.isSetMasterKey?'更新':'设置'}成功`)
+    await app.showMiniNotice(`${user.isSetMasterKey?this.t('update_success'):this.t('config_success')}`)
     await user.reloadInfo()
     app.navigateBack()
   },
@@ -115,7 +119,7 @@ Page({
     })
     setTimeout(() => {
       this.setData({
-        tips
+        tips: (this.t(tips) || tips) + ' !'
       })
     }, 300);
   },
@@ -136,22 +140,22 @@ Page({
   inputConfirm(){
     const key = this.data.key.trim()
     if(!key){
-      this.showTips('输入有误！')
+      this.showTips('input_error')
       return
     }
 
     if(key.length < 8 || key.match(/^\d{8,}$/)){
-      this.showTips('密码不满足格式要求！')
+      this.showTips('format_error')
       return
     }
 
     if(this.data.step === 1 && app.masterKeyManager.originUserKey === key){
-      this.showTips('新密码不能与被修改的主密码相同！')
+      this.showTips('same_key_error')
       return
     }
 
     if(this.data.step === 2 && this.inputKey !== key){
-      this.showTips('两次输入不一致！')
+      this.showTips('same_input_error')
       return
     }
     if(this.data.step === 1){

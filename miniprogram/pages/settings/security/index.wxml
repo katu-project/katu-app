@@ -1,50 +1,50 @@
 <cu-custom bgColor="bg-cyan" isBack="{{true}}">
-  <view slot="backText">返回</view>
-  <view slot="content">安全</view>
+  <view slot="backText">{{t.back}}</view>
+  <view slot="content">{{t.security}}</view>
 </cu-custom>
 
 <view class="">
   <view class="cu-list menu sm-border card-menu margin-top">
     <view class="cu-item arrow" bindtap="tapToPage" data-page="settings/security/master-key/index">
       <view class="content">
-        <text class="">主密码</text>
+        <text class="">{{t.master_key}}</text>
       </view>
       <view class="action">
-        <text class="text-green text-sm" wx:if="{{setMasterKey}}">已设置</text>
-        <text class="text-red text-sm" wx:else>未设置</text>
+        <text class="text-green text-sm" wx:if="{{setMasterKey}}">{{t.enabled}}</text>
+        <text class="text-red text-sm" wx:else>{{t.not_enabled}}</text>
       </view>
     </view>
-    <view class="padding bg-white text-grey text-sm">访问加密数据的唯一密钥</view>
+    <view class="padding bg-white text-grey text-sm">{{t.master_key_desc}}</view>
 
     <view class="cu-item arrow" bindtap="tapToPage" data-page="settings/security/mini-key/index">
       <view class="content">
-        <text class="">快速密码</text>
+        <text class="">{{t.mini_key}}</text>
       </view>
       <view class="action">
       </view>
     </view>
-    <view class="padding bg-white text-grey text-sm">代替复杂主密码使用</view>
+    <view class="padding bg-white text-grey text-sm">{{t.mini_key_desc}}</view>
 
     <view class="cu-item arrow" bindtap="tapToPage" data-page="settings/security/recovery-key/index">
       <view class="content">
-        <text class="">主密码备份</text>
+        <text class="">{{t.key_back_up}}</text>
       </view>
       <view class="action">
-        <text class="text-green text-sm" wx:if="{{config_security_setRecoveryKey}}">已设置</text>
-        <text class="text-red text-sm" wx:else>未设置</text>
+        <text class="text-green text-sm" wx:if="{{config_security_setRecoveryKey}}">{{t.enabled}}</text>
+        <text class="text-red text-sm" wx:else>{{t.not_enabled}}</text>
       </view>
     </view>
-    <view class="padding bg-white text-grey text-sm">用于重置主密码</view>
+    <view class="padding bg-white text-grey text-sm">{{t.key_back_up_desc}}</view>
 
     <view class="cu-item">
       <view class="content">
-      <text>记住主密码</text>
+      <text>{{t.remember_key}}</text>
       </view>
       <view class="action">
         <switch class="sm" bindchange="tapToConfig" data-key="config_security_rememberPassword" checked="{{config_security_rememberPassword}}"></switch>
       </view>
     </view>
-    <view class="padding bg-white text-grey text-sm">访问数据不再要求主密码 <text class="cuIcon-warn text-yellow" bindtap="tapToReadDoc"></text></view>
+    <view class="padding bg-white text-grey text-sm">{{t.remember_key_desc}} <text class="cuIcon-warn text-yellow" bindtap="tapToReadDoc"></text></view>
 
   </view>
 </view>

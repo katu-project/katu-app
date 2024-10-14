@@ -4,7 +4,11 @@ import { getUserManager } from '@/controller/user'
 const app = getAppManager()
 const user = getUserManager()
 
-Page({
+app.createPage({
+  i18n: {
+    page: ['settings','security','resetKey']
+  },
+
   data: {
     masterKey: '',
     masterKeyRepeat: '',
@@ -16,7 +20,7 @@ Page({
       onlyFromCamera: false
     }, { timeout: -1 })
     await loadData(app.resetKeyManager.checkState, qrPack)
-    await app.showConfirm("重置凭证数据读取成功\n开始设置新密码？")
+    await app.showConfirm(`${this.t('start_set_key')}?`)
     this.setData({
       showInputKey: true,
       recoveryKey: qrPack.rk
@@ -33,7 +37,7 @@ Page({
 
   async tapToSetMasterKey(){
     if(!this.data.masterKey || this.data.masterKey !== this.data.masterKeyRepeat){
-      app.showNotice('两次输入不一致')
+      app.showNotice(this.t('same_input_error'))
       return
     }
     try {
@@ -46,7 +50,7 @@ Page({
   async setMasterKey(){
     app.masterKeyManager.checkMasterKeyFormat(this.data.masterKey)
 
-    await app.showConfirm('确认使用该密码？')
+    await app.showConfirm(`${this.t('confirm_use_key')}?`)
     loadData(async ()=>{
       const originMasterKey = await app.resetKeyManager.fetchKeyFromResetKey(this.data.recoveryKey)
       await app.masterKeyManager.update({
@@ -61,7 +65,7 @@ Page({
   async finishTask(){
     app.masterKeyManager.clear()
     user.reloadInfo()
-    await app.showNotice(`主密码重置成功`)
+    await app.showNotice(this.t('reset_key_success'))
     app.navigateBack()
   },
 })

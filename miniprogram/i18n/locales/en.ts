@@ -15,7 +15,14 @@ export default {
     quota: 'T-Coin Info',
     cancel: 'Cancel',
     confirm: 'Confirm',
-    mp: 'Wechat'
+    mp: 'Wechat',
+    update_success: 'Update Success',
+    config_success: 'Setup Success',
+    cancel_success: 'Cancel Success',
+    save_success: 'Save Success',
+    save_failed: 'Save Failed',
+    unknown_error: 'Unknown Error',
+    enter_master_key: 'Enter Master Key'
   },
   settings:{
     account: 'Account',
@@ -155,5 +162,85 @@ export default {
     enable_config: 'Enable',
     save_config: 'Save Configuration',
     delete_config: 'Delete Configuration'
+  },
+  security: {
+    master_key: 'Master Key',
+    enabled: 'Enabled',
+    not_enabled: 'Not Set',
+    master_key_desc: 'A unique key to access encrypted data',
+    mini_key: 'Mini Key',
+    mini_key_desc: 'Use instead of complex master key',
+    key_back_up: 'Backup',
+    key_back_up_desc: 'Used to reset the master key',
+    remember_key: 'Remember Master Key',
+    remember_key_desc: 'Key no longer required to access data',
+    // sub
+    format_error: 'key format error',
+    same_input_error: 'the two inputs are not the same'
+  },
+  masterKey: {
+    key_used_to: 'A master key is used to',
+    protect: 'protect',
+    data_safe: 'your data safe',
+    forget_key_will: 'Forgetting master key will result',
+    data_lose: 'Data loss',
+    must_remember: 'It\'s important to keep in mind',
+    edit_key: 'Change Key',
+    start_setup: 'Start Create',
+    more_desc: 'Read More Info',
+    set_new_key: 'Set New Master Key',
+    set_key: 'Set Master Key',
+    key_rule_desc: 'Contains letters,numbers,symbols, min length',
+    input_key_again: 'Enter Master Key Again',
+    back_previous: 'Back to the previous',
+    confirm_update_master_key: 'Confirm Change This Key',
+    confirm_master_key: 'Confirm Use This Key',
+    // js
+    input_error: 'enter error',
+    same_key_error: 'new key cannot be the same as old key'
+  },
+  miniKey: {
+    mini_key_desc_1: 'Enable/Cancel Mini key',
+    mini_key_sync: 'Sync Mini Key',
+    mini_key_sync_desc: 'Mini key can be used on different clients',
+    // js
+    enable_mini_key: 'Turn on Mini key',
+    cancel_mini_key: 'Turn off Mini key',
+    enable_mini_key_sync: 'Turn on Mini key sync',
+    cancel_mini_key_sync: 'Turn off Mini key sync',
+    enable_mini_key_first: 'Please enable Mini key first',
+    set_mini_key: 'Set Mini key',
+    set_mini_key_again: 'Set Mini key again'
+  },
+  resetCode: {
+    recreate_reset_key: 'Regenerate Reset Code',
+    create_reset_key: 'Create Reset Code',
+    export_reset_key: 'Export Reset Code',
+    // js
+    check_data: 'Check Data',
+    not_set_reset_code: 'The Reset Code has not been set',
+    start_set_reset_code: 'Click button below to get started',
+    has_set_reset_code: 'You have set Reset Code',
+    reset_code_id: 'Reset Code ID',
+    key_reset_code: 'Master Key Reset Code',
+    please_wait: 'Please wait',
+    export_and_save_safe: 'Please export it in time and keep it safe',
+    new_reset_code_notice: 'This will cause the old reset code to be invalid',
+    keep_reset_code_safe: 'Please keep reset code in a safe place'
+  },
+  resetKey: {
+    reset_key: 'Reset Master Key',
+    choose_reset_way: 'Select the reset method',
+    have_reset_code: 'Have a Rest Code',
+    no_reset_way: 'There\'s no way it works for you',
+    // qrcode
+    choose_reset_code: 'Click Select Reset Code',
+    enter_new_key: 'Enter New Master Key',
+    confirm_key: 'Confirm Master Key',
+    save_key: 'Save Master Key',
+    // js
+    confirm_use_key: 'Confirm master key',
+    reset_key_success: 'Reset success',
+    start_set_key: 'Start set new master key'
   }
 }

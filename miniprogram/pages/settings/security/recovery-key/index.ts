@@ -6,7 +6,11 @@ import { CreateKeyInput } from '@/behaviors/keyInput'
 const app = getAppManager()
 const user = getUserManager()
 
-Page({
+app.createPage({
+  i18n: {
+    page: ['settings','security','resetCode']
+  },
+
   _canvasCtx: {} as IAnyObject,
 
   data: {
@@ -16,9 +20,7 @@ Page({
   },
 
   behaviors: [
-    CreateKeyInput({
-      title: '输入主密码：'
-    })
+    CreateKeyInput()
   ],
   
   onLoad() {
@@ -26,6 +28,9 @@ Page({
   },
 
   onReady() {
+    this.configKeyInput({
+      title: `${this.t('enter_master_key')}:`
+    })
   },
 
   async onShow() {
@@ -72,16 +77,16 @@ Page({
   },
 
   async initCanvasContent(ctx){
-    await showLoading('检查数据',1000)
+    await showLoading(this.t('check_data'),1000)
 
     this.setCanvasBg(ctx, '#ccefee', this._canvasCtx.__width, this._canvasCtx.__height)
     const textX = this._canvasCtx.__width / 2
     if(!this.data.setRecoveryKey){
-      this.drawNotice(ctx, '还未设置主密码重置凭证','red', textX, 135)
-      this.drawNotice(ctx, `点击下方按钮开始设置`,'grey',textX, 175)
+      this.drawNotice(ctx, this.t('not_set_reset_code'),'red', textX, 135)
+      this.drawNotice(ctx, this.t('start_set_reset_code'),'grey',textX, 175)
     }else{
-      this.drawNotice(ctx, '已设置过主密码重置凭证','green', textX, 135)
-      this.drawNotice(ctx, `凭证ID: ${this.data.recoveryKeyId}`,'green', textX, 175)
+      this.drawNotice(ctx, this.t('has_set_reset_code'),'green', textX, 135)
+      this.drawNotice(ctx, `${this.t('reset_code_id')}: ${this.data.recoveryKeyId}`,'green', textX, 175)
     }
   },
 
@@ -110,7 +115,7 @@ Page({
     ctx.fillStyle = '#f94747'
     ctx.font = '25px serif'
     ctx.textAlign = 'center';
-    ctx.fillText('主密码重置凭证', 150*rx, 35*ry)
+    ctx.fillText(this.t('key_reset_code'), 150*rx, 35*ry)
 
     ctx.fillStyle = '#ffffff';
     ctx.fillRect(30*rx, 60*ry, 240*rx, 240*ry)
@@ -183,7 +188,7 @@ Page({
   },
 
   async genCert(){
-    await showLoading('请稍等')
+    await showLoading(this.t('please_wait'))
     const { keyPack, qrPack } = await app.createResetKey()
     const canvasCtx = await this.initCanvas()
     await this.drawRecoveryKey(canvasCtx, qrPack)
@@ -195,12 +200,12 @@ Page({
       setRecoveryKey: true,
       readyExport: true
     })
-    app.showNotice("请及时导出并妥善保存该凭证。")
+    app.showNotice(this.t('export_and_save_safe'))
   },
 
   async tapToGenKey(){
     if(this.data.setRecoveryKey){
-      await app.showConfirm("生成新凭证会使已有凭证失效",'仍然继续')
+      await app.showConfirm(this.t('new_reset_code_notice'))
     }
 
     const state = app.masterKeyManager.check()
@@ -216,7 +221,7 @@ Page({
   },
 
   async tapToExport(){
-    await app.showNotice("请妥善保管该凭证\n否则存在数据泄漏风险！")
+    await app.showNotice(`${this.t('keep_reset_code_safe')}!`)
     const url = await this.getCanvasImage()
     wx.saveImageToPhotosAlbum({
       filePath: url as string,
@@ -225,12 +230,12 @@ Page({
           readyExport: false
         })
         this.initCanvasContent(this._canvasCtx).then(()=>{
-          app.showMiniNotice("保存成功")
+          app.showMiniNotice(this.t('save_success'))
         })
       },
       fail: error => {
         console.log(error)
-        app.showNotice("保存失败,请重试")
+        app.showNotice(this.t('save_failed'))
       }
     })
   },

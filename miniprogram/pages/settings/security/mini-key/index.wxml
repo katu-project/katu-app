@@ -1,28 +1,28 @@
 <cu-custom bgColor="bg-cyan" isBack="{{true}}">
-  <view slot="backText">返回</view>
-  <view slot="content">快速密码</view>
+  <view slot="backText">{{t.back}}</view>
+  <view slot="content">{{t.mini_key}}</view>
 </cu-custom>
 
 <view class="cu-list menu sm-border card-menu margin-top">
   <view class="cu-item">
     <view class="content">
-    <text>快速密码</text>
+    <text>{{t.mini_key}}</text>
     </view>
     <view class="action">
       <switch class="sm" bindchange="tapToUseMiniKey" checked="{{useMiniKey}}"></switch>
     </view>
   </view>
-  <view class="padding bg-white text-grey text-sm">启用/取消快速密码 <text class="cuIcon-question text-green" bindtap="tapToOpenDoc"></text></view>
+  <view class="padding bg-white text-grey text-sm">{{t.mini_key_desc_1}} <text class="cuIcon-question text-green" bindtap="tapToOpenDoc"></text></view>
 
   <view class="cu-item">
     <view class="content">
-    <text>多端同步</text>
+    <text>{{t.mini_key_sync}}</text>
     </view>
     <view class="action">
       <switch class="sm" disabled="{{!useMiniKey}}" bindchange="tapToSetSync" checked="{{syncMiniKey}}"></switch>
     </view>
   </view>
-  <view class="padding bg-white text-grey text-sm">快速密码可以在不同客户端使用</view>
+  <view class="padding bg-white text-grey text-sm">{{t.mini_key_sync_desc}}</view>
 </view>
 
 <include src="/components/input-key/tpl.wxml"/>

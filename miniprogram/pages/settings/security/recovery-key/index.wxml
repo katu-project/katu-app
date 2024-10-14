@@ -1,6 +1,6 @@
 <cu-custom bgColor="bg-cyan" isBack="{{true}}">
-  <view slot="backText">返回</view>
-  <view slot="content">主密码备份</view>
+  <view slot="backText">{{t.back}}</view>
+  <view slot="content">{{t.key_back_up}}</view>
 </cu-custom>
 
 <view class="page">
@@ -8,8 +8,8 @@
     <view class="padding-xs br-10" style="background-color:#ccefee;width: 620rpx; height: 820rpx;">
       <canvas type="2d" class="br-10" style="width: 600rpx; height: 800rpx;" id="reqrcode"></canvas>
     </view>
-    <button class="margin padding-tb-lg cu-btn bg-green light" style="width: 60vw;" bindtap="tapToGenKey">{{setRecoveryKey?'重新':''}}生成凭证</button>
-    <button class="cu-btn padding-tb-lg bg-black light" style="width: 60vw;" disabled="{{!readyExport}}" bindtap="tapToExport">导出凭证</button>
+    <button class="margin padding-tb-lg cu-btn bg-green light" style="width: 60vw;" bindtap="tapToGenKey">{{setRecoveryKey?t.recreate_reset_key:t.create_reset_key}}</button>
+    <button class="cu-btn padding-tb-lg bg-black light" style="width: 60vw;" disabled="{{!readyExport}}" bindtap="tapToExport">{{t.export_reset_key}}</button>
   </view>
 </view>
 

@@ -6,7 +6,11 @@ import { CreateKeyInput } from '@/behaviors/keyInput'
 const app = getAppManager()
 const user = getUserManager()
 
-Page({
+app.createPage({
+  i18n: {
+    page: ['settings','security','miniKey']
+  },
+
   inputKey: '',
   setStep: 0,
   useKeyFor: 'setKey',
@@ -49,7 +53,7 @@ Page({
       useMiniKey: this.data.useMiniKey,
     })
 
-    const {cancel} = await app.showChoose(`${value?'开启':'取消'}快速密码功能?`)
+    const {cancel} = await app.showChoose(`${value?this.t('enable_mini_key'):this.t('cancel_mini_key')}?`)
     if(cancel) return
 
     if(value){
@@ -58,7 +62,7 @@ Page({
         if(state.needKey){
           this.showKeyInput({
             inputMode: 'adv',
-            title: '验证主密码：'
+            title: `${this.t('enter_master_key')}：`
           })
         }else{
           app.showNotice(state.message)
@@ -70,7 +74,7 @@ Page({
       await loadData(app.miniKeyManager.disable)
       await user.reloadInfo()
       this.loadData()
-      app.showMiniNotice('取消成功')
+      app.showMiniNotice(this.t('cancel_success'))
     }
   },
 
@@ -82,7 +86,7 @@ Page({
       syncMiniKey: this.data.syncMiniKey,
     })
 
-    const {cancel} = await app.showChoose(`${value?'开启':'取消'}多端同步功能?`)
+    const {cancel} = await app.showChoose(`${value?this.t('enable_mini_key_sync'):this.t('cancel_mini_key_sync')}?`)
     if(cancel) return
 
     if(value){
@@ -100,20 +104,20 @@ Page({
       this.setSyncMiniKey()
     }else{
       await loadData(app.miniKeyManager.disableSync)
-      app.showMiniNotice('取消成功')
+      app.showMiniNotice(this.t('cancel_success'))
       user.reloadInfo().then(this.loadData)
     }
   },
 
   async setSyncMiniKey(){
     if(!user.miniKeyPack?.syncId) {
-      app.showNotice('请先启用快速密码')
+      app.showNotice(this.t('enable_mini_key_first'))
       return
     }
     loadData(app.enableSyncMiniKey, {
       syncId: user.miniKeyPack?.syncId
     }).then(()=>{
-      app.showMiniNotice('设置成功')
+      app.showMiniNotice(this.t('config_success'))
       user.reloadInfo().then(this.loadData)
     })
   },
@@ -122,7 +126,7 @@ Page({
     if(this.setStep === 1){
       if(!key.match(/^\d{6}$/)){
         this.configKeyInput({
-          resultText: '密码格式错误!'
+          resultText: this.t('format_error') + '!'
         })
         return
       }
@@ -134,7 +138,7 @@ Page({
     }else if(this.setStep === 2){
       if(this.inputKey !== key){
         this.configKeyInput({
-          resultText: '两次输入不一致！'
+          resultText: this.t('same_input_error') + '!'
         })
         return
       }
@@ -142,7 +146,7 @@ Page({
       await loadData(app.createMiniKey,{
         miniKey: this.inputKey
       })
-      app.showMiniNotice(`设置成功`)
+      app.showMiniNotice(this.t('config_success'))
       user.reloadInfo().then(this.loadData)
     }else{
       app.masterKeyManager.loadWithKey(key).then(()=>{
@@ -167,7 +171,7 @@ Page({
     this.showKeyInput({
       inputMode: 'mini',
       showSubBtn: false,
-      title: step === 1 ? '设置快速密码' : '再次确认快速密码'
+      title: step === 1 ? this.t('set_mini_key') : this.t('set_mini_key_again')
     })
   },
 
@@ -187,7 +191,7 @@ Page({
         })
       })
     }else{
-      app.showNotice('未知错误').then(app.navigateBack)
+      app.showNotice(this.t('unknown_error')).then(app.navigateBack)
     }
   },
 

@@ -4,7 +4,11 @@ import { getAppManager } from '@/controller/app'
 const user = getUserManager()
 const app = getAppManager()
 
-Page({
+app.createPage({
+  i18n: {
+    page: ['settings','security']
+  },
+
   data: {
     setMasterKey: false,
     config_security_rememberPassword: false,

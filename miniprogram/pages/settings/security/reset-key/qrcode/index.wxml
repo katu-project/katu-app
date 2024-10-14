@@ -1,6 +1,6 @@
 <cu-custom bgColor="bg-cyan" isBack="{{true}}">
-  <view slot="backText">返回</view>
-  <view slot="content">重置主密码</view>
+  <view slot="backText">{{t.back}}</view>
+  <view slot="content">{{t.reset_key}}</view>
 </cu-custom>
 
 <view class="page">
@@ -9,26 +9,26 @@
       <text class="flex-col justify-center align-center br-12" style="height: 40vw;width: 40vw;border: 1px solid darkcyan;margin-top:30vh;">
         <text style="font-size: 80rpx;" class="cuIcon-scan"></text>
       </text>
-      <view class="flex-col align-center padding">
-        <text class="text-cyan">点击选择重置凭证</text>
+      <view class="flex-col align-center padding-top">
+        <text class="text-cyan">{{t.choose_reset_code}}</text>
       </view>
     </view>
     <view hidden="{{!showInputKey}}">
       <view class="padding flex-col justify-center align-center" style="margin-top:20vh;">
-        <text class="padding-bottom-sm">输入新的主密码</text>
+        <text class="padding-bottom-sm">{{t.enter_new_key}}</text>
         <view class="padding-xs text-center key-input">
           <input model:value="{{masterKey}}" bindinput="checkInput" type="text"/>
         </view>
       </view>
 
       <view class="padding flex-col justify-center align-center">
-        <text class="padding-bottom-sm">确认主密码</text>
+        <text class="padding-bottom-sm">{{t.confirm_key}}</text>
         <view class="padding-xs text-center key-input">
           <input model:value="{{masterKeyRepeat}}" bindinput="checkRepeatInput" type="text"/>
         </view>
       </view>
 
-      <button class="cu-btn block line-cyan lg margin-top-lg gfw" bindtap="tapToSetMasterKey">设置主密码</button>
+      <button class="cu-btn block line-cyan lg margin-top-lg gfw" bindtap="tapToSetMasterKey">{{t.save_key}}</button>
     </view>
   </view>
 </view>
