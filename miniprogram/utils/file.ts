@@ -83,6 +83,13 @@ export async function getSavedFileList(){
   return toPromise(getSavedFileList, {}, 'fileList')
 }
 
+/**
+ * 不要直接使用
+ * bug: 当传入空目录且recursive为true时返回结果有误
+ * @param path 
+ * @param recursive 
+ * @returns 
+ */
 export async function getStats<T = any>(path, recursive=false){
   const getStats = args => wx.getFileSystemManager().stat(args)
   getStats.noLog = true
@@ -101,8 +108,7 @@ export async function readdir(dirPath){
 
 export async function rmdir(dirPath){
   const _rmdir = args => wx.getFileSystemManager().rmdir(args)
-
-  const items = await getStats(dirPath, true)
+  const items = await advReaddir(dirPath)
   console.log(dirPath,items)
   const files = items.filter(e=>e.stats.isFile())
   const dirs = items.filter(e=>e.stats.isDirectory()).sort((a,b)=>b.path.length-a.path.length)
@@ -124,8 +130,17 @@ export async function rmdir(dirPath){
 // ------- wx function end ----
 
 // ------- 扩展方法 ----
+// 修复 recursive=true 且文件夹未空时返回 stat 而不是 FileStats 数组
 export async function advReaddir(dir:string){
-  return getStats<{path:string,stats:WechatMiniprogram.Stats}[]>(dir,true)
+  const checkStat = await getStats(dir)
+  if(!checkStat.isDirectory()){
+    throw Error(`${dir} is not a directory`)
+  }
+  const res = await getStats(dir,true)
+  if(!Array.isArray(res) && res?.isDirectory()) {
+    return []
+  }
+  return res as {path:string,stats:WechatMiniprogram.Stats}[]
 }
 
 export async function readFileByPosition<T extends string | ArrayBuffer>(options: WechatMiniprogram.ReadFileOption){
