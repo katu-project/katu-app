@@ -64,6 +64,7 @@
     "navigationStyle": "custom",
     "enablePullDownRefresh": false
   },
+  "lazyCodeLoading": "requiredComponents",
   "sitemapLocation": "sitemap.json",
   "style": "v2",
   "resolveAlias": {
