@@ -3,56 +3,60 @@ const app = getAppManager()
 
 const codeList = [
   {
-    name: '中国',
+    name: 'china',
     key: '+86'
   },
   {
-    name: '香港(中国)',
+    name: 'hong_kong',
     key: '+852'
   },
   {
-    name: '台湾(中国)',
+    name: 'taiwan',
     key: '+886'
   },
   {
-    name: '澳门(中国)',
+    name: 'macau',
     key: '+853'
   },
   {
-    name: '马来西亚',
+    name: 'malaysia',
     key: '+60'
   },
   {
-    name: '美国',
+    name: 'united_states',
     key: '+1'
   },
   {
-    name: '加拿大',
+    name: 'canada',
     key: '+1'
   },
   {
-    name: '新加坡',
+    name: 'singapore',
     key: '+65'
   },
   {
-    name: '澳大利亚',
+    name: 'australia',
     key: '+61'
   },
   {
-    name: '日本',
+    name: 'japan',
     key: '+81'
   }
 ]
 
-Page({
+app.createPage({
+  i18n: {
+    page: ['telCode']
+  },
+
   where: {},
 
-  originList: codeList,
+  originList: [] as AnyObject[],
 
   data: {
     key: '',
     tag: '',
-    list: codeList
+    list: [] as AnyObject[]
   },
 
   onLoad() {
@@ -62,6 +66,10 @@ Page({
   },
 
   onReady() {
+    this.originList = codeList.map(e=>({name: this.t(e.name), key: e.key}))
+    this.setData({
+      list: this.originList
+    })
   },
 
   onShow() {

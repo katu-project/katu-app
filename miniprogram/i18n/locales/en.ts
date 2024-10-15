@@ -266,5 +266,19 @@ export default {
     notification: 'Notifications',
     system: 'System',
     me: 'Me'
+  },
+  telCode: {
+    choose_location: 'Select area code',
+    support_location: 'Country/Region currently supported',
+    china: 'China',
+    hong_kong: 'Hong Kong (China)',
+    taiwan: 'Taiwan (China)',
+    macau: 'Macau (China)',
+    malaysia: 'Malaysia',
+    united_states: 'United States',
+    canada: 'Canada',
+    singapore: 'Singapore',
+    australia: 'Australia',
+    japan: 'Japan'
   }
 }

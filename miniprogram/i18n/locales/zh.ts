@@ -266,5 +266,19 @@ export default {
     notification: '消息中心',
     system: '系统',
     me: '我的'
+  },
+  telCode: {
+    choose_location: '选择号码归属地',
+    support_location: '当前支持地区',
+    china: '中国',
+    hong_kong: '香港(中国)',
+    taiwan: '台湾(中国)',
+    macau: '澳门(中国)',
+    malaysia: '马来西亚',
+    united_states: '美国',
+    canada: '加拿大',
+    singapore: '新加坡',
+    australia: '澳大利亚',
+    japan: '日本'
   }
 }
