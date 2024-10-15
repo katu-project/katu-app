@@ -20,7 +20,11 @@ type Point = {
   f?: number
 }
 
-Page({
+app.createPage({
+  i18n: {
+    page: ['cardImageEdit']
+  },
+
   canvas: {} as Canvas,
 
   data: {
@@ -38,14 +42,15 @@ Page({
       this.setData({
         tmpImagePath: options.value
       })
-    }else{
-      await app.showConfirm('请选择图片')
-      app.navigateBack()
-      return
     }
   },
 
   async onReady() {
+    if(!this.data.tmpImagePath){
+      await app.showConfirm(this.t('select_pic'))
+      app.navigateBack()
+      return
+    }
     this.loadImage()
   },
 
@@ -74,7 +79,7 @@ Page({
   async useImage(url){
     if(app.isMp){
       await app.knowContentCheck()
-      await loadData(app.imageContentCheck,{imagePath:url},'内容合规检查')
+      await loadData(app.imageContentCheck,{imagePath:url}, this.t('content_safe_check'))
     }
     app.publishCardEditImageEvent(url)
     app.navigateBack()
@@ -108,7 +113,7 @@ Page({
         points
       })
       this.useImage(tmpSaveImagePath)
-    }, undefined, '正在处理图片')
+    }, undefined, this.t('process_pic'))
   },
 
   handleCanvasStart(e){

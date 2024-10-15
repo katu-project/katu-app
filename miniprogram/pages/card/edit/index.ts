@@ -9,7 +9,11 @@ const app = getAppManager()
 const cardManager = getCardManager()
 const user = getUserManager()
 
-Page({
+app.createPage({
+  i18n: {
+    page: ['cardEdit']
+  },
+
   id: '',
   originData: {} as ICard,
   otherTagIdx: -1,
@@ -27,7 +31,7 @@ Page({
     card: {
       _id: '',
       encrypted: true,
-      title: '卡片名称1',
+      title: '',
       tags: [] as string[],
       setLike: false,
       image: [
@@ -86,6 +90,10 @@ Page({
       await this.loadData()
       // 处理卡片标签选中状态
       this.renderTagState()
+    }else{
+      this.setData({
+        'card.title': this.t('new_card')
+      })
     }
   },
 
@@ -161,12 +169,12 @@ Page({
     const card = this.data.card
     // 卡片数据有效性检查
     if(card.image.filter(e=>e.url === app.getConst('DefaultAddImage')).length > 0) {
-      app.showNotice('请先添加卡片')
+      app.showNotice(this.t('add_pic_first'))
       return
     }
     // 检查卡面数量
     if(card.image.length > app.getConfig('cardImageMaxNum')) {
-      app.showNotice("卡面数量错误")
+      app.showNotice(this.t('pic_num_err'))
       return
     }
 
@@ -185,7 +193,7 @@ Page({
       try {
         await user.checkQuota()
       } catch (error:any) {
-        app.showNotice(`${error.message}`)
+        app.showNotice(this.t('recharge_quota'))
         return
       }
     }
@@ -222,7 +230,7 @@ Page({
         const savedImage = await loadData(cardManager.saveImage, {
           imageLocalPath: image.url,
           info: card.info
-        }, `保存卡面 ${+idx+1}`)
+        }, `${this.t('save_pic')} ${+idx+1}`)
         this.saveState.set(saveKey, savedImage)
         savedImages.push(savedImage as ICardImage)
       }
@@ -231,12 +239,12 @@ Page({
     const savedCard = await loadData(cardManager.save, {
       card: card as ICard, 
       images: savedImages
-    },'保存卡片信息')
+    },this.t('save_card_info'))
 
     console.debug(`提前缓存${this.data.edit?'修改':'新增'}卡片`)
     await cardManager.cacheCard(savedCard, this.data.card as ICard)
     app.publishCardChangeEvent(savedCard)
-    await app.showNotice(`卡片${this.data.edit?'修改':'保存'}成功`)
+    await app.showNotice(`${this.data.edit? this.t('update_success') : this.t('save_success')}`)
     app.navigateBack()
   },
 
@@ -252,7 +260,7 @@ Page({
       await app.goEditImagePage(picPath)
     } catch (error:any) {
       console.error(error)
-      app.showNotice(`选取错误: ${error.message||'未知错误'}`)
+      app.showNotice(this.t('choose_pic_error'))
     }
   },
 
@@ -262,7 +270,7 @@ Page({
       await app.goEditImagePage(picPath)
     } catch (error:any) {
       console.error(error)
-      app.showNotice(`选取错误: ${error.message||'未知错误'}`)
+      app.showNotice(this.t('choose_pic_error'))
     }
   },
 

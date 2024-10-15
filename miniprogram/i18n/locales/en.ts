@@ -8,7 +8,11 @@ export default {
     toc: 'TOC',
     privacy: 'Privacy',
     no_data: 'No Data',
+    edit: 'Edit',
+    add: 'Add',
+    delete: 'Delete',
     cancel: 'Cancel',
+    share: 'Share',
     confirm: 'Confirm',
     save: 'Save',
     mp: 'Wechat',
@@ -280,5 +284,56 @@ export default {
     singapore: 'Singapore',
     australia: 'Australia',
     japan: 'Japan'
+  },
+  card: {
+    reading_data: 'Reading data',
+    choose_share_type: 'Select the type of sharing',
+    // js
+    use_mini_key: 'Use Mini Key on this device',
+    sync_data: 'Sync the latest data',
+    decrypt_data: 'Decrypt card data first',
+    sync_success: 'Sync succeeded',
+    load_error: 'Loading error, try again',
+    confirm_delete: 'Once card is deleted, cannot be restored',
+    read_card: 'Read card data',
+    loading_card: 'Load card data',
+    loading_card_error: 'Load error',
+    card_not_exist: 'Card not exist'
+  },
+  cardEdit: {
+    card_name: 'Name',
+    select_tags: 'Tags',
+    not_selected: 'Not selected',
+    set_like: 'Like',
+    extra_data: 'Info',
+    none: 'None',
+    row: ' row',
+    new_card: 'New Card',
+    add_pic_first : 'Add one card picture first',
+    pic_num_err: 'number of card picture error',
+    recharge_quota: 'The account is not full of T-Coins',
+    save_pic: 'Save Pic',
+    save_card_info: 'Save Card Info',
+    choose_pic_error: 'Selecting the picture error',
+    // title
+    edit_content: 'Edit Content',
+    enter_title: 'enter title',
+    // extra data
+    choose_date: 'choose date',
+    click_below: 'Click',
+    add_item: 'add item',
+    extra_save_desc: 'The data info is also encrypted and stored with the card picture',
+    field: 'Field',
+    field_not_fill: 'There are fields that are not filled'
+  },
+  cardImageEdit: {
+    choose_pic: 'Choose Picture',
+    help_tips: 'Confirm after moving endpoint to 4 vertices of the card',
+    re_select: 'Re-select',
+    confirm_choose: 'Confirm Selection',
+    use_origin: 'Use original pic',
+    reset: 'Reset selection',
+    select_pic: 'Please select an picture',
+    process_pic: 'Process the picture'
   }
 }

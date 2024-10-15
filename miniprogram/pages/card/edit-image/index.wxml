@@ -1,10 +1,11 @@
 <cu-custom bgColor="bg-cyan" isBack="{{true}}">
-  <view slot="backText">返回</view>
-  <view slot="content">选择卡面</view>
+  <view slot="backText">{{t.back}}</view>
+  <view slot="content">{{t.choose_pic}}</view>
 </cu-custom>
 
 <view class="flex-col justify-between" style="height: calc(100vh - {{navHeight}}px);">
-  <view class="text-yellow text-sm text-center padding-xs bg-yellow light">移动端点到卡片 4 个顶点后确认选择</view>
+  <!-- 这里使用 {{t.help_tips}} 与下面 canvas 元素 同时出现会报错： Uncaught TypeError: this._getData is not a function -->
+  <view class="text-yellow text-sm text-center padding-xs bg-yellow light">{{t.help_tips}}</view>
   <view class="flex-row justify-center padding-tb-xl" style="flex:1;background-color:#2b2b2b">
     <canvas 
       type="2d" 
@@ -18,13 +19,13 @@
   </view>
   <view class="padding-sm flex-row align-center margin-bottom-sm">
     <button class="cu-btn light" bindtap="tapToSelectImage">
-      <text class="gfw">重新选择</text>
+      <text class="gfw">{{t.re_select}}</text>
     </button>
     <view class="margin-lr-lg text-xxl text-grey">
       <text class="cuIcon-apps" catchtap="tapToShowMoreOptions"></text>
     </view>
     <button class="cu-btn bg-cyan light" bindtap="tapToSelectCanvas">
-      <text class="gfw">确认选择</text>
+      <text class="gfw">{{t.confirm_choose}}</text>
     </button>
   </view>
 </view>
@@ -41,11 +42,11 @@
 >
   <view class="margin-xl">
     <view class="cu-btn block bg-gray lg shadow margin-bottom" data-key="useOrigin" catchtap="tapToSelectOption">
-      <text class="text-black">使用原图</text>
+      <text class="text-black">{{t.use_origin}}</text>
     </view>
     
     <view class="cu-btn block bg-gray lg shadow margin-bottom" data-key="reset" catchtap="tapToSelectOption">
-      <text class="text-black">重置选择框</text>
+      <text class="text-black">{{t.reset}}</text>
     </view>
 
   </view>

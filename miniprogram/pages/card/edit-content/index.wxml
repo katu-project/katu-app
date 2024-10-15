@@ -1,13 +1,13 @@
 <cu-custom bgColor="bg-cyan" isBack="{{true}}">
-  <view slot="backText">返回</view>
-  <view slot="content">编辑内容</view>
+  <view slot="backText">{{t.back}}</view>
+  <view slot="content">{{t.edit_content}}</view>
 </cu-custom>
 
 <view class="page">
   <view class="margin padding-left br-10" style="height: 50px;border: 2rpx solid darkcyan;">
-    <input type="text" focus="true" value="{{content}}" bindinput="onBindInput" style="height: 50px;" placeholder="输入名称"/>
+    <input type="text" focus="true" value="{{content}}" bindinput="onBindInput" style="height: 50px;" placeholder="{{t.enter_title}}"/>
   </view>
   <view class="padding flex-row">
-    <button class="bg-cyan gfw" disabled="{{!dataChange}}" bindtap="tapToSetContent">确认</button>
+    <button class="bg-cyan gfw" disabled="{{!dataChange}}" bindtap="tapToSetContent">{{t.confirm}}</button>
   </view>
 </view>

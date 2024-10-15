@@ -1,5 +1,5 @@
 <cu-custom bgColor="bg-cyan" isBack="{{true}}">
-  <view slot="backText">返回</view>
+  <view slot="backText">{{t.back}}</view>
 </cu-custom>
 
 <view class="page">
@@ -7,7 +7,7 @@
     <view class="head flex justify-between align-center">
       <view class="text-cyan text-xl flex align-center">
         <text class="cuIcon-vipcard padding-right-xs"></text>
-        <text class="text-xl text-black">{{card.title||'加载中...'}}</text>
+        <text class="text-xl text-black">{{card.title||t.reading_data}}</text>
       </view>
       <view style="flex:1"></view>
       <block wx:if="{{showHideCardData}}">
@@ -52,7 +52,7 @@
   <view class="cu-dialog">
     <view class="padding-bottom-lg">
       <view class="cu-bar justify-center padding-tb-lg">
-        <text class="text-lg text-cyan light">选择分享类型</text>
+        <text class="text-lg text-cyan light">{{t.choose_share_type}}</text>
       </view>
       <view class="flex-row">
         <button class="cu-btn icon text-xl" style="width: 10vw;height:10vw;" open-type="share">
@@ -64,7 +64,7 @@
       </view>
     </view>
     <view class="cu-bar bg-gray">
-      <view class="action margin-0 flex-sub" bindtap="hideShareDialog">取消</view>
+      <view class="action margin-0 flex-sub" bindtap="hideShareDialog">{{t.cancel}}</view>
     </view>
   </view>
 </view>
@@ -72,10 +72,10 @@
 <view class="cu-modal bottom-modal {{ showActionDialog ?'show':''}}" data-close="true" catchtap="tapToHideActionDialog">
   <view class="action-dialog cu-dialog">
     <view class="padding">
-      <view catchtap="tapToEditCard" class="item text-lg solids-bottom">修改</view>
-      <view hidden="{{disableShareAction}}" catchtap="tapToShowShareDialog" class="item text-lg solids-bottom">分享</view>
-      <view catchtap="tapToDeleteCard" class="item text-lg solids-bottom text-red">删除</view>
-      <view catchtap="tapToHideActionDialog"  data-close="true" class="item text-lg text-grey">取消</view>
+      <view catchtap="tapToEditCard" class="item text-lg solids-bottom">{{t.edit}}</view>
+      <view hidden="{{disableShareAction}}" catchtap="tapToShowShareDialog" class="item text-lg solids-bottom">{{t.share}}</view>
+      <view catchtap="tapToDeleteCard" class="item text-lg solids-bottom text-red">{{t.delete}}</view>
+      <view catchtap="tapToHideActionDialog"  data-close="true" class="item text-lg text-grey">{{t.cancel}}</view>
     </view>
   </view>
 </view>

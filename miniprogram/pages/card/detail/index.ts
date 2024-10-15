@@ -9,7 +9,11 @@ const app = getAppManager()
 const user = getUserManager()
 const cardManager = getCardManager()
 
-Page({
+app.createPage({
+  i18n: {
+    page: ['card']
+  },
+
   id: '',
   chooseIdx: 0,
   chooseAction: '',
@@ -66,7 +70,7 @@ Page({
 
   async onReady() {
     if(!this.id) {
-      await app.showNotice("卡片不存在")
+      await app.showNotice(this.t('card_not_exist'))
       app.navigateBack()
       return
     }
@@ -91,7 +95,7 @@ Page({
           ignoreCache
         }, 
         {
-          loadingTitle: showText || '加载卡片数据',
+          loadingTitle: showText || this.t('loading_card'),
           hideLoading,
           returnFailed: true
         }
@@ -105,7 +109,7 @@ Page({
       this.autoShowContent()
     } catch (error:any) {
       if(!hideLoading){
-        await app.showNotice(error.message || '卡片加载错误')
+        await app.showNotice(error.message || this.t('loading_card_error'))
         app.navigateBack()
       }
     }
@@ -136,7 +140,7 @@ Page({
     try {
       await app.miniKeyManager.checkState()
     } catch (error) {
-      const { confirm } = await app.showChoose('在本设备使用快速密码？')
+      const { confirm } = await app.showChoose(`${this.t('use_mini_key')}?`)
       if(confirm){
         this.syncMiniKey = true
         this.showKeyInput({
@@ -158,7 +162,7 @@ Page({
       }
     }).then(async needSync=>{
       if(needSync){
-        const { confirm } = await app.showChoose('云端数据有变动\n同步最新数据？')
+        const { confirm } = await app.showChoose(`${this.t('sync_data')}?`)
         if(confirm){
           await this.loadData({ ignoreCache:true , showText:'同步最新数据'})
         }
@@ -209,7 +213,7 @@ Page({
       return
     }
    
-    const card = await loadData(cardManager.getCard, { id: this.id, decrypt:true }, '读取卡面')
+    const card = await loadData(cardManager.getCard, { id: this.id, decrypt:true }, this.t('read_card'))
     const setData = {
       [`card.image`]: card.image,
       ['extraData']: cardManager.rebuildExtraFields(card.info),
@@ -244,7 +248,7 @@ Page({
 
   async tapToDeleteCard(){
     this.hideActionDialog()
-    await app.showConfirm("卡片删除后不可恢复！")
+    await app.showConfirm(`${this.t('confirm_delete')}!`)
     loadData(cardManager.deleteCard, this.data.card).then(()=>{
       app.publishCardDeleteEvent(this.data.card)
       app.navigateBack()
@@ -267,7 +271,7 @@ Page({
     this.hideActionDialog()
     if(this.data.card.encrypted){
       if(this.data.card.image?.some(pic => pic._url === app.getConst('DefaultShowLockImage') )){
-        app.showNotice('请先解密卡片内容')
+        app.showNotice(this.t('decrypt_data'))
         return
       }
     }
@@ -289,7 +293,7 @@ Page({
   async inputKeyConfirm(){
     if(this.syncMiniKey){
       await loadData(app.syncMiniKey)
-      await app.showMiniNotice('同步成功')
+      await app.showMiniNotice(this.t('sync_success'))
       this.syncMiniKey = false
     }
     if(this.chooseAction){
@@ -306,7 +310,7 @@ Page({
     const setData = {}
     setData[`card.image[${e.currentTarget.dataset.index}]._url`] = app.getConst('DefaultLoadFailedImage')
     this.setData(setData)
-    app.showNotice('图片加载错误\n请刷新数据重新加载')
+    app.showNotice(this.t('load_error'))
   },
 
   showShareDialog(){

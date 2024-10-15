@@ -7,7 +7,11 @@ const cardManager = getCardManager()
 const user = getUserManager()
 const CardExtraDataFieldsKeys = app.getCardConfig('defaultFields')
 
-Page({
+app.createPage({
+  i18n: {
+    page: ['cardEdit']
+  },
+
   originData: '' as string|undefined,
   data: {
     extraFieldsKeys: CardExtraDataFieldsKeys,
@@ -57,7 +61,7 @@ Page({
     for (const key of keys) {
       const extraField = Object.assign({},this.data.extraFieldsKeys.find(e=>e.key === key))
       if(extraField.key === 'cu'){
-        extraField.name = `字段 ${this.data.extraFields.filter(e=>e.key==='cu').length+1}`
+        extraField.name = `${this.t('field')} ${this.data.extraFields.filter(e=>e.key==='cu').length+1}`
       }
       extraFields = extraFields.concat(extraField).sort((a,b)=> a.xid-b.xid)
     }
@@ -93,13 +97,13 @@ Page({
   async tapToSave(){
     if(this.data.extraFields.length){
       if(this.data.extraFields.some(field=>!field.value || !field.name)){
-        app.showNotice('内容填写有误')
+        app.showNotice(this.t('field_not_fill'))
         return
       }
       const extraFields = cardManager.condenseExtraFields(this.data.extraFields as ICardExtraField[])
 
       if(this.originData === JSON.stringify(extraFields)) {
-        app.showNotice('内容无变动')
+        app.showNotice(this.t('data_no_change'))
         return
       }
       
@@ -107,7 +111,7 @@ Page({
       if(user.isActive){
         if(app.isMp){
           const checkText = this.data.extraFields.map(e=>e.key === 'cu'? `${e.name}${e.value}`: e.value).join('')
-          await loadData(app.textContentSafetyCheck,checkText,'内容合规检查')
+          await loadData(app.textContentSafetyCheck,checkText, this.t('content_safe_check'))
         }
       }
       app.publishCardEditExtraDataEvent(extraFields)

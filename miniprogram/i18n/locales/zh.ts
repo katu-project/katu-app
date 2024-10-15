@@ -8,7 +8,11 @@ export default {
     toc: '用户协议',
     privacy: '隐私政策',
     no_data: '暂无数据',
+    edit: '修改',
+    add: '添加',
+    delete: '删除',
     cancel: '取消',
+    share: '分享',
     confirm: '确定',
     save: '保存',
     mp: '微信小程序',
@@ -280,5 +284,56 @@ export default {
     singapore: '新加坡',
     australia: '澳大利亚',
     japan: '日本'
+  },
+  card: {
+    reading_data: '正在读取数据',
+    choose_share_type: '选择分享类型',
+    // js
+    use_mini_key: '在本设备使用快速密码',
+    sync_data: '同步最新数据',
+    decrypt_data: '请先解密卡片内容',
+    sync_success: '同步成功',
+    load_error: '图片加载错误请重试',
+    confirm_delete: '卡片删除后不可恢复',
+    read_card: '读取卡面',
+    loading_card: '加载卡片数据',
+    loading_card_error: '卡片加载错误',
+    card_not_exist: '卡片不存在'
+  },
+  cardEdit: {
+    card_name: '卡片名称',
+    select_tags: '选择标签',
+    not_selected: '未选择',
+    set_like: '设为常用',
+    extra_data: '附加数据',
+    none: '无',
+    row: ' 条',
+    new_card: '新卡片',
+    add_pic_first : '请先添加卡面',
+    pic_num_err: '卡面数量错误',
+    recharge_quota: '兔币余额不足',
+    save_pic: '保存卡面',
+    save_card_info: '保存卡片信息',
+    choose_pic_error: '选取图片出错',
+    // title
+    edit_content: '编辑内容',
+    enter_title: '输入名字',
+    // extra data
+    choose_date: '选择日期',
+    click_below: '点击下方',
+    add_item: '添加数据',
+    extra_save_desc: '卡片附加的数据也会与卡片图片一起加密保存',
+    field: '字段',
+    field_not_fill: '内容填写有误'
+  },
+  cardImageEdit: {
+    choose_pic: '选择卡面',
+    help_tips: '移动端点到卡片 4 个顶点后确认选择',
+    re_select: '重新选择',
+    confirm_choose: '确认选择',
+    use_origin: '使用原图',
+    reset: '重置选择框',
+    select_pic: '请选择图片',
+    process_pic: '正在处理图片'
   }
 }
