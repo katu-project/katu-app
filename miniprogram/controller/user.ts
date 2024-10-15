@@ -38,15 +38,15 @@ export default class User extends Controller {
   }
 
   get isSetMasterKey():boolean{
-    return this.user.setMasterKey || false
+    return this.user.setMasterKey ?? false
   }
 
   get useMiniKey(){
-    return this.user.config?.security.useMiniKey
+    return this.user.config?.security.useMiniKey ?? false
   }
 
   get useSyncMiniKey(){
-    return this.user.config?.security.useSyncMiniKey
+    return this.user.config?.security.useSyncMiniKey ?? false
   }
 
   get masterKeyPack(){
@@ -86,7 +86,7 @@ export default class User extends Controller {
   }
 
   get rememberPassword(){
-    return this.user.config?.security.rememberPassword || false
+    return this.user.config?.security.rememberPassword ?? false
   }
   
   async loadInfo(options?:{skipCache:boolean}){
