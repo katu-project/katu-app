@@ -10,6 +10,7 @@ export default {
     no_data: '暂无数据',
     cancel: '取消',
     confirm: '确定',
+    save: '保存',
     mp: '微信小程序',
     update_success: '更新成功',
     config_success: '设置成功',
@@ -17,7 +18,8 @@ export default {
     save_success: '保存成功',
     save_failed: '保存失败',
     unknown_error: '未知错误',
-    enter_master_key: '输入主密码'
+    enter_master_key: '输入主密码',
+    data_no_change: '数据无变动'
   },
   settings:{
     account: '账户',
@@ -36,6 +38,14 @@ export default {
     help: '使用帮助 ( FAQ )',
     about: '关于卡兔',
     customer_support: '我的客服' 
+  },
+  profileEdit: {
+    profile: '个人资料',
+    enter_nickname: '输入昵称',
+    change_avatar: '更改头像',
+    max_length: '最多字符',
+    uploading_avatar: '正在上传头像',
+    saving_data: '正在保存信息'
   },
   auth: {
     quick: '快速',

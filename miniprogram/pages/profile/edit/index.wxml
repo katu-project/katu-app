@@ -1,6 +1,6 @@
 <cu-custom bgColor="bg-cyan" isBack="{{true}}">
-  <view slot="backText">返回</view>
-  <view slot="content">个人资料</view>
+  <view slot="backText">{{t.back}}</view>
+  <view slot="content">{{t.profile}}</view>
 </cu-custom>
 
 <view class="flex-col justify-center align-center padding margin-top-lg">
@@ -9,16 +9,16 @@
   </view>
 
   <!-- #if MP -->
-  <button class="cu-btn line-cyan margin-top w-200" open-type="chooseAvatar" bindchooseavatar="onBindChooseAvatar">更改头像</button>
+  <button class="cu-btn line-cyan margin-top" open-type="chooseAvatar" bindchooseavatar="onBindChooseAvatar">{{t.change_avatar}}</button>
   <!-- #elif NATIVE -->
-  <button class="cu-btn line-cyan margin-top w-200" catchtap="tapToChooseAvatar">更改头像</button>
+  <button class="cu-btn line-cyan margin-top" catchtap="tapToChooseAvatar">{{t.change_avatar}}</button>
   <!-- #endif -->
 
   <view class="cu-form-group margin-top">
 		<view class="nickname">
-      <input value="{{name}}" class="text-center" bindinput="nameInput" placeholder="输入昵称"></input>
+      <input value="{{name}}" class="text-center" bindinput="nameInput" placeholder="{{t.enter_nickname}}"></input>
     </view>
 	</view>
-  <button class="cu-btn margin-top line-cyan" disabled="{{!dataChange}}" bindtap="tapToSaveUserInfo">保存</button>
+  <button class="cu-btn margin-top line-cyan" disabled="{{!dataChange}}" bindtap="tapToSaveUserInfo">{{t.save}}</button>
 </view>
 

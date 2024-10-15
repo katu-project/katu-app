@@ -10,6 +10,7 @@ export default {
     no_data: 'No Data',
     cancel: 'Cancel',
     confirm: 'Confirm',
+    save: 'Save',
     mp: 'Wechat',
     update_success: 'Update Success',
     config_success: 'Setup Success',
@@ -17,7 +18,8 @@ export default {
     save_success: 'Save Success',
     save_failed: 'Save Failed',
     unknown_error: 'Unknown Error',
-    enter_master_key: 'Enter Master Key'
+    enter_master_key: 'Enter Master Key',
+    data_no_change: 'Data no change'
   },
   settings:{
     account: 'Account',
@@ -36,6 +38,14 @@ export default {
     help: 'Help ( FAQ )',
     about: 'About',
     customer_support: 'Customer Support' 
+  },
+  profileEdit: {
+    profile: 'Profile',
+    enter_nickname: 'enter nickname',
+    change_avatar: 'Change Avatar',
+    max_length: 'Max length',
+    uploading_avatar: 'Uploading avatar',
+    saving_data: 'Saving data'
   },
   auth: {
     quick: 'Quick',

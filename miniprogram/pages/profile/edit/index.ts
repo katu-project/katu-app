@@ -4,7 +4,11 @@ import { getAppManager } from '@/controller/app'
 const user = getUserManager()
 const app = getAppManager()
 
-Page({
+app.createPage({
+  i18n: {
+    page: ['profileEdit']
+  },
+
   originData: {} as {name:string, avatar:string},
 
   data: {
@@ -54,26 +58,26 @@ Page({
   async tapToSaveUserInfo(){
     const nickName = this.data.name
     if(nickName === this.originData.name && this.data.avatar === this.originData.avatar) {
-      app.showNotice('数据无变动!')
+      app.showNotice(`${this.t('data_no_change')}!`)
       return
     }
     const userData = {}
 
     if(nickName !== this.originData.name){
       if(nickName.length>8){
-        app.showNotice("昵称长度有误")
+        app.showNotice(`${this.t('max_length')}: 8`)
         return
       }
       userData['name'] = nickName
     }
     if(this.data.avatar !== this.originData.avatar){
-      userData['avatar'] = await loadData(user.uploadAvatar, this.data.avatar, '正在上传头像')
+      userData['avatar'] = await loadData(user.uploadAvatar, this.data.avatar, this.t('uploading_avatar'))
     }
     
-    await loadData(user.updateProfile, userData, '正在保存信息')
+    await loadData(user.updateProfile, userData, this.t('saving_data'))
     await user.reloadInfo()
     user.publishUserProfileChangeEvent()
-    await app.showNotice('修改成功')
+    await app.showNotice(this.t('update_success'))
     app.navigateBack()
   }
 })
