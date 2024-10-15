@@ -33,7 +33,7 @@ class ResetKeyManager extends KeyManager {
   }
 
   async checkState(qrPack){
-    if(!qrPack || qrPack.i !== this.user.recoveryKeyPack?.qrId){
+    if(!qrPack || !qrPack.i || qrPack.i !== this.user.recoveryKeyPack?.qrId){
       throw Error('凭证ID不匹配!')
     }
   }
