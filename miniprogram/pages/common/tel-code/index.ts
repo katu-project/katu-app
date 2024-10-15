@@ -99,7 +99,7 @@ app.createPage({
       this.resetData()
     }else{
       this.setData({
-        list: this.data.list.filter(e=>e.key.includes(key))
+        list: this.data.list.filter(e=>e.key.includes(key) || e.name.includes(key))
       })
     }
   },
