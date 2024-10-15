@@ -9,6 +9,7 @@ export default class Base {
       if(!this.instance){
         // 使用 selfish 解决传递类方法导致 this 丢失问题
         this.instance = selfish(new this())
+        console.debug('Create Class', this.name)
       }
       return this.instance as T
   }
