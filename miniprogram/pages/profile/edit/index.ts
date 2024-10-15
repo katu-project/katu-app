@@ -49,6 +49,7 @@ app.createPage({
   // app only
   async tapToChooseAvatar(){
     const avatarUrl = await app.chooseLocalImage()
+    if(!avatarUrl) return
     this.setData({
       avatar: avatarUrl,
       dataChange: true
