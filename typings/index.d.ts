@@ -30,7 +30,11 @@ interface IAppConfig {
   cacheClearGapTime: number
   contentCheckHash: HashType
   imageNameFormatHashMethod: HashType
-  appEntryPagePath: string
+  appEntryPagePath: string,
+  smsCode: {
+    name: string,
+    key: string
+  }[]
 }
 
 interface ICardConfig {

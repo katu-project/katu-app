@@ -20,7 +20,19 @@ const AppConfig:IAppConfig = {
   cacheClearGapTime: 86400, // 一天
   contentCheckHash: 'SHA1',
   imageNameFormatHashMethod: 'MD5',
-  appEntryPagePath: 'home/index'
+  appEntryPagePath: 'home/index',
+  smsCode: [
+    { name: 'australia', key: '+61' },
+    { name: 'canada', key: '+1' },
+    { name: 'china', key: '+86' },
+    { name: 'hong_kong', key: '+852' },
+    { name: 'japan', key: '+81' },
+    { name: 'macau', key: '+853' },
+    { name: 'malaysia', key: '+60' },
+    { name: 'singapore', key: '+65' },
+    { name: 'taiwan', key: '+886' },
+    { name: 'united_states', key: '+1' }
+  ]
 }
 
 export default AppConfig

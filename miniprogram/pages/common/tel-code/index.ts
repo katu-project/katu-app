@@ -1,49 +1,6 @@
 import { getAppManager } from '@/controller/app'
 const app = getAppManager()
 
-const codeList = [
-  {
-    name: 'china',
-    key: '+86'
-  },
-  {
-    name: 'hong_kong',
-    key: '+852'
-  },
-  {
-    name: 'taiwan',
-    key: '+886'
-  },
-  {
-    name: 'macau',
-    key: '+853'
-  },
-  {
-    name: 'malaysia',
-    key: '+60'
-  },
-  {
-    name: 'united_states',
-    key: '+1'
-  },
-  {
-    name: 'canada',
-    key: '+1'
-  },
-  {
-    name: 'singapore',
-    key: '+65'
-  },
-  {
-    name: 'australia',
-    key: '+61'
-  },
-  {
-    name: 'japan',
-    key: '+81'
-  }
-]
-
 app.createPage({
   i18n: {
     page: ['telCode']
@@ -66,7 +23,7 @@ app.createPage({
   },
 
   onReady() {
-    this.originList = codeList.map(e=>({name: this.t(e.name), key: e.key}))
+    this.originList = app.getConfig('smsCode').map(e=>({name: this.t(e.name), key: e.key}))
     this.setData({
       list: this.originList
     })
