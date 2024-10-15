@@ -1,21 +1,21 @@
 import { loadData } from '@/utils/index'
 import { getUserManager } from '@/controller/user'
-import { CreateI18nBehavior } from '@/behaviors/i18n'
+import { getAppManager } from '@/controller/app'
+
+const app = getAppManager()
 const user = getUserManager()
 
-Page({
+app.createPage({
+  i18n: {
+    page: ['quota']
+  },
+
   id: '',
 
   data: {
     loading: true,
     detail: {}
   },
-
-  behaviors: [
-    CreateI18nBehavior({
-      page: 'quota'
-    })
-  ],
 
   onLoad(options){
     if(options.id){

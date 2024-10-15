@@ -7,12 +7,7 @@ export default {
     slogan: 'Secure And User-Friendly Card Management APP',
     toc: 'TOC',
     privacy: 'Privacy',
-    about: 'About',
-    change_log: 'Change Logs',
-    contact_us: 'Contact Us',
-    help: 'Usage Help ( Q&A )',
     no_data: 'No Data',
-    quota: 'T-Coin Info',
     cancel: 'Cancel',
     confirm: 'Confirm',
     mp: 'Wechat',
@@ -35,8 +30,11 @@ export default {
     settings: 'Settings'
   },
   profile: {
+    quota: 'T-Coin Info',
     tag: 'Card Tags',
     settings: 'Settings',
+    help: 'Help ( FAQ )',
+    about: 'About',
     customer_support: 'Customer Support' 
   },
   auth: {
@@ -56,6 +54,8 @@ export default {
   },
   about:{
     version: 'Version',
+    change_log: 'Change Logs',
+    contact_us: 'Contact Us',
     feedback: 'Feedback',
     icp: 'ICP'
   },

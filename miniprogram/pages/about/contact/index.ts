@@ -1,18 +1,15 @@
-import { CreateI18nBehavior } from '@/behaviors/i18n'
 import { getAppManager } from '@/controller/app'
 const app = getAppManager()
 
-Page({
+app.createPage({
+  i18n: {
+    page: ['about','contactUs']
+  },
+
   data: {
     showCustomerService: false,
     email: app.getConfig('contacts').email
   },
-
-  behaviors: [
-    CreateI18nBehavior({
-      page: 'contactUs'
-    })
-  ],
   
   onLoad(e) {
     if(e.openService){

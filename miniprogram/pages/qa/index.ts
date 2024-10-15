@@ -1,21 +1,18 @@
 import { loadData } from '@/utils/index'
 import { getAppManager } from '@/controller/app'
-import { CreateI18nBehavior } from '@/behaviors/i18n'
 const app = getAppManager()
 const QaTypeCate = app.menu.qa
 
-Page({
+app.createPage({
+  i18n: {
+    page: ['profile','help']
+  },
+
   data: {
     qaCate: [] as typeof QaTypeCate,
     list: [] as AnyObject[],
     isLoading: true
   },
-
-  behaviors: [
-    CreateI18nBehavior({
-      page: 'help'
-    })
-  ],
 
   onLoad() {
     this.setData({

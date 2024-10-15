@@ -1,25 +1,25 @@
 import { loadData } from '@/utils/index'
 import { getAppManager } from '@/controller/app'
 import { getUserManager } from '@/controller/user'
-import { CreateI18nBehavior } from '@/behaviors/i18n'
 import { CreateEventBehavior } from '@/behaviors/event'
 
 const app = getAppManager()
 const user = getUserManager()
 
-Page({
-  behaviors: [
-    CreateEventBehavior('profile'),
-    CreateI18nBehavior({
-      page: 'profile'
-    })
-  ],
+app.createPage({
+  i18n: {
+    page: ['profile']
+  },
 
   data: {
     user: {} as Partial<IUser>,
     menus: app.menu.profile,
     showCustomerService: true
   },
+
+  behaviors: [
+    CreateEventBehavior('profile')
+  ],
 
   onLoad(){
   },

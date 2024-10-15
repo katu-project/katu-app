@@ -1,9 +1,12 @@
 import { loadData } from '@/utils/index'
 import { getAppManager } from '@/controller/app'
-import { CreateI18nBehavior } from '@/behaviors/i18n'
 const app = getAppManager()
 
-Page({
+app.createPage({
+  i18n: {
+    page: ['profile','help']
+  },
+
   data: {
     id: '',
     doc: {
@@ -12,12 +15,6 @@ Page({
       updateTime: ''
     }
   },
-
-  behaviors: [
-    CreateI18nBehavior({
-      page: 'help'
-    })
-  ],
   
   onLoad(options) {
     this.data.id = options.id || ''

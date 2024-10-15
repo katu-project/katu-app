@@ -7,12 +7,7 @@ export default {
     slogan: '安全好用的卡片管理工具',
     toc: '用户协议',
     privacy: '隐私政策',
-    about: '关于卡兔',
-    change_log: '发布历史',
-    contact_us: '联系我们',
-    help: '使用帮助 ( Q&A )',
     no_data: '暂无数据',
-    quota: '兔币明细',
     cancel: '取消',
     confirm: '确定',
     mp: '微信小程序',
@@ -35,8 +30,11 @@ export default {
     settings: '设置'
   },
   profile: {
+    quota: '兔币明细',
     tag: '卡片标签',
     settings: '软件设置',
+    help: '使用帮助 ( FAQ )',
+    about: '关于卡兔',
     customer_support: '我的客服' 
   },
   auth: {
@@ -56,6 +54,8 @@ export default {
   },
   about:{
     version: '版本号',
+    change_log: '发布历史',
+    contact_us: '联系我们',
     feedback: '使用反馈',
     icp: '备案号'
   },

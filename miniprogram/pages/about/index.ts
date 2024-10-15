@@ -1,20 +1,17 @@
 import { getAppManager } from '@/controller/app'
 import { file } from '@/utils/index'
-import { CreateI18nBehavior } from '@/behaviors/i18n'
 
 const app = getAppManager()
 
-Page({
+app.createPage({
+  i18n: {
+    page: ['profile','about']
+  },
+  
   data: {
     logo: '/static/logo.svg',
     version: 'dev'
   },
-
-  behaviors: [
-    CreateI18nBehavior({
-      page: 'about'
-    })
-  ],
 
   onLoad() {
 

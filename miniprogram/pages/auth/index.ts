@@ -1,19 +1,15 @@
 import { appleLogin, loadData, showLoading, weixinMiniProgramLogin } from '@/utils/index'
 import { getAppManager } from '@/controller/app'
 import { CreateEventBehavior } from '@/behaviors/event'
-import { CreateI18nBehavior } from '@/behaviors/i18n'
 import { getUserManager } from '@/controller/user'
 
 const app = getAppManager()
 const user = getUserManager()
 
-Page({
-  behaviors: [
-    CreateEventBehavior('auth'),
-    CreateI18nBehavior({
-      page: 'auth'
-    })
-  ],
+app.createPage({
+  i18n: {
+    page: ['auth']
+  },
 
   data: {
     activeInfo: {
@@ -35,6 +31,10 @@ Page({
     toc_1: '',
     toc_2: ''
   },
+
+  behaviors: [
+    CreateEventBehavior('auth')
+  ],
 
   async onLoad() {
     const useLang = await app.getUseLanguage()

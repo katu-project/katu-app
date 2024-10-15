@@ -1,18 +1,15 @@
-import { CreateI18nBehavior } from '@/behaviors/i18n'
 import { getAppManager } from '@/controller/app'
 
 const app = getAppManager()
 
-Page({
+app.createPage({
+  i18n: {
+    page: ['settings']
+  },
+
   data: {
     menu: app.menu.settings
   },
-
-  behaviors: [
-    CreateI18nBehavior({
-      page: 'settings'
-    })
-  ],
 
   onLoad() {
 
