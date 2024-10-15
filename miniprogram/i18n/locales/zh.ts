@@ -261,5 +261,10 @@ export default {
     confirm_use_key: '确认使用该密码',
     reset_key_success: '主密码重置成功',
     start_set_key: '开始设置新密码'
+  },
+  notice: {
+    notification: '消息中心',
+    system: '系统',
+    me: '我的'
   }
 }

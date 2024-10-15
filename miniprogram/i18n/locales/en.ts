@@ -261,5 +261,10 @@ export default {
     confirm_use_key: 'Confirm master key',
     reset_key_success: 'Reset success',
     start_set_key: 'Start set new master key'
+  },
+  notice: {
+    notification: 'Notifications',
+    system: 'System',
+    me: 'Me'
   }
 }

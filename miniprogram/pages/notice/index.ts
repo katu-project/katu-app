@@ -2,7 +2,11 @@ import { getAppManager } from '@/controller/app'
 import { loadData } from '@/utils/index'
 const app = getAppManager()
 
-Page({
+app.createPage({
+  i18n: {
+    page: ['notice']
+  },
+
   notices: {
     sys: [] as INotice[],
     user: [] as INotice[],

@@ -1,14 +1,14 @@
 <cu-custom bgColor="bg-cyan" isBack="{{true}}">
-  <view slot="backText">返回</view>
-  <view slot="content">消息中心</view>
+  <view slot="backText">{{t.back}}</view>
+  <view slot="content">{{t.notification}}</view>
 </cu-custom>
 <view class="bg-white nav">
   <view class="flex text-center">
     <view class="cu-item flex-sub {{ curTab == 'sys' ? 'text-orange cur':''}}" bindtap="changeTab" data-tab="sys">
-      系统
+      {{t.system}}
     </view>
     <view class="cu-item flex-sub {{ curTab == 'user' ? 'text-orange cur':''}}" bindtap="changeTab" data-tab="user">
-      我的
+      {{t.me}}
     </view>
   </view>
 </view>
@@ -22,7 +22,7 @@
     >
   <view style="min-height:80vh">
     <view class="text-center margin-top" wx:if="{{list.length==0}}">
-      <text class="text-gray">暂无消息</text>
+      <text class="text-gray">{{t.no_data}}</text>
     </view>
     <view wx:for="{{list}}" wx:key="_id">
       <view class="flex-row justify-center">
