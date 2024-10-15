@@ -6,7 +6,11 @@ const app = getAppManager()
 
 const DefaultThemeColors = app.theme.DefaultColors
 
-Page({
+app.createPage({
+  i18n: {
+    page: ['profile','tagEdit']
+  },
+
   data: {
     list: [] as AnyObject[],
     tempTagName: '',
@@ -76,13 +80,13 @@ Page({
   async tapToDeleteTag(e){
     const idx = parseInt(e.currentTarget.dataset.idx)
     const tag = this.data.list[idx]
-    await app.showConfirm(`删除标签: ${tag.name}`)
+    await app.showConfirm(`${this.t('delete_tag')}: ${tag.name}`)
     await loadData(user.deleteTag, tag._id)
     this.data.list.splice(idx,1)
     this.setData({
       list: this.data.list
     })
-    app.showMiniNotice('删除成功')
+    app.showMiniNotice(this.t('delete_success'))
     app.clearUserTagsCache()
   },
 
@@ -92,14 +96,14 @@ Page({
     }
     const tagName = this.data.tempTagName
     if(app.isMp){
-      await loadData(app.textContentSafetyCheck,tagName,'内容合规检查')
+      await loadData(app.textContentSafetyCheck,tagName, this.t('content_safe_check'))
     }
     const res = await loadData(user.createTag, tagName)
     this.hideDialog('showDialogCreateTag')
     this.setData({
       [`list[${this.data.list.length}]`]: {name: res.name, _id: res._id}
     })
-    app.showMiniNotice('创建成功')
+    app.showMiniNotice(this.t('create_success'))
     app.clearUserTagsCache()
   },
 
@@ -120,7 +124,7 @@ Page({
         [`list[${this.data.selectedTagIdx}].color`]: tag.color,
       })
       this.hideDialog('showDialogSetColor')
-      app.showMiniNotice('修改成功')
+      app.showMiniNotice(this.t('update_success'))
       app.clearUserTagsCache()
     }
   }

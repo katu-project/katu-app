@@ -15,11 +15,14 @@ export default {
     update_success: 'Update Success',
     config_success: 'Setup Success',
     cancel_success: 'Cancel Success',
+    delete_success: 'Delete Success',
+    create_success: 'Create Success',
     save_success: 'Save Success',
     save_failed: 'Save Failed',
     unknown_error: 'Unknown Error',
     enter_master_key: 'Enter Master Key',
-    data_no_change: 'Data no change'
+    data_no_change: 'Data no change',
+    content_safe_check: 'Content Security Checks'
   },
   settings:{
     account: 'Account',
@@ -46,6 +49,12 @@ export default {
     max_length: 'Max length',
     uploading_avatar: 'Uploading avatar',
     saving_data: 'Saving data'
+  },
+  tagEdit: {
+    my_tags: 'My Tags',
+    enter_tag_name: 'Enter tag name',
+    tag_name_max_length: 'Length is less than 4 characters',
+    delete_tag: 'Delete tag'
   },
   auth: {
     quick: 'Quick',

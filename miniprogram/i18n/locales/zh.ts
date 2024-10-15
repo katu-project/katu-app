@@ -15,11 +15,14 @@ export default {
     update_success: '更新成功',
     config_success: '设置成功',
     cancel_success: '取消成功',
+    delete_success: '删除成功',
+    create_success: '创建成功',
     save_success: '保存成功',
     save_failed: '保存失败',
     unknown_error: '未知错误',
     enter_master_key: '输入主密码',
-    data_no_change: '数据无变动'
+    data_no_change: '数据无变动',
+    content_safe_check: '内容合规检查'
   },
   settings:{
     account: '账户',
@@ -46,6 +49,12 @@ export default {
     max_length: '最多字符',
     uploading_avatar: '正在上传头像',
     saving_data: '正在保存信息'
+  },
+  tagEdit: {
+    my_tags: '我的标签',
+    enter_tag_name: '输入标签名字',
+    tag_name_max_length: '名字长度不超过4个字符',
+    delete_tag: '删除标签'
   },
   auth: {
     quick: '快速',

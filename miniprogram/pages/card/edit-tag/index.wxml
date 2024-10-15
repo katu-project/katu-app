@@ -1,6 +1,6 @@
 <cu-custom bgColor="bg-cyan" isBack="{{true}}">
-  <view slot="backText">返回</view>
-  <view slot="content">标签管理</view>
+  <view slot="backText">{{t.back}}</view>
+  <view slot="content">{{t.tag}}</view>
 </cu-custom>
 
 <view class="page" style="min-height: 100vh;">
@@ -8,7 +8,7 @@
     <view class="flex-row-sb align-center">
       <view>
         <text class="cuIcon-tag text-cyan"></text>
-        <text class="padding-left-sm">我的标签<text class="text-df text-grey" wx:if="{{list.length}}">・{{list.length}}</text></text>
+        <text class="padding-left-sm">{{t.my_tags}}<text class="text-df text-grey" wx:if="{{list.length}}">・{{list.length}}</text></text>
       </view>
       <view class="padding-right">
         <button class="cu-btn icon round line-cyan sm" bindtap="tapToShowCreateTag">
@@ -20,7 +20,7 @@
     </view>
   </view>
   
-  <view class="padding-top-xl text-center text-gray" wx:if="{{!list.length}}">暂无自定义标签</view>
+  <view class="padding-top-xl text-center text-gray" wx:if="{{!list.length}}">{{t.no_data}}</view>
 
   <view class="padding-tb flex flex-wrap">
     <view class="padding-tb-sm padding-lr margin-sm light bg-{{ selectedTagIdx === index ? tempTagColor:item.color || 'blue'}} {{selectedTagIdx===index? 'selected':''}} br-14" data-idx="{{index}}" bindtap="tapToDeleteTag" bindlongpress="tapToShowSetColor" wx:for="{{list}}" wx:key="_id">
@@ -33,21 +33,21 @@
 <view class="cu-modal {{showDialogCreateTag?'show':''}}">
   <view class="cu-dialog">
     <view class="cu-bar bg-white justify-end">
-      <view class="content">输入标签名字</view>
+      <view class="content">{{t.enter_tag_name}}</view>
     </view>
     <view class="padding-xl bg-white flex-col justify-center">
       <view class="solids-bottom" style="width: 300rpx;align-self: center;">
         <input type="text" style="height: 80rpx;" class="text-center" model:value="{{tempTagName}}" bindinput="checkInputTag"/>
       </view>
       <view class="padding-top">
-        <text class="text-sm text-grey">标签名称长度不超过4个字符</text>
+        <text class="text-sm text-grey">{{t.tag_name_max_length}}</text>
       </view>
     </view>
     <view class="cu-bar bg-white justify-end">
       <view class="action">
-        <button class="cu-btn line-green text-green gfw w-200" data-key="showDialogCreateTag" bindtap="tapToHideDialog">取消</button>
+        <button class="cu-btn line-green text-green gfw w-200" data-key="showDialogCreateTag" bindtap="tapToHideDialog">{{t.cancel}}</button>
         <view class="padding-left-sm"></view>
-        <button class="cu-btn bg-green margin-left gfw w-200" bindtap="tapToSaveTag">确定</button>
+        <button class="cu-btn bg-green margin-left gfw w-200" bindtap="tapToSaveTag">{{t.confirm}}</button>
       </view>
     </view>
   </view>
@@ -56,8 +56,8 @@
 <view class="cu-modal bottom-modal {{showDialogSetColor?'show':''}}">
   <view class="cu-dialog">
     <view class="cu-bar bg-white">
-      <view class="action text-green" data-key="showDialogSetColor" bindtap="tapToHideDialog">取消</view>
-      <view class="action text-blue" style="margin-right: 30rpx;" bindtap="tapToSetColor">确定</view>
+      <view class="action text-green" data-key="showDialogSetColor" bindtap="tapToHideDialog">{{t.cancel}}</view>
+      <view class="action text-blue" style="margin-right: 30rpx;" bindtap="tapToSetColor">{{t.confirm}}</view>
     </view>
     <view class="padding-xl">
       <view class="grid col-3 padding-sm br-16" style="border: 1rpx solid darkcyan;">
