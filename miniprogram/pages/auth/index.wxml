@@ -78,20 +78,19 @@
 <view class="cu-modal {{showActiveInfo?'show':''}}">
   <view class="cu-dialog bg-white br-16" style="width: 75vw;">
     <view class="cu-bar justify-end">
-      <view class="content text-black">温馨提示</view>
+      <view class="content text-black">{{t.mp_tips}}</view>
     </view>
     <view class="padding margin-lr" style="height: 30vh; text-align: left;">
-      <rich-text style="flex:1" nodes="{{activeInfo.notice||'内容加载中...'}}"></rich-text>
+      <rich-text style="flex:1" nodes="{{activeInfo.notice||t.loading}}"></rich-text>
       <view class="padding">
         <view class="padding-top" wx:for="{{activeInfo.protocols}}" wx:key="index" data-item="{{item}}" bindtap="tapToReadDoc">
-          <text class="cuIcon-title"></text> 阅读《<text class="text-red">{{item.name}}</text>》
+          <text class="cuIcon-title"></text> {{t.read}}《<text class="text-red">{{item.name}}</text>》
         </view> 
       </view>
     </view>
     <view class="action flex-row-sb padding">
-      <button class="cu-btn round lines-red gfw w-200" bindtap="hideActiveNotice">不同意</button>
-      <!-- <button class="cu-btn round bg-red" bindtap="tapToActiveAccount" style="width: 200rpx;font-weight: 300;">同意并继续</button> -->
-      <button class="cu-btn round bg-red w-200" style="font-weight: 300;" id="agree-btn" open-type="agreePrivacyAuthorization" bindagreeprivacyauthorization="tapToActiveAccount">同意并继续</button>
+      <button class="cu-btn round lines-red gfw w-200" bindtap="hideActiveNotice">{{t.disagree}}</button>
+      <button class="cu-btn round bg-red w-200" style="font-weight: 300;" id="agree-btn" open-type="agreePrivacyAuthorization" bindagreeprivacyauthorization="tapToActiveAccount">{{t.agree}}</button>
     </view>
   </view>
 </view>

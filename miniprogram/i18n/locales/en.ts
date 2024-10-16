@@ -73,7 +73,23 @@ export default {
     unregistered: 'Unregistered',
     auto_create_account: 'will be automatically created',
     has_problem: 'Problems',
-    other_signin: 'Other Signin'
+    other_signin: 'Other Signin',
+    login_success: 'Login Success',
+    activate_account: 'Account activating',
+    account_activated: 'Account has been activated',
+    wait_auth: 'Wait for authorization',
+    fetch_user_info: 'Fetch user info',
+    auth_success: 'Authorization successful',
+    auth_failed: 'Authorization failed',
+    sms_sent: 'sms code sent',
+    input_error: 'Input error',
+    login_and_back: 'Login successful, will be back soon',
+    // mp active info
+    mp_tips: 'Tips',
+    loading: 'Data loading ...',
+    read: 'Read',
+    disagree: 'Disagree',
+    agree: 'Agree'
   },
   about:{
     version: 'Version',

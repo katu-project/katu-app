@@ -18,8 +18,7 @@ app.createPage({
     showOtherLogin: false,
     showMpLogin: true,
     loginMode:{
-      key: 'tel',
-      label: '手机号',
+      key: 'tel'
     },
     loginState:{
       value: '',
@@ -37,7 +36,7 @@ app.createPage({
   ],
 
   async onLoad() {
-    const useLang = await app.getUseLanguage()
+    const useLang = app.getUseLanguage()
     if(useLang && useLang === 'en'){
       this.tapToChangeLoginMode()
     }
@@ -62,11 +61,11 @@ app.createPage({
     })
   },
 
-  // 小程序快速注册
+  // wx mini app sign up
   async tapToMpSignup(){
     await user.loadInfo({skipCache:true})
     if(user.isActive) {
-      await app.showNotice('登录成功')
+      await app.showNotice(this.t('login_success'))
       app.reLaunch()
       return
     }
@@ -75,8 +74,8 @@ app.createPage({
 
   async tapToActiveAccount(){
     this.hideActiveNotice()
-    await loadData(app.loginWithMp, undefined, '正在激活账户')
-    await app.showNotice('账户已激活')
+    await loadData(app.loginWithMp, undefined, this.t('activate_account'))
+    await app.showNotice(this.t('account_activated'))
     app.navigateBack()
   },
 
@@ -110,17 +109,15 @@ app.createPage({
     return app.navToDocPage(id)
   },
 
-  // app 端登录注册
+  // native app signin/up 
   tapToChangeLoginMode(){
     if(this.data.loginMode.key === 'tel'){
       this.setData({
-        'loginMode.key': 'email',
-        'loginMode.label': '邮箱'
+        'loginMode.key': 'email'
       })
     }else{
       this.setData({
-        'loginMode.key': 'tel',
-        'loginMode.label': '手机号'
+        'loginMode.key': 'tel'
       })
     }
   },
@@ -153,33 +150,29 @@ app.createPage({
   },
 
   async goAppleLogin(){
-    const hideLoading = await showLoading('等待授权', -1, false)
+    const hideLoading = await showLoading(this.t('wait_auth'), -1, false)
     try {
       const code = await appleLogin()
       await hideLoading()
-      await loadData(app.loginWithCode, code, '获取用户信息')
-      await app.showNotice("Apple ID 授权成功")
+      await loadData(app.loginWithCode, code, this.t('fetch_user_info'))
+      await app.showNotice(this.t('auth_success'))
       app.navigateBack()
     } catch (err:any) {
       await hideLoading()
-      console.log('appleLogin:', err)
-      if(err.message){
-        await app.showNotice(err.message)
-      }else{
-        await app.showMiniNotice('授权失败')
-      }
+      console.error('appleLogin:', err)
+      await app.showNotice(this.t('auth_failed'))
     }
   },
 
   async goMpLogin(){
     try {
       const code = await weixinMiniProgramLogin()
-      await loadData(app.loginWithCode, code, '获取用户信息')
-      await app.showNotice("小程序 授权成功")
+      await loadData(app.loginWithCode, code, this.t('fetch_user_info'))
+      await app.showNotice(this.t('auth_success'))
       app.navigateBack()
     } catch (err:any) {
-      console.log('weixinMiniProgramLogin:', err)
-      app.showNotice(err.message||'授权失败')
+      console.error('weixinMiniProgramLogin:', err)
+      await app.showNotice(this.t('auth_failed'))
     }
   },
 
@@ -189,7 +182,7 @@ app.createPage({
       type: this.data.loginMode.key,
       value: (this.data.loginMode.key === 'tel' ? this.data.loginState.telCode : '') + this.data.loginState.value 
     })
-    await app.showMiniNotice('验证码已发送')
+    await app.showMiniNotice(this.t('sms_sent'))
     this.setData({
       'loginState.sendCode': true,
       'loginState.verifyId': verifyId
@@ -198,7 +191,7 @@ app.createPage({
 
   async tapToLogin(){
     if(!this.data.loginState.value || !this.data.loginState.code){
-      app.showMiniNotice('输入有误')
+      app.showMiniNotice(this.t('input_error'))
       return
     }
     if(!this.checkToc()) return
@@ -208,7 +201,7 @@ app.createPage({
       code: this.data.loginState.code,
       verifyId: this.data.loginState.verifyId
     })
-    await app.showNotice('登录成功，即将返回')
+    await app.showNotice(this.t('login_and_back'))
     app.navigateBack()
   },
 

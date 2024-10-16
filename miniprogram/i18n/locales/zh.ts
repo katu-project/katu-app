@@ -73,7 +73,23 @@ export default {
     unregistered: '未注册',
     auto_create_account: '验证后自动创建卡兔账号',
     has_problem: '遇到问题',
-    other_signin: '其他登录方式'
+    other_signin: '其他登录方式',
+    login_success: '登录成功',
+    activate_account: '正在激活账户',
+    account_activated: '账户已激活',
+    wait_auth: '等待授权',
+    fetch_user_info: '获取用户信息',
+    auth_success: '授权成功',
+    auth_failed: '授权失败',
+    sms_sent: '验证码已发送',
+    input_error: '输入有误',
+    login_and_back: '登录成功，即将返回',
+    // mp active info
+    mp_tips: '温馨提示',
+    loading: '内容加载中 ...',
+    read: '阅读',
+    disagree: '不同意',
+    agree: '同意并继续'
   },
   about:{
     version: '版本号',
