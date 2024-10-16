@@ -13,6 +13,8 @@ interface IAppOption {
 }
 
 interface IAppConfig {
+  appName: string
+  icp: string
   contacts: {
     email: string
   }

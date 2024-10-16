@@ -1,4 +1,6 @@
 const AppConfig:IAppConfig = {
+  appName: '卡兔',
+  icp: '粤ICP备2023001493号',
   contacts:{
     email: 'info@katucloud.com'
   },
