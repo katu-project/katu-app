@@ -1,12 +1,12 @@
 <cu-custom bgColor="bg-cyan" isBack="{{true}}">
-  <view slot="backText">返回</view>
-  <view slot="content">开发者</view>
+  <view slot="backText">back</view>
+  <view slot="content">developer</view>
 </cu-custom>
 
 <view class="cu-list menu sm-border card-menu margin-top">
   <view class="cu-item arrow" catchtap="tapToOpenLog">
     <view class="content">
-    <text>查看日志</text>
+    <text>Show Logs</text>
     </view>
     <view class="action">
     </view>

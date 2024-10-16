@@ -204,7 +204,10 @@ export default {
     developer: '开发者',
     developer_desc: '查看各种运行日志',
     ccv: '通用安全配置',
-    cpk: '通用加密包'
+    cpk: '通用加密包',
+    get_token_confirm: '获取新的 API 密钥',
+    copy_token: '复制密钥',
+    new_token: '新密钥'
   },
   storage: {
     custom_storage: '自定义存储',

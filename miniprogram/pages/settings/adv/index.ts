@@ -28,11 +28,11 @@ app.createPage({
   },
 
   async tapToCreateToken(){
-    await app.showConfirm('确认获取新的 API 密钥?')
+    await app.showConfirm(`${this.t('get_token_confirm')}?`)
     const token = await loadData(app.createApiToken)
     const showTokenText = `${token.slice(0,5)}****${token.slice(-5)}`
-    const { confirm } = await app.showChoose(`新密钥已生成:\n${showTokenText}`,{
-      confirmText: '复制密钥'
+    const { confirm } = await app.showChoose(`${this.t('new_token')}:\n${showTokenText}`,{
+      confirmText: this.t('copy_token')
     })
     if(confirm){
       app.copyText(token)

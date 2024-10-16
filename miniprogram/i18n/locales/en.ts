@@ -204,7 +204,10 @@ export default {
     developer: 'Development',
     developer_desc: 'View run logs',
     ccv: 'Common Crypto Version',
-    cpk: 'Crypto Packages'
+    cpk: 'Crypto Packages',
+    get_token_confirm: 'Create New Token',
+    copy_token: 'Copy',
+    new_token: 'New Token'
   },
   storage: {
     custom_storage: 'Custom Storage',
