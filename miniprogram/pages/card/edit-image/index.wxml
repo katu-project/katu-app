@@ -4,7 +4,7 @@
 </cu-custom>
 
 <view class="flex-col justify-between" style="height: calc(100vh - {{navHeight}}px);">
-  <!-- 这里使用 {{t.help_tips}} 与下面 canvas 元素 同时出现会报错： Uncaught TypeError: this._getData is not a function -->
+  <!-- {{t.help_tips}} with canvas exist at the same time： Uncaught TypeError: this._getData is not a function -->
   <view class="text-yellow text-sm text-center padding-xs bg-yellow light">{{t.help_tips}}</view>
   <view class="flex-row justify-center padding-tb-xl" style="flex:1;background-color:#2b2b2b">
     <canvas 

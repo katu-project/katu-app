@@ -24,7 +24,7 @@ app.createPage({
     if(parseExtraData.length){
       let extraFieldsKeys = this.data.extraFieldsKeys
       const extraFields = cardManager.rebuildExtraFields(parseExtraData)
-      // 移除存在的项目
+      // remove exist item
       extraFieldsKeys = extraFieldsKeys.filter(item=>{
         return item.key === 'cu' || !extraFields.some(e=>item.key === e.key)
       })
@@ -33,7 +33,7 @@ app.createPage({
         extraFields
       })
     }else{
-      //不存在数据时根据tag(如果有)来显示默认填写的字段
+      // use tag default fields
       if(options.tag){
         const checkFieldTag = cardManager.getCardConfig('defaultTags').find(tag=>tag._id === options.tag)
         if(checkFieldTag && checkFieldTag.field){
@@ -107,7 +107,7 @@ app.createPage({
         return
       }
       
-      // 未激活用户可能会进入这里，可以跳过下面检查
+      // no active user can be skip csc
       if(user.isActive){
         if(app.isMp){
           const checkText = this.data.extraFields.map(e=>e.key === 'cu'? `${e.name}${e.value}`: e.value).join('')

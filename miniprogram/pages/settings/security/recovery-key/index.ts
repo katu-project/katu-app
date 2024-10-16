@@ -56,13 +56,10 @@ app.createPage({
       .select('#reqrcode')
       .fields({ node: true, size: true })
       .exec((res) => {
-          // Canvas 对象
           const canvas = res[0].node
           const renderWidth = res[0].width
           const renderHeight = res[0].height
-          // Canvas 绘制上下文
           this._canvasCtx = canvas.getContext('2d')
-          // 初始化画布大小
           const dpr = wx.getWindowInfo().pixelRatio
           console.log({dpr,renderWidth,renderHeight});
           canvas.width = renderWidth * dpr
@@ -132,7 +129,6 @@ app.createPage({
       text: text,
       background: 'green',
       foreground: '#ccefee',
-      // v1.0.0+版本支持在二维码上绘制图片
       // image: {
       //   imageResource: '../../images/icon.png',
       //   dx: 70,
@@ -240,7 +236,7 @@ app.createPage({
     })
   },
 
-  // 密码验证通过回调
+  // callback when key verify
   inputKeyConfirm(){
     this.genCert()
   }

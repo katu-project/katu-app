@@ -48,7 +48,6 @@ app.createPage({
   async tapToUseMiniKey(e){
     this.useKeyFor = 'setKey'
     const value = e.detail.value
-    // 先取消switch样式
     this.setData({
       useMiniKey: this.data.useMiniKey,
     })
@@ -81,7 +80,6 @@ app.createPage({
   async tapToSetSync(e){
     this.useKeyFor = 'setSync'
     const value = e.detail.value
-    // 先取消switch样式
     this.setData({
       syncMiniKey: this.data.syncMiniKey,
     })
@@ -175,7 +173,7 @@ app.createPage({
     })
   },
 
-  // 密码验证通过回调
+  // callback when key virify
   inputKeyConfirm(e){
     const key = e.detail.value.trim()
     if(this.useKeyFor === 'setKey'){

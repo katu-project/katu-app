@@ -124,7 +124,7 @@
   }
 
   &.show{
-    animation: slideInUp 0.5s forwards; /* 按钮从底部往上出现的动画 */
+    animation: slideInUp 0.5s forwards;
   }
 
   &.hide{
@@ -149,22 +149,22 @@
 
 @keyframes slideInUp {
   from {
-      bottom: -50px; /* 初始位置在底部 */
-      opacity: 0; /* 初始透明度为0 */
+      bottom: -50px;
+      opacity: 0;
   }
   to {
-      bottom: 20px; /* 最终位置略高于底部 */
-      opacity: 1; /* 最终完全显示按钮 */
+      bottom: 20px;
+      opacity: 1;
   }
 }
 
 @keyframes slideOutDown {
   from {
-      bottom: 20px; /* 初始位置略高于底部 */
-      opacity: 1; /* 初始完全显示按钮 */
+      bottom: 20px;
+      opacity: 1;
   }
   to {
-      bottom: -50px; /* 最终位置在底部以下 */
-      opacity: 0; /* 最终透明度为0，隐藏按钮 */
+      bottom: -50px;
+      opacity: 0;
   }
 }

@@ -8,9 +8,9 @@ const app = getAppManager()
 const cardManager = getCardManager()
 
 const StatusConfig = {
-  Idle: 0,       //正常状态
-  DragStart: 1, //拖拽开始
-  Dragging: 2,   //拖拽中
+  Idle: 0,
+  DragStart: 1,
+  Dragging: 2,
 }
 
 type Point = {
@@ -146,7 +146,7 @@ app.createPage({
       }
       canvasInfo.dragTarget.x = canvasPosition.x
       canvasInfo.dragTarget.y = canvasPosition.y
-      // 重新绘制
+      // re draw
       this.canvas.refreshCardMode()
       this.canvas.drawCircleImage(canvasPosition)
     }
@@ -179,7 +179,7 @@ app.createPage({
     switch (option) {
       case 'useOrigin':
         {
-          // page-container 存在时返回会报错，延时300ms等page-container消失
+          // page-container display and back will throw error, delay 300ms wait page-container hide
           sleep(300).then(()=>this.useImage(this.data.tmpImagePath))
         }
         break;

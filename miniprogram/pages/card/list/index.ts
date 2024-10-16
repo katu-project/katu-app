@@ -98,7 +98,7 @@ app.createPage({
       if(originCard.setLike !== card.setLike){
         setData[`list[${idx}].setLike`] = card.setLike
       }
-      // 图片变动
+      // image change
       if(originCard.image[0].hash !== card.image[0].hash){
         setData[`list[${idx}].image`] = card.image
         setData[`list[${idx}]._url`] = app.getConst(card.encrypted ? 'DefaultShowLockImage' : 'DefaultShowImage')
