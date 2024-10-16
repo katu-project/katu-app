@@ -49,11 +49,11 @@ app.createPage({
       transactionIdentifier: transaction.transactionIdentifier
     })
     if(this.inPurchase){
-      console.log('支付成功:', transaction.payment.productIdentifier)
+      console.debug('Pay success:', transaction.payment.productIdentifier)
       this.showPayLoading()
       this.inPurchase = false
       loadData(user.updateQuota, transaction, {
-        failedContent: '支付异常，请联系客服'
+        failedContent: this.t('pay_error')
       }).then(()=>{
         this.tapToReloadInfo()
       })
@@ -66,7 +66,7 @@ app.createPage({
 
   async loadData(){
     if(app.isApp){
-      // todo 检查iap购买历史记录，并刷新未完成的订单（服务端）    
+      // todo: server should check iap history, and refresh un-pay done order
     }
 
     const logs = await loadData(async ()=>{
@@ -100,7 +100,7 @@ app.createPage({
       this.setData({
         code: ''
       })
-      app.showNotice('兑换成功')
+      app.showNotice(this.t('exchange_ok'))
       this.loadData()
     })
   },
@@ -116,7 +116,7 @@ app.createPage({
     })  
     const iapItemKey = e.currentTarget.dataset.key
     this.inPurchase = false
-    this.showPayLoading('获取交易信息')
+    this.showPayLoading(this.t('fetch_pay_info'))
     const requestObj = wx.miniapp.IAP.requestSKProducts({
       productIdentifiers: [iapItemKey],
       success: (res)=>{
@@ -127,7 +127,7 @@ app.createPage({
           applicationUsername: user.uid,
           quantity: 1,
           success: async (res)=>{
-            this.showPayLoading('等待支付')
+            this.showPayLoading(this.t('wait_pay'))
             console.debug('addPaymentByProductIdentifiers',res)
           },
           fail: console.error,

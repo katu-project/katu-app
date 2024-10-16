@@ -141,7 +141,11 @@ export default {
     deduct_remain_quota: 'After Decrease',
     encrypted_card: 'Encrypted Card',
     no_encrypted_card: 'Unencrypted Card',
-    log_date: 'Date'
+    log_date: 'Date',
+    pay_error: 'Payment error, please contact us',
+    exchange_ok: 'Exchange Success',
+    fetch_pay_info: 'Get transaction information',
+    wait_pay: 'Wait for payment'
   },
   account: {
     tel_number: 'Phone Number',

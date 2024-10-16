@@ -141,7 +141,11 @@ export default {
     deduct_remain_quota: '扣除后可用兔币',
     encrypted_card: '加密卡片',
     no_encrypted_card: '普通卡片',
-    log_date: '日期'
+    log_date: '日期',
+    pay_error: '支付异常，请联系客服',
+    exchange_ok: '兑换成功',
+    fetch_pay_info: '获取交易信息',
+    wait_pay: '等待支付'
   },
   account: {
     tel_number: '手机号码',
