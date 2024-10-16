@@ -84,7 +84,7 @@ app.createPage({
   async tapToItem(e){
     const item = e.currentTarget.dataset.item
     if(item.needActive && !user.isActive){
-      app.showMiniNotice('登录后可用')
+      app.showMiniNotice(this.t('login_first'))
       return
     }
     return app.goToPage(item.url)
@@ -92,16 +92,16 @@ app.createPage({
 
   async tapToScan(){
     const resultJson = await loadData(app.scanQrcode,{},{ timeout: -1 })
-    let msg = '未知二维码'
+    let msg = this.t('error_qrcode')
 
     if(resultJson.type === 'login'){
-      await app.showConfirm('正在进行 web 登录，确认登录？')
+      await app.showConfirm(`${this.t('confirm_web_log')}?`)
       await loadData(async ()=>{
         await app.invokeApi('qrCodelogin', {
           loginCode: resultJson.code
         })
       })
-      msg = '授权登录成功'
+      msg = this.t('auth_success')
     }
     app.showMiniNotice(msg)
   },

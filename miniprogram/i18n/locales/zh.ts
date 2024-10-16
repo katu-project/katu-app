@@ -44,7 +44,11 @@ export default {
     settings: '软件设置',
     help: '使用帮助 ( FAQ )',
     about: '关于卡兔',
-    customer_support: '我的客服' 
+    customer_support: '我的客服',
+    login_first: '登录后可用',
+    error_qrcode: '未知二维码',
+    auth_success: '授权成功',
+    confirm_web_log: '确认进行网页登录'
   },
   profileEdit: {
     profile: '个人资料',

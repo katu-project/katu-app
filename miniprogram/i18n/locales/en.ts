@@ -44,7 +44,11 @@ export default {
     settings: 'Settings',
     help: 'Help ( FAQ )',
     about: 'About',
-    customer_support: 'Customer Support' 
+    customer_support: 'Customer Support',
+    login_first: 'Login in first',
+    error_qrcode: 'Unknown QR code',
+    auth_success: 'Authorization Success',
+    confirm_web_log: 'Confirm the web login'
   },
   profileEdit: {
     profile: 'Profile',
