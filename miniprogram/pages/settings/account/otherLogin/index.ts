@@ -6,9 +6,9 @@ const user = getUserManager()
 
 app.createPage({
   i18n: {
-    page: ['settings','account']
+    page: ['settings','otherLogin']
   },
-  
+
   data: {
     logins: {
       apple: {
@@ -33,58 +33,59 @@ app.createPage({
   async tapToConfig(e){
     const enable = e.detail.value
     const type = e.currentTarget.dataset.key
+    // value sync
     if(user.config?.security.logins[type]?.enable === enable) {
-      app.showMiniNotice('已'+ (enable ? '启用' : '取消'))
+      app.showMiniNotice(enable ? this.t('config_success') : this.t('cancel_success'))
       return
     }
+
+    this.setData({
+      [`logins.${type}.enable`]: !enable
+    })
+
     if(enable){
       let code = ''
-      const hideLoading = await showLoading('等待授权', -1, false)
+
+      if(type === 'mp'){
+        const hasInstall = await app.hasInstallWechat()
+        if(!hasInstall){
+          await app.showNotice(this.t('not_install_wx'))
+          return
+        }
+      }
+
+      const hideLoading = await showLoading(this.t('wait_auth'), -1, false)
       try {
         if(type === 'apple') code = await appleLogin()
-        if(type === 'mp') {
-          const hasInstall = await app.hasInstallWechat()
-          if(!hasInstall){
-            throw Error('未安装微信')
-          }
-          code = await weixinMiniProgramLogin()
-        }
-        if(!code) throw Error('绑定出错了')
+        if(type === 'mp') code = await weixinMiniProgramLogin()
+        if(!code) throw Error('error 400')
       } catch (err:any) {
         await hideLoading()
         console.error('bind other login:', err)
-        this.setData({
-          [`logins.${type}.enable`]: false
-        })
-        if(err.message){
-          await app.showNotice(err.message)
-        }else{
-          await app.showMiniNotice('授权失败')
-        }
+        await app.showMiniNotice(this.t('auth_failed'))
         return
       }
 
       await hideLoading()
       loadData(app.bindOtherLoginByCode, code, {
-        loadingTitle: '正在绑定账户',
+        loadingTitle: this.t('in_bind_account'),
         returnFailed: true
       }).then(async ()=>{
-        app.showMiniNotice("绑定成功")
+        app.showMiniNotice(this.t('config_success'))
         await user.reloadInfo()
       }).catch(()=>{
       }).finally(()=>{
         this.renderData()
       })
     }else{
-      const { confirm } = await app.showChoose('确认取消绑定？')
+      const { confirm } = await app.showChoose(`${this.t('cancel_bind')}?`)
       if(!confirm){
-        await this.renderData()
         return
       }else{
         loadData(app.unbindOtherLogin, type, {
           returnFailed: true
         }).then(async ()=>{
-          app.showMiniNotice("已取消绑定")
+          app.showMiniNotice(this.t('cancel_success'))
           await user.reloadInfo()
         }).catch(()=>{
         }).finally(()=>{

@@ -158,8 +158,21 @@ export default {
     used_to_receive_notice: 'Used to receive message notifications',
     other_login_desc: 'Manage third-party account logins',
     delete_account_desc: 'Clear user data and delete accounts',
+    do_on_web: 'Please do this in the web console',
+    go_help: 'Go help',
+    delete_account_warn: 'This action will delete all of the user\'s data',
+    in_logout: 'Exiting',
+    logout_ok: 'Logged out'
+  },
+  otherLogin: {
+    other_login: 'Third-party Logins',
     apple_id_login_desc: 'You can authorize sign-in with your Apple ID',
-    mp_login_desc: 'You can authorize sign-in with the WeChat MiniProgram'
+    mp_login_desc: 'You can authorize sign-in with the WeChat MiniProgram',
+    wait_auth: 'Wait Authorization',
+    auth_failed: 'Authorization failed',
+    not_install_wx: 'WeChat is not installed',
+    in_bind_account: 'Configuring...',
+    cancel_bind: 'Cancel Binding'
   },
   general: {
     language: 'Language',

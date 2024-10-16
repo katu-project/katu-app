@@ -158,8 +158,21 @@ export default {
     used_to_receive_notice: '用于接收消息通知',
     other_login_desc: '管理第三方账号登录',
     delete_account_desc: '清空用户数据并删除账号',
+    do_on_web: '请在卡兔网页服务端操作',
+    go_help: '查看帮助',
+    delete_account_warn: '此操作将删除用户所有数据',
+    in_logout: '正在退出',
+    logout_ok: '已退出登录'
+  },
+  otherLogin: {
+    other_login: '第三方登录',
     apple_id_login_desc: '可以使用 Apple ID 授权登录应用',
-    mp_login_desc: '可以使用微信小程序授权登录应用'
+    mp_login_desc: '可以使用微信小程序授权登录应用',
+    wait_auth: '等待授权',
+    auth_failed: '授权失败',
+    not_install_wx: '未安装微信',
+    in_bind_account: '正在绑定账户',
+    cancel_bind: '取消绑定'
   },
   general: {
     language: '多语言',

@@ -32,7 +32,7 @@ app.createPage({
 
   async tapToPage({currentTarget:{dataset:{page}}}){
     if(['bind-tel','bind-email'].includes(page) ){
-      const {cancel} = await app.showChoose('请在卡兔网页服务端操作',{cancelText:'查看帮助'})
+      const {cancel} = await app.showChoose(this.t('do_on_web'),{cancelText: this.t('go_help')})
       if(cancel){
         app.openBindTelDoc()
       }
@@ -46,19 +46,19 @@ app.createPage({
   },
 
   async tapToDeleteAccount(){
-    await app.showConfirm('此操作将删除用户所有数据！','删除')
+    await app.showConfirm(`${this.t('delete_account_warn')}!`)
     loadData(app.deleteAccount).then(()=>{
-      app.showNotice('账户删除成功').then(()=>{
+      app.showNotice(this.t('delete_success')).then(()=>{
         app.reLaunch()
       })
     })
   },
 
   async tapToLogout(){
-    await app.showConfirm('确认退出登录？')
+    await app.showConfirm(`${this.t('sign_out')}?`)
     app.logout()
-    await showLoading('正在退出', 2000)
-    await app.showNotice('已退出登录')
+    await showLoading(this.t('in_logout'), 2000)
+    await app.showNotice(this.t('logout_ok'))
     app.reLaunch()
   }
 })
