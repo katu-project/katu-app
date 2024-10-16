@@ -210,7 +210,7 @@ export default {
     copy_token: '复制密钥',
     new_token: '新密钥'
   },
-  storage: {
+  data: {
     custom_storage: '自定义存储',
     enabled: '已启用',
     not_enabled: '未启用',
@@ -219,6 +219,12 @@ export default {
     delete_cache_data_desc: '可以修复一些使用过程中的数据异常情况',
     export_data: '导出卡片数据',
     export_data_desc:'可用于备份或者转移数据',
+    confirm_export: '导出卡片数据',
+    submit_success: '提交成功,等待处理',
+    confirm_clear: '清空缓存数据'
+  },
+  storage: {
+    custom_storage: '自定义存储',
     storage_service: '存储服务商',
     not_selected: '未选择',
     server_address: '服务器地址',
@@ -229,10 +235,17 @@ export default {
     region: '地域',
     account_id: '帐户 ID',
     account_id_desc: '存储桶所属帐户 ID',
-    secret_id: '密钥',
+    secret: '密钥',
     enable_config: '启用配置',
     save_config: '保存配置',
-    delete_config: '删除配置'
+    delete_config: '删除配置',
+    input_error:'请填写配置',
+    change_will_error: '修改已启用的配置会导致对应储存的卡片数据无法访问',
+    connect_test: '连接测试',
+    connect_error: '无法访问存储，请检查配置',
+    delete_warn: '删除配置会导致已储存的卡片数据无法访问',
+    enable_custom_storage: '启用自定义存储',
+    cancel_custom_storage: '关闭自定义存储'
   },
   security: {
     master_key: '主密码',

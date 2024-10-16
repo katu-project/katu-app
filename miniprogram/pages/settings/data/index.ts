@@ -6,7 +6,7 @@ const user = getUserManager()
 
 app.createPage({
   i18n: {
-    page: ['settings','storage']
+    page: ['settings','data']
   },
 
   data: {
@@ -28,15 +28,15 @@ app.createPage({
   },
 
   async tapToExportData(){
-    await app.showConfirm('确认导出卡片数据？')
+    await app.showConfirm(`${this.t('confirm_export')}?`)
     await loadData(app.exportCardData)
-    app.showNotice('数据导出请求提交成功')
+    app.showNotice(this.t('submit_success'))
   },
   
   async tapToClearCacheData(){
-    await app.showConfirm('确认清空缓存数据？')
+    await app.showConfirm(`${this.t('confirm_clear')}?`)
     await loadData(app.clearCacheData)
-    app.showNotice('缓存数据删除成功')
+    app.showNotice(this.t('delete_success'))
   },
 
   tapToPage(e){

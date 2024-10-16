@@ -65,7 +65,7 @@ app.createPage({
       Object.keys(cosConfig).some(e=>cosConfig[e]==='') ||
       Object.keys(cosConfig.secret).some(e=>cosConfig.secret[e]==='')
     ){
-      app.showMiniNotice('请填写配置')
+      app.showMiniNotice(this.t('input_error'))
       return
     }
 
@@ -74,7 +74,7 @@ app.createPage({
       if(state.needKey){
         this.showKeyInput()
       }else{
-        app.showNotice(`${state.message}`)
+        app.showNotice(this.t('unknown_error'))
       }
       return
     }
@@ -84,26 +84,26 @@ app.createPage({
       if( userCos.type !== cosConfig.type ||
           userCos.bucket !== cosConfig.bucket ||
           userCos.region !== cosConfig.region){
-            await app.showConfirm('修改已启用的配置会导致对应储存的卡片数据无法访问')
+            await app.showConfirm(this.t('change_will_error'))
           }
     }
 
     await loadData(app.storage.connectTest, cosConfig, {
-      loadingTitle: '连接测试',
-      failedContent: '无法访问存储，请检查配置'
+      loadingTitle: this.t('connect_test'),
+      failedContent: this.t('connect_error')
     })
 
     await loadData(user.setCustomStorage, {
       cosConfig
     })
-    app.showMiniNotice('修改成功')
+    app.showMiniNotice(this.t('config_success'))
     this.renderData()
   },
 
   async tapToDelete(){
-    await app.showConfirm('删除配置会导致已储存的卡片数据无法访问')
+    await app.showConfirm(this.t('delete_warn'))
     await loadData(user.removeCustomStorage, undefined)
-    app.showMiniNotice('修改成功')
+    app.showMiniNotice(this.t('config_success'))
     this.renderData()
   },
 
@@ -124,11 +124,10 @@ app.createPage({
       return
     }
 
-    const action = enable ? '启用' : '关闭'
-    const { confirm } = await app.showChoose(`确认${action}自定义存储？`)
+    const { confirm } = await app.showChoose(enable ? this.t('enable_custom_storage') : this.t('cancel_custom_storage'))
     if(confirm){
       await loadData(user.configCustomStorage, enable)
-      app.showMiniNotice(`${action}成功`)
+      app.showMiniNotice(this.t('config_success'))
       this.renderData()
     }else{
       this.setData({
@@ -144,7 +143,7 @@ app.createPage({
     this.setData(setData)
   },
 
-  // 密码验证通过回调
+  // callback when key verify
   inputKeyConfirm(){
     this.tapToSave()
   }

@@ -44,11 +44,11 @@
       </block>
       <view class="cu-form-group">
         <view class="title">SecretId</view>
-        <input placeholder="{{t.secret_id}} ID" disabled="{{created}}" value="{{cosConfig.secret.secretId}}" bindinput="onBindinput" data-key="secret.secretId"></input>
+        <input placeholder="{{t.secret}} ID" disabled="{{created}}" value="{{cosConfig.secret.secretId}}" bindinput="onBindinput" data-key="secret.secretId"></input>
       </view>
       <view class="cu-form-group">
         <view class="title">SecretKey</view>
-        <input placeholder="{{t.secret_id}} KEY" disabled="{{created}}" value="{{cosConfig.secret.secretKey}}" bindinput="onBindinput" data-key="secret.secretKey"></input>
+        <input placeholder="{{t.secret}} KEY" disabled="{{created}}" value="{{cosConfig.secret.secretKey}}" bindinput="onBindinput" data-key="secret.secretKey"></input>
       </view>
     </block>
     <view class="cu-form-group">
