@@ -336,6 +336,7 @@ export default {
     save_pic: 'Save Pic',
     save_card_info: 'Save Card Info',
     choose_pic_error: 'Selecting the picture error',
+    custom: 'Custom',
     // title
     edit_content: 'Edit Content',
     enter_title: 'enter title',

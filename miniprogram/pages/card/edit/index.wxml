@@ -82,15 +82,15 @@
 <view class="cu-modal bottom-modal {{ showSelectTag?'show':''}}">
   <view class="cu-dialog">
     <view class="cu-bar bg-white">
-      <view class="action" bindtap="tapToCancelSelectTag">取消</view>
-      <view class="action text-green" style="margin-right: 30rpx;" bindtap="tapToSetTag">确定</view>
+      <view class="action" bindtap="tapToCancelSelectTag">{{t.cancel}}</view>
+      <view class="action text-green" style="margin-right: 30rpx;" bindtap="tapToSetTag">{{t.confirm}}</view>
     </view>
     <view class="padding-tb flex flex-wrap">
       <view class="padding-tb-sm padding-lr-sm margin-sm light bg-{{ item.selected ? item.color||'cyan' : 'gray'}} br-14" data-value="{{index}}" bindtap="tapToSelectTag" wx:for="{{tags}}" wx:key="name">
         <text class="">{{item.name}}</text>
       </view>
       <view class="padding-tb-sm padding-lr-sm margin-sm br-14 solids-bottom" bindtap="tapToCustomTag">
-        <text class="cuIcon-add">自定义</text>
+        <text class="cuIcon-add">{{t.custom}}</text>
       </view>
     </view>
     <view class="padding-lg"></view>

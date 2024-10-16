@@ -336,6 +336,7 @@ export default {
     save_pic: '保存卡面',
     save_card_info: '保存卡片信息',
     choose_pic_error: '选取图片出错',
+    custom: '自定义',
     // title
     edit_content: '编辑内容',
     enter_title: '输入名字',

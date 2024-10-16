@@ -88,7 +88,7 @@ app.createPage({
     this.loadRenderData()
     if(this.id){
       await this.loadData()
-      // 处理卡片标签选中状态
+      // Handles the card label selected status
       this.renderTagState()
     }else{
       this.setData({
@@ -106,7 +106,7 @@ app.createPage({
 
   async loadTagData(){
     const tags = (this.data.useDefaultTag ? app.getCardConfig('defaultTags') : []).concat(await user.getTags())
-    // 记录【其他】标签的idx
+    // save【other】tag idx
     this.otherTagIdx = tags.findIndex(e=>e._id === 'oc')
     this.setData({
       tags
@@ -125,8 +125,8 @@ app.createPage({
 
   async loadData(){
     const card = await loadData(cardManager.getCard, { id: this.id })
-    // 记录原始图片数据，保存时判断图片是否变动
-    // 检测 图片路径 和 附加数据
+    // The original image data is recorded, and the image is judged to be changed when saved
+    // Detect Picture Paths and extra Data
     card.image.map(e=>{
       const image = JSON.parse(JSON.stringify(e))
       const saveKey = `${image._url}-${JSON.stringify(card.info)}`
@@ -134,8 +134,8 @@ app.createPage({
       this.saveState.set(saveKey, image)
     })
 
-    // url 远程地址
-    // _url 本地地址
+    // url remote
+    // _url local
     card.image.map(e=> {
       const t = e.url
       e.url = e._url!
@@ -167,12 +167,12 @@ app.createPage({
 
   async tapToSaveCard(){
     const card = this.data.card
-    // 卡片数据有效性检查
+    // check image
     if(card.image.filter(e=>e.url === app.getConst('DefaultAddImage')).length > 0) {
       app.showNotice(this.t('add_pic_first'))
       return
     }
-    // 检查卡面数量
+    // check image number
     if(card.image.length > app.getConfig('cardImageMaxNum')) {
       app.showNotice(this.t('pic_num_err'))
       return
@@ -188,7 +188,7 @@ app.createPage({
       return
     }
     
-    // 提前检查可用额度，避免因为可用额度不足而导致处理卡片数据产生无效的消耗
+    // check quota
     if(!this.data.edit){
       try {
         await user.checkQuota()
@@ -203,10 +203,10 @@ app.createPage({
       const image = card.image[idx] as ICardImage
       const saveKey = `${image.url}-${JSON.stringify(card.info)}`
       if(this.saveState.has(saveKey)){
-        console.debug('使用保存缓存数据:',saveKey)
+        console.debug('use cache data:',saveKey)
         savedImages.push(this.saveState.get(saveKey)!)
       }else{
-        // 需要保存加密数据时才进行密码检测
+        // need input key when save crypto data
         const state = app.masterKeyManager.check()
         if(state){
           if(state.needKey){
@@ -219,12 +219,12 @@ app.createPage({
 
         if(card._id){
           if(image._url) {
-            console.debug(`UPDATE - 卡面/附加数据修改`)
+            console.debug(`UPDATE - pic/extradata change`)
           }else{
-            console.debug(`UPDATE - 新增卡面`)
+            console.debug(`UPDATE - new pic`)
           }
         }else{
-          console.debug('CREATE - 新增卡面')
+          console.debug('CREATE - new pic')
         }
 
         const savedImage = await loadData(cardManager.saveImage, {
@@ -241,14 +241,14 @@ app.createPage({
       images: savedImages
     },this.t('save_card_info'))
 
-    console.debug(`提前缓存${this.data.edit?'修改':'新增'}卡片`)
+    console.debug(`pre cache ${this.data.edit?'Edit':'Add'} card`)
     await cardManager.cacheCard(savedCard, this.data.card as ICard)
     app.publishCardChangeEvent(savedCard)
     await app.showNotice(`${this.data.edit? this.t('update_success') : this.t('save_success')}`)
     app.navigateBack()
   },
 
-  // 密码验证通过回调
+  // callback when key verify
   inputKeyConfirm(){
     this.tapToSaveCard()
   },
@@ -296,7 +296,6 @@ app.createPage({
     this.checkDataChange()
   },
 
-  // 卡片名称
   tapToEditTitle(){
     app.goEditContentPage(this.data.card.title)
   },
@@ -307,7 +306,6 @@ app.createPage({
     app.goEditExtraDataPage(c,tag)
   },
 
-  // 标签部分
   tapToSetTag(){
     const tags = this.data.tags.filter(tag=>tag.selected).map(e=>e.name)
     this.setData({
@@ -361,7 +359,6 @@ app.createPage({
     })
   },
 
-  // 其他
   cardSwiper(e){
     if(e.detail.source == 'touch'){
       this.setData({
@@ -374,23 +371,18 @@ app.createPage({
     const originCard = this.originData
     const editCard = this.data.card
     let dataChange = false
-    // 名字
     if(originCard?.title !== editCard?.title){
       dataChange = true
     }else
-    // 标签
     if(originCard.tags.join('') !== editCard.tags.join('')){
       dataChange = true
     }else
-    // 设置常用
     if(originCard.setLike !== editCard.setLike){
       dataChange = true
     }else
-    // 附件数据
     if(originCard.info.join() !== editCard.info.join()){
       dataChange = true
     }else
-    // 图片
     if(originCard.image.length !== editCard.image.length || 
        originCard.image.map(e=>e.url).join('') !== editCard.image.map(e=>e.url).join('')){
       dataChange = true
