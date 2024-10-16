@@ -33,7 +33,7 @@ app.createPage({
       returnFailed: true
     }
     loadData(user.applyConfig,configItem,loadDataOptions).then(()=>{
-      app.showMiniNotice('修改成功')
+      app.showMiniNotice(this.t('config_success'))
     }).catch(()=>{
       this.loadData()
     })
