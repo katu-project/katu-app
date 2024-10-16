@@ -267,6 +267,7 @@ export default {
     confirm_update_master_key: 'Confirm Change This Key',
     confirm_master_key: 'Confirm Use This Key',
     // js
+    input_key: 'Enter Master Key',
     input_error: 'enter error',
     same_key_error: 'new key cannot be the same as old key'
   },

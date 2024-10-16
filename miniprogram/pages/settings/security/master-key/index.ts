@@ -24,8 +24,7 @@ app.createPage({
   behaviors: [
     CreateKeyInput({
       changeMode: false,
-      inputMode: 'adv',
-      title: '输入主密码：'
+      inputMode: 'adv'
     })
   ],
 
@@ -37,7 +36,8 @@ app.createPage({
       step: 0
     })
     this.configKeyInput({
-      showSubBtn: user.isSetMasterKey
+      showSubBtn: user.isSetMasterKey,
+      title: `${this.t('input_key')}:`
     })
   },
 
@@ -168,7 +168,7 @@ app.createPage({
     })
   },
 
-  // 密码验证通过回调
+  // callback when key verify
   inputKeyConfirm(){
     this.tapToStartSetKey()
   }

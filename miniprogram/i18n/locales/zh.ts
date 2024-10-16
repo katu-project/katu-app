@@ -267,6 +267,7 @@ export default {
     confirm_update_master_key: '确认修改主密码',
     confirm_master_key: '确认使用主密码',
     // js
+    input_key: '输入主密码',
     input_error: '输入有误',
     same_key_error: '新密码不能与被修改的主密码相同！'
   },
