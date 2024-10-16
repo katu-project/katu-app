@@ -80,6 +80,7 @@ export default {
     change_log: '发布历史',
     contact_us: '联系我们',
     feedback: '使用反馈',
+    submit: '去提交',
     icp: '备案号'
   },
   changeLog: {
@@ -87,7 +88,8 @@ export default {
   },
   contactUs: {
     online_help: '在线客服',
-    help_email: '客服邮箱'
+    help_email: '客服邮箱',
+    help_tips: '请点击上方按钮联系在线客服'
   },
   help: {
     category: '文档分类',

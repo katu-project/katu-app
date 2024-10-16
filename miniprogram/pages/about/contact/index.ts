@@ -6,6 +6,8 @@ app.createPage({
     page: ['about','contactUs']
   },
 
+  openService: false,
+
   data: {
     showCustomerService: false,
     email: app.getConfig('contacts').email
@@ -13,7 +15,7 @@ app.createPage({
   
   onLoad(e) {
     if(e.openService){
-      app.showNotice('由于微信限制\n请点击上方按钮打开在线客服')
+      this.openService = true
     }
   },
 
@@ -25,6 +27,9 @@ app.createPage({
         })
       }
     })
+    if(this.openService){
+      app.showNotice(this.t('help_tips'))
+    }
   },
 
   onShow() {

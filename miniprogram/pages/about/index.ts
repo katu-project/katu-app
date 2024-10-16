@@ -10,7 +10,9 @@ app.createPage({
   
   data: {
     logo: '/static/logo.svg',
-    version: 'dev'
+    version: 'dev',
+    appName: app.getConfig('appName'),
+    icp: app.getConfig('icp')
   },
 
   onLoad() {

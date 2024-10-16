@@ -6,7 +6,7 @@
 <view class="">
   <view class="padding-top-xl flex-col justify-center align-center">
     <image mode="aspectFit" bindtap="showDebugLog" bindlongpress="enableDebug" class="margin-bottom-xl w-200" style="border-radius: 10%;opacity: 0.9;height: 200rpx;" src="{{logo}}"></image>
-    <text class="text-xxl text-shadow text-cyan">卡兔</text>
+    <text class="text-xxl text-shadow text-cyan">{{appName}}</text>
     <text class="padding text-grey">{{t.slogan}}</text>
   </view>
   <view class="cu-list menu sm-border card-menu margin-top">
@@ -52,7 +52,7 @@
         <text class="">{{t.feedback}}</text>
       </view>
       <view class="action">
-        <button class="cu-btn bg-gray gfw" style="text-align: right;width: 160rpx;margin-right:0;padding:0" open-type="feedback">去提交</button>
+        <button class="cu-btn bg-gray gfw" style="text-align: right;width: 160rpx;margin-right:0;padding:0" open-type="feedback">{{t.submit}}</button>
       </view>
     </view>
 
@@ -61,7 +61,7 @@
         <text class="">{{t.icp}}</text>
       </view>
       <view class="action">
-        <text class="text-sm text-grey">粤ICP备2023001493号</text>
+        <text class="text-sm text-grey">{{icp}}</text>
       </view>
     </view>
     <!-- #endif -->

@@ -80,6 +80,7 @@ export default {
     change_log: 'Change Logs',
     contact_us: 'Contact Us',
     feedback: 'Feedback',
+    submit: 'Submit',
     icp: 'ICP'
   },
   changeLog: {
@@ -87,7 +88,8 @@ export default {
   },
   contactUs: {
     online_help: 'Online Service',
-    help_email: 'Service Email'
+    help_email: 'Service Email',
+    help_tips: 'Please click on the Online Service for help'
   },
   help:{
     category: 'Document Category',
