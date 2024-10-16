@@ -9,7 +9,7 @@ export const CreateI18nBehavior = (options?:{page:string|string[]})=>{
     },
 
     async attached(){
-      const useLang = await app.getUseLanguage()
+      const useLang = app.getUseLanguage()
       const langLib = Languages[useLang!]
       let usePageLangs = {}
       if(options?.page){

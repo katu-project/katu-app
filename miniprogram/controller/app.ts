@@ -17,7 +17,6 @@ class AppManager extends Controller {
   async init(systemInfo){
     this.setBaseInfo(systemInfo)
     console.debug(systemInfo,this.AppInfo)
-    this.setDefaultLanguage()
     this.loadGlobalEvents()
     this.loadModules()
     this.firstOpenTask()
@@ -266,8 +265,8 @@ class AppManager extends Controller {
     this.crypto.init(this.cryptoConfig)
   }
 
-  async setDefaultLanguage(){
-    let useLanguage = await this.getLocalData<UseLanguageType>('USE_LANG')
+  setDefaultLanguage(sysLanguage:string){
+    let useLanguage = this.getLocalDataSync<UseLanguageType>('USE_LANG')
     if(!useLanguage) {
       const LanguageMap = [
         {
@@ -280,19 +279,19 @@ class AppManager extends Controller {
           values: ['en']
         }
       ]
-      let checkUseLang = LanguageMap.find(e=>e.values.includes(this.systemLanguage))
+      let checkUseLang = LanguageMap.find(e=>e.values.includes(sysLanguage))
       if(!checkUseLang){
         checkUseLang = LanguageMap.find(e=>e.default)
       }
-      await this.setLocalData('USE_LANG', checkUseLang?.name)
+      this.setLocalData('USE_LANG', checkUseLang?.name)
       useLanguage = checkUseLang?.name as UseLanguageType
     }
 
     this.UseLanguage = useLanguage
   }
 
-  async getUseLanguage(){
-    return this.getLocalData<UseLanguageType>('USE_LANG')
+  getUseLanguage(){
+    return this.UseLanguage
   }
 
   async setUseLanguage(lang:UseLanguageType){

@@ -3,7 +3,9 @@ import { getAppManager } from '@/controller/app'
 const app = getAppManager()
 
 App({
-  onLaunch: function () {
+  onLaunch(){
+    const baseInfo = wx.getAppBaseInfo()
+    app.setDefaultLanguage(baseInfo.language)
     wx.getSystemInfo({
       success: info => {
         this.globalData.StatusBar = info.statusBarHeight;
