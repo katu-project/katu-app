@@ -29,7 +29,6 @@
     "pages/settings/security/reset-key/index",
     "pages/settings/security/reset-key/qrcode/index",
     "pages/settings/adv/index",
-    "pages/share/index",
     "pages/about/contact/index",
     "pages/quota/index",
     "pages/quota/detail/index",

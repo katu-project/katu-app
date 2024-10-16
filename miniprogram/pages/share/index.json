@@ -1,6 +1,0 @@
-{
-  "usingComponents": {
-    "cu-custom": "/colorui/components/cu-custom",
-    "input-key": "/components/input-key"
-  }
-}
