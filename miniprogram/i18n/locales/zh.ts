@@ -180,7 +180,8 @@ export default {
     default_tag: '默认标签',
     default_tag_desc: '使用系统内置卡片标签',
     auto_show: '主动显示',
-    auto_show_desc: '详情页自动显示加密卡片内容'
+    auto_show_desc: '详情页自动显示加密卡片内容',
+    go_detail: '查看详情'
   },
   language: {
     choose_language: '选择使用语言',

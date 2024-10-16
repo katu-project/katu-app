@@ -36,12 +36,12 @@ app.createPage({
     }
     if(configItem.key === 'config_general_useDefaultTag'){
       loadDataOptions['failedNoticeCancel'] = {
-        text: '查看详情',
+        text: this.t('go_detail'),
         action: app.openTagConflictDoc
       }
     }
     loadData(user.applyConfig,configItem,loadDataOptions).then(()=>{
-      app.showMiniNotice('修改成功')
+      app.showMiniNotice(this.t('config_success'))
     }).catch(()=>{
       this.loadData()
     })

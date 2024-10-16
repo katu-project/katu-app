@@ -180,7 +180,8 @@ export default {
     default_tag: 'Default Tags',
     default_tag_desc: 'Use the APP built-in card tags',
     auto_show: 'Auto Display',
-    auto_show_desc: 'Auto displays contents of the crypto card'
+    auto_show_desc: 'Auto displays contents of the crypto card',
+    go_detail: 'Info'
   },
   language: {
     choose_language: 'Select Language',
