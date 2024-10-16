@@ -339,5 +339,11 @@ export default {
   cardList: {
     title: '名字',
     cvv: '验证码(cvv)'
+  },
+  home: {
+    message: '消息提示',
+    i_know: '我知道了',
+    no_card: '没有卡片数据',
+    help_tips: '点击下方按钮开始创建卡片数据吧'
   }
 }

@@ -8,7 +8,11 @@ const app = getAppManager()
 const cardManager = getCardManager()
 const user = getUserManager()
 
-Page({
+app.createPage({
+  i18n: {
+    page: ['home']
+  },
+
   behaviors: [
     CreateEventBehavior('home')
   ],

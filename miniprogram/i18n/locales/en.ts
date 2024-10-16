@@ -339,5 +339,11 @@ export default {
   cardList: {
     title: 'title',
     cvv: 'CVV'
+  },
+  home: {
+    message: 'Message',
+    i_know: 'I Know',
+    no_card: 'No Card',
+    help_tips: 'Click the button below to creating card'
   }
 }
