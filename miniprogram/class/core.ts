@@ -105,6 +105,13 @@ export default class Core extends Base {
     return
   }
 
+  getLocalDataSync<T>(key: LocalCacheKeyType) {
+    try {
+      return cache.getCacheSync(Const.LOCAL_CACHE_KEYS[key]) as T
+    } catch (_) {}
+    return
+  }
+
   async setLocalData(key: LocalCacheKeyType, data) {
     return cache.setCache(Const.LOCAL_CACHE_KEYS[key], data)
   }
