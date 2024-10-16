@@ -335,5 +335,9 @@ export default {
     reset: 'Reset selection',
     select_pic: 'Please select an picture',
     process_pic: 'Process the picture'
+  },
+  cardList: {
+    title: 'title',
+    cvv: 'CVV'
   }
 }

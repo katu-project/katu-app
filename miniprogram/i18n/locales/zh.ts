@@ -335,5 +335,9 @@ export default {
     reset: '重置选择框',
     select_pic: '请选择图片',
     process_pic: '正在处理图片'
+  },
+  cardList: {
+    title: '名字',
+    cvv: '验证码(cvv)'
   }
 }

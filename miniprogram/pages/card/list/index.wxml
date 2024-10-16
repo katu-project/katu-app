@@ -1,20 +1,19 @@
 <cu-custom bgColor="bg-cyan" isBack="{{true}}">
-  <view slot="backText">返回</view>
-  <view slot="content">卡片列表-{{tag||'全部'}}</view>
+  <view slot="backText">{{t.back}}</view>
+  <view slot="content">{{tag}}</view>
 </cu-custom>
 <view class="box">
   <view class="cu-bar bg-cyan search">
     <view class="search-form radius">
       <text class="cuIcon-search"></text>
-      <input type="text" model:value="{{key}}" bindinput="inputSearch" placeholder="搜索卡片名称" confirm-type="search"></input>
+      <input type="text" model:value="{{key}}" bindinput="inputSearch" placeholder="{{t.title}}" confirm-type="search"></input>
     </view>
-    <view class="action" wx:if="{{key}}" bindtap="tapToCloseFilter">
+    <view class="action text-lg" wx:if="{{key}}" bindtap="tapToCloseFilter">
       <text class="cuIcon-close"></text>
-      <text>取消</text>
     </view>
   </view>
 </view>
-<view class="padding text-center text-grey" wx:if="{{!list.length && !isRefresh}}">暂无数据</view>
+<view class="padding text-center text-grey" wx:if="{{!list.length && !isRefresh}}">{{t.no_data}}</view>
 <scroll-view
   scroll-y="true"
   enable-flex="true"
@@ -54,7 +53,7 @@
 
     <view wx:if="{{layout === 'credit_card'}}" class="bank-card">
       <view class="cu-card case" wx:for="{{list}}" wx:key="_id">
-        <template is="commonInfo" data="{{item,index,isCredit:true}}"/>
+        <template is="commonInfo" data="{{item,index,isCredit:true,cvv:t.cvv}}"/>
       </view>
     </view>
   </view>
@@ -77,7 +76,7 @@
       </view>
       <view wx:if="{{isCredit}}" class="padding-left padding-tb-xs flex-row align-center">
           <view class="padding-right padding-xs flex-row">
-            <text> 验证码(cvv) : </text>
+            <text>{{cvv}} : </text>
             <text class="text-xl radius text-block padding-left-xs">{{item.cvv || '***'}}</text>
           </view>
       </view>

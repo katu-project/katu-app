@@ -10,7 +10,11 @@ const cardManager = getCardManager()
 
 const AppDefaultTags = app.getCardConfig('defaultTags')
 
-Page({
+app.createPage({
+  i18n: {
+    page: ['cardList']
+  },
+
   where: {},
   originList: [] as AnyObject[],
   
