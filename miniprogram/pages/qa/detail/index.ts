@@ -29,7 +29,7 @@ app.createPage({
 
   loadData(){
     if(!this.data.id){
-      app.showNotice('文档不存在').then(()=> app.navigateBack())
+      app.showNotice(this.t('not_find')).then(()=> app.navigateBack())
       return
     }
     
@@ -42,7 +42,7 @@ app.createPage({
 
   onShareAppMessage(): WechatMiniprogram.Page.ICustomShareContent {
     return {
-      title: '卡兔使用文档 - ' + this.data.doc.title
+      title: `${this.t('app_help_doc')} - ${this.data.doc.title}`
     }
   }
 })

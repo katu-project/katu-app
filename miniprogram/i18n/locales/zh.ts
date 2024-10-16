@@ -100,7 +100,9 @@ export default {
     other: '其他',
     data_loading: '数据加载中',
     update_time: '更新时间',
-    share: '分享给好友'
+    share: '分享给好友',
+    not_find: '文档不存在',
+    app_help_doc: '卡兔使用文档'
   },
   quota: {
     remain_quota: '可用兔币',

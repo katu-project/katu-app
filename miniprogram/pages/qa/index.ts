@@ -46,7 +46,7 @@ app.createPage({
 
   onShareAppMessage() {
     return {
-      title: '卡兔使用文档'
+      title: 'katu help documents'
     }
   }
 })

@@ -100,7 +100,9 @@ export default {
     other: 'Other',
     data_loading: 'Loading data',
     update_time: 'Update Time',
-    share: 'Share Help'
+    share: 'Share Help',
+    not_find: 'The document does not exist',
+    app_help_doc: 'Katu Usage Documentation'
   },
   quota: {
     remain_quota: 'Remain T-Coin',

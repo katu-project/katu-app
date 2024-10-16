@@ -43,7 +43,7 @@ app.createPage({
 
   onShareAppMessage(): WechatMiniprogram.Page.ICustomShareContent {
     return {
-      title: '卡兔使用文档-' + this.data.cate.name
+      title: `${this.t('app_help_doc')} - ${this.data.cate.name}`
     }
   }
 })
