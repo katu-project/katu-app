@@ -164,7 +164,7 @@ app.createPage({
       if(needSync){
         const { confirm } = await app.showChoose(`${this.t('sync_data')}?`)
         if(confirm){
-          await this.loadData({ ignoreCache:true , showText:'同步最新数据'})
+          await this.loadData({ ignoreCache:true , showText:this.t('sync_new_data')})
         }
       }
     })
@@ -256,12 +256,12 @@ app.createPage({
   },
 
   onShareAppMessage(): WechatMiniprogram.Page.ICustomShareContent{
-    // 取消由于分享导致的小程序 hide 事件
+    // Mini Program will emit hide event caused by sharing
     getApp().globalData.state.push('inShare')
     const params = `sid=${this.shareData?.sid}&sk=${this.shareData?.sk}&dk=${this.shareData?.dk}`
     this.hideShareDialog()
     return {
-      title: `来自 ${user.nickName} 分享的内容`,
+      title: `From ${user.nickName} share`,
       path: `/pages/share/index?${params}`,
       imageUrl: app.getConst('DefaultShareImage')
     }
@@ -289,7 +289,7 @@ app.createPage({
     })
   },
 
-  // 密码验证通过回调
+  // Key verification via callback
   async inputKeyConfirm(){
     if(this.syncMiniKey){
       await loadData(app.syncMiniKey)

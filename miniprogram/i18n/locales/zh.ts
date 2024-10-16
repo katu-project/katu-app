@@ -318,7 +318,8 @@ export default {
     read_card: '读取卡面',
     loading_card: '加载卡片数据',
     loading_card_error: '卡片加载错误',
-    card_not_exist: '卡片不存在'
+    card_not_exist: '卡片不存在',
+    sync_new_data: '同步最新数据'
   },
   cardEdit: {
     card_name: '卡片名称',

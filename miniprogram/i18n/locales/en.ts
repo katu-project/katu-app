@@ -318,7 +318,8 @@ export default {
     read_card: 'Read card data',
     loading_card: 'Load card data',
     loading_card_error: 'Load error',
-    card_not_exist: 'Card not exist'
+    card_not_exist: 'Card not exist',
+    sync_new_data: 'Sync the latest data'
   },
   cardEdit: {
     card_name: 'Name',
