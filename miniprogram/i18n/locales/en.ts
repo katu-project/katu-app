@@ -369,6 +369,11 @@ export default {
     message: 'Message',
     i_know: 'I Know',
     no_card: 'No Card',
-    help_tips: 'Click the button below to creating card'
+    help_tips: 'Click the button below to creating card',
+    load_user_info: 'Load user info',
+    go_sign_up: 'Go',
+    good_msg: 'Good news',
+    signup_gift: 'Now register to use will receive free T-Coins',
+    load_card: 'Load cards'
   }
 }

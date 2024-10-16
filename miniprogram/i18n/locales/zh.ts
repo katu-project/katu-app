@@ -369,6 +369,11 @@ export default {
     message: '消息提示',
     i_know: '我知道了',
     no_card: '没有卡片数据',
-    help_tips: '点击下方按钮开始创建卡片数据吧'
+    help_tips: '点击下方按钮开始创建卡片数据吧',
+    load_user_info: '加载用户数据',
+    go_sign_up: '去注册',
+    good_msg: '好消息',
+    signup_gift: '现注册使用卡兔可领取免费兔币',
+    load_card: '加载卡片数据'
   }
 }

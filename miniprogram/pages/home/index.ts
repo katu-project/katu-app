@@ -22,7 +22,7 @@ app.createPage({
     likeList: [] as AnyObject[],
     notice: {
       _id: '',
-      content: '暂无新消息',
+      content: '',
       updateTime: '',
       auto_show: false
     } as AnyObject,
@@ -51,7 +51,7 @@ app.createPage({
 
   async loadUser(){
     await loadData(app.loadUser, undefined, {
-      loadingTitle: '加载用户数据',
+      loadingTitle: this.t('load_user_info'),
       timeout: -1
     })
     this.setData({
@@ -61,7 +61,7 @@ app.createPage({
       app.loadGlobalTask()
       app.checkLikeCardNeedSync().then(needSync=>{
         if(needSync){
-          console.debug('准备后台更新首页数据')
+          console.debug('update data in background')
           this.loadData({
             forceUpdate: true,
             hideLoading: true
@@ -70,9 +70,9 @@ app.createPage({
       })
     }else{
       if(app.isMp){
-        const {confirm} = await app.showChoose('现注册使用卡兔可领取免费兔币',{
-          confirmText: '去注册',
-          title: '好消息'
+        const {confirm} = await app.showChoose(this.t('signup_gift'),{
+          confirmText: this.t('go_sign_up'),
+          title: this.t('good_msg')
         })
         if(confirm){
           app.goToUserProfilePage()
@@ -126,8 +126,8 @@ app.createPage({
     }
   },
 
-  // 修改名称，图片，喜爱
-  // 新增卡片
+  // change title，pic,like
+  // add carf
   onEventCardChange(card){
     const idx = this.data.likeList.findIndex(e=>e._id === card._id)
     const findCard = this.data.likeList[idx]
@@ -140,7 +140,7 @@ app.createPage({
         this.removeLikeListCard(idx)
       }
     }else{
-      if(card.setLike){ // 新增like状态卡片
+      if(card.setLike){ // add like state card
         this.renderLikeCard(card)
         this.renderLikeCardImage(card)
       }
@@ -157,9 +157,9 @@ app.createPage({
     const idx = this.data.likeList.findIndex(e=>e._id === card._id)
     if(idx !== -1){
       this.removeLikeListCard(idx)
-      console.log('静默移除卡片：',card._id)
+      console.log('remove card in background：',card._id)
     }
-    // 更新cataList数据
+    // update cataList
     this.renderCateList(card, true)
     app.deleteHomeDataCache()
   },
@@ -173,7 +173,7 @@ app.createPage({
       },
       options?.hideLoading ? {
         hideLoading: options?.hideLoading
-      } : '加载卡片数据')
+      } : this.t('load_card'))
     
     const setData = {}
 
@@ -245,7 +245,7 @@ app.createPage({
         const idx = this.data.cateList.findIndex(e=> e && e.name === tag)
         const count = this.data.cateList[idx].count - 1
         if(count === 0){
-          if(this.data.cateList.length === 1){ // 特殊情况：最后一个分类且没有卡片时，直接对cateList置空
+          if(this.data.cateList.length === 1){ // Special case：last cate and no card，set cateList empty
             setData[`cateList`] = []
           }else{
             setData[`cateList[${idx}]`] = null
@@ -254,7 +254,7 @@ app.createPage({
           setData[`cateList[${idx}].count`] = count
         }
       })
-    }else{ // 卡片新增，内容更新，无法判断tag变化，直接请求对应接口获取数据
+    }else{ // add，update，can't check tag status，reload data with api
       try {
         setData['cateList'] = await app.getCateList()
       } catch (error) {
@@ -269,7 +269,7 @@ app.createPage({
   },
 
   async loadNotice(forceFetch?:boolean){
-    // 未获取到用户信息，未激活，有未读消息 三种情况跳过
+    // can't get user info, or no active, or has unread msg pass
     if(!user.id) return
 
     if(!user.isActive){
