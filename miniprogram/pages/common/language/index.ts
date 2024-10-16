@@ -34,13 +34,13 @@ app.createPage({
   },
   
   async tapToChooseCode(e){
-    await app.showConfirm('确认切换到该语言？')
+    await app.showConfirm(`${this.t('use_lang')}?`)
     app.setUseLanguage(e.currentTarget.dataset.key)
-    await loadData(undefined,undefined,'正在切换语言')
+    await loadData(undefined,undefined,this.t('switch_lang'))
     this.setData({
       useLang: app.UseLanguage
     })
-    await app.showConfirm('设置需要重新打开应用','立即重启')
+    await app.showConfirm(this.t('reload_work'))
     app.reLaunch()
   },
 

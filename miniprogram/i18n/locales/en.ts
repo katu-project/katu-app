@@ -165,7 +165,10 @@ export default {
     choose_language: 'Select Language',
     support_language: 'Currently Supported Languages',
     zh: 'Chinese',
-    en: 'English'
+    en: 'English',
+    use_lang: 'Confirm use the language',
+    switch_lang: 'Switching languages',
+    reload_work: 'It takes effect after the restart'
   },
   ui: {
     turn_animation: 'Button Animation',

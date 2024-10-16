@@ -165,7 +165,10 @@ export default {
     choose_language: '选择使用语言',
     support_language: '当前支持的语言',
     zh: '中文',
-    en: '英语'
+    en: '英语',
+    use_lang: '确认切换到该语言',
+    switch_lang: '正在切换',
+    reload_work: '配置重启后生效'
   },
   ui: {
     turn_animation: '打开添加按钮动画',
