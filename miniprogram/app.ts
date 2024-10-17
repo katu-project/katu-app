@@ -5,7 +5,7 @@ const app = getAppManager()
 App({
   onLaunch(){
     const baseInfo = wx.getAppBaseInfo()
-    app.setDefaultLanguage(baseInfo.language)
+    app.initI18n(baseInfo.language)
     wx.getSystemInfo({
       success: info => {
         this.globalData.StatusBar = info.statusBarHeight;

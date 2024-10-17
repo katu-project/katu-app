@@ -3,12 +3,17 @@ import Const from "@/const"
 import Config from '@/config/index'
 import { cache, file, crypto, checkTimeout, chooseLocalImage, scanQrcode, setClipboardData } from "@/utils/index"
 import api from '@/api'
+import { getI18nInstance } from '@/class/i18n'
 
 type ApiType = typeof api
 type LocalCacheKeyType = keyof typeof Const.LOCAL_CACHE_KEYS
 
 export default class Core extends Base {
   DeviceInfo: Partial<WechatMiniprogram.SystemInfo> = {}
+
+  UseLanguage = ''
+
+  i18n = getI18nInstance()
 
   get platform(){
     return this.DeviceInfo.platform || 'unknown'
@@ -42,6 +47,25 @@ export default class Core extends Base {
 
   get systemLanguage(){
     return this.DeviceInfo.language || 'unknown'
+  t(str:string, args?:string[], section?:string|string[]){
+    return this.i18n.t(str,{
+      args,
+      section
+    })
+  }
+
+  t_e(str:string, args?:string[]){
+    return this.i18n.t(str,{
+      args,
+      section: 'error'
+    })
+  }
+
+  t_k(str:string, args?:string[]){
+    return this.i18n.t(str,{
+      args,
+      section: 'key'
+    })
   }
 
   async invokeApi<K extends keyof ApiType, R = ReturnType<ApiType[K]>>(apiName: K, ...args:Parameters<ApiType[K]>):Promise<Awaited<R>>{
