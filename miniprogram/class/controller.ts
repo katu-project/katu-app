@@ -1,5 +1,4 @@
 import Navigation from './navigation'
-import { file, editImage } from '@/utils/index'
 import { getNoticeModule, getCryptoModule, getCacheModule, getStorageModule } from '@/module/index'
 
 export default class Controller extends Navigation {
@@ -31,23 +30,6 @@ export default class Controller extends Navigation {
       console.error('image type check err:',error)
       throw Error('图片格式不支持')
     }
-  }
-
-  async editImage(path:string){
-    let tempImagePath = ''
-    try {
-      tempImagePath = await editImage(path)
-    } catch (error:any) {
-      if(error.errno && error.errno === 1 && error.errMsg.includes('cancel')){
-        throw null
-      }
-      console.error(error)
-      throw Error('功能暂时不可用')
-    }
-    if(!tempImagePath) throw Error('系统不支持该功能')
-    const tempFilePath = await this.getTempFilePath(`wei-${this.currentTimestamp}`)
-    await file.copyFile(tempImagePath, tempFilePath)
-    return tempFilePath
   }
 
   // 移除号码设置页后未使用

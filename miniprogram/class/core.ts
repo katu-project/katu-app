@@ -45,8 +45,6 @@ export default class Core extends Base {
     return false
   }
 
-  get systemLanguage(){
-    return this.DeviceInfo.language || 'unknown'
   t(str:string, args?:string[], section?:string|string[]){
     return this.i18n.t(str,{
       args,
