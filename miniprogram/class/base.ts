@@ -6,12 +6,12 @@ export default class Base {
   private emitter = emitter
   static instance: Base
   static getInstance<T extends Base>(){
-      if(!this.instance){
-        // 使用 selfish 解决传递类方法导致 this 丢失问题
-        this.instance = selfish(new this())
-        console.debug('Create Class', this.name)
-      }
-      return this.instance as T
+    if(!this.instance){
+      // Use 'selfish' to solve the problem of passing class methods causing 'this' to be lost
+      this.instance = selfish(new this())
+      console.debug('Create Class', this.name)
+    }
+    return this.instance as T
   }
 
   get on(){
