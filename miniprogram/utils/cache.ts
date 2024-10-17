@@ -17,7 +17,11 @@ export async function delCache(key){
 }
 
 export function getCacheSync(key){
-  return wx.getStorageSync(key)
+  try {
+    return wx.getStorageSync(key)
+  } catch (error) {
+    return
+  }
 }
 
 export default {
