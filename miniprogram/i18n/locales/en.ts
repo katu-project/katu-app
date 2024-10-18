@@ -74,7 +74,7 @@ export default {
     no_new_key: 'Key invalid',
     no_key_find: 'Master key is missing',
     not_set_key: 'Master key is not set',
-    use_master_replace_mini: 'Mini key is not available, please use the Master key',
+    use_master_replace_mini: 'Mini key invalid, use Master key',
     format_error: 'Format error',
     no_quota: 'T-Coin balance is insufficient',
     not_set_cs: 'Custom storage is not configured',
@@ -129,7 +129,7 @@ export default {
   },
   auth: {
     quick: 'Quick',
-    verify_code: 'SMS Code',
+    verify_code: 'Code',
     email: ' E-mail ',
     tel: ' SMS ',
     input_email: 'email address',
