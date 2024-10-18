@@ -28,25 +28,25 @@ class ResetKeyManager extends KeyManager {
   }
 
   async fetchKeyFromResetKey(rk){
-    if(!this.user.recoveryKeyPack) throw Error("没有设置备份主密码")
+    if(!this.user.recoveryKeyPack) throw Error(this.t_e('no_key_backup'))
     return this.crypto.extractKeyFromResetKeyPack(this.user.recoveryKeyPack, rk)
   }
 
   async checkState(qrPack){
     if(!qrPack || !qrPack.i || qrPack.i !== this.user.recoveryKeyPack?.qrId){
-      throw Error('凭证ID不匹配!')
+      throw Error(this.t_e('backup_not_match'))
     }
   }
 }
 
 class MiniKeyManager extends KeyManager {
   async createMiniKey({miniKey, masterKey}:{miniKey:string, masterKey:string}){
-    if(!miniKey) throw Error('快速密码不能为空')
-    if(!masterKey) throw Error('读取主密码错误')
+    if(!miniKey) throw Error(this.t_e('mini_key_error'))
+    if(!masterKey) throw Error(this.t_e('master_key_error'))
     const randomHexString = await this.crypto.randomHex(24)
     const mixMiniKey = `${miniKey}${randomHexString}`
     const miniKeyPack = await this.crypto.createCommonKeyPack(mixMiniKey, masterKey)
-    // 该数据存在本地    
+    // save local only  
     const miniKeySaveData = JSON.stringify({
       rk: randomHexString,
       keyPack: miniKeyPack
@@ -77,12 +77,12 @@ class MiniKeyManager extends KeyManager {
   }
 
   async enableSync({kid,masterKey}:{kid:string, masterKey:string}){
-    if(!masterKey) throw Error('读取主密码错误')
+    if(!masterKey) throw Error(this.t_e('master_key_error'))
     const miniKeyFilePath = await this.getMiniKeyPath(kid)
     try {
       await file.checkAccess(miniKeyFilePath)
     } catch (error:any) {
-      throw Error('创建和同步需要在相同客户端')
+      throw Error(this.t_e('do_on_same_device'))
     }
     const miniKeyJsonString = await file.readFile<string>(miniKeyFilePath, 'utf8')
     const miniKeyEncryptPack = await this.crypto.encryptString(miniKeyJsonString, masterKey)
@@ -103,14 +103,14 @@ class MiniKeyManager extends KeyManager {
     try {
       await file.checkAccess(miniKeyFilePath)
     } catch (error:any) {
-      throw Error('快速密码未同步')
+      throw Error(this.t_e('mini_key_not_sync'))
     }
-    console.debug('快速密码同步正常')
+    console.debug('mini key sync is good')
   }
 
   async sync(masterKey:string){
     if(!this.user.miniKeyPack?.syncId || !this.user.miniKeyPack?.pack){
-      throw Error('无法同步快速密码')
+      throw Error(this.t_e('mini_key_sync_first'))
     }
     const miniKeyPackJsonString = await this.crypto.decryptString(this.user.miniKeyPack.pack, masterKey)
     let miniKeyPack
@@ -118,17 +118,17 @@ class MiniKeyManager extends KeyManager {
       miniKeyPack = JSON.parse(miniKeyPackJsonString)
     } catch (_) {}
     if(!miniKeyPack || !miniKeyPack.rk || !miniKeyPack.keyPack){
-      throw Error('同步失败')
+      throw Error(this.t_e('mini_key_sync_error'))
     }
     const miniKeyFilePath = await this.getMiniKeyPath(this.user.miniKeyPack.syncId)
     await file.writeFile(miniKeyFilePath, miniKeyPackJsonString)
-    console.debug('快速密码同步成功')
+    console.debug('mini key sync ok')
   }
 }
 
 class MasterKeyManager extends KeyManager{
-  _userKey: string = '' // 用户原始密码
-  _masterKey: string = '' // app 主密码
+  _userKey: string = '' // user origin key
+  _masterKey: string = '' // app master key
 
   get masterKey(){
     return this._masterKey
@@ -143,21 +143,20 @@ class MasterKeyManager extends KeyManager{
   }
 
   async create(key: string){
-    if(!key) throw Error('新密码缺失')
+    if(!key) throw Error(this.t_e('no_new_key'))
     const masterKeyPack = await this.crypto.createCommonKeyPack(key)
     return this.invokeApi('setMasterKeyInfo', masterKeyPack)
   }
 
   async update({newKey, originKey}:{newKey:string, originKey?:string}){
-    if(!newKey) throw Error('新密码缺失')
+    if(!newKey) throw Error(this.t_e('no_new_key'))
     if(!originKey){
-      if(!this.masterKey) throw Error('主密码缺失')
-      // 获取目前使用的主密码
+      if(!this.masterKey) throw Error(this.t_e('no_key_find'))
+      // use key in runtime
       originKey = this.masterKey
     }
-    // 重新生成新的主密码包, 更新时使用最新的 ccv
+    // re create new key pack, use latest new ccv
     const masterKeyPack = await this.crypto.createCommonKeyPack(newKey, originKey)
-    // 更新主密码包
     return this.invokeApi('setMasterKeyInfo', masterKeyPack)
   }
 
@@ -165,15 +164,15 @@ class MasterKeyManager extends KeyManager{
     const masterKey = await this.cache.getMasterKey()
     if(masterKey){
       this.setValue(masterKey)
-      console.log("本地缓存的主密码加载成功")
+      console.log("load master key ok in local cache")
     }else{
-      console.warn("未发现本地缓存的主密码")
+      console.warn("no master key find in local cache")
     }
   }
 
-  // 用户主密码导出原始主密码
+  // fetch origin master key use user key
   async loadWithKey(key:string){
-    if(!this.user.masterKeyPack?.keyPack) throw Error('未设置主密码')
+    if(!this.user.masterKeyPack?.keyPack) throw Error(this.t_e('not_set_key'))
     
     let masterKey = ''
     if(this.user.useMiniKey && key.length === this.getConst('MINI_KEY_LENGTH')){
@@ -184,7 +183,7 @@ class MasterKeyManager extends KeyManager{
         mixMiniKey = `${key}${keyPackJson.rk}`
         keyPack = keyPackJson.keyPack
       } catch (error) {
-        throw Error('快速密码不可用，请使用主密码!')
+        throw Error(this.t_e('use_master_replace_mini'))
       }
       masterKey = await this.crypto.fetchKeyFromKeyPack(keyPack, mixMiniKey)
     }else{
@@ -213,21 +212,21 @@ class MasterKeyManager extends KeyManager{
     }
     if(!this.user.isSetMasterKey){
       state.code = '10'
-      state.message = '还未设置主密码'
+      state.message = this.t_k('not_set_key')
       return state
     }
 
     if(!this.user.rememberPassword && !this.masterKey){
       state.code = '21'
       state.needKey = true
-      state.message = '请输入主密码'
+      state.message = this.t_k('enter_master_key')
       return state
     }
 
     if(!this.masterKey) {
       state.code = '20'
       state.needKey = true
-      state.message = '请输入主密码'
+      state.message = this.t_k('enter_master_key')
       return state
     }
 
@@ -236,7 +235,7 @@ class MasterKeyManager extends KeyManager{
     } catch (err) {
       state.code = '22'
       state.needKey = true
-      state.message = '密码错误'
+      state.message = this.t_k('bad_key')
       return state
     }
 
@@ -245,7 +244,7 @@ class MasterKeyManager extends KeyManager{
 
   checkMasterKeyFormat(key:string){
     const clearKey = key.replace(/\s/g, '')
-    if(!clearKey || clearKey.length < 6) throw Error("格式错误")
+    if(!clearKey || clearKey.length < 6) throw Error(this.t_e('format_error'))
   }
 }
 

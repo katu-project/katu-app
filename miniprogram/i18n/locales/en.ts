@@ -26,7 +26,15 @@ export default {
     unknown_error: 'Unknown Error',
     enter_master_key: 'Enter Master Key',
     data_no_change: 'Data no change',
-    content_safe_check: 'Content Security Checks'
+    content_safe_check: 'Content Security Checks',
+    content_check_desc: 'Content security check will take place, which can take 5-10 seconds',
+    tips: 'Tips',
+    go_set: 'Go Set',
+    go_detail: 'Go Info',
+    no_auth: 'Login is required to proceed, go to login',
+    go_login: 'Go Login',
+    got_it: 'Got it',
+    new_version_tips: 'New version, updated now'
   },
   key: {
     enter_key: 'Enter key',
@@ -34,11 +42,42 @@ export default {
     bad_key: 'Key is incorrect',
     change_mode: 'Switch the input mode',
     verify_key: 'Verifying key',
+    not_set_key: 'Master key Not Set',
+    enter_master_key: 'Enter Master key'
   },
   error: {
+    empty_key: 'Invalid Key',
+    bad_key: 'Key is incorrect',
     image_format_error: 'The image format is not supported',
     client_not_work: 'This feature is not supported by the client',
     image_name_error: 'Error getting file name',
+    content_check_error: 'Content check failed',
+    timeout_retry: 'Check timed out, try again',
+    share_error: 'Share the build error',
+    login_error: 'Sign-in error',
+    mp_use_cs: 'Custom storage cannot be used, please operate it in the APP',
+    no_card_image: 'No card picture',
+    cs_not_enable: 'Custom storage is not enabled, cannot fetch card data',
+    card_not_exist: 'Card not exist',
+    extra_data_format: 'The format of the attached data is incorrect',
+    no_key_backup: 'No backup master key set',
+    backup_not_match: 'Backups are not available',
+    mini_key_error: 'Mini key incorrect',
+    master_key_error: 'Master key incorrect',
+    do_on_same_device: 'The operate need to be on the same client',
+    mini_key_not_sync: 'Mini key is not syncing',
+    mini_key_sync_first: 'Set up a Mini key first',
+    mini_key_sync_error: 'Sync failed',
+    no_new_key: 'Key invalid',
+    no_key_find: 'Master key is missing',
+    not_set_key: 'Master key is not set',
+    use_master_replace_mini: 'Mini key is not available, please use the Master key',
+    format_error: 'Format error',
+    no_quota: 'T-Coin balance is insufficient',
+    not_set_cs: 'Custom storage is not configured',
+    get_cs_error: 'Extract config failed',
+    tag_exist: 'Tag already exists',
+    build_in_tag: 'Built-in labels cannot be created'
   },
   settings:{
     account: 'Account',
@@ -157,7 +196,9 @@ export default {
     pay_error: 'Payment error, please contact us',
     exchange_ok: 'Exchange Success',
     fetch_pay_info: 'Get transaction information',
-    wait_pay: 'Wait for payment'
+    wait_pay: 'Wait for payment',
+    buy_1000_coin: 'Buy {#} T-Coins',
+    need_quota: 'Please deposit T-Coins'
   },
   account: {
     tel_number: 'Phone Number',
@@ -373,7 +414,10 @@ export default {
     loading_card: 'Load card data',
     loading_card_error: 'Load error',
     card_not_exist: 'Card not exist',
-    sync_new_data: 'Sync the latest data'
+    sync_new_data: 'Sync the latest data',
+    // other
+    not_set_id: 'Number Not Set',
+    show_after_decrypt: 'Decrypt First'
   },
   cardEdit: {
     card_name: 'Name',

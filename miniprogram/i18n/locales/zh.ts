@@ -26,7 +26,15 @@ export default {
     unknown_error: '未知错误',
     enter_master_key: '输入主密码',
     data_no_change: '数据无变动',
-    content_safe_check: '内容合规检查'
+    content_safe_check: '内容合规检查',
+    content_check_desc: '将进行内容合规检测\n可能需要5-10秒',
+    tips: '温馨提示',
+    go_set: '去设置',
+    go_detail: '了解详情',
+    no_auth: '未登录，无法进行该操作',
+    go_login: '去登录',
+    got_it: '不再提示',
+    new_version_tips: '发现新版本，现在更新'
   },
   key: {
     enter_key: '输入密码',
@@ -34,11 +42,42 @@ export default {
     bad_key: '密码不正确',
     change_mode: '切换输入模式',
     verify_key: '密码验证中',
+    not_set_key: '未设置主密码',
+    enter_master_key: '请输入主密码'
   },
   error: {
+    empty_key: '无效密码',
+    bad_key: '密码不正确',
     image_format_error: '图片格式不支持',
     client_not_work: '当前客户端不支持该功能',
     image_name_error: '获取文件名出错',
+    content_check_error: '未通过内容检测',
+    timeout_retry: '检测超时，请重试',
+    share_error: '分享生成错误',
+    login_error: '登录错误，请使用其他方式登录或者联系客服',
+    mp_use_cs: '小程序无法使用自定义存储，请使用 APP 操作',
+    no_card_image: '无卡片图片',
+    cs_not_enable: '自定义存储未启用，无法获取卡片数据',
+    card_not_exist: '卡片不存在',
+    extra_data_format: '附加数据格式错误',
+    no_key_backup: '没有设置备份主密码',
+    backup_not_match: '凭证ID不匹配',
+    mini_key_error: '快速密码错误',
+    master_key_error: '主密码错误',
+    do_on_same_device: '创建和同步需要在相同客户端',
+    mini_key_not_sync: '快速密码未同步',
+    mini_key_sync_first: '先设置快速密码',
+    mini_key_sync_error: '同步失败',
+    no_new_key: '密码无效',
+    no_key_find: '主密码缺失',
+    not_set_key: '未设置主密码',
+    use_master_replace_mini: '快速密码不可用，请使用主密码',
+    format_error: '格式错误',
+    no_quota: '兔币余额不足',
+    not_set_cs: '未配置自定义存储',
+    get_cs_error: '提取配置出错',
+    tag_exist: '标签已存在',
+    build_in_tag: '无法创建内置标签'
   },
   settings:{
     account: '账户',
@@ -157,7 +196,9 @@ export default {
     pay_error: '支付异常，请联系客服',
     exchange_ok: '兑换成功',
     fetch_pay_info: '获取交易信息',
-    wait_pay: '等待支付'
+    wait_pay: '等待支付',
+    buy_1000_coin: '购买 {#} 个兔币',
+    need_quota: '请充值兔币'
   },
   account: {
     tel_number: '手机号码',
@@ -373,7 +414,10 @@ export default {
     loading_card: '加载卡片数据',
     loading_card_error: '卡片加载错误',
     card_not_exist: '卡片不存在',
-    sync_new_data: '同步最新数据'
+    sync_new_data: '同步最新数据',
+    // other
+    not_set_id: '未设置卡号',
+    show_after_decrypt: '解密后查看卡号'
   },
   cardEdit: {
     card_name: '卡片名称',

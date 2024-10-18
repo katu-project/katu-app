@@ -30,7 +30,7 @@ class CardManager extends Controller{
     const saveImageFile = async(filePath:string) => {
       if(this.user.config?.storage?.cos?.enable){
         if(this.app.isMp){
-          throw Error('小程序无法使用自定义存储，请使用 APP 操作')
+          throw Error(this.t_e('mp_use_cs'))
         }
         const storageConfig = await this.user.getCustomStorageConfig(this.app.masterKeyManager.masterKey)
         return this.storage.saveCardImage(filePath, storageConfig)
@@ -48,12 +48,12 @@ class CardManager extends Controller{
 
   async save(options:{card:Partial<ICard>, images}){
     const { card, images } = options
-    if(!images.length) throw Error('无卡片图片')
+    if(!images.length) throw Error(this.t_e('no_card_image'))
 
     const cardModel: Partial<ICard> = { image: images }
     cardModel.encrypted = true
-    cardModel.title = card.title || '未命名'
-    cardModel.tags = card.tags || ['其他']
+    cardModel.title = card.title || ''
+    cardModel.tags = card.tags || []
     cardModel.info = []
     cardModel.setLike = card.setLike || false
     if(card._id){
@@ -66,7 +66,7 @@ class CardManager extends Controller{
   }
 
   async encryptImage(image:ICardImage, extraData, key:string){
-    if(!key) throw Error('密码不能为空')
+    if(!key) throw Error(this.t_e('bad_key'))
     const keyPair = await this.crypto.createCommonKeyPair({
       key
     })
@@ -81,7 +81,7 @@ class CardManager extends Controller{
   }
 
   async decryptImage(image:ICardImage, key:string){
-    if(!key) throw Error('密码不能为空')
+    if(!key) throw Error(this.t_e('empty_key'))
     const keyPair = await this.crypto.createCommonKeyPair({
       key,
       salt: image.salt,
@@ -91,10 +91,10 @@ class CardManager extends Controller{
       const savePath = await this.getDownloadFilePath(image)
       if(this.storage.checkUseCustomStorage(image.url)){
         if(!this.user.config?.storage?.cos?.enable){
-          throw Error('自定义存储未启用，无法获取卡片数据')
+          throw Error(this.t_e('cs_not_enable'))
         }
         if(this.app.isMp){
-          throw Error('小程序无法使用自定义存储，请使用 APP 操作')
+          throw Error(this.t_e('mp_use_cs'))
         }
         const storageConfig = await this.user.getCustomStorageConfig(this.app.masterKeyManager.masterKey)
         return this.storage.downloadCardImage(image.url, savePath, storageConfig)
@@ -117,7 +117,7 @@ class CardManager extends Controller{
     }
   }
 
-  // 渲染层业务接口
+  // ui render
   async getCard({id, ignoreCache, decrypt}:{id, ignoreCache?:boolean, decrypt?:boolean}):Promise<ICard>{
     let card:ICard|undefined
     if(!ignoreCache){
@@ -126,20 +126,20 @@ class CardManager extends Controller{
 
     if(!card){
       card = await this.invokeApi('getCard', {_id:id})
-      if(!card) throw Error("卡片不存在")
+      if(!card) throw Error(this.t_e('card_not_exist'))
       await this.cache.setCard(card)
     }
 
     for (const image of card.image) {
-      if(decrypt){ // 解密图片
+      if(decrypt){
         const imageData =  await this.decryptImage(image, this.app.masterKeyManager.masterKey)
         image._url = imageData.imagePath
         card.info = imageData.extraData
         if(card.info.length){
-          // 2个卡面会多次重复调用
+          // two pic will repeat set
           await this.cache.setCardExtraData(id, imageData.extraData)
         }
-      }else{ // 获取图片缓存
+      }else{ // todo: need remove 
         try {
           image._url = await this.cache.getCardImagePath(image)
           if(card.encrypted){
@@ -148,7 +148,7 @@ class CardManager extends Controller{
         } catch (_) {
           if(card.encrypted){
             image._url = this.getConst('DefaultShowLockImage')
-          }else{  // 普通图片未缓存则使用远程地址，并在后台缓存
+          }else{
             image._url = image.url
             this.cache.setCardImage(image, false)
           }
@@ -196,7 +196,7 @@ class CardManager extends Controller{
   async syncCheck(id:string){
     const cacheCard = await this.cache.getCard(id)
     const remoteCard = await this.invokeApi('getCard', {_id:id})
-    // todo: 优化数据变动检测
+    // todo: need refine data change check
     return JSON.stringify(cacheCard) !== JSON.stringify(remoteCard)
   }
 
@@ -227,10 +227,10 @@ class CardManager extends Controller{
     return tempPath
   }
   
-  // 辅助方法
+  // extra data helper
   condenseExtraFields(extraFields: ICardExtraField[]):[string,string][]{
     return extraFields.map(e=>{
-      if(!(e.key && e.name && e.value)) throw Error('附加数据格式错误')
+      if(!(e.key && e.name && e.value)) throw Error(this.t_e('extra_data_format'))
       return [e.key == 'cu'?`cu-${e.name}`:e.key,e.value!]
     })
   }
@@ -239,20 +239,19 @@ class CardManager extends Controller{
     return extraFields.map(item=>{
       const [key,cuName] = item[0].split('-')
       let extraField = Object.assign({value:''},this.getCardConfig('defaultFields').find(e=>e.key === key))
-      extraField = Object.assign({name: '未知', value: '无'},extraField)
+      extraField = Object.assign({name: '', value: ''},extraField)
       if(key === 'cu') extraField.name = cuName
       extraField.value = item[1]
       return extraField
     })
   }
 
-  // 获取图片渲染数据
   async getImageRenderSetData({idx,card,keyName}:{idx:number|string, card:ICard, keyName:string}){
     const cardDataKey = `${keyName}[${idx}]`
     const setData = {}
 
     if(keyName === 'list'){
-      setData[`${cardDataKey}.cnText`] = '未设置卡号'
+      setData[`${cardDataKey}.cnText`] = this.t('not_set_id', [], 'card')
       setData[`${cardDataKey}.cn`] = ''
       setData[`${cardDataKey}.cvv`] = ''
   
@@ -276,9 +275,9 @@ class CardManager extends Controller{
       setData[`${cardDataKey}._url`] = await this.cache.getCardImagePath(card.image[0])
     } catch (_) {
       if(card.encrypted){
-        setData[`${cardDataKey}.cnText`] = '解密后查看卡号'
+        setData[`${cardDataKey}.cnText`] = this.t('show_after_decrypt',[],'card')
       }else{
-        console.debug('未发现缓存图片，开始缓存', card._id)
+        console.debug('no cache image find, start cache:', card._id)
         await this.cache.setCardImage(card.image[0], false)
         setData[`${cardDataKey}._url`] = await this.cache.getCardImagePath(card.image[0])
       }

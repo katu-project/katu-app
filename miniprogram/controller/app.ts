@@ -53,7 +53,7 @@ class AppManager extends Controller {
     if(this.isApp){
       const requestConfig = this.getRequestConfig('http')
       if(requestConfig?.token){
-        console.debug('使用内置 Token')
+        console.debug('Use build-in Token')
         await this.cache.setLoginToken(requestConfig.token)
       }
     }
@@ -111,7 +111,7 @@ class AppManager extends Controller {
         updatedTransactions: (args:updatedTransactionsRes) => {
           if(!args.transactions.length) return
           const transaction = args.transactions[0]
-          console.debug('支付状态变动:', transaction.payment.applicationUsername, transaction.transactionIdentifier || transaction.tempTransactionIdentifier, transaction.transactionState)
+          console.debug('pay stats change:', transaction.payment.applicationUsername, transaction.transactionIdentifier || transaction.tempTransactionIdentifier, transaction.transactionState)
           switch (transaction.transactionState) {
             case 'SKPaymentTransactionStatePurchased':
               this.publishAppleOrderPayDoneEvent(transaction)
@@ -128,14 +128,14 @@ class AppManager extends Controller {
   }
 
   checkUpdate(){
-    console.log('检查更新')
+    console.log('check update')
     if(this.isMp){
       const updateManager = wx.getUpdateManager()
       updateManager.onCheckForUpdate(({hasUpdate})=>{
         console.log({hasUpdate})
         if(!hasUpdate) return
         updateManager.onUpdateReady(async ()=>{
-          await this.showConfirm('发现新版本，现在更新？')
+          await this.showConfirm(this.t('new_version_tips'))
           updateManager.applyUpdate()
         })
       })
@@ -146,7 +146,7 @@ class AppManager extends Controller {
 
   firstOpenTask(){
     if(this.isApp){
-      // iOS app 首次安装后第一个网络请求会失败,所以先发送一个测试请求
+      // iOS app first network request will fail after the first installation, so send a test request first
       this.invokeApi('appStatus').catch(e=>{
         console.error('app hook req:',e)
       })
@@ -165,14 +165,14 @@ class AppManager extends Controller {
     try {
       await this.userManager.loadInfo()
     } catch (error:any) {
-      // 服务端凭证失效，需要重新登录
+      // The server token are invalid and need to log in again
       if(this.isApp && error.code === 401){
         this.logout()
       }
       throw error
     }
     if(this.userManager.isSetMasterKey && this.userManager.rememberPassword){
-      console.log("用户启用记住密码，尝试加载主密码")
+      console.log("User enable remember key, try to load the master key")
       this.masterKeyManager.load()
     }
   }
@@ -186,7 +186,7 @@ class AppManager extends Controller {
   }
 
   async login(token:string){
-    if(!token) throw Error('登录错误，请使用其他方式登录或者联系客服')
+    if(!token) throw Error(this.t_e('login_error'))
     await this.cache.setLoginToken(token)
     await this.userManager.reloadInfo()
     this.publishLoginChangeEvent(true)
@@ -204,7 +204,6 @@ class AppManager extends Controller {
     }
     options.extra = convert.stringToBase64(JSON.stringify(extra))
     const { token } = await this.invokeApi('loginWithVerifyCode', options)
-    if(!token) throw Error('登录错误，请使用其他方式登录或者联系客服')
     return this.login(token)
   }
 
@@ -226,7 +225,7 @@ class AppManager extends Controller {
     this.subscribeMasterKeyRemoveEvent(this.masterKeyManager.clear)
     
     wx.onAppHide(()=>{
-      // 以下操作会触发 onAppHide 事件
+      // The following actions trigger the onAppHide event
       const OnAppHideAction = ['InPreviewPic','InSelectFile','InShare']
       const globalState = getApp().globalData.state
       if(globalState.length && OnAppHideAction.includes(globalState[0])){
@@ -246,19 +245,19 @@ class AppManager extends Controller {
   async loadGlobalTask(){
     const clearTempFileCache = async ()=> {
       if(await this.globalTaskTimeoutCheck()){
-        console.debug(`开始清理临时文件目录`)
+        console.debug(`Start clean up temp file directory`)
         await this.cache.clearTempDirFile()
       }
     }
     const clearExtraDataCache = async ()=> {
       if(await this.globalTaskTimeoutCheck()){
-        console.debug('开始检测卡片无效附加数据')
+        console.debug('Start check invalid cached data for extra data')
         try {
           const cardIds = await this.getCardIds()
           const localExtraDataCache = await this.cache.getExtraDatas()
           const invalidIds = Object.keys(localExtraDataCache).filter(e=>!cardIds.includes(e))
           if(invalidIds.length){
-            console.debug(`删除无效附加数据本地缓存：${invalidIds.length} 条`)
+            console.debug(`Delete invalid extra data cache ：${invalidIds.length} rows`)
             await this.cache.deleteCardExtraData(invalidIds)
           }
         } catch (error) {
@@ -268,10 +267,10 @@ class AppManager extends Controller {
     }
     const clearCardImageCache = async ()=> {
       if(await this.globalTaskTimeoutCheck()){
-        console.debug('开始检测图片无效缓存数据')
+        console.debug('Start check invalid cached data for images')
         try {
           const imageIds = await this.getImageIds()
-          console.debug(`删除无效图片缓存数据：${imageIds.length} 条`)
+          console.debug(`Delete invalid image cache ：${imageIds.length} rows`)
           this.cache.deleteCardFile(imageIds)
         } catch (error) {
           console.error('clearCardImageCache:',error)
@@ -303,7 +302,7 @@ class AppManager extends Controller {
     return this.setLocalData('USE_LANG', lang)
   }
 
-  // 未使用
+  // unused
   async saveCurrentUserCode(userCode){
     if(!userCode) return
     return this.cache.setLocalData('LAST_LOGIN_UID', userCode)
@@ -313,17 +312,17 @@ class AppManager extends Controller {
     const homeDataCache = await this.cache.getHomeData()
     if(!homeDataCache || homeDataCache?.data?.cateList?.length === 0) return true
     if(this.likeListCacheTimeoutCheck(homeDataCache.cacheTime)){
-      console.debug('首页数据缓存超时,进行数据同步检测')
+      console.debug('Home data cache timeout, doing data sync check')
     }else{
-      console.debug('首页数据 likeList 缓存有效')
+      console.debug('Home data -> likeList Caching is valid')
       return false 
     }
     const likeList = homeDataCache.data.likeList
     const remoteLikeList = await this.getLikeCardIds()
     console.debug('checkLikeCardNeedSync', likeList.length, remoteLikeList.length)
-    // todo: 现在只对数量检查，需要考虑数量相同id不同的情况
+    // todo: Now only check the quantity, and later we need to consider the case of different IDs
     if(remoteLikeList.length && remoteLikeList.length !== likeList.length) return true
-    // 如果数据没变化，只是时间超时，就更新缓存的时间
+    // If the data has not changed, but the time has expired, the cached time is updated
     this.cache.setHomeCacheData(homeDataCache.data)
     return false
   }
@@ -350,14 +349,14 @@ class AppManager extends Controller {
     return this.resetKeyManager.create(this.masterKeyManager.masterKey)
   }
 
-  // 未使用
+  // unused
   async checkNeverLogin(){
     const loginUserId = await this.cache.getLocalData<string>('LAST_LOGIN_UID')
     return !loginUserId
   }
 
   openCustomerService(){
-    // 二次跳转
+    // temp solve
     wx.miniapp.launchMiniProgram({
       userName: 'gh_be19db4e969f',
       path: 'pages/about/contact/index?openService=1',
@@ -366,7 +365,7 @@ class AppManager extends Controller {
       fail: console.log
     })
     
-    // 微信客服服务，需要开放平台认证
+    // need weixin open active
     // return wx.miniapp.openCustomerServiceChat({
     //   corpId: 'ww33f3ccab4cbd777c',
     //   url: 'https://work.weixin.qq.com/kfid/kfc1cb144db771291df',
@@ -400,7 +399,7 @@ class AppManager extends Controller {
     }
     if(card.encrypted){
       for (const pic of card.image!) {
-        if(!pic._url || !await file.checkAccess(pic._url)) throw Error("分享生成错误")
+        if(!pic._url || !await file.checkAccess(pic._url)) throw Error(this.t_e('share_error'))
         const image = {url: pic._url, salt: '', hash: pic.hash, ccv:''}
         const encrytedPic = await this.cardManager.encryptImage(image, card.info, dk)
         image.url = await this.uploadShareFile(encrytedPic.path)
@@ -471,9 +470,9 @@ class AppManager extends Controller {
     const isKnowDataCheck = await this.notice.getKnowDataCheck()
     if(isKnowDataCheck) return
 
-    const {cancel, confirm} = await this.showChoose('将进行图片内容合规检测\n此过程可能需要等待5-10秒',{
-      cancelText: '了解详情',
-      confirmText: '不再提示'
+    const {cancel, confirm} = await this.showChoose(this.t('content_check_desc'),{
+      cancelText: this.t('go_detail'),
+      confirmText: this.t('got_it')
     })
     if(cancel){
       this.openDataCheckDoc()
@@ -489,9 +488,9 @@ class AppManager extends Controller {
     const isKnow = await this.notice.getKnowShareData()
     if(isKnow) return
     
-    const {cancel, confirm} = await this.showChoose('更多分享帮助点击【了解详情】',{
-      cancelText: '了解详情',
-      confirmText: '不再提示'
+    const {cancel, confirm} = await this.showChoose('read more help for share',{
+      cancelText: 'Detail',
+      confirmText: 'not show'
     })
     if(cancel){
       this.openDataShareDoc()
@@ -503,12 +502,12 @@ class AppManager extends Controller {
     return
   }
 
-  async checkQuotaNotice(msg?:string){
+  async checkQuotaNotice(){
     return new Promise((resolve)=>{
       if(this.userManager.quota >= 0){
         return resolve("")
       }
-      this.showNotice(msg || '无可用兔币，无法查看卡片')
+      this.showNotice(this.t('need_quota',[],'quota'))
     })
   }
 
@@ -521,7 +520,7 @@ class AppManager extends Controller {
       console.error('getIapItems:',error)
       iapItems.push({
         key: 'katu_coin_1000',
-        label: '购买 1000 个兔币'
+        label: this.t('buy_1000_coin',['1000'],'quota')
       })
     }
     return iapItems
@@ -532,9 +531,9 @@ class AppManager extends Controller {
     this.publishTagChangeEvent()
   }
 
-  //设置页开始
-  //数据
-  //清除缓存
+  //settings start
+  //data
+  //cache clear
   async clearCacheData(){
     try {
       await file.rmdir(this.getConst('APP_TEMP_DIR'))
@@ -548,7 +547,7 @@ class AppManager extends Controller {
     this.publishCacheDeleteEvent()
   }
 
-  //数据备份
+  //data backup
   async exportCardData(){
     return this.invokeApi('exportData', {type: 'card'})
   }
@@ -559,7 +558,7 @@ class AppManager extends Controller {
     await this.clearCacheData()
     return this.masterKeyManager.clear()
   }
-  //设置页结束
+  //settings end
 
   createPage<TData extends WechatMiniprogram.Page.DataOption,TCustom extends WechatMiniprogram.Page.CustomOption>(obj:WechatMiniprogram.Page.Options<TData,TCustom>){
     if(obj.i18n){
@@ -579,7 +578,7 @@ class AppManager extends Controller {
     if(needCheck){
       const url = await this.uploadTempFile(imagePath)
       for(let i=0;i<10;i++){
-        if(i==9) throw Error("内容检测超时，请稍后重试")
+        if(i==9) throw Error(this.t_e('timeout_retry'))
         const { checkEnd, checkPass } = await this.invokeApi('imageContentSafetyCheck', {hash, url})
         if(checkEnd){
           if(checkPass){
@@ -593,7 +592,7 @@ class AppManager extends Controller {
     }else{
       if(checkPass) return
     }
-    throw Error('图片存在不适内容')
+    throw Error(this.t_e('content_check_error'))
   }
 
   async textContentSafetyCheck(text){
@@ -606,7 +605,7 @@ class AppManager extends Controller {
     }else{
       if(checkPass) return
     }
-    throw Error('文字存在不适内容')
+    throw Error(this.t_e('content_check_error'))
   }
 
   async getActiveInfo(){
@@ -618,13 +617,13 @@ class AppManager extends Controller {
     }
   }
 
-  async showActiveNotice(title?:string, confirmText?:string){
-    await this.showConfirm(title || "未登录，无法进行该操作。", confirmText || '去登录')
+  async showActiveNotice(){
+    await this.showConfirm(this.t('no_auth'), this.t('go_login'))
     return this.goToUserProfilePage()
   }
   
   async showSetMasterKeyNotice(){
-    await this.showConfirm("未设置主密码",'去设置')
+    await this.showConfirm(this.t_k('not_set_key'), this.t('go_set'))
     return this.goEditMasterKeyPage()
   }
 
@@ -661,25 +660,25 @@ class AppManager extends Controller {
     return this.invokeApi('getShareItem', params)
   }
 
-  // 弹窗提示
-
+  // popup action
   showMiniNotice(msg){
     return showNotice(msg)
   }
 
   showNotice(msg:string, options?:any){
-    return showChoose('温馨提示',msg, { showCancel: false, ...options})
+    return showChoose(this.t('tips'), msg, { showCancel: false, ...options})
   }
 
   async showConfirm(msg:string, confirmText?:string){
     const options = {}
     if(confirmText) options['confirmText'] = confirmText
-    const { confirm } = await showChoose('温馨提示',msg, options)
+    msg = msg.endsWith('?') ? msg : `${msg}?`
+    const { confirm } = await showChoose(this.t('tips'), msg, options)
     return new Promise((resolve,_)=>confirm && resolve(confirm))
   }
 
   async showChoose(msg:string, options?:WechatMiniprogram.ShowModalOption){
-    return showChoose('温馨提示', msg, options)
+    return showChoose(this.t('tips'), msg, options)
   }
 }
 

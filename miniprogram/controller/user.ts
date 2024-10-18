@@ -96,12 +96,12 @@ export default class User extends Controller {
     let cacheUser = await this.cache.getUser() 
     if(!cacheUser || this.userInfoCacheTimeout(cacheUser.time)){
       const user = await this.invokeApi('getUser')
-      console.debug(`用户数据缓存过期，重新获取: ${JSON.stringify(user).length} bytes`)
+      console.debug(`User info cache timeout, fetch again: ${JSON.stringify(user).length} bytes`)
       cacheUser = { data:user, time:0 }
       await this.cache.setUser(user)
     }else{
       const cacheTime = new Date(cacheUser.time).toLocaleString()
-      console.debug(`使用缓存的用户资料: ${JSON.stringify(cacheUser.data).length} bytes, 缓存时间: ${ cacheTime }`)
+      console.debug(`Use user info in cache: ${JSON.stringify(cacheUser.data).length} bytes, Cache time: ${ cacheTime }`)
     }
     if(cacheUser.data.avatarUrl){
       this._avatar = await this.cache.setUserAvatar(cacheUser.data.avatarUrl)
@@ -121,7 +121,7 @@ export default class User extends Controller {
 
   async checkQuota(){
     if(this.quota < 0){
-      throw Error('兔币余额不足')
+      throw Error(this.t_e('no_quota'))
     }
   }
 
@@ -165,9 +165,9 @@ export default class User extends Controller {
   }
 
   async getCustomStorageConfig(masterKey){
-    if(!this.storageConfig?.cos.enable) throw Error('未配置自定义存储')
+    if(!this.storageConfig?.cos.enable) throw Error(this.t_e('not_set_cs'))
     const cosJsonStr = this.crypto.decryptString(this.storageConfig?.cos.keyPack, masterKey)
-    if(this.crypto.getStringHash(cosJsonStr, 'SHA1') !== this.storageConfig.cos.keyId) throw Error('提取配置出错')
+    if(this.crypto.getStringHash(cosJsonStr, 'SHA1') !== this.storageConfig.cos.keyId) throw Error(this.t_e('get_cs_error'))
     const cosJson = JSON.parse(cosJsonStr)
     return cosJson as ICustomStorageConfig
   }
@@ -177,7 +177,7 @@ export default class User extends Controller {
     const keyId = this.crypto.getStringHash(cosJsonString,'SHA1')
     const keyPack = await this.crypto.encryptString(cosJsonString, this.app.masterKeyManager.masterKey)
     
-    // secret 字段脱敏处理
+    // secret fields fill with ***
     Object.keys(cosConfig.secret).map((key)=>{
       cosConfig.secret[key] = '*'.repeat(10) + cosConfig.secret[key].slice(-4)
     })
@@ -209,12 +209,12 @@ export default class User extends Controller {
     await this.deleteLocalData('USER_INFO_CACHE_KEY')
   }
 
-  // 未使用
+  // not used
   async bindTelNumber(data){
     return this.invokeApi('bindTelNumber', data)
   }
 
-  // 未使用
+  // not used
   async removeBindTelNumber(data){
     return this.invokeApi('removeBindTelNumber', data)
   }
@@ -239,11 +239,11 @@ export default class User extends Controller {
   async createTag(tagName:string){
     const customTags = await this.getTags()
     if(customTags.find(tag=>tag.name === tagName)){
-      throw Error("标签已存在")
+      throw Error(this.t_e('tag_exist'))
     }
 
     if(this.config?.general.useDefaultTag && this.getCardConfig('defaultTags').find(tag=>tag.name === tagName)){
-      throw Error("内置标签中已经存在\n无需重复创建")
+      throw Error(this.t_e('build_in_tag'))
     }
 
     return this.invokeApi('createTag', tagName)
