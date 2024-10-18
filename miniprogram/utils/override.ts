@@ -51,14 +51,13 @@ const advLog = (level, ...args) => {
   } catch (error:any) {
     const callStack:string[] = error.stack.split('\n').slice(1)
     for (const idx in callStack) {
-      if(!callStack[idx].includes('advLog') && callStack[idx].includes('override.js')){
-        const callInfo = /.*\/(.*?)\){0,1}$/.exec(callStack[+idx+1])
-        const callInfoText = callInfo ? callInfo[1] : ''
-        if(callInfoText) {
-          logText = [`[${time()}][${callInfoText}][%c${level}%c] `,`color:${levelColors[level]}`,'',...args]
-        }
-        break
+      if(callStack[idx].includes('override.js')) continue
+      const callInfo = /.*\/appservice\/(.*\.js)/.exec(callStack[idx])
+      const callInfoText = callInfo ? callInfo[1] : ''
+      if(callInfoText) {
+        logText = [`[${time()}][${callInfoText}][%c${level}%c] `,`color:${levelColors[level]}`,'',...args]
       }
+      break
     }
   }
   if(!logText.length){
