@@ -28,6 +28,10 @@ export default {
     data_no_change: 'Data no change',
     content_safe_check: 'Content Security Checks'
   },
+  key: {
+    enter_key: 'Enter key',
+    forget_key: 'Forgot key',
+  },
   error: {
     image_format_error: 'The image format is not supported',
     client_not_work: 'This feature is not supported by the client',

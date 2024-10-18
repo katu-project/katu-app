@@ -63,11 +63,11 @@ export const CreateEventBehavior = (page:string)=>{
   return Behavior({
     lifetimes: {
       created(){
-        console.debug('挂载页面事件:', pageEvents)
+        console.debug('Mount page events:', pageEvents)
         this.loadEvent()
       },
       detached(){
-        console.debug('卸载页面事件:', pageEvents)
+        console.debug('Unmount page events:', pageEvents)
         this.unloadEvent()
       }
     },
@@ -89,7 +89,7 @@ export const CreateEventBehavior = (page:string)=>{
   
       subscribe(event, handler){
         if(!handler){
-          console.warn(`${event} 事件不存在`)
+          console.warn(`${event} event not exist`)
           return
         }
         app.on(event,handler)
@@ -97,7 +97,7 @@ export const CreateEventBehavior = (page:string)=>{
     
       unsubscribe(event, handler){
         if(!handler){
-          console.warn(`${event} 事件不存在`)
+          console.warn(`${event} event not exist`)
           return
         }
         app.off(event,handler)

@@ -12,12 +12,12 @@ export const CreateKeyInput = (optinos?:KeyInputBehaviorOptionsType&{customKeyIn
       customKeyInputConfirm: optinos?.customKeyInputConfirm,
       __inputKey:{
         show: false,
-        title: optinos?.title || '输入密码：',
+        title: optinos?.title || app.t_k('enter_key'),
         inputMode: optinos?.inputMode || '',
         changeMode: optinos?.hasOwnProperty('changeMode') ? optinos.changeMode : true,
         resultText: optinos?.resultText || '',
         showSubBtn: optinos?.hasOwnProperty('showSubBtn') ? optinos.showSubBtn : true,
-        subBtnText: optinos?.subBtnText || '忘记密码'
+        subBtnText: optinos?.subBtnText || app.t_k('forget_key')
       }
     },
   
