@@ -4,11 +4,11 @@
       <view class='input_title'>
         <view wx:if="{{state === 'loading'}}" class="text-xxl flex-row justify-center"> 
           <text class="cuIcon-loading text-green iconfont-spin"></text>
-          <text class="text-lg padding-left-sm">密码验证中</text>
+          <text class="text-lg padding-left-sm">{{t.verify_key}}</text>
         </view>
         <view wx:if="{{state === 'failed'}}" class="text-xxl flex-row justify-center"> 
           <text class="cuIcon-roundclose text-red"></text>
-          <text class="text-lg padding-left-sm">{{result || '密码不正确'}}</text>
+          <text class="text-lg padding-left-sm">{{result || t.bad_key}}</text>
         </view>
         <view wx:if="{{state === ''}}" class="text-xxl"> 
           <text class="cuIcon-lock text-green"></text> 
@@ -32,11 +32,11 @@
         </block>
 
       </view>
-      <view class='mode_change solids-bottom' hidden="{{!changeMode}}" catchtap='tapChangeMode'>切换输入模式</view>
+      <view class='mode_change solids-bottom' hidden="{{!changeMode}}" catchtap='tapChangeMode'>{{t.change_mode}}</view>
       <view class='forget_pwd' wx:if="{{showSubBtn && state === 'failed' }}" catchtap='tapSubBtn'>{{subBtnText}}</view>
       <view class="btn-row">
         <button class="cu-btn lg text-white bg-grey gfw cancel-btn" data-btn="true" catchtap="tapToHideModal">
-          取消
+          {{t.cancel}}
         </button>
       </view>
     </view>

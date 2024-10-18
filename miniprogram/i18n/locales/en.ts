@@ -31,6 +31,9 @@ export default {
   key: {
     enter_key: 'Enter key',
     forget_key: 'Forgot key',
+    bad_key: 'Key is incorrect',
+    change_mode: 'Switch the input mode',
+    verify_key: 'Verifying key',
   },
   error: {
     image_format_error: 'The image format is not supported',

@@ -31,6 +31,9 @@ export default {
   key: {
     enter_key: '输入密码',
     forget_key: '忘记密码',
+    bad_key: '密码不正确',
+    change_mode: '切换输入模式',
+    verify_key: '密码验证中',
   },
   error: {
     image_format_error: '图片格式不支持',

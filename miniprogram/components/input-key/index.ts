@@ -8,7 +8,7 @@ Component({
   properties: {
     title: {
       type: String,
-      value: '输入密码：'
+      value: ''
     },
     show: {
       type: Boolean,
@@ -20,7 +20,7 @@ Component({
     },
     subBtnText: {
       type: String,
-      value: '忘记密码'
+      value: ''
     },
     inputMode: {
       type: String,
@@ -40,7 +40,13 @@ Component({
     display: false,
     key: '',
     focus: false,
-    state: ''
+    state: '',
+    t: {
+      cancel: user.t('cancel'),
+      bad_key: user.t_k('bad_key'),
+      change_mode: user.t_k('change_mode'),
+      verify_key: user.t_k('verify_key'),
+    }
   },
 
   observers:{
