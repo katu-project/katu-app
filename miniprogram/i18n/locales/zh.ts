@@ -36,6 +36,9 @@ export default {
     got_it: '不再提示',
     new_version_tips: '发现新版本，现在更新'
   },
+  brand: {
+    'tencent_cloud': '腾讯云'
+  },
   key: {
     enter_key: '输入密码',
     forget_key: '忘记密码',
@@ -77,7 +80,16 @@ export default {
     not_set_cs: '未配置自定义存储',
     get_cs_error: '提取配置出错',
     tag_exist: '标签已存在',
-    build_in_tag: '无法创建内置标签'
+    build_in_tag: '无法创建内置标签',
+    decrypt_failed: '解密失败',
+    decrypt_extra_error: '附加数据读取出错',
+    create_key_pack: '创建密码对错误',
+    convert_key_error: '密码转换处理失败',
+    calculate_key_id_error: '获取密码ID出错',
+    key_id_not_match: '密码ID验证失败',
+    build_in_params_error: '内部参数错误',
+    content_test_error: '内容完整性检测失败',
+    unknown_cs: '未知的存储类型'
   },
   settings:{
     account: '账户',

@@ -33,13 +33,13 @@ class Cache extends Module {
   async setUserAvatar(url:string){
     const cachePath = await this.getUserAvatarCachePath(url)
     const cacheFile = await file.checkAccess(cachePath).catch(_=>{
-      console.warn('无有效缓存头像数据')
+      console.warn('no valid avatar cache')
     })
    
     if(cacheFile){
-      console.log('使用缓存头像数据')
+      console.log('use cache avatar')
     }else{
-      console.debug('开始缓存用户头像')
+      console.debug('start cache avatar')
       try {
         await file.rmdir(this.config.userAvatarDir)
       } catch (_) {}
@@ -48,7 +48,7 @@ class Cache extends Module {
         const cachePath = await this.getUserAvatarCachePath(url)
         await this.downloadFile({url, savePath: cachePath})
       } catch (error) {
-        console.error('缓存头像下载错误:',error)
+        console.error('cache avatar download failed:',error)
       }
     }
     return cachePath
@@ -110,7 +110,7 @@ class Cache extends Module {
   }
 
   async setHomeCacheData(homeData:IHomeData){
-    console.debug('设置首页数据缓存')
+    console.debug('set home data cache')
     const cacheData = {
       cacheTime: this.currentTimestamp,
       data: homeData
@@ -131,7 +131,7 @@ class Cache extends Module {
   async getCard(id:string){
     const cards = await this.getCards()
     if(cards[id]) {
-      console.debug('getCard 命中缓存')
+      console.debug('getCard hit cache')
       return cards[id]
     }
     return undefined
@@ -148,10 +148,6 @@ class Cache extends Module {
     console.debug('setCard cache:', card._id)
     const cards = await this.getCards()
     cards[card._id] = card
-    // 加密卡片在解密时设置附加数据缓存，普通卡片在这里缓存附加数据
-    if(!card.encrypted){
-      await this.setCardExtraData(card._id, card.info)
-    }
     return this.setLocalData('CARD_DATA_CACHE_KEY',cards)
   }
 
@@ -174,7 +170,7 @@ class Cache extends Module {
       try {
         await file.moveFile(image._url, cachePath)
       } catch (error) {
-        console.error('缓存加密图片失败:',error)
+        console.error('cache crypto card failed :',error)
       }
     }else{
       try {
@@ -183,7 +179,7 @@ class Cache extends Module {
           savePath: cachePath
         })
       } catch (error) {
-        console.error('缓存普通图片失败:',error)
+        console.error('cache un-crypto card failed :',error)
       }
     }
   }
@@ -245,7 +241,7 @@ class Cache extends Module {
   async deleteCardExtraData(cardId:string|string[]){
     const cacheData = await this.getExtraDatas()
     if(typeof cardId === 'string'){
-      console.debug('删除缓存卡片附加数据', cardId, cacheData[cardId])
+      console.debug('delte card extra data cache ', cardId, cacheData[cardId])
       delete cacheData[cardId]
     }else{
       cardId.forEach(id => delete cacheData[id])
@@ -261,7 +257,7 @@ class Cache extends Module {
         const path = await this.getFilePath(this.getConst('APP_IMAGE_DIR'), fileId)
         file.deleteFile(path)
       })
-      console.log(`删除无效图片文件：${invalidIds.length} 条`)
+      console.log(`delete invalid card image: ${invalidIds.length} rows`)
     } catch (_) {}
     try {
       const localDownIdxs = await file.readdir(this.getConst('APP_DOWN_DIR'))
@@ -270,7 +266,7 @@ class Cache extends Module {
         const path = await this.getFilePath(this.getConst('APP_DOWN_DIR'), fileId)
         file.deleteFile(path)
       })
-      console.log(`删除无效下载文件：${invalidIds.length} 条`)
+      console.log(`delete invalid download file: ${invalidIds.length} rows`)
     } catch (_) {}
     this.setLocalData('CACHE_CLEAR_TIME', this.currentTimestamp)
   }

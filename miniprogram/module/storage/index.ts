@@ -6,7 +6,7 @@ import cos from "./cos"
 class Storage extends Module {
   ServiceTypeLabel = {
     'tencent.cos': {
-      label: '腾讯云 COS',
+      label: `${this.t('tencent_cloud',[],'brand')} COS`,
       name: 'tencent.cos',
       prefix: 's3+://'
     },
@@ -98,7 +98,7 @@ class Storage extends Module {
     }
 
     const downTestFileContent = await file.readFile(testFile, 'utf8')
-    if(downTestFileContent !== testContent) throw Error('内容检查错误')
+    if(downTestFileContent !== testContent) throw Error(this.t_e('content_test_error'))
   }
 
   async saveCardImage(filePath:string, storageConfig:ICustomStorageConfig){
@@ -113,12 +113,12 @@ class Storage extends Module {
         break
       case 'webdav':
         const client = new webdav.Client(storageConfig)
-        // 目前 webdav 不能创建子目录，将路径中的 / 替换为 _
+        // now webdav cannot create sub dir, replace / to _
         const fileKey = uploadInfo.cloudPath.replace(/\//g,'_')
         await client.upload(fileKey, filePath)
         break
       default:
-        throw Error('未知的存储类型')
+        throw Error(this.t_e('unknown_cs'))
     }
 
     return `${prefix}${uploadInfo.cloudPath}`
@@ -128,7 +128,7 @@ class Storage extends Module {
     const prefix = url.split('://')[0] + '://'
     const cloudPath = url.slice(prefix.length)
     const storageType = Object.values(this.ServiceTypeLabel).find(e=>e.prefix === prefix)
-    if(!storageType) throw Error('未知的存储类型')
+    if(!storageType) throw Error(this.t_e('unknown_cs'))
 
     switch(storageType.name){
       case 'tencent.cos':
@@ -138,12 +138,12 @@ class Storage extends Module {
         break
       case 'webdav':
         const client = new webdav.Client(storageConfig)
-        // 目前 webdav 不能创建子目录，将路径中的 / 替换为 _
+        // now webdav cannot create sub dir, replace / to _
         const fileKey = cloudPath.replace(/\//g, '_')
         await client.download(fileKey, savePath)
         break
       default:
-        throw Error('未知的存储类型')
+        throw Error(this.t_e('unknown_cs'))
     }
 
     return savePath

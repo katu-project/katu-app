@@ -86,11 +86,11 @@ class Client {
           if (res.statusCode >= 200 && res.statusCode < 300) {
             resolve(res.data)
           } else {
-            reject(Error(`WEBDAV 请求错误: ${res.statusCode}`));
+            reject(Error(`WEBDAV Request Error: ${res.statusCode}`));
           }
         },
         fail: (err) => {
-          reject(Error(`WEBDAV 请求错误: ${err.errMsg}`));
+          reject(Error(`WEBDAV Request Error: ${err.errMsg}`));
         }
       });
     });

@@ -36,6 +36,9 @@ export default {
     got_it: 'Got it',
     new_version_tips: 'New version, updated now'
   },
+  brand: {
+    'tencent_cloud': 'Tencent Cloud'
+  },
   key: {
     enter_key: 'Enter key',
     forget_key: 'Forgot key',
@@ -77,7 +80,16 @@ export default {
     not_set_cs: 'Custom storage is not configured',
     get_cs_error: 'Extract config failed',
     tag_exist: 'Tag already exists',
-    build_in_tag: 'Built-in labels cannot be created'
+    build_in_tag: 'Built-in labels cannot be created',
+    decrypt_failed: 'Decrypt Failed',
+    decrypt_extra_error: 'Read card info failed',
+    create_key_pack: 'Create key pair incorrectly',
+    convert_key_error: 'Key conversion failed',
+    calculate_key_id_error: 'Failed to calculate the key ID',
+    key_id_not_match: 'Failed to verify key ID',
+    build_in_params_error: 'Build-in param Error',
+    content_test_error: 'Content integrity detection failed',
+    unknown_cs: 'Unknown storage type'
   },
   settings:{
     account: 'Account',

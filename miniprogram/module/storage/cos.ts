@@ -67,7 +67,7 @@ function getTencentCosDownloadUrl(key:string, config:ICustomStorageConfig){
   const url = 'https://' + cosHost + key + '?' + sign
   return url
 }
-// 获取签名
+// get sign
 function getTencentCosUploadInfo(key:string, config:ICustomStorageConfig) {
   let cosHost = `${config.bucket}.cos.${config.region}.myqcloud.com`
   const ak = config.secret.secretId
@@ -122,7 +122,7 @@ function getUploadInfo(key:string, config:ICustomStorageConfig){
     case 'tencent.cos':
       return getTencentCosUploadInfo(key, config)
     default:
-      throw Error('不支持的存储类型')
+      throw Error(`Unknown type: ${config.type}`)
   }
 }
 
@@ -133,7 +133,7 @@ function getDownloadInfo(key:string, config:ICustomStorageConfig){
     case 'tencent.cos':
       return getTencentCosDownloadUrl(key, config)
     default:
-      throw Error('不支持的存储类型')
+      throw Error(`Unknown type: ${config.type}`)
   }
 }
 
