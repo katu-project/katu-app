@@ -454,7 +454,7 @@ export default {
     use_origin: 'Use original pic',
     reset: 'Reset selection',
     select_pic: 'Please select an picture',
-    process_pic: 'Process the picture'
+    process_pic: 'Processing'
   },
   cardList: {
     title: 'title',
