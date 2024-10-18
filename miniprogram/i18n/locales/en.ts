@@ -28,6 +28,11 @@ export default {
     data_no_change: 'Data no change',
     content_safe_check: 'Content Security Checks'
   },
+  error: {
+    image_format_error: 'The image format is not supported',
+    client_not_work: 'This feature is not supported by the client',
+    image_name_error: 'Error getting file name',
+  },
   settings:{
     account: 'Account',
     general: 'General',

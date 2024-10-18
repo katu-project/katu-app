@@ -23,8 +23,8 @@ export default class Base {
   }
 
   emit(key:string, record?:any){
-    const recordData = record === null || record === undefined ? '无' : record 
-    console.debug(`事件: ${key} 发出，携带数据: ${recordData}`)
+    const recordData = record ?? 'None'
+    console.debug(`Event: ${key} emit，with data: ${recordData}`)
     return this.emitter.emit(key, record)
   }
 

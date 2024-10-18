@@ -67,8 +67,8 @@ export default class Core extends Base {
   }
 
   async invokeApi<K extends keyof ApiType, R = ReturnType<ApiType[K]>>(apiName: K, ...args:Parameters<ApiType[K]>):Promise<Awaited<R>>{
-    console.debug('执行 API 请求: ', apiName, args)
-    // @ts-ignore 类型识别有问题，先跳过
+    console.debug('Invoke API : ', apiName, args)
+    // @ts-ignore can't fetch type
     return api[apiName](...args)
   }
 
@@ -154,7 +154,7 @@ export default class Core extends Base {
 
   async chooseLocalImage(){
     if(this.isMac){
-      throw Error('当前客户端不支持该功能')
+      throw Error(this.t_e('client_not_work'))
     }
     getApp().globalData.state.push('InSelectFile')
     const chooseTempFile = await chooseLocalImage()
@@ -203,28 +203,28 @@ export default class Core extends Base {
 
   async getImageFilePath(image: Pick<ICardImage, 'url'>) {
     let checkUrl = image.url
-     // 分享的卡片连接是http，需要移除请求参数
+     // remove http domain
      if(checkUrl.startsWith('http')){
       checkUrl = checkUrl.split('?')[0]
     }
     const splitUrl = checkUrl.split('/')
     const fileName = splitUrl[splitUrl.length - 1]
     if (!fileName) {
-      throw Error('图片文件名不能为空')
+      throw Error(this.t_e('image_name_error'))
     }
     return this.getFilePath(this.getConst('APP_IMAGE_DIR'), fileName)
   }
 
   async getDownloadFilePath(image: Pick<ICardImage, 'url'>) {
     let checkUrl = image.url
-    // 分享的卡片连接是http，需要移除请求参数
+    // remove http domain
     if(checkUrl.startsWith('http')){
       checkUrl = checkUrl.split('?')[0]
     }
     const splitUrl = checkUrl.split('/')
     const fileName = splitUrl[splitUrl.length - 1]
     if (!fileName) {
-      throw Error('图片文件名不能为空')
+      throw Error(this.t_e('image_name_error'))
     }
     return this.getFilePath(this.getConst('APP_DOWN_DIR'), fileName)
   }

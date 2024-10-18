@@ -3,7 +3,6 @@ import { navigateTo, navigateBack, openPrivacyContract } from '@/utils/index'
 
 export default class Navigation extends Agent {
 
-  // 导航
   navigateBack(){
     return navigateBack()
   }
@@ -107,7 +106,7 @@ export default class Navigation extends Agent {
     return this.navToDocPage(this.navDocMap.userUsageProtocol)
   }
 
-  // 尝试打开官方提供的隐私协议，否则退回到有同样内容的隐私文档
+  // Pre use of standard privacy protocol interfaces
   async openUserPrivacyProtocol(){
     try {
       await openPrivacyContract()

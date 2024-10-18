@@ -25,14 +25,14 @@ export default class Controller extends Navigation {
   async checkImageType(picPath:string){
     try {
       const imageType = await this.getImageType(picPath)
-      if(!this.getConfig('allowUploadImageType').includes(imageType)) throw Error(`不支持 ${imageType} 图片格式`)
+      if(this.getConfig('allowUploadImageType').includes(imageType)) return
     } catch (error) {
       console.error('image type check err:',error)
-      throw Error('图片格式不支持')
     }
+    throw Error(this.t_e('image_format_error'))
   }
 
-  // 移除号码设置页后未使用
+  // Unused
   checkSmsTimeout(lastTime:number){
     return this.checkTimeout(lastTime, this.getConfig('smsGapTime'))
   }

@@ -28,6 +28,11 @@ export default {
     data_no_change: '数据无变动',
     content_safe_check: '内容合规检查'
   },
+  error: {
+    image_format_error: '图片格式不支持',
+    client_not_work: '当前客户端不支持该功能',
+    image_name_error: '获取文件名出错',
+  },
   settings:{
     account: '账户',
     general: '通用',
