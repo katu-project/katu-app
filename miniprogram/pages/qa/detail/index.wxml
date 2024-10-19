@@ -15,7 +15,7 @@
     <text class="cuIcon-time text-cyan"></text>
     <view class="margin-left-xs">{{t.update_time}} : {{doc.updateTime}}</view>
   </view>
-  <view class="margin text-cyan text-lg">
+  <view wx:if="{{showShare}}" class="margin text-cyan text-lg">
     <button class="cu-btn block line-cyan lg" open-type="share">
       <text class="cuIcon-forward"></text>
       <text class="padding-left-sm">{{t.share}}</text>

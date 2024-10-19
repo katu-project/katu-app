@@ -187,7 +187,7 @@ export default {
     update_time: 'Update Time',
     share: 'Share Help',
     not_find: 'The document does not exist',
-    app_help_doc: 'Katu Usage Documentation'
+    app_help_doc: 'Katu Documentation'
   },
   quota: {
     remain_quota: 'Remain T-Coin',

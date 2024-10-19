@@ -13,7 +13,8 @@ app.createPage({
       title: '',
       content: '',
       updateTime: ''
-    }
+    },
+    showShare: false
   },
   
   onLoad(options) {
@@ -22,6 +23,11 @@ app.createPage({
 
   onReady() {
     this.loadData()
+    if(app.isMp){
+      this.setData({
+        showShare: true
+      })
+    }
   },
 
   onShow(){
