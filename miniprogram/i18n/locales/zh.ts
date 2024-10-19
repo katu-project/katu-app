@@ -89,7 +89,8 @@ export default {
     key_id_not_match: '密码ID验证失败',
     build_in_params_error: '内部参数错误',
     content_test_error: '内容完整性检测失败',
-    unknown_cs: '未知的存储类型'
+    unknown_cs: '未知的存储类型',
+    opencv_select_card_error: '卡片图像选择失败'
   },
   settings:{
     account: '账户',

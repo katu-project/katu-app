@@ -215,15 +215,20 @@ class CardManager extends Controller{
   async parseCardImageBySelectRectangle(options:{imageData, points}){
     const { getCardFromPoints } = await require.async('../packages/opencv/index')
     const tempPath = await this.getTempFilePath(`cv-${this.currentTimestamp}`)
-    const dstBuffer = await getCardFromPoints({
-      imageData: options.imageData,
-      pts: options.points,
-      dstSize: {
-        width: 1000,
-        height: 630
-      }
-    })
-    await file.writeFile(tempPath, dstBuffer)
+    try {
+      const dstBuffer = await getCardFromPoints({
+        imageData: options.imageData,
+        pts: options.points,
+        dstSize: {
+          width: 1000,
+          height: 630
+        }
+      })
+      await file.writeFile(tempPath, dstBuffer)
+    } catch (error) {
+      console.error('func parseCardImageBySelectRectangle: ', error)
+      throw Error(this.t_e('opencv_select_card_error'))
+    }
     return tempPath
   }
   

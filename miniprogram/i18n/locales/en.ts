@@ -89,7 +89,8 @@ export default {
     key_id_not_match: 'Failed to verify key ID',
     build_in_params_error: 'Build-in param Error',
     content_test_error: 'Content integrity detection failed',
-    unknown_cs: 'Unknown storage type'
+    unknown_cs: 'Unknown storage type',
+    opencv_select_card_error: 'Card image selection failed'
   },
   settings:{
     account: 'Account',
