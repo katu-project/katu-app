@@ -10,8 +10,7 @@ app.createPage({
 
   data: {
     qaCate: [] as typeof QaTypeCate,
-    list: [] as AnyObject[],
-    isLoading: true
+    list: [] as AnyObject[]
   },
 
   onLoad() {
@@ -30,8 +29,7 @@ app.createPage({
   loadData(){
     loadData(app.getHotDoc).then(list=>{
       this.setData({
-        list,
-        isLoading: false
+        list
       })
     })
   },

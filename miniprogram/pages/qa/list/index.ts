@@ -12,8 +12,7 @@ app.createPage({
 
   data: {
     cate: {} as AnyObject,
-    list: [] as AnyObject[],
-    isLoading: true
+    list: [] as AnyObject[]
   },
 
   onLoad(options) {
@@ -33,7 +32,9 @@ app.createPage({
 
   loadData(){
     loadData(app.getCateDoc, this.cate).then(list=>{
-      this.setData({list,isLoading: false})
+      this.setData({
+        list
+      })
     })
   },
 

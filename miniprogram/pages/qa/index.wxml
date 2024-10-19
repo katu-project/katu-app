@@ -21,7 +21,6 @@
     <text class="cuIcon-titles text-cyan"></text>
     <text class="margin-left-xs text-orange">{{t.faq}}</text>
   </view>
-  <view class="cu-load {{isLoading?'loading':''}}"></view>
   <view class="cu-list menu sm-border margin-top">
     <view class="cu-item arrow skeleton-gray-block item" wx:for="{{list}}" wx:key="id" bindtap="tapToDetail" data-key="{{item._id}}" data-skeleton-list>
       <view class="content">
