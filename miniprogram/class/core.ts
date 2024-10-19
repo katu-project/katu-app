@@ -1,7 +1,7 @@
 import Base from '@/class/base'
 import Const from "@/const"
 import Config from '@/config/index'
-import { cache, file, crypto, checkTimeout, chooseLocalImage, scanQrcode, setClipboardData } from "@/utils/index"
+import { cache, file, crypto, chooseLocalImage, scanQrcode, setClipboardData } from "@/utils/index"
 import api from '@/api'
 import { getI18nInstance } from '@/class/i18n'
 
@@ -108,8 +108,19 @@ export default class Core extends Base {
     return Config.Menu
   }
 
-  get checkTimeout(){
-    return checkTimeout
+  /**
+   * timeout check，return value s less than 0 is timeout, else not timeout
+   * @param recordTime
+   * @param gapTime
+   * @returns number
+   */
+  checkTimeout(recordTime:number, gapTime:number){
+    const nowTime = this.currentTimestamp
+    // convert to millisecond
+    recordTime = String(recordTime).length === 10 ? recordTime * 1000 : recordTime
+    if(recordTime > nowTime) return 0
+    const costTime = Math.floor((nowTime - recordTime)/1000)
+    return gapTime - costTime
   }
 
   get scanQrcode(){
