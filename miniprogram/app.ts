@@ -6,6 +6,7 @@ App({
   onLaunch(){
     const baseInfo = wx.getAppBaseInfo()
     app.initI18n(baseInfo.language)
+    this.i18n = app.i18n
     wx.getSystemInfo({
       success: info => {
         this.globalData.StatusBar = info.statusBarHeight;
@@ -30,5 +31,7 @@ App({
     CustomBar: 0,
     Custom: {},
     state: []
-  }
+  },
+  
+  i18n: {}
 });
