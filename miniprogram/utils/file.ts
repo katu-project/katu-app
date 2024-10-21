@@ -67,7 +67,7 @@ export async function checkAccess(path: string) {
   try {
     return await toPromise(checkAccess, options)
   } catch (error:any) {
-    throw Error(error?.errMsg || '文件不存在')
+    throw Error(error?.errMsg || 'Access Error')
   }
 }
 
@@ -84,8 +84,8 @@ export async function getSavedFileList(){
 }
 
 /**
- * 不要直接使用
- * bug: 当传入空目录且recursive为true时返回结果有误
+ * Do not use directly
+ * bug: When an empty directory is passed in and recursive is true, the result is incorrect
  * @param path 
  * @param recursive 
  * @returns 
@@ -129,8 +129,8 @@ export async function rmdir(dirPath){
 }
 // ------- wx function end ----
 
-// ------- 扩展方法 ----
-// 修复 recursive=true 且文件夹未空时返回 stat 而不是 FileStats 数组
+// ------- Extension methods ----
+// fix recursive=true and dir is not empty, return stat not FileStats array
 export async function advReaddir(dir:string){
   const checkStat = await getStats(dir)
   if(!checkStat.isDirectory()){
@@ -147,7 +147,7 @@ export async function readFileByPosition<T extends string | ArrayBuffer>(options
   const readFileByPosition = args => wx.getFileSystemManager().readFile(args)
   readFileByPosition.noLog = true
   if(options.encoding === 'hex' && options.length){
-    if(options.length * 4 % 8 !== 0) throw Error('读取长度需是8的倍数')
+    if(options.length * 4 % 8 !== 0) throw Error('length must divisible by 8')
     options.length = options.length * 4 / 8
   }
   return toPromise<T>(readFileByPosition, options , 'data')
@@ -168,7 +168,7 @@ export async function getFilePath({dir, name, suffix}:{dir: string, name:string,
   if(name.includes('/')){
     const splitName = name.split('/')
     if(splitName.length !== 2){
-      throw Error('目录层级过深')
+      throw Error('Directory is too deep')
     }
 
     dirPath = `${dir}/${splitName[0]}`

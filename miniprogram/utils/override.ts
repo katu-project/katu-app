@@ -1,4 +1,4 @@
-// 支持单独引入lodash/debounce方法
+// used to support lodash/debounce
 Object.assign(global, {
   Date: Date,
   Object: Object,
@@ -15,7 +15,7 @@ const isDev = AppInfo.miniProgram.envVersion === 'develop'
 const forceDebug = wx.getStorageSync('KATU_DEBUG')
 const fs = wx.getFileSystemManager()
 
-// 单独使用 fs.open 在首次安装并启动app时会报错
+// Using fs.open alone will throw error when install and launch the app for the first time
 const logFile = `${wx.env.USER_DATA_PATH}/err.log`
 fs.access({
   path: logFile,
@@ -25,7 +25,7 @@ fs.access({
       flag: 'as',
       fail: console.log,
       success: ()=>{
-        console.log('创建日志文件 ok')
+        console.log('Create debug log: Ok')
       }
     })
   }

@@ -58,10 +58,10 @@ async function scanQrcode(options?:WechatMiniprogram.ScanCodeOption){
     if(['scanCode:fail cancel'].includes(error.errMsg)){
       throw error
     }
-    throw Error('无效二维码')
+    throw Error('Invalid QR Code')
   }
   console.debug('scanQrcode',scanRes)
-  if(!scanRes) throw Error('无效二维码')
+  if(!scanRes) throw Error('Invalid QR Code')
   try {
     return JSON.parse(scanRes)
   } catch (_) {}
@@ -136,8 +136,7 @@ type LoadDataOptions = {
 }
 
 /**
- * 注意：
- * 1. 传进来的 finallyAction 只保证在内部 Promise.race 后会执行，与外面 then 里的异步函数无顺序关联
+ * 1. the finallyAction only invoke after Promise.race, no promise invoke after then
  * @param func 
  * @param params 
  * @param options 
@@ -178,7 +177,7 @@ async function loadData<T extends AnyFunction>(
   }
 
   if(hideLoading){
-    console.log("静默操作")
+    console.log("Operate silently")
   }else{
     wx.showLoading({
       title: loadingTitle,

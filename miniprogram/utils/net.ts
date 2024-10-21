@@ -37,7 +37,7 @@ async function request(action:string, data:any, requestor, options){
   const networkTimeout = new Promise(async (_,reject)=>{
     await sleep(9000)
     reject({
-      message: '请求超时，请检查网络'
+      message: 'Network Timeout'
     })
   })
   
@@ -50,22 +50,24 @@ async function request(action:string, data:any, requestor, options){
     ])
   } catch (err:any) {
     error.message = err.message || err.errMsg || err.toString()
-    error.code = 600 // 云函数报错
-    console.error('网络请求错误：',action,data,error)
+    error.code = 600 // network error
+    console.error('Network Request Error: ', action, data, err)
     throw error
   }
 
   if(typeof resp !== 'object'){
-    error.message = '基础请求响应错误: '+ JSON.stringify(resp)
-    error.code = 500 // 1 业务报错 其他 系统错误
-    console.error(action, error)
+    error.message = 'Api Response Data Error'
+    error.code = 500 // web server error
+    console.error('Network Request Error', action, JSON.stringify(resp))
     throw error
   }
 
-  if(resp.code !== 0){
+  if(resp.code !== 0){ // app service error
     error.message = resp.msg
-    error.code = resp.code // 1 业务报错 其他 系统错误
-    if(resp.code != 1) console.error(action, error)
+    error.code = resp.code
+    if(resp.code != 1) {
+      console.warn('Special Service Code', action, resp)
+    }
     throw error
   }
 
@@ -83,10 +85,10 @@ export async function downloadFile(url:string, options:{savePath:string, header?
     }
     const res:WechatMiniprogram.DownloadFileSuccessCallbackResult = await toPromise(download, args)
     if (res.statusCode !== 200) {
-      throw new CustomError(`文件下载出错[${res.statusCode}]`)
+      throw new CustomError(`File download failed [${res.statusCode}]`)
     }
     if (!res.tempFilePath) {
-      throw new CustomError("文件下载出错[104]")
+      throw new CustomError("File download failed [104]")
     }
     await file.saveTempFile(res.tempFilePath, options.savePath)
     return res
@@ -95,7 +97,7 @@ export async function downloadFile(url:string, options:{savePath:string, header?
     if(error instanceof CustomError){
       throw error
     }
-    throw Error("文件下载出错[100]")
+    throw Error("File download failed [100]")
   }
 }
 
@@ -134,7 +136,7 @@ function createHttpRequestor(options:IHttpRequestOptions){
     }
 
     // #if NATIVE
-    if(!args.header?.Token){ // 内置 Token 优先
+    if(!args.header?.Token){ // buil-in Token first
       const token = await getCache<string>('KATU_APP_TOKEN').catch(console.debug)
       args.header!.Token = token || ''
     }
@@ -161,7 +163,7 @@ function createHttpUploader(options:IHttpRequestOptions){
     }
 
     // #if NATIVE
-    if(!args.header?.Token){ // 内置 Token 优先
+    if(!args.header?.Token){ // buil-in Token first
       const token = await getCache<string>('KATU_APP_TOKEN').catch(console.debug)
       args.header!.Token = token || ''
     }
@@ -172,28 +174,28 @@ function createHttpUploader(options:IHttpRequestOptions){
     } catch (error:any) {
       if(error.errMsg){
         console.error(error)
-        throw Error('上传出错了[021]')
+        throw Error('File upload failed [021]')
       }
       throw error
     }
     if(resp.statusCode !== 200){
       if(resp.statusCode === 413){
-        throw Error(`选择的文件太大了，无法上传`)
+        throw Error(`File upload failed [413]`)
       }
-      throw Error(`上传出错了[${resp.statusCode}]`)
+      throw Error(`File upload failed [${resp.statusCode}]`)
     }
 
     try {
       respJson = JSON.parse(resp.data)
     } catch (error) {
       console.error(resp.data)
-      throw Error('上传出错了[022]')
+      throw Error('File upload failed [022]')
     }
     if(respJson.code !== 0){
-      throw Error(`上传出错了[P${respJson.code}]`)
+      throw Error(`File upload failed [P${respJson.code}]`)
     }
     if(!respJson.data){
-      throw Error('上传出错了[023]')
+      throw Error('File upload failed [023]')
     }
     return respJson.data
   }
@@ -231,7 +233,7 @@ export function createCosUploader(){
     } catch (error:any) {
       console.error('cos upload err:',error)
       if(error.errMsg){
-        throw Error('上传出错了[021]')
+        throw Error('File upload failed [021]')
       }
       throw error
     }
@@ -239,9 +241,9 @@ export function createCosUploader(){
     if(resp.statusCode !== 200){
       console.error('cos upload resp err:',resp)
       if(resp.statusCode === 413){
-        throw Error(`选择的文件太大了，无法上传`)
+        throw Error(`File upload failed [413]`)
       }
-      throw Error(`上传出错了[${resp.statusCode}]`)
+      throw Error(`File upload failed [${resp.statusCode}]`)
     }
     return resp.data
   }

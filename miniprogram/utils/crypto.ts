@@ -25,7 +25,7 @@ export async function random(bytesLength:number){
     })
     randomHexSring = BufferToHex(randomValues)
   } catch (error) {
-    console.warn('获取系统随机数出错，将使用内置替代库：', error)
+    console.warn('random api err, use cryptojs build-in random:', error)
     randomHexSring = CryptoJS.lib.WordArray.random(bytesLength).toString()
   }
   return randomHexSring
