@@ -500,5 +500,12 @@ export default {
     good_msg: 'Good news',
     signup_gift: 'Now register to use will receive free T-Coins',
     load_card: 'Load cards'
+  },
+  extraData: {
+    cn: 'Number',
+    cvv: 'CVV',
+    cm: 'Contact',
+    ed: 'Expires On',
+    cu: 'Custom'
   }
 }

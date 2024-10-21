@@ -5,7 +5,6 @@ import { getCardManager } from '@/controller/card'
 const app = getAppManager()
 const cardManager = getCardManager()
 const user = getUserManager()
-const CardExtraDataFieldsKeys = app.getCardConfig('defaultFields')
 
 app.createPage({
   i18n: {
@@ -13,23 +12,28 @@ app.createPage({
   },
 
   originData: '' as string|undefined,
+  originExtraFieldsKeys: [] as ICardExtraField[],
+
   data: {
-    extraFieldsKeys: CardExtraDataFieldsKeys,
+    extraFieldsKeys: [] as AnyObject[],
     extraFields: [] as AnyObject[]
   },
 
   onLoad(options) {
     this.originData = options.value
+    this.originExtraFieldsKeys = app.getCardConfig('defaultFields').map(e=>{
+      e.name = app.t(e.key,[],'extraData')
+      return e
+    })
+    let extraFieldItems = this.originExtraFieldsKeys
     const parseExtraData = JSON.parse(options.value||'[]')
     if(parseExtraData.length){
-      let extraFieldsKeys = this.data.extraFieldsKeys
       const extraFields = cardManager.rebuildExtraFields(parseExtraData)
       // remove exist item
-      extraFieldsKeys = extraFieldsKeys.filter(item=>{
+      extraFieldItems = extraFieldItems.filter(item=>{
         return item.key === 'cu' || !extraFields.some(e=>item.key === e.key)
       })
       this.setData({
-        extraFieldsKeys,
         extraFields
       })
     }else{
@@ -41,6 +45,10 @@ app.createPage({
         }
       }
     }
+
+    this.setData({
+      extraFieldsKeys: extraFieldItems
+    })
   },
 
   onBindinput({currentTarget:{dataset: {idx, cu}}, detail: {value}}){
@@ -88,7 +96,7 @@ app.createPage({
       extraFields: this.data.extraFields
     }
     if(selectedField.key !== 'cu'){
-      setData[`extraFieldsKeys`] = this.data.extraFieldsKeys.concat(CardExtraDataFieldsKeys.find(e=>e.key === selectedField.key)!).sort((a,b)=> a.xid-b.xid)
+      setData[`extraFieldsKeys`] = this.data.extraFieldsKeys.concat(this.originExtraFieldsKeys.find(e=>e.key === selectedField.key)!).sort((a,b)=> a.xid-b.xid)
     }
 
     this.setData(setData)

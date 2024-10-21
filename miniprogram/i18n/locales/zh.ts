@@ -500,5 +500,12 @@ export default {
     good_msg: '好消息',
     signup_gift: '现注册使用卡兔可领取免费兔币',
     load_card: '加载卡片数据'
+  },
+  extraData: {
+    cn: '卡号',
+    cvv: '校验码',
+    cm: '联系方式',
+    ed: '失效日期',
+    cu: '自定义'
   }
 }

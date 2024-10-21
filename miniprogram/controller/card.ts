@@ -241,9 +241,13 @@ class CardManager extends Controller{
   }
 
   rebuildExtraFields(extraFields: Partial<ICardExtraField>[]){
+    const defaultExtraFields = this.getCardConfig('defaultFields').map(e=>{
+      e.name = this.t(e.key,[],'extraData')
+      return e
+    })
     return extraFields.map(item=>{
       const [key,cuName] = item[0].split('-')
-      let extraField = Object.assign({value:''},this.getCardConfig('defaultFields').find(e=>e.key === key))
+      let extraField = Object.assign({value:''}, defaultExtraFields.find(e=>e.key === key))
       extraField = Object.assign({name: '', value: ''},extraField)
       if(key === 'cu') extraField.name = cuName
       extraField.value = item[1]

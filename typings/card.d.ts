@@ -29,7 +29,7 @@ interface ICardTag {
 
 interface ICardExtraField {
   key: string
-  name: string
+  name?: string
   xid: number
   cid?: number
   value?: string
