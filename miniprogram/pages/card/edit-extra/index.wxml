@@ -5,7 +5,7 @@
 
 <view class="page">
   <view class="margin-tb" style="min-height: 40vh;border-bottom: 1px solid darkcyan">
-    <view class="cu-form-group" wx:for="{{extraFields}}" wx:key="index">
+    <view class="cu-form-group" wx:for="{{extraFields}}" wx:key="key">
       <view class="flex-row field" wx:if="{{item.key === 'cu'}}">
         <input bindinput="onBindinput" maxlength="10" data-idx="{{index}}" data-cu="{{true}}" style="padding-right: 0;flex:unset" placeholder-style="color:#383838" value="{{item.name}}"></input>
       </view>

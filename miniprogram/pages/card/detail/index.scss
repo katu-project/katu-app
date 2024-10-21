@@ -34,8 +34,15 @@
 .extra-data-list{
   border: 1px solid rgb(167, 236, 236);
   .item{
-    .title{
-      width: 23vw;
+    justify-content: left;
+    .title {
+      width: 22vw;
+      padding-right: 0;
+    }
+    .value {
+      text-align: right;
+      flex: 1;
+      color: var(--grey);
     }
   }
 }

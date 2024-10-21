@@ -40,9 +40,9 @@
   </view>
   <view hidden="{{!extraData.length}}" class="padding-sm br-12 extra-data-list">
     <view class="cu-form-group item" wx:for="{{extraData}}" data-value="{{item.value}}" bindtap="tapToCopyValue" wx:key="idx">
-      <view class="title">{{item.name}} :</view>
-      <input placeholder="{{item.value}}" disabled></input>
-      <text class="cuIcon-copy text-gray"></text>
+      <view class="title">{{item.name}}</view>
+      <view>:</view>
+      <view class="value text-lg">{{item.value}}</view>
     </view>
   </view>
   <view class="padding-xl"></view>
