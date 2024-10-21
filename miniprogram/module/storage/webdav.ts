@@ -53,7 +53,10 @@ class Client {
   async download(href, savePath) {
     const fileData = await this.request('GET', href, {
       responseType: 'arraybuffer',
-      dataType: '其他'
+      dataType: undefined,
+      header: {
+        'content-type': 'application/octet-stream'
+      }
     })
     await writeFile(savePath, fileData, 'binary')
   }
