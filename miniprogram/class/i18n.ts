@@ -18,15 +18,19 @@ class I18n extends Base {
     console.debug('Set App Lang:', this.useLanguage)
   }
 
-  t(str:string, options?:{args?:string[], section?:string|string[]}){
+  _t(str:string, options?:{args?:string[], section?:string|string[], lib?:AnyObject}){
     let useSectionLangs = this.languages.base
-    if(options?.section){
-      if(typeof options?.section === 'string'){
-        useSectionLangs = this.languages[options.section] || {}
-      }else{
-        useSectionLangs = options?.section.reduce((obj, section) => {
-          return { ...obj, ...this.languages[section] };
-      }, {})
+    if(options?.lib){
+      useSectionLangs = options.lib
+    }else{
+      if(options?.section){
+        if(typeof options?.section === 'string'){
+          useSectionLangs = this.languages[options.section] || {}
+        }else{
+          useSectionLangs = options?.section.reduce((obj, section) => {
+            return { ...obj, ...this.languages[section] };
+        }, {})
+        }
       }
     }
 
@@ -39,6 +43,27 @@ class I18n extends Base {
       })
     }
     return result
+  }
+
+  t(str:string, args?:string[], section?:string|string[]){
+    return this._t(str,{
+      args,
+      section
+    })
+  }
+
+  t_e(str:string, args?:string[]){
+    return this._t(str,{
+      args,
+      section: 'error'
+    })
+  }
+
+  t_k(str:string, args?:string[]){
+    return this._t(str,{
+      args,
+      section: 'key'
+    })
   }
 }
 

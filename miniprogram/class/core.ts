@@ -45,25 +45,17 @@ export default class Core extends Base {
     return false
   }
 
-  t(str:string, args?:string[], section?:string|string[]){
-    return this.i18n.t(str,{
-      args,
-      section
-    })
+  get t(){
+    return this.i18n.t
   }
 
-  t_e(str:string, args?:string[]){
-    return this.i18n.t(str,{
-      args,
-      section: 'error'
-    })
+  get t_e(){
+    return this.i18n.t_e
+
   }
 
-  t_k(str:string, args?:string[]){
-    return this.i18n.t(str,{
-      args,
-      section: 'key'
-    })
+  get t_k(){
+    return this.i18n.t_k
   }
 
   async invokeApi<K extends keyof ApiType, R = ReturnType<ApiType[K]>>(apiName: K, ...args:Parameters<ApiType[K]>):Promise<Awaited<R>>{

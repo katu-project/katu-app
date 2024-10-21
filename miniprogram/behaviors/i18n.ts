@@ -31,15 +31,10 @@ export const CreateI18nBehavior = (options?:{page:string|string[]})=>{
 
     methods: {
       t(str:string, args?:string[]){
-        let result = this.data.t[str] || str
-        if (args) {
-          args.map(item=>{
-            if(result){
-              result = result.replace('{#}', item)
-            }
-          })
-        }
-        return result
+        return app.i18n._t(str, {
+          args,
+          lib: this.data.t
+        })
       }
     }
   })
