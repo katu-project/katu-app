@@ -34,12 +34,20 @@ async function showNotice(msg){
 
 // showChoose(title,content)
 async function showChoose(title:string, content?:string, options?: WechatMiniprogram.ShowModalOption): Promise<WechatMiniprogram.ShowModalSuccessCallbackResult> {
+  const i18n = getApp().i18n
   return new Promise((resolve)=>{
-    wx.showModal({
+    const params:WechatMiniprogram.ShowModalOption = {
       title,
       content: content || '',
       ...(options || {})
-    }).then((e)=>{
+    }
+    if(!params.confirmText){
+      params.confirmText = i18n.t('confirm')
+    }
+    if(!params.cancelText){
+      params.cancelText = i18n.t('cancel')
+    }
+    wx.showModal(params).then((e)=>{
       return resolve(e)
     }).catch(console.warn)
   })
@@ -148,7 +156,8 @@ async function loadData<T extends AnyFunction>(
   options?: Partial<LoadDataOptions> | string
   ): Promise<Awaited<ReturnType<T>>>
   {
-  let loadingTitle = '正在处理请求', 
+  const i18n = getApp().i18n
+  let loadingTitle = i18n.t('processing') , 
       returnFailed = false,
       hideLoading = false,
       failedContent,
@@ -190,7 +199,7 @@ async function loadData<T extends AnyFunction>(
     if(timeout > 0){
       sleep(timeout).then(()=>{
         reject({
-          message: '服务超时，请稍后再试'
+          message: i18n.t_e('timeout_retry')
         })
       })
     }
@@ -220,13 +229,13 @@ async function loadData<T extends AnyFunction>(
         hidenLoadingFunc()
       }
       console.error('loadData', func?.name||'No Name', params||'No Params', error)
-      if(Object.hasOwnProperty ? Object.hasOwnProperty.call(error,'code'): error.code){ // 业务错误代码
-        if(error.code === 1){ // 普通业务错误代码
+      if(Object.hasOwnProperty ? Object.hasOwnProperty.call(error,'code'): error.code){
+        if(error.code === 1){
           wx.showModal({
-            title: '操作错误',
-            content: failedContent || error.message.toString() || '未知错误',
+            title: i18n.t_e('operate_error'),
+            content: failedContent || error.message.toString() || i18n.t('unknown_error'),
             showCancel: failedNoticeCancel ? true : false,
-            cancelText: failedNoticeCancel?.text || '取消',
+            cancelText: failedNoticeCancel?.text || i18n.t('cancel'),
             success: res=>{
               if(failedNoticeCancel && res.cancel){
                 failedNoticeCancel.action()
@@ -234,12 +243,13 @@ async function loadData<T extends AnyFunction>(
             }
           })
           if(returnFailed) return reject(error)
-        }else{ // 特殊业务错误代码
-          const showContent = `错误代码: ${error.code}`
+        }else{
+          const showContent = `Error: ${error.code}`
           const showModalOption: WechatMiniprogram.ShowModalOption = {
-            title: `服务错误`,
-            content: `${error.message || '请稍后重试'}\n${showContent}`,
-            confirmText: '联系客服',
+            title: i18n.t_e('service_error'),
+            content: `${error.message || i18n.t_e('retry_again')}\n${showContent}`,
+            confirmText: i18n.t('get_help',[],'other'),
+            cancelText: i18n.t('cancel'),
             showCancel: false,
             success: ({confirm})=>{
               if(!confirm) return
@@ -247,20 +257,21 @@ async function loadData<T extends AnyFunction>(
                 url: '/pages/about/contact/index',
               })
             },
-            fail: ()=>{
+            fail: (e)=>{
+              console.error('showModal',e)
               wx.reLaunch({
                 url: '/pages/home/index',
               })
             }
           }
-          // 400以上是用户账户相关问题
+          // 400 is about user account 
           if(error.code.toString().startsWith('4')){
-            showModalOption.title = '账户状态异常'
+            showModalOption.title = i18n.t_e('account_error')
             if(error.code == 401){
-              showModalOption.title = '请求错误'
-              showModalOption.content = '登录失效，请重新登录'
+              showModalOption.title = i18n.t_e('request_error')
+              showModalOption.content = i18n.t_e('login_invalid')
               showModalOption.showCancel = true
-              showModalOption.confirmText = '去登录'
+              showModalOption.confirmText = i18n.t('go_login')
               showModalOption.success = ({confirm})=>{
                 if(!confirm) return
                 wx.navigateTo({
@@ -269,19 +280,19 @@ async function loadData<T extends AnyFunction>(
               }
             }
           }
-          // 500以上是应用程序出错
+          // 500 is about app service
           if(error.code.toString().startsWith('5')){
-            showModalOption.title = '服务异常'
-            showModalOption.content = '很抱歉，服务暂时不可用'
+            showModalOption.title = i18n.t_e('service_error')
+            showModalOption.content = i18n.t_e('service_not_work')
             showModalOption.showCancel = true
           }
 
-          // 600是 api 底层请求错误
+          // 600 is api request error
           if(error.code.toString().startsWith('6')){
-            showModalOption.title = '网络环境异常'
-            showModalOption.content = error?.message || '请检查应用网络设置后重试'
+            showModalOption.title = i18n.t_e('network_error')
+            showModalOption.content = i18n.t_e('check_net_retry')
             showModalOption.showCancel = true
-            showModalOption.confirmText = '查看设置'
+            showModalOption.confirmText = i18n.t('go_config',[],'other')
             showModalOption.success = ({confirm})=>{
               if(!confirm) return
               wx.openAppAuthorizeSetting({
@@ -301,15 +312,15 @@ async function loadData<T extends AnyFunction>(
 
           wx.showModal(showModalOption)
         }
-      }else{ // 小程序内部错误
+      }else{ // wx mp error
         if(error.errMsg && ['scanCode:fail cancel'].includes(error.errMsg)){
           wx.showToast({
-            title: '操作取消',
+            title: i18n.t('operate_cancel'),
             icon: 'none'
           })
         }else{
           wx.showModal({
-            title: '操作错误',
+            title: i18n.t_e('operate_error'),
             content: error.errMsg || error.message || error,
             showCancel: false,
           })
@@ -323,6 +334,7 @@ async function loadData<T extends AnyFunction>(
 }
 
 async function chooseLocalImage(){
+  const i18n = getApp().i18n
   try {
     const pics = await wx.chooseMedia({
       count: 1,
@@ -335,7 +347,7 @@ async function chooseLocalImage(){
   } catch (error:any) {
     if(error?.errMsg === 'chooseMedia:fail cancel'){
       wx.showToast({
-        title: '取消选择',
+        title: i18n.t('choose_cancel',[],'other'),
         icon: 'none'
       })
       return

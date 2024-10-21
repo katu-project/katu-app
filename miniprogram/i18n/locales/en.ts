@@ -34,10 +34,17 @@ export default {
     no_auth: 'Login is required to proceed, go to login',
     go_login: 'Go Login',
     got_it: 'Got it',
-    new_version_tips: 'New version, updated now'
+    new_version_tips: 'New version, updated now',
+    processing: 'Processing',
+    operate_cancel: 'Operate Cancel'
   },
   brand: {
     'tencent_cloud': 'Tencent Cloud'
+  },
+  other: {
+    go_config: 'Settings',
+    get_help: 'get Help',
+    choose_cancel: 'Choose Cancel'
   },
   key: {
     enter_key: 'Enter key',
@@ -90,7 +97,17 @@ export default {
     build_in_params_error: 'Build-in param Error',
     content_test_error: 'Content integrity detection failed',
     unknown_cs: 'Unknown storage type',
-    opencv_select_card_error: 'Card image selection failed'
+    opencv_select_card_error: 'Card image selection failed',
+    timeout_retry: 'The service timed out, please try again',
+    operate_error: 'Operate error',
+    service_error: 'Service error',
+    retry_again: 'Retry again',
+    account_error: 'Account restricted',
+    request_error: 'The request is incorrect',
+    login_invalid: 'The login is invalid, please log in again',
+    service_not_work: 'The service is temporarily unavailable',
+    network_error: 'Network unavailable',
+    check_net_retry: 'Please check network settings and try again'
   },
   settings:{
     account: 'Account',

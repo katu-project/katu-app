@@ -34,10 +34,17 @@ export default {
     no_auth: '未登录，无法进行该操作',
     go_login: '去登录',
     got_it: '不再提示',
-    new_version_tips: '发现新版本，现在更新'
+    new_version_tips: '发现新版本，现在更新',
+    processing: '正在处理请求',
+    operate_cancel: '操作取消'
   },
   brand: {
     'tencent_cloud': '腾讯云'
+  },
+  other: {
+    go_config: '查看设置',
+    get_help: '联系客服',
+    choose_cancel: '选择取消'
   },
   key: {
     enter_key: '输入密码',
@@ -90,7 +97,17 @@ export default {
     build_in_params_error: '内部参数错误',
     content_test_error: '内容完整性检测失败',
     unknown_cs: '未知的存储类型',
-    opencv_select_card_error: '卡片图像选择失败'
+    opencv_select_card_error: '卡片图像选择失败',
+    timeout_retry: '服务超时，请重试',
+    operate_error: '操作错误',
+    service_error: '服务错误',
+    retry_again: '请稍后重试',
+    account_error: '账户状态异常',
+    request_error: '请求错误',
+    login_invalid: '登录失效，请重新登录',
+    service_not_work: '服务故障，请稍后重试',
+    network_error: '网络环境异常',
+    check_net_retry: '请检查应用网络设置后重试'
   },
   settings:{
     account: '账户',
