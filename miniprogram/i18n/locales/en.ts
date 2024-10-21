@@ -55,7 +55,7 @@ export default {
     client_not_work: 'This feature is not supported by the client',
     image_name_error: 'Error getting file name',
     content_check_error: 'Content check failed',
-    timeout_retry: 'Check timed out, try again',
+    check_timeout_retry: 'Check timed out, try again',
     share_error: 'Share the build error',
     login_error: 'Sign-in error',
     mp_use_cs: 'Custom storage cannot be used, please operate it in the APP',

@@ -578,7 +578,7 @@ class AppManager extends Controller {
     if(needCheck){
       const url = await this.uploadTempFile(imagePath)
       for(let i=0;i<10;i++){
-        if(i==9) throw Error(this.t_e('timeout_retry'))
+        if(i==9) throw Error(this.t_e('check_timeout_retry'))
         const { checkEnd, checkPass } = await this.invokeApi('imageContentSafetyCheck', {hash, url})
         if(checkEnd){
           if(checkPass){

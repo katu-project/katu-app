@@ -55,7 +55,7 @@ export default {
     client_not_work: '当前客户端不支持该功能',
     image_name_error: '获取文件名出错',
     content_check_error: '未通过内容检测',
-    timeout_retry: '检测超时，请重试',
+    check_timeout_retry: '检测超时，请重试',
     share_error: '分享生成错误',
     login_error: '登录错误，请使用其他方式登录或者联系客服',
     mp_use_cs: '小程序无法使用自定义存储，请使用 APP 操作',
