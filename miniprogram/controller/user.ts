@@ -148,7 +148,7 @@ export default class User extends Controller {
   async applyConfig(configItem:{key:string,value:string|boolean}){
     try {
       await this.invokeApi('updateUserConfig', configItem)
-      await this.deleteLocalData('USER_INFO_CACHE_KEY')
+      await this.cache.deleteUser()
       return this.objectSetValue(this.user, configItem.key, configItem.value)
     } catch (error:any) {
       console.warn('applyConfig:',error.message)
@@ -189,7 +189,7 @@ export default class User extends Controller {
     await this.invokeApi('updateCustomStorage', {
       config: savePack
     })
-    await this.deleteLocalData('USER_INFO_CACHE_KEY')
+    await this.cache.deleteUser()
   }
 
   async removeCustomStorage(){
@@ -197,7 +197,7 @@ export default class User extends Controller {
       config: {},
       action: 'delete'
     })
-    await this.deleteLocalData('USER_INFO_CACHE_KEY')
+    await this.cache.deleteUser()
   }
 
   async configCustomStorage(enable:boolean){
@@ -206,7 +206,7 @@ export default class User extends Controller {
         enable 
       }
     })
-    await this.deleteLocalData('USER_INFO_CACHE_KEY')
+    await this.cache.deleteUser()
   }
 
   // not used
