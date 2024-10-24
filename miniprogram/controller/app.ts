@@ -180,6 +180,7 @@ class AppManager extends Controller {
   logout(){
     this.cache.deleteLoginToken()
     this.deleteHomeDataCache()
+    this.clearUserTagsCache()
     this.masterKeyManager.clear()
     this.userManager.clearInfo()
     this.publishLoginChangeEvent(false)

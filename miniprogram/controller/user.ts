@@ -117,6 +117,7 @@ export default class User extends Controller {
 
   async clearInfo(){
     this._user = {}
+    await this.cache.deleteUser()
   }
 
   async checkQuota(){
