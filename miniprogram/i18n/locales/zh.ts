@@ -468,8 +468,6 @@ export default {
     // title
     edit_content: '编辑内容',
     enter_title: '输入名字',
-    // extra data
-    choose_date: '选择日期',
     click_below: '点击下方',
     add_item: '添加数据',
     extra_save_desc: '卡片附加的数据也会与卡片图片一起加密保存',

@@ -14,7 +14,7 @@
       <input wx:if="{{item.key!=='ed'}}" style="text-align: right;" type="{{item.key === 'cn' ? 'number' : 'text'}}" focus="{{index == extraFields.length-1}}" value="{{item.value}}" data-idx="{{index}}" bindinput="onBindinput"></input>
       <picker wx:else mode="date" fields="month" value="{{item.value}}" data-idx="{{index}}"  start="2023-01" end="2050-12" bindchange="onBindDateChange">
         <view class="picker">
-          {{item.value||t.choose_date}}
+          {{item.value|| 'YY-MM'}}
         </view>
       </picker>
       <view bindtap="tapToRemoveField" data-idx="{{index}}" class="text-lg margin-left-xl padding-xs bg-red light flex-col br-12">

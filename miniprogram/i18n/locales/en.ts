@@ -468,8 +468,6 @@ export default {
     // title
     edit_content: 'Edit Content',
     enter_title: 'enter title',
-    // extra data
-    choose_date: 'choose date',
     click_below: 'Click',
     add_item: 'add item',
     extra_save_desc: 'The data info is also encrypted and stored with the card picture',
