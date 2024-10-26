@@ -220,9 +220,11 @@ export default class User extends Controller {
     return this.invokeApi('removeBindTelNumber', data)
   }
 
-  async getTags(){
-    const tagsCache = await this.cache.getTags()
-    if(tagsCache) return tagsCache
+  async getTags(options?:{skipCache:boolean}){
+    if(!options?.skipCache){
+      const tagsCache = await this.cache.getTags()
+      if(tagsCache) return tagsCache
+    }
 
     const fetchRemoteTags = await this.invokeApi('getUserTag')
     await this.cache.setTags(fetchRemoteTags)

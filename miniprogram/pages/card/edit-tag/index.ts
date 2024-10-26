@@ -29,7 +29,7 @@ app.createPage({
 
   async loadData(){
     if(!user.isOk) return
-    const tags = await loadData(user.getTags)
+    const tags = await loadData(user.getTags, {skipCache:true})
     this.setData({
       list: tags
     })
