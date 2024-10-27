@@ -75,8 +75,8 @@
         <text class="cuIcon-copy text-cyan margin-right-xl" data-idx="{{index}}" bindtap="tapToCopyValue"></text>
       </view>
       <view wx:if="{{isCredit}}" class="padding-left padding-tb-xs flex-row align-center">
-          <view class="padding-right padding-xs flex-row">
-            <text>{{cvv}} : </text>
+          <view class="padding-right flex-row" style="align-items: center;">
+            <text class="text-grey">{{cvv}} : </text>
             <text class="text-xl radius text-block padding-left-xs">{{item.cvv || '***'}}</text>
           </view>
       </view>
