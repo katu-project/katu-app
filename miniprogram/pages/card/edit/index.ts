@@ -348,6 +348,7 @@ app.createPage({
       }     
     }else{
       setData[`tags[${index}].selected`] = !this.data.tags[index]['selected']
+      // check if exist other, and cancel other tag selected
       if(this.otherTagIdx >=0 && this.data.tags[this.otherTagIdx].selected){
         setData[`tags[${this.otherTagIdx}].selected`] = false
       }
