@@ -87,7 +87,7 @@ export default {
     not_set_cs: 'Custom storage is not configured',
     get_cs_error: 'Extract config failed',
     tag_exist: 'Tag already exists',
-    build_in_tag: 'Built-in labels cannot be created',
+    build_in_tag: 'Built-in tag cannot be created',
     decrypt_failed: 'Decrypt Failed',
     decrypt_extra_error: 'Read card info failed',
     create_key_pack: 'Create key pair incorrectly',
