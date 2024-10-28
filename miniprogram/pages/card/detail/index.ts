@@ -116,11 +116,13 @@ app.createPage({
   },
 
   async renderTagInfo(){
-    const tags = (user.config?.general.useDefaultTag ? app.getCardConfig('defaultTags') : []).concat(await user.getTags())
-    const cardTags = this.data.card.tags.map(tag=>{
+    const userTags = await user.getTags()
+    const tags = (user.config?.general.useDefaultTag ? app.getCardConfig('defaultTags') : []).concat(userTags)
+    const cardTags = this.data.card.tags.map(name=>{
+      const tag = tags.find(e=>e.name === name)
       return {
-        name: tag,
-        color: tags.find(e=>e.name === tag)?.color || ''
+        label: tag?.default ? app.t(tag.name,[],'tag') : name,
+        color: tag?.color || ''
       }
     })
     this.setData({

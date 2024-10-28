@@ -451,6 +451,30 @@ class AppManager extends Controller {
     return homeData
   }
 
+  buildTagsInfo(tags){
+    const builtInTags = this.getCardConfig('defaultTags')
+    // i18n builder
+    tags.map(tag=>{
+      const builtInTag = builtInTags.find(e=>e.name === tag.name)
+      tag['label'] = builtInTag ? this.t(tag.name, [], 'tag') : tag.name
+      tag.xid = builtInTag?.xid || 99
+    })
+    tags = tags.sort((a,b)=>{
+      if(a.xid === b.xid){
+        return b.count - a.count
+      }
+      return a.xid - b.xid
+    })
+    // move oc to end
+    const ocIdx = tags.findIndex(e=>e.name === 'oc')
+    if(ocIdx !== -1){
+      const [oc] = tags.splice(ocIdx,1)
+      tags.push(oc)
+    }
+
+    return tags
+  }
+
   async deleteHomeDataCache(){
     return this.cache.deleteHomeData()
   }

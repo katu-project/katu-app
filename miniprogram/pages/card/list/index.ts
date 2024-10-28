@@ -8,14 +8,12 @@ const app = getAppManager()
 const user = getUserManager()
 const cardManager = getCardManager()
 
-const AppDefaultTags = app.getCardConfig('defaultTags')
-
 app.createPage({
   i18n: {
     page: ['cardList']
   },
 
-  where: {},
+  where: { tag: '' },
   originList: [] as AnyObject[],
   
   behaviors: [
@@ -33,22 +31,20 @@ app.createPage({
 
   onLoad(options) {
     if(options.tag){
-      this.where = {tag: options.tag}
-      if(options.tag){
-        const appTag = AppDefaultTags.find(e=>e.name === options.tag)
-        const setData = {
-          tag: options.tag
-        }
-        if(appTag?.layout) setData['layout'] = appTag.layout
-        this.setData(setData)
-      }
+      this.where.tag = options.tag
     }
   },
 
-  onUnload(){
-  },
-
   onReady() {
+    const { tag:useTag } = this.where
+    if(useTag){
+      const appTag = app.getCardConfig('defaultTags').find(e=>e.name === useTag)
+      const setData = {
+        tag: appTag?.default ? app.t(useTag,[],'tag') : useTag
+      }
+      if(appTag?.layout) setData['layout'] = appTag.layout
+      this.setData(setData)
+    }
     this.loadData()
   },
 
@@ -67,7 +63,12 @@ app.createPage({
   async loadTagsInfo(){
     const tags = (user.config?.general.useDefaultTag ? app.getCardConfig('defaultTags') : []).concat(await user.getTags())
     const tagsInfo = {}
-    tags.map(e=>e.color && (tagsInfo[e.name]=e.color))
+    tags.map(e=>{
+      tagsInfo[e.name] = {
+        label: e?.default ? app.t(e.name,[],'tag') : e.name,
+        color: e?.default ? '' : e.color
+      }
+    })
     this.setData({
       tagsInfo: tagsInfo
     })

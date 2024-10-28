@@ -105,9 +105,14 @@ app.createPage({
   },
 
   async loadTagData(){
-    const tags = (this.data.useDefaultTag ? app.getCardConfig('defaultTags') : []).concat(await user.getTags())
+    const userTags = await user.getTags()
+    const tags = (this.data.useDefaultTag ? app.getCardConfig('defaultTags') : []).concat(userTags)
     // save【other】tag idx
-    this.otherTagIdx = tags.findIndex(e=>e._id === 'oc')
+    this.otherTagIdx = tags.findIndex(e=>e.default && e.name === 'oc')
+    // i18n builder
+    tags.map(tag=>{
+      tag['label'] = tag.default ? app.t(tag.name, [], 'tag') : tag.name
+    })
     this.setData({
       tags
     })
@@ -158,6 +163,7 @@ app.createPage({
       }
       return tag
     })
+    // remove invalid tag
     const cardTags = this.data.card.tags.filter(tag=>tags.some(e=>e.name === tag))
     this.setData({
       tags,
@@ -302,7 +308,7 @@ app.createPage({
 
   tapToEditExtraData(){
     const c = JSON.stringify(this.data.card.info)
-    const tag = this.data.tags.find(e=>e.selected && e.field)?._id || ''
+    const tag = this.data.tags.find(e=>e.selected && e.field)?.name || ''
     app.goEditExtraDataPage(c,tag)
   },
 

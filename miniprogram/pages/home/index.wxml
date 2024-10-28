@@ -114,7 +114,7 @@
           <view class="cate-count margin-left-sm bg-{{item.color || 'cyan'}} light flex-col align-center justify-center">
             <text class="text-xl">{{item.count}}</text>
           </view>
-          <text class="text-white text-lg padding-left margin-right-sm" style="flex:1">{{item.name}}</text>
+          <text class="text-white text-lg padding-left margin-right-sm" style="flex:1">{{item.label}}</text>
         </view>
       </block>
       <view wx:if="{{cateList.length}}" class="margin" style="height: 128rpx;width:1px;"></view>

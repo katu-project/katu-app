@@ -29,7 +29,7 @@
     <view class="tag-list text-cyan text-xl flex align-center">
       <text class="cuIcon-tag padding-right-sm"></text>
       <view class="flex tag-list-content">
-        <text class="cu-tag margin-right-xs radius line-{{item.color || 'grey'}} " wx:for="{{tagsInfo}}" wx:key="name">{{item.name}}</text>
+        <text class="cu-tag margin-right-xs radius line-{{item.color || 'grey'}} " wx:for="{{tagsInfo}}" wx:key="name">{{item.label}}</text>
       </view>
     </view>
   </view>

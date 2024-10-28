@@ -177,7 +177,7 @@ app.createPage({
     
     const setData = {}
 
-    setData['cateList'] = cateList
+    setData['cateList'] = app.buildTagsInfo(cateList)
 
     setData['likeList'] = likeList.map(card=>{
       card._url = app.getConst(card.encrypted ? 'DefaultShowLockImage' : 'DefaultShowImage')
@@ -256,7 +256,7 @@ app.createPage({
       })
     }else{ // add，update，can't check tag status，reload data with api
       try {
-        setData['cateList'] = await app.getCateList()
+        setData['cateList'] = app.buildTagsInfo(await app.getCateList()) 
       } catch (error) {
         console.error('renderCateList getHomeData:', error)
       }

@@ -11,7 +11,8 @@ app.createPage({
     page: ['cardEdit']
   },
 
-  originData: '' as string|undefined,
+  originValue: '',
+  useTag: '',
   originExtraFieldsKeys: [] as ICardExtraField[],
 
   data: {
@@ -20,13 +21,19 @@ app.createPage({
   },
 
   onLoad(options) {
-    this.originData = options.value
+    this.originValue = options.value || '[]'
+    this.useTag = options.tag || ''
     this.originExtraFieldsKeys = app.getCardConfig('defaultFields').map(e=>{
       e.name = app.t(e.key,[],'extraData')
       return e
     })
+  },
+
+  onReady() {
     let extraFieldItems = this.originExtraFieldsKeys
-    const parseExtraData = JSON.parse(options.value||'[]')
+    this.data.extraFieldsKeys = extraFieldItems
+
+    const parseExtraData = JSON.parse(this.originValue)
     if(parseExtraData.length){
       const extraFields = cardManager.rebuildExtraFields(parseExtraData)
       // remove exist item
@@ -38,17 +45,13 @@ app.createPage({
       })
     }else{
       // use tag default fields
-      if(options.tag){
-        const checkFieldTag = cardManager.getCardConfig('defaultTags').find(tag=>tag._id === options.tag)
+      if(this.useTag){
+        const checkFieldTag = app.getCardConfig('defaultTags').find(tag=>tag.name === this.useTag)
         if(checkFieldTag && checkFieldTag.field){
           this.addField(checkFieldTag.field)
         }
       }
     }
-
-    this.setData({
-      extraFieldsKeys: extraFieldItems
-    })
   },
 
   onBindinput({currentTarget:{dataset: {idx, cu}}, detail: {value}}){
@@ -65,17 +68,16 @@ app.createPage({
   },
 
   addField(keys){
-    let extraFields = this.data.extraFields
+    const extraFields = this.data.extraFields
     for (const key of keys) {
-      const extraField = Object.assign({},this.data.extraFieldsKeys.find(e=>e.key === key))
+      const extraField = Object.assign({},this.originExtraFieldsKeys.find(e=>e.key === key))
       if(extraField.key === 'cu'){
-        extraField.name = `${this.t('field')} ${this.data.extraFields.filter(e=>e.key==='cu').length+1}`
+        extraField.name = `${this.t('field')} ${extraFields.filter(e=>e.key==='cu').length+1}`
       }
-      extraFields = extraFields.concat(extraField).sort((a,b)=> a.xid-b.xid)
+      extraFields.push(extraField)
     }
-    
     this.setData({
-      extraFields,
+      extraFields: extraFields.sort((a,b)=> a.xid-b.xid),
       extraFieldsKeys: this.data.extraFieldsKeys.filter(e => e.key === 'cu' || !keys.includes(e.key))
     })
   },
@@ -110,7 +112,7 @@ app.createPage({
       }
       const extraFields = cardManager.condenseExtraFields(this.data.extraFields as ICardExtraField[])
 
-      if(this.originData === JSON.stringify(extraFields)) {
+      if(this.originValue === JSON.stringify(extraFields)) {
         app.showNotice(this.t('data_no_change'))
         return
       }

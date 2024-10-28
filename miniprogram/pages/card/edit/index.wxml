@@ -47,7 +47,7 @@
         <view class="cu-tag radius bg-orange light" wx:if="{{!card.tags.length}}">{{t.not_selected}}</view>
         <block wx:else>
           <block wx:for="{{tags}}" wx:key="_id">
-            <view class="cu-tag radius bg-{{item.color || 'cyan'}} light" hidden="{{!item.selected}}">{{item.name}}</view>
+            <view class="cu-tag radius bg-{{item.color || 'cyan'}} light" hidden="{{!item.selected}}">{{item.label}}</view>
           </block>
         </block>
       </view>
@@ -87,7 +87,7 @@
     </view>
     <view class="padding-tb flex flex-wrap">
       <view class="padding-tb-sm padding-lr-sm margin-sm light bg-{{ item.selected ? item.color||'cyan' : 'gray'}} br-14" data-value="{{index}}" bindtap="tapToSelectTag" wx:for="{{tags}}" wx:key="name">
-        <text class="">{{item.name}}</text>
+        <text class="">{{item.label}}</text>
       </view>
       <view class="padding-tb-sm padding-lr-sm margin-sm br-14 solids-bottom" bindtap="tapToCustomTag">
         <text class="cuIcon-add">{{t.custom}}</text>

@@ -22,7 +22,9 @@ interface ICardImage {
 interface ICardTag {
   _id?: string
   name: string
+  default?: boolean
   color: string
+  xid?: number
   layout?: string
   field?: string[]
 }

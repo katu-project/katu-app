@@ -37,7 +37,7 @@
             <text class="text-cut text-xl">{{item.title}}</text>
           </view>
           <view class="text-grey margin-tb-xs tags">
-            <text class="cu-tag line-{{tagsInfo[item]||'grey'}} light" wx:for="{{item.tags}}" wx:key="name">{{item}}</text>
+            <text class="cu-tag line-{{tagsInfo[item].color}} light" wx:for="{{item.tags}}" wx:key="name">{{tagsInfo[item].label}}</text>
           </view>
         </view>
         <view class="action">

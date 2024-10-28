@@ -499,6 +499,13 @@ export default {
     signup_gift: '现注册使用卡兔可领取免费兔币',
     load_card: '加载卡片数据'
   },
+  tag: {
+    dc: '储蓄卡',
+    cc: '信用卡',
+    sc: '购物卡',
+    bc: '名片',
+    oc: '其他'
+  },
   extraData: {
     cn: '卡号',
     cvv: '校验码',

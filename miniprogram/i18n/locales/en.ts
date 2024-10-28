@@ -499,6 +499,13 @@ export default {
     signup_gift: 'Now register to use will receive free T-Coins',
     load_card: 'Load cards'
   },
+  tag: {
+    dc: 'Debit',
+    cc: 'Credit',
+    sc: 'Gift',
+    bc: 'Business',
+    oc: 'Other'
+  },
   extraData: {
     cn: 'Number',
     cvv: 'CVV',

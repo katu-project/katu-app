@@ -1,10 +1,24 @@
 const CardConfig: ICardConfig = {
   defaultTags: [
-    { _id: 'dc', name: '储蓄卡', color: '', layout: 'debit_card', field:['cn'] },
-    { _id: 'cc', name: '信用卡', color: '', layout: 'credit_card', field:['cn','cvv','ed'] },
-    { _id: 'sc', name: '购物卡', color: '' },
-    { _id: 'bc', name: '名片', color: '' },
-    { _id: 'oc', name: '其他', color: '' }
+    {
+      name: 'cc',
+      default: true,
+      color: '',
+      xid: 1,
+      layout: 'credit_card',
+      field: [ 'cn', 'cvv', 'ed' ]
+    },
+    {
+      name: 'dc',
+      default: true,
+      color: '',
+      xid: 2,
+      layout: 'debit_card',
+      field: [ 'cn' ]
+    },
+    { name: 'sc', default: true, color: '', xid: 3},
+    { name: 'bc', default: true, color: '', xid: 4 },
+    { name: 'oc', default: true, color: '', xid: 5 }
   ],
   defaultFields: [
     {
