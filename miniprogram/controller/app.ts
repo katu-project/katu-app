@@ -7,8 +7,6 @@ import { CreateI18nBehavior } from '@/behaviors/i18n'
 
 class AppManager extends Controller {
   AppInfo = wx.getAccountInfoSync()
-
-  SupportedLanguages = ['zh','en']
   
   constructor(){
     super()
@@ -18,20 +16,10 @@ class AppManager extends Controller {
     const setDefaultLanguage = ()=>{
       let useLanguage = this.getLocalDataSync<UseLanguageType>('USE_LANG')
       if(!useLanguage) {
-        const LanguageMap = [
-          {
-            name: 'zh',
-            values: ['zh_CN','zh_HK','zh_TW'],
-            default: true
-          },
-          {
-            name: 'en',
-            values: ['en']
-          }
-        ]
-        let checkUseLang = LanguageMap.find(e=>e.values.includes(sysLanguage))
+        const enabledLanguages = this.theme.Languages
+        let checkUseLang = enabledLanguages.find(e=>e.values.includes(sysLanguage))
         if(!checkUseLang){
-          checkUseLang = LanguageMap.find(e=>e.default)
+          checkUseLang = enabledLanguages.find(e=>e.default)
         }
         this.setLocalData('USE_LANG', checkUseLang?.name)
         useLanguage = checkUseLang?.name as UseLanguageType

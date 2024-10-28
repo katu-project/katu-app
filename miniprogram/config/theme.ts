@@ -75,6 +75,17 @@ const ThemeConfig = {
       name: 'white',
       color: '#ffffff'
     },
+  ],
+  Languages: [
+    {
+      name: 'zh',
+      values: ['zh_CN','zh_HK','zh_TW'],
+      default: true
+    },
+    {
+      name: 'en',
+      values: ['en']
+    }
   ]
 }
 

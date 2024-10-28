@@ -9,12 +9,12 @@ app.createPage({
   
   where: {},
 
-  originList: app.SupportedLanguages,
+  originList: app.theme.Languages,
 
   data: {
     key: '',
     useLang: '',
-    list: app.SupportedLanguages
+    list: app.theme.Languages
   },
 
   onLoad() {
@@ -41,7 +41,6 @@ app.createPage({
       useLang: app.UseLanguage
     })
     await app.showConfirm(this.t('reload_work'))
-    app.reLaunch()
   },
 
   tapToCloseFilter(){
@@ -63,7 +62,7 @@ app.createPage({
       this.resetData()
     }else{
       this.setData({
-        list: this.data.list.filter(e=>this.t(e).includes(key))
+        list: this.data.list.filter(e=>this.t(e.name).includes(key))
       })
     }
   },
