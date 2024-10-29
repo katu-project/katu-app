@@ -14,8 +14,6 @@ export default {
 
   appStatus: () => request('app/status'),
 
-  getSysConfig: <T extends keyof ISysConfig>(name: T) => request<filterSysConfigItem<T>>('app/config', {name}),
-
   getChangeLog: () => request<IChangeLog[]>('app/changeLog'),
 
   getIapItems: () => request<{key:string,label:string}[]>('app/iap/list'),

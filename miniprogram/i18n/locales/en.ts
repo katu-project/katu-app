@@ -5,7 +5,7 @@ export default {
     signup: 'Sign up',
     and: 'And',
     slogan: 'Secure And User-Friendly Card Management APP',
-    toc: 'TOC',
+    toc: 'Terms',
     privacy: 'Privacy',
     no_data: 'No Data',
     edit: 'Edit',
@@ -174,7 +174,8 @@ export default {
     loading: 'Data loading ...',
     read: 'Read',
     disagree: 'Disagree',
-    agree: 'Agree'
+    agree: 'Agree',
+    active_info: '<p>Dear users, you are welcome to trust and use ikatu APP.<br/></p><p>Activate your account to get more benefits, you need to read and agree to the following agreement before activating your account :</p>'
   },
   about:{
     version: 'Version',

@@ -12,9 +12,7 @@ app.createPage({
   },
 
   data: {
-    activeInfo: {
-      id: ''
-    },
+    activeInfo: {},
     showOtherLogin: false,
     showMpLogin: true,
     loginMode:{
@@ -93,20 +91,24 @@ app.createPage({
   },
   
   async loadActiveData(){
-    if(this.data.activeInfo.id) return
-    const { activeInfo, content } = await loadData(app.getActiveInfo)
     this.setData({
-      activeInfo,
-      'activeInfo.notice': content
+      activeInfo: await app.getActiveInfo()
     })
   },
 
   tapToReadDoc(e){
-    const {title,id} = e.currentTarget.dataset.item
-    if(title == 'privacy'){
-      return app.openUserPrivacyProtocol()
+    const doc = e.currentTarget.dataset.doc
+    switch (doc) {
+    case 'privacy':
+      app.openUserPrivacyProtocol()
+      break;
+    case 'toc':
+      app.openUserUsageProtocol()
+      break;
+    default:
+      app.showNotice(this.t('unknown_error'))
+      break;
     }
-    return app.navToDocPage(id)
   },
 
   // native app signin/up 

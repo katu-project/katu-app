@@ -174,7 +174,8 @@ export default {
     loading: '内容加载中 ...',
     read: '阅读',
     disagree: '不同意',
-    agree: '同意并继续'
+    agree: '同意并继续',
+    active_info: '<p>亲爱的用户，欢迎你信任并使用卡兔APP卡片助手!<br/></p><p>激活账户可以获得更多权益，在激活你的账户之前，需要阅读并同意以下协议:</p>'
   },
   about:{
     version: '版本号',

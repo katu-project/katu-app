@@ -91,18 +91,6 @@ interface IQuotaLog {
   couponId: string
 }
 
-interface ISysConfig {
-  active: {
-    id: string
-    protocols: any[]
-    tip: string
-  }
-}
-
-type filterSysConfigItem<T> = 
-    T extends "active" ? ISysConfig['active'] :
-    never;
-
 interface IUsageStatistic {
   usedCardCount: number
   usedEncryptedCardCount: number

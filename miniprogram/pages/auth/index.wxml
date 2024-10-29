@@ -81,10 +81,10 @@
       <view class="content text-black">{{t.mp_tips}}</view>
     </view>
     <view class="padding margin-lr" style="height: 30vh; text-align: left;">
-      <rich-text style="flex:1" nodes="{{activeInfo.notice||t.loading}}"></rich-text>
+      <rich-text style="flex:1" nodes="{{activeInfo.content||t.loading}}"></rich-text>
       <view class="padding">
-        <view class="padding-top" wx:for="{{activeInfo.protocols}}" wx:key="index" data-item="{{item}}" bindtap="tapToReadDoc">
-          <text class="cuIcon-title"></text> {{t.read}}《<text class="text-red">{{item.name}}</text>》
+        <view wx:for="{{activeInfo.protocols}}" wx:key="index" data-doc="{{item.title}}" bindtap="tapToReadDoc">
+          <text class="cuIcon-title"></text> {{t.read}} "<text class="text-red">{{item.name}}</text>"
         </view> 
       </view>
     </view>

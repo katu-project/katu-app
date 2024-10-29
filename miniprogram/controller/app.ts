@@ -621,13 +621,23 @@ class AppManager extends Controller {
     throw Error(this.t_e('content_check_error'))
   }
 
+  // for mp only
   async getActiveInfo(){
-    const activeInfo = await this.invokeApi('getSysConfig', 'active')
-    const { content } = await this.invokeApi('getDoc', {_id: activeInfo.id})
-    return {
-      activeInfo,
-      content
+    const activeInfo = {
+      content: this.t('active_info',[],'auth'),
+      protocols: [
+        {
+          name: this.t('toc'),
+          title: 'toc'
+        },
+        {
+          name: this.t('privacy'),
+          title: 'privacy'
+        }
+      ]
     }
+
+    return activeInfo
   }
 
   async showActiveNotice(){
