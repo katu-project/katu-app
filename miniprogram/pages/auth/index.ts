@@ -213,11 +213,11 @@ app.createPage({
   },
 
   tapToReadPrivacy(){
-    return app.navToDocPage('7027b65465ae31a8080fe48113c88ed1')
+    return app.openUserPrivacyProtocol()
   },
 
   tapToReadTos(){
-    return app.navToDocPage('f6e08a6462b0879e08d6b0a15725ecbb')
+    return app.openUserUsageProtocol()
   },
 
   tapToOpenHelper(){

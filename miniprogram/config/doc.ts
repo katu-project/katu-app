@@ -1,7 +1,8 @@
 const DocConfig:IDocConfig = {
   docMap: {
     userUsageProtocol: 'f6e08a6462b0879e08d6b0a15725ecbb',
-    userPrivacyProtocol: '6d85a2b962c283280e7a269719a44f88',
+    mpPrivacy: '6d85a2b962c283280e7a269719a44f88',
+    appPrivacy: '7027b65465ae31a8080fe48113c88ed1',
     masterKeyNotice: '0a4ec1f9628b5501063149ac75a21cb7',
     rememberKeyNotice: '0a4ec1f962c4f45f0ea61cd706dd10ca',
     forgetKeyNotice: 'f6e08a64628b55a704a899564e10cf2e',

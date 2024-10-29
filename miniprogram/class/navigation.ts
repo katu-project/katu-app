@@ -106,12 +106,16 @@ export default class Navigation extends Agent {
     return this.navToDocPage(this.navDocMap.userUsageProtocol)
   }
 
-  // Pre use of standard privacy protocol interfaces
+  // Pre use of standard privacy protocol interfaces in mp
   async openUserPrivacyProtocol(){
-    try {
-      await openPrivacyContract()
-    } catch (error) {
-      return this.navToDocPage(this.navDocMap.userPrivacyProtocol)
+    if(this.isMp){
+      try {
+        await openPrivacyContract()
+      } catch (error) {
+        return this.navToDocPage(this.navDocMap.mpPrivacy)
+      }
+    }else{
+      return this.navToDocPage(this.navDocMap.appPrivacy)
     }
   }
 

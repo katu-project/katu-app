@@ -47,7 +47,8 @@ interface ICardConfig {
 interface IDocConfig {
   docMap: {
     userUsageProtocol: string
-    userPrivacyProtocol: string
+    mpPrivacy: string
+    appPrivacy: string
     masterKeyNotice: string
     rememberKeyNotice: string
     forgetKeyNotice: string
