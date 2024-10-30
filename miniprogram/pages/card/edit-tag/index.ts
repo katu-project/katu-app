@@ -80,7 +80,7 @@ app.createPage({
   async tapToDeleteTag(e){
     const idx = parseInt(e.currentTarget.dataset.idx)
     const tag = this.data.list[idx]
-    await app.showConfirm(`${this.t('delete_tag')}: ${tag.name}`)
+    await app.showConfirm(this.t('delete_tag',[tag.name]))
     await loadData(user.deleteTag, tag._id)
     this.data.list.splice(idx,1)
     this.setData({

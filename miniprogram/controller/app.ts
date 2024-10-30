@@ -695,7 +695,7 @@ class AppManager extends Controller {
   async showConfirm(msg:string, confirmText?:string){
     const options = {}
     if(confirmText) options['confirmText'] = confirmText
-    msg = msg.endsWith('?') ? msg : `${msg}?`
+    msg = msg.endsWith('?') ? msg : `${msg} ?`
     const { confirm } = await showChoose(this.t('tips'), msg, options)
     return new Promise((resolve,_)=>confirm && resolve(confirm))
   }

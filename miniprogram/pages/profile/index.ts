@@ -95,7 +95,7 @@ app.createPage({
     let msg = this.t('error_qrcode')
 
     if(resultJson.type === 'login'){
-      await app.showConfirm(`${this.t('confirm_web_log')}?`)
+      await app.showConfirm(this.t('confirm_web_log'))
       await loadData(async ()=>{
         await app.invokeApi('qrCodelogin', {
           loginCode: resultJson.code

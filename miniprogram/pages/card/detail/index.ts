@@ -250,7 +250,7 @@ app.createPage({
 
   async tapToDeleteCard(){
     this.hideActionDialog()
-    await app.showConfirm(`${this.t('confirm_delete')}!`)
+    await app.showConfirm(this.t('confirm_delete'))
     loadData(cardManager.deleteCard, this.data.card).then(()=>{
       app.publishCardDeleteEvent(this.data.card)
       app.navigateBack()

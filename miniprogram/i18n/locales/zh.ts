@@ -143,7 +143,7 @@ export default {
     my_tags: '我的标签',
     enter_tag_name: '输入标签名字',
     tag_name_max_length: '名字长度不超过4个字符',
-    delete_tag: '删除标签'
+    delete_tag: '删除标签: {#}'
   },
   auth: {
     quick: '快速',
@@ -244,7 +244,7 @@ export default {
     delete_account_desc: '清空用户数据并删除账号',
     do_on_web: '请在卡兔网页服务端操作',
     go_help: '查看帮助',
-    delete_account_warn: '此操作将删除用户所有数据',
+    delete_account_warn: '将删除用户所有数据，确认继续',
     in_logout: '正在退出',
     logout_ok: '已退出登录'
   },
@@ -324,10 +324,10 @@ export default {
     save_config: '保存配置',
     delete_config: '删除配置',
     input_error:'请填写配置',
-    change_will_error: '修改已启用的配置会导致对应储存的卡片数据无法访问',
+    change_will_error: '修改配置将无法访问对应储存中的卡片，确认继续',
     connect_test: '连接测试',
     connect_error: '无法访问存储，请检查配置',
-    delete_warn: '删除配置会导致已储存的卡片数据无法访问',
+    delete_warn: '该存储中的卡片将无法访问，确认继续',
     enable_custom_storage: '启用自定义存储',
     cancel_custom_storage: '关闭自定义存储'
   },
@@ -394,7 +394,7 @@ export default {
     key_reset_code: '主密码重置凭证',
     please_wait: '请稍等',
     export_and_save_safe: '请及时导出并妥善保存该凭证',
-    new_reset_code_notice: '生成新凭证会使已有凭证失效',
+    new_reset_code_notice: '旧凭证会失效，确认生成新凭证',
     keep_reset_code_safe: '请妥善保管该凭证'
   },
   resetKey: {

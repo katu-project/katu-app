@@ -46,7 +46,7 @@ app.createPage({
   },
 
   async tapToDeleteAccount(){
-    await app.showConfirm(`${this.t('delete_account_warn')}!`)
+    await app.showConfirm(this.t('delete_account_warn'))
     loadData(app.deleteAccount).then(()=>{
       app.showNotice(this.t('delete_success')).then(()=>{
         app.reLaunch()
@@ -55,7 +55,7 @@ app.createPage({
   },
 
   async tapToLogout(){
-    await app.showConfirm(`${this.t('sign_out')}?`)
+    await app.showConfirm(this.t('sign_out'))
     app.logout()
     await showLoading(this.t('in_logout'), 2000)
     await app.showNotice(this.t('logout_ok'))

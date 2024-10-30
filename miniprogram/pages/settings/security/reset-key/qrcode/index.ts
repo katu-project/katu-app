@@ -20,7 +20,7 @@ app.createPage({
       onlyFromCamera: false
     }, { timeout: -1 })
     await loadData(app.resetKeyManager.checkState, qrPack)
-    await app.showConfirm(`${this.t('start_set_key')}?`)
+    await app.showConfirm(this.t('start_set_key'))
     this.setData({
       showInputKey: true,
       recoveryKey: qrPack.rk
@@ -50,7 +50,7 @@ app.createPage({
   async setMasterKey(){
     app.masterKeyManager.checkMasterKeyFormat(this.data.masterKey)
 
-    await app.showConfirm(`${this.t('confirm_use_key')}?`)
+    await app.showConfirm(this.t('confirm_use_key'))
     loadData(async ()=>{
       const originMasterKey = await app.resetKeyManager.fetchKeyFromResetKey(this.data.recoveryKey)
       await app.masterKeyManager.update({

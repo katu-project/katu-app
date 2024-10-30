@@ -28,7 +28,7 @@ app.createPage({
   },
 
   async tapToCreateToken(){
-    await app.showConfirm(`${this.t('get_token_confirm')}?`)
+    await app.showConfirm(this.t('get_token_confirm'))
     const token = await loadData(app.createApiToken)
     const showTokenText = `${token.slice(0,5)}****${token.slice(-5)}`
     const { confirm } = await app.showChoose(`${this.t('new_token')}:\n${showTokenText}`,{

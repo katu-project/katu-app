@@ -143,7 +143,7 @@ export default {
     my_tags: 'My Tags',
     enter_tag_name: 'Enter tag name',
     tag_name_max_length: 'Length is less than 4 characters',
-    delete_tag: 'Delete tag'
+    delete_tag: 'Delete tag: {#}'
   },
   auth: {
     quick: 'Quick',
@@ -244,7 +244,7 @@ export default {
     delete_account_desc: 'Clear user data and delete accounts',
     do_on_web: 'Please do this in the web console',
     go_help: 'Go help',
-    delete_account_warn: 'This action will delete all of the user\'s data',
+    delete_account_warn: 'This action will delete all of the user\'s data, confirm the continue',
     in_logout: 'Exiting',
     logout_ok: 'Logged out'
   },
@@ -324,10 +324,10 @@ export default {
     save_config: 'Save Configuration',
     delete_config: 'Delete Configuration',
     input_error:'Input error',
-    change_will_error: 'Modifying config will make the stored card data inaccessible',
+    change_will_error: 'you will not be able to access the cards in the storage, confirm the continue',
     connect_test: 'Connect test',
     connect_error: 'Test connect failed',
-    delete_warn: 'Deleting config will make the stored card data inaccessible',
+    delete_warn: 'The cards in the store will be inaccessible, confirm to continue',
     enable_custom_storage: 'Enable configuration',
     cancel_custom_storage: 'Disable configuration'
   },
@@ -394,8 +394,8 @@ export default {
     key_reset_code: 'Master Key Reset Code',
     please_wait: 'Please wait',
     export_and_save_safe: 'Please export it in time and keep it safe',
-    new_reset_code_notice: 'This will cause the old reset code to be invalid',
-    keep_reset_code_safe: 'Please keep reset code in a safe place'
+    new_reset_code_notice: 'Reset Code will become invalid, confirm the continuation',
+    keep_reset_code_safe: 'Please keep Reset Code in a safe place'
   },
   resetKey: {
     reset_key: 'Reset Master Key',

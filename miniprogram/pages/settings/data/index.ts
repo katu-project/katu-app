@@ -28,13 +28,13 @@ app.createPage({
   },
 
   async tapToExportData(){
-    await app.showConfirm(`${this.t('confirm_export')}?`)
+    await app.showConfirm(this.t('confirm_export'))
     await loadData(app.exportCardData)
     app.showNotice(this.t('submit_success'))
   },
   
   async tapToClearCacheData(){
-    await app.showConfirm(`${this.t('confirm_clear')}?`)
+    await app.showConfirm(this.t('confirm_clear'))
     await loadData(app.clearCacheData)
     app.showNotice(this.t('delete_success'))
   },

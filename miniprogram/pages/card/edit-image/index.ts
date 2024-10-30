@@ -46,8 +46,8 @@ app.createPage({
   },
 
   async onReady() {
-    if(!this.data.tmpImagePath){
-      await app.showConfirm(this.t('select_pic'))
+    if(this.data.tmpImagePath){
+      await app.showNotice(this.t('select_pic'))
       app.navigateBack()
       return
     }

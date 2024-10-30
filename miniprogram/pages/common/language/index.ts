@@ -34,13 +34,13 @@ app.createPage({
   },
   
   async tapToChooseCode(e){
-    await app.showConfirm(`${this.t('use_lang')}?`)
+    await app.showConfirm(this.t('use_lang'))
     app.setUseLanguage(e.currentTarget.dataset.key)
     await loadData(undefined,undefined,this.t('switch_lang'))
     this.setData({
       useLang: app.UseLanguage
     })
-    await app.showConfirm(this.t('reload_work'))
+    await app.showNotice(this.t('reload_work'))
   },
 
   tapToCloseFilter(){
