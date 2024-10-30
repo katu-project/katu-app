@@ -26,7 +26,7 @@ export default {
     unknown_error: 'Unknown Error',
     enter_master_key: 'Enter Master Key',
     data_no_change: 'Data no change',
-    content_safe_check: 'Content Security Checks',
+    content_safe_check: 'Content Check',
     content_check_desc: 'Content security check will take place, which can take 5-10 seconds',
     tips: 'Tips',
     go_set: 'Go Set',
