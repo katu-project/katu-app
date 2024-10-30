@@ -132,20 +132,21 @@ declare namespace WechatMiniprogram {
   }
 }
 
-// 在 Page 里添加密码输入帮助方法的类型支持
 declare namespace WechatMiniprogram.Page {
   interface ILifetime {
-    t: (str:string, args?:string[]) => string
-    showKeyInput: (args?:KeyInputBehaviorOptionsType) => void
-    hideKeyInput: () => void
-    configKeyInput: (args?:KeyInputBehaviorOptionsType) => void
   }
 }
 
-// 在 behaviors 里增加默认回调方法的类型支持
 declare namespace WechatMiniprogram.Component {
   interface InstanceMethods<D extends DataOption> {
+    // key input behavior callback type
     inputKeyConfirm: (e?)=>void
+    // key input method type
+    hideKeyInput: () => void
+    showKeyInput: (args?:KeyInputBehaviorOptionsType) => void
+    configKeyInput: (args?:KeyInputBehaviorOptionsType) => void
+    // i18n translate method type
+    t: (str:string, args?:string[]) => string
   }
 }
 
