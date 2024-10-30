@@ -1,5 +1,8 @@
+import { loadData } from '@/utils/index'
 import { getAppManager } from '@/controller/app'
+import { getUserManager } from '@/controller/user'
 const app = getAppManager()
+const user = getUserManager()
 
 app.createPage({
   i18n: {
@@ -29,8 +32,15 @@ app.createPage({
     })
   },
 
-  tapToSetContent(){
-    app.publishCardEditTitleEvent(this.data.content.trim())
+  async tapToSetContent(){
+    const content = this.data.content.trim()
+    // no active user can be skip csc
+    if(user.isActive){
+      if(app.isMp){
+        await loadData(app.textContentSafetyCheck, content, this.t('content_safe_check'))
+      }
+    }
+    app.publishCardEditTitleEvent(content)
     app.navigateBack()
   }
 })
