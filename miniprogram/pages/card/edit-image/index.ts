@@ -79,7 +79,10 @@ app.createPage({
   async useImage(url){
     if(app.isMp){
       await app.knowContentCheck()
-      await loadData(app.imageContentCheck,{imagePath:url}, this.t('content_safe_check'))
+      await loadData(app.imageContentCheck, {imagePath:url}, {
+        loadingTitle: this.t('content_safe_check'),
+        timeout: 20000
+      })
     }
     app.publishCardEditImageEvent(url)
     app.navigateBack()
